@@ -1,3 +1,9 @@
+---
+title: Pegasus
+subtitle: 易伸缩，强一致，高效的，开源分布式Key-Value存储
+layout: page
+---
+
 ## 概览
 
 Pegasus是小米云存储团队开发的一个分布式Key-Value存储系统，最初的动机是弥补HBase在可用性和性能上的不足。Pegasus系统的Server端完全采用C++语言开发，使用PacificA协议支持强一致性，使用RocksDB作为单机存储引擎。
