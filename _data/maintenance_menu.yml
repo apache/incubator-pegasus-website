@@ -1,0 +1,36 @@
+- label: 高效运维
+  items:
+    - name: 集群部署
+      link: /deployment
+    - name: 配置说明
+      link: /config
+    - name: 负载均衡
+      link: /auto-rebalance
+    - name: 可视化监控
+      link: /monitoring
+    - name: 集群升级
+      link: /rolling-update
+    - name: 集群扩容缩容
+      link: /membership-change
+    - name: 资源管理
+      link: /resource-management
+    - name: 冷备份
+      link: /cold-backup
+    - name: 元数据恢复
+      link: /meta-recovery
+    - name: Replica数据恢复
+      link: /replica-recovery
+    - name: Zookeeper迁移
+      link: /zk-migration
+    - name: Table软删除
+      link: /soft-delete
+    - name: Table环境变量
+      link: /table-env
+    - name: 远程命令
+      link: /remote-commands
+    - name: Partition-Split
+      link: /partition-split
+    - name: 跨机房同步
+      link: /duplication
+    - name: 运维经验
+      link: /experiences

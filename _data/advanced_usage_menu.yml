@@ -1,0 +1,14 @@
+- label: 高级使用
+  items:
+    - name: TTL
+      link: /ttl
+    - name: 单行原子操作
+      link: /single-atomic
+    - name: Redis适配
+      link: /redis
+    - name: GEO支持
+      link: /geo
+    - name: 数据压缩
+      link: /compression
+    - name: 流量控制
+      link: /throttling
