@@ -1,0 +1,50 @@
+- label: 文档目录
+  items:
+    - name: Home
+      link: /
+    - name: 介绍
+      items:
+        - name: 系统介绍 
+          link: /introduction
+        - name: 数据模型
+          link: /data-model
+        - name: Benchmark
+          link: /benchmark
+        - name: 版本发布
+          link: /releases
+    - name: 基础使用
+      items:
+        - name: 编译构建 
+          link: /compilation
+        - name: 体验onebox集群
+          link: /onebox
+        - name: Shell工具
+          link: /shell
+        - name: Java客户端文档
+          link: /java-client
+        - name: Cpp客户端文档
+          link: /cpp-client
+        - name: Java客户端文档
+          link: /java-client
+        - name: Go客户端文档
+          link: /go-client
+        - name: Python客户端文档
+          link: /python-client
+        - name: Node.js客户端文档
+          link: /node-client
+        - name: Scala客户端文档
+          link: /scala-client
+    - name: 高级使用
+      items:
+        - name: TTL 
+          link: /ttl
+        - name: 单行原子操作
+          link: /single-atomic
+        - name: Redis适配
+          link: /redis
+        - name: GEO支持
+          link: /geo
+        - name: 数据压缩
+          link: /compression
+        - name: 流量控制
+          link: /throttling
