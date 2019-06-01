@@ -1,3 +1,9 @@
+---
+title: 文档
+layout: page
+show_sidebar: false
+---
+
 * [主页](https://github.com/XiaoMi/pegasus/wiki)
 
 # 介绍

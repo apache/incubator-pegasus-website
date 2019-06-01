@@ -1,2 +1,11 @@
 title: Pegasus
-remote_theme: chrisrhymes/bulma-clean-theme
+
+collections:
+  overview:
+    output: true
+    layout: page 
+    permalink: /:collection/:path
+  clients:
+    output: true
+    layout: page 
+    permalink: /:collection/:path
