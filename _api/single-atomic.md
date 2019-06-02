@@ -2,7 +2,7 @@
 title: 单行原子操作
 layout: page
 show_sidebar: false
-menubar: advanced_usage_menu
+menubar: api_menu
 ---
 
 从版本[1.10.0](https://github.com/XiaoMi/pegasus/releases/tag/v1.10.0)开始，Pegasus支持单行原子操作。这里的**单行**是指同一HashKey下的所有数据。

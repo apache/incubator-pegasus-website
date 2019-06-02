@@ -1,8 +1,7 @@
 ---
 title: TTL
 layout: page
-show_sidebar: false
-menubar: advanced_usage_menu
+menubar: api_menu
 ---
 
 目录：

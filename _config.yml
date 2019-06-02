@@ -9,6 +9,14 @@ collections:
     output: true
     layout: page 
     permalink: /:collection/:path
+  api:
+    output: true
+    layout: page 
+    permalink: /:collection/:path
+  administration:
+    output: true
+    layout: page 
+    permalink: /:collection/:path
 
 plugins:
   - jekyll-sitemap
