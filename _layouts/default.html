@@ -3,12 +3,7 @@
   {% include head.html %}
   <body>
     {% include header.html %}
-    {% if page.front == true %}
-        {% include hero-front.html %}
-    {% endif %}
-    {% if page.front == false %}
-        {% include hero-page.html %}
-    {% endif %}
+    {% include hero-page.html %}
     <section class="section">
         <div class="container">
             <div class="columns is-multiline">
