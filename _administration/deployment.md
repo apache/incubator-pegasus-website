@@ -1,7 +1,6 @@
 ---
 title: 集群部署
 layout: page
-show_sidebar: false
 menubar: administration_menu
 ---
 

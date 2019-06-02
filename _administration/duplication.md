@@ -1,7 +1,6 @@
 ---
 title: 跨机房同步
 layout: page
-show_sidebar: false
 menubar: administration_menu
 ---
 

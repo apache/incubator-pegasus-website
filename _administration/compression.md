@@ -1,7 +1,6 @@
 ---
 title: 数据压缩
 layout: page
-show_sidebar: false
 menubar: administration_menu
 ---
 

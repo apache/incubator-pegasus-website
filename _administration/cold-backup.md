@@ -1,7 +1,6 @@
 ---
 title: 冷备份
 layout: page
-show_sidebar: false
 menubar: administration_menu
 ---
 
