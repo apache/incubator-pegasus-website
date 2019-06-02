@@ -23,28 +23,11 @@ defaults:
   -
     scope:
       path: ""
-      type: "overview"
     values:
       show_sidebar: false
       toc: true
-  -
-    scope:
-      path: ""
-      type: "clients"
-    values:
-      show_sidebar: false
-      toc: true
-  -
-    scope:
-      path: ""
-      type: "api"
-    values:
-      show_sidebar: false
-      toc: true
-  -
-    scope:
-      path: ""
-      type: "administration"
-    values:
-      show_sidebar: false
-      toc: true
+      front: false
+
+toc:
+  list_class: menu-list
+  sublist_class: menu-list

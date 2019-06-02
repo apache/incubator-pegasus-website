@@ -3,7 +3,12 @@
   {% include head.html %}
   <body>
     {% include header.html %}
-    {% include hero.html %}
+    {% if page.front == true %}
+        {% include hero-front.html %}
+    {% endif %}
+    {% if page.front == false %}
+        {% include hero-page.html %}
+    {% endif %}
     <section class="section">
         <div class="container">
             <div class="columns is-multiline">
@@ -22,7 +27,8 @@
                 </div>
                 {% endif %}
                 {% if page.toc %}
-                <div class="column is-2-desktop is-6-tablet">
+                <div class="column is-2-desktop is-4-tablet is-hidden-mobile">
+                    <p class="menu-label">本页导航</p>
                     {% toc %}
                 </div>
                 {% endif %}
