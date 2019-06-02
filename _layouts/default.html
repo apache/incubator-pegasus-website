@@ -8,11 +8,11 @@
         <div class="container">
             <div class="columns is-multiline">
                 {% if page.menubar %}
-                <div class="column is-3-desktop is-3-tablet">
+                <div class="column is-one-fourth">
                     {% include menubar.html %}
                 </div>
                 {% endif %}
-                <div class="column">
+                <div class="column is-half">
                     {% include tabs.html %}
                     {{ content }}
                 </div>
@@ -22,7 +22,7 @@
                 </div>
                 {% endif %}
                 {% if page.toc %}
-                <div class="column is-2-desktop is-4-tablet is-hidden-mobile">
+                <div class="column is-one-fourth is-hidden-mobile" style="padding-left: 3rem">
                     <p class="menu-label">本页导航</p>
                     {% toc %}
                 </div>
