@@ -9,3 +9,42 @@ collections:
     output: true
     layout: page 
     permalink: /:collection/:path
+
+plugins:
+  - jekyll-sitemap
+  - jekyll-paginate
+  - jekyll-feed
+  - jekyll-seo-tag
+  - jekyll-toc
+  - kramdown
+  - rouge
+
+defaults:
+  -
+    scope:
+      path: ""
+      type: "overview"
+    values:
+      show_sidebar: false
+      toc: true
+  -
+    scope:
+      path: ""
+      type: "clients"
+    values:
+      show_sidebar: false
+      toc: true
+  -
+    scope:
+      path: ""
+      type: "api"
+    values:
+      show_sidebar: false
+      toc: true
+  -
+    scope:
+      path: ""
+      type: "administration"
+    values:
+      show_sidebar: false
+      toc: true

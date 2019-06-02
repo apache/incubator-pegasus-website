@@ -21,6 +21,11 @@
                     {% include latest-posts.html %}
                 </div>
                 {% endif %}
+                {% if page.toc %}
+                <div class="column is-2-desktop is-6-tablet">
+                    {% toc %}
+                </div>
+                {% endif %}
             </div>
         </div>
     </section>

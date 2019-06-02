@@ -38,7 +38,7 @@ Pegasus目前只支持在Linux平台运行。当前我们提供如下几种安�
 
 你可以参照右侧目录检索你想要了解的内容。如果你对Pegasus完全陌生，可以首先阅读[系统介绍](https://github.com/XiaoMi/pegasus/wiki/%E7%B3%BB%E7%BB%9F%E4%BB%8B%E7%BB%8D)，并通过[体验onebox集群](https://github.com/XiaoMi/pegasus/wiki/%E4%BD%93%E9%AA%8Conebox%E9%9B%86%E7%BE%A4)来熟悉Pegasus的各项功能。配合阅览下方的分享 PPT 口味更佳。
 
-## 社区分享：
+## 社区分享
 
 * 2018年10月分享：《深入了解Pegasus》
   * [【PPT下载】](https://github.com/XiaoMi/pegasus/raw/master/docs/ppt/Pegasus_Intro_2018_10.pptx)

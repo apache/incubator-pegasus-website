@@ -1,7 +1,6 @@
 ---
 title: 项目背景
 layout: page
-show_sidebar: false
 menubar: overview_menu
 ---
 
