@@ -17,6 +17,12 @@ collections:
     output: true
     layout: page 
     permalink: /:collection/:path
+  blogs:
+    output: true
+    permalink: /:collection/:path
+  community:
+    output: true
+    permalink: /:collection/:path
 
 plugins:
   - jekyll-sitemap

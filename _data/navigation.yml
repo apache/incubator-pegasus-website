@@ -1,5 +1,5 @@
 - name: 文档
-  link: /docs
+  link: /overview
   dropdown:
   - name: 概览
     link: /overview
@@ -10,7 +10,7 @@
   - name: 高效运维
     link: /administration
 - name: Blog
-  link: /blog/
+  link: /blogs
 - name: 社区
   link: /community
 - name: 关于
