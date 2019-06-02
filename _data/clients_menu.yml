@@ -1,7 +1,6 @@
-- label: 客户端文档
-  items:
-    - name: Home
-      link: /
+- items:
+    - name: 客户端文档
+      link: /clients
     - name: Java客户端文档
       link: /clients/java-client
     - name: Cpp客户端文档

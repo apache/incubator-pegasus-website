@@ -1,7 +1,6 @@
-- label: 概览
-  items:
-    - name: Home
-      link: /
+- items:
+    - name: 概览
+      link: /overview
     - name: 项目背景
       link: /overview/background
     - name: 数据模型

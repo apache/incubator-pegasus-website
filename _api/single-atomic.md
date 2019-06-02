@@ -7,12 +7,6 @@ menubar: api_menu
 
 从版本[1.10.0](https://github.com/XiaoMi/pegasus/releases/tag/v1.10.0)开始，Pegasus支持单行原子操作。这里的**单行**是指同一HashKey下的所有数据。
 
-目录
-* [原理](#原理)
-* [原子增减](#原子增减)
-* [CAS操作](#cas操作)
-***
-
 # 原理
 Pegasus采用Hash分片，同一个HashKey的数据总是存储在同一个Partition中，即相同的Replica中。同时，Pegasus实现时，同一个Replica的写操作在server端总是串行执行的。因此对于同一HashKey下的数据操作，可以很方便地实现原子的语义。
 

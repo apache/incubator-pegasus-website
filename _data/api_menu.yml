@@ -1,5 +1,6 @@
-- label: 高级使用
-  items:
+- items:
+    - name: API文档
+      link: /api
     - name: TTL
       link: /api/ttl
     - name: 单行原子操作
