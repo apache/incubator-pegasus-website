@@ -5,11 +5,6 @@ show_sidebar: false
 menubar: administration_menu
 ---
 
-目录：
-* [客户端压缩](#客户端压缩)
-* [服务端压缩](#服务端压缩)
-***
-
 # 客户端压缩
 
 请参考 [Java客户端文档#数据序列化](Java客户端文档#数据序列化) 和 [Java客户端文档#数据压缩](Java客户端文档#数据压缩) 。
