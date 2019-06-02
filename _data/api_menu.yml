@@ -1,10 +1,10 @@
 - label: 高级使用
   items:
     - name: TTL
-      link: /ttl
+      link: /api/ttl
     - name: 单行原子操作
-      link: /single-atomic
+      link: /api/single-atomic
     - name: Redis适配
-      link: /redis
+      link: /api/redis
     - name: GEO支持
-      link: /geo
+      link: /api/geo
