@@ -8,7 +8,3 @@
       link: /redis
     - name: GEO支持
       link: /geo
-    - name: 数据压缩
-      link: /compression
-    - name: 流量控制
-      link: /throttling

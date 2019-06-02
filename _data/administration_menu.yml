@@ -32,5 +32,9 @@
       link: /partition-split
     - name: 跨机房同步
       link: /duplication
+    - name: 数据压缩
+      link: /compression
+    - name: 流量控制
+      link: /throttling
     - name: 运维经验
       link: /experiences

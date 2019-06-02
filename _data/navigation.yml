@@ -5,8 +5,8 @@
     link: /overview
   - name: 客户端
     link: /clients
-  - name: 高级使用
-    link: /ttl
+  - name: API文档
+    link: /api
   - name: 高效运维
     link: /administration
 - name: Blog
