@@ -7,7 +7,7 @@ menubar: overview_menu
 
 Pegasus目前只支持Linux平台。目前在CentOS、Ubuntu上都测试运行过。
 
-编译过程中遇到问题，请先参考下面的**常见问题**，如果还不能解决，请加入[微信交流群](https://github.com/XiaoMi/pegasus/wiki/%E5%85%B3%E4%BA%8E%E6%88%91%E4%BB%AC)向我们咨询。
+编译过程中遇到问题，请先参考下面的**常见问题**，如果还不能解决，可以通过 [Github Issue](https://github.com/XiaoMi/pegasus/issues) 向我们咨询。
 
 ## 用docker编译
 
@@ -63,33 +63,19 @@ cd pegasus
 如果要编译发布的稳定版本，请checkout至相应的tag（建议用[最新的release版本](https://github.com/xiaomi/pegasus/releases)），譬如：
 
 ```bash
-git checkout -b v1.11.2 v1.11.2
+git checkout -b v1.11.4 v1.11.4
 git submodule update
 ```
 
-运行build命令进行编译，该命令使用CMake来进行构建：
+运行build命令进行编译：
 
 ```bash
 ./run.sh build
 ```
 
-build命令支持以下参数：
-
-```
-* --compiler：指定C和C++编译器，通过逗号分隔的，默认为"gcc,g++"。
-* -t|--type：指定编译类型是debug还是release，默认为release。
-* -j|--jobs：指定编译的并发度，默认为8。
-* -b|--boost_dir：指定boost安装路径，如果不指定则使用系统自带的boost。
-* -w|--warning_all：打开所有编译警告，默认不打开。
-* -v|--verbose：输出详细的编译信息，默认不输出。
-* -c|--clear：在编译前先清理环境（不清理thirdparty），默认不清理。
-* -cc|--harf-clear：在编译前先清理环境（不清理rdsn和thirdparty），默认不清理。
-* --thirdparty：在编译前清理所有环境（包括thirdparty），默认不清理。
-```
-
 编译后输出会放在当前目录的DSN_ROOT/文件夹下，里面包含bin、include、lib目录。
 
-可以用pack_server命令打包server端程序包，用于部署cluser：
+可以用pack_server命令打包server端程序包，用于服务部署：
 
 ```bash
 ./run.sh pack_server
@@ -129,10 +115,10 @@ git submodule update
 如果还不能解决，可以进一步尝试（解决thirdparty依赖变化的问题）：
 
 ```bash
-./run.sh build --clear_thirdparty
+./run.sh build -c --clear_thirdparty
 ```
 
-如果还不能解决，请咨询我们。
+如果还不能解决，可以咨询我们。
 
 ### 使用非系统自带的boost库
 
@@ -150,7 +136,7 @@ git submodule update
 
 ### 使用toolchain编译
 
-编译默认使用系统自带的gcc/g++，但是如果系统自带的编译器版本太低且无法升级（不支持C++11），可以自己下载和编译高版本的gcc toolchain，然后放到PATH中：
+如果系统自带的编译器版本太低且难以升级（不支持C++14），可以自己下载和编译高版本的gcc工具链，然后放到PATH中：
 
 ```bash
 export PATH="$TOOLCHAIN_DIR/bin:$PATH"
@@ -192,22 +178,4 @@ export PATH="$TOOLCHAIN_DIR/bin:$PATH"
 
 ```
 ./run.sh pack_server -b -g
-```
-
-### 指定gflags以编译bench工具
-
-注：从1.10.0版本开始，Pegasus编译强制依赖gflags库，以下步骤可以忽略。
-
-Pegasus的bench工具修改自RocksDB的bench，其在编译时需要依赖gflags，如果找不到gflags，虽然也能编译成功，但是bench程序无法使用，会报如下错误：
-
-```
-Please install gflags to run rocksdb tools
-```
-
-默认使用系统库中自带的gflags，如果系统库中没有安装，可以自己下载和编译gflags库，然后放到以下环境变量中：
-
-```bash
-export CPATH="$GFLAGS_DIR/include"
-export LIBRARY_PATH="$GFLAGS_DIR/lib"
-./run.sh build
 ```
