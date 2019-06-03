@@ -25,7 +25,14 @@
                         </div>
                     </div>
                     {% else %}
-                    <a href="{{ item.link | prepend: site.baseurl }}" class="navbar-item {% if item.link == page.url %}is-active{% endif %}">{{ item.name }}</a>
+                    <a href="{{ item.link | prepend: site.baseurl }}" class="navbar-item {% if item.link == page.url %}is-active{% endif %}">
+                        {% if item.icon %}
+                        <span class="icon" style="margin-right: .25em">
+                            <i class="{{ item.icon }}"></i>
+                        </span>
+                        {% endif %}
+                        <span>{{ item.name }}</span>
+                    </a>
                     {% endif %}
                 {% endfor %}
                 {% endif %}
