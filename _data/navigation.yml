@@ -1,5 +1,6 @@
 - name: 文档
   link: /overview
+  icon: fas fa-book
   dropdown:
   - name: 概览
     link: /overview
@@ -11,10 +12,13 @@
     link: /administration
 - name: Blog
   link: /blogs
+  icon: fas fa-rss
 - name: 社区
   link: /community
+  icon: fas fa-user-plus
 - name: 关于
   link: /about
+  icon: fas fa-robot
 - name: Github
   link: https://github.com/XiaoMi/pegasus
   icon: fab fa-github-alt
