@@ -53,7 +53,8 @@ sudo make install -j8
 
 ## 源码编译
 
-从github获取Pegasus源代码，并递归获取其依赖的[rDSN](https://github.com/xiaomi/rdsn)：
+从github获取Pegasus源代码，并递归获取其依赖的[rDSN](https://github.com/xiaomi/rdsn)和
+[Rocksdb](https://github.com/XiaoMi/pegasus-rocksdb)：
 
 ```bash
 git clone https://github.com/xiaomi/pegasus.git --recursive
@@ -70,10 +71,10 @@ git submodule update
 运行build命令进行编译：
 
 ```bash
-./run.sh build
+./run.sh build -c
 ```
 
-编译后输出会放在当前目录的DSN_ROOT/文件夹下，里面包含bin、include、lib目录。
+编译后输出会放在当前目录的`DSN_ROOT/`文件夹下，里面包含bin、include、lib目录。
 
 可以用pack_server命令打包server端程序包，用于服务部署：
 
