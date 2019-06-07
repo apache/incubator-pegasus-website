@@ -16,9 +16,6 @@
 - name: 社区
   link: /community
   icon: fas fa-user-plus
-- name: 关于
-  link: /about
-  icon: fas fa-robot
 - name: Github
   link: https://github.com/XiaoMi/pegasus
   icon: fab fa-github-alt

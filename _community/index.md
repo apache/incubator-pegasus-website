@@ -8,6 +8,10 @@ header-style: is-dark
 Pegasus 目前是由小米主导的开源项目，至今在敝公司内部已稳定使用了4年以上。
 随着系统的不断迭代发展，我们相信 Pegasus 所积累的技术能力同样能够服务于广大互联网存储场景。
 
+- 邮件组：<pegasus-help@xiaomi.com>
+- Slack: <https://pegasus-kv.slack.com/>
+- 微信：你可以联系 `qinzuoyan` 或 `wutao5003` 以加入我们的微信交流群。
+
 ## 开源
 
 Pegasus 是 100% 开源的项目，我们所有的开发都在 Github 之上，所有的组件都使用

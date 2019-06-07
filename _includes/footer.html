@@ -1,5 +1,5 @@
 <footer class="footer">
-    <div class="container">        
+    <div class="container">
         {% if site.footer_menu %}
         <div class="columns is-multiline">
             {% for item in site.data[site.footer_menu] %}
@@ -11,5 +11,11 @@
             {% endfor %}
         </div>
         {% endif %}
+        <div class="content is-small has-text-centered">
+            <p>Copyright (c) 2019, Xiaomi, Inc.  All rights reserved.</p>
+            <p>
+                我们是小米公司云平台部门的存储团队，团队的职责是开发和维护分布式存储系统，为整个小米公司及生态链企业提供分布式存储解决方案。
+            </p>
+        </div>
     </div>
 </footer>
