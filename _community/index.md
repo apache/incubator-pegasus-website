@@ -2,11 +2,13 @@
 title: Pegasus 社区
 subtitle: 我们以纯粹开放的态度，愿与你共同构筑 Pegasus
 layout: community
-header-style: is-dark
+header_style: is-dark
 ---
 
 Pegasus 目前是由小米主导的开源项目，至今在敝公司内部已稳定使用了4年以上。
 随着系统的不断迭代发展，我们相信 Pegasus 所积累的技术能力同样能够服务于广大互联网存储场景。
+
+## 联系我们
 
 - 邮件组：<pegasus-help@xiaomi.com>
 - Slack: <https://pegasus-kv.slack.com/>
