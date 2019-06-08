@@ -13,6 +13,7 @@ Pegasus 目前是由小米主导的开源项目，至今在敝公司内部已稳
 - 邮件组：<pegasus-help@xiaomi.com>
 - Slack: <https://pegasus-kv.slack.com/>
 - 微信：你可以联系 `qinzuoyan` 或 `wutao5003` 以加入我们的微信交流群。
+- 知乎：[Pegasus 技术专栏](https://zhuanlan.zhihu.com/c_1059090995865608192)
 
 ## 开源
 
