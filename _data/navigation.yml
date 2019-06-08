@@ -17,10 +17,10 @@
   link: /community
   icon: fas fa-user-plus
   dropdown:
-  - name: 参与贡献
-    link: /community/#参与贡献
   - name: 联系我们
     link: /community/#联系我们
+  - name: 参与贡献
+    link: /community/#参与贡献
   - name: 开发工具栈
     link: /community/coding-guides
 - name: Github
