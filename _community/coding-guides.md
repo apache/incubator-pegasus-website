@@ -1,8 +1,8 @@
 ---
 title: 开发工具栈
 layout: page
-hero_style: is-light is-centered
-header_style: is-dark
+hero_style: is-white is-centered
+header_style: is-black
 ---
 
 ## Clang-Format

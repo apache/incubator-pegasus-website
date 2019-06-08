@@ -2,7 +2,7 @@
 title: Pegasus 社区
 subtitle: 我们以纯粹开放的态度，愿与你共同构筑 Pegasus
 layout: community
-header_style: is-dark
+header_style: is-black
 ---
 
 Pegasus 目前是由小米主导的开源项目，至今在敝公司内部已稳定使用了4年以上。
