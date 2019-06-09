@@ -34,6 +34,7 @@ plugins:
 
 defaults:
   -
+    # docs
     scope:
       path: ""
     values:
@@ -51,3 +52,14 @@ defaults:
       layout: post
       header_style: is-dark
       hero_style: is-small is-light
+  -
+    scope:
+      path: ""
+      type: community
+    values:
+      show_sidebar: false
+      toc: true
+      front: false
+      layout: post
+      hero_style: is-white is-centered
+      header_style: is-black

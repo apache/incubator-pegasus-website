@@ -4,9 +4,9 @@
   dropdown:
   - name: 概览
     link: /overview
-  - name: 客户端
+  - name: 客户端库
     link: /clients
-  - name: API文档
+  - name: 用户接口
     link: /api
   - name: 高效运维
     link: /administration
@@ -23,6 +23,8 @@
     link: /community/#参与贡献
   - name: 开发工具栈
     link: /community/coding-guides
+  - name: Roadmap
+    link: /community/roadmap
 - name: Github
   link: https://github.com/XiaoMi/pegasus
   icon: fab fa-github-alt
