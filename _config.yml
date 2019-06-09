@@ -40,3 +40,14 @@ defaults:
       show_sidebar: false
       toc: true
       front: false
+  -
+    scope:
+      path: ""
+      type: posts
+    values:
+      show_sidebar: false
+      toc: true
+      front: false
+      layout: post
+      header_style: is-dark
+      hero_style: is-small is-light
