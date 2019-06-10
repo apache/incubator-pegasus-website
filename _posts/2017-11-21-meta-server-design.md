@@ -106,3 +106,14 @@ ReplicaGroup的管理就是上文说的对**PartitionConfiguration**的管理。
 为了保证MetaServer的leader和follower能拥有一致的集群元数据，元数据的持久化我们也是通过Zookeeper来完成的。
 
 我们使用了Zookeeper官方的c语言库来访问Zookeeper集群。因为其没有提供CMakeLists的构建方式，所以目前这部分代码是单独抽取了出来的。后面重构我们的构建过程后，应该可以把这个依赖去掉而直接用原生代码。
+
+### MetaServer的bootstrap
+
+当一个MetaServer的进程启动时，它会首先根据配置好的zookeeper服务的路径，来检测自己是否能够成为leader。如果是leader, 它会向zookeeper拉去当前集群的所有元数据，包括：
+
+1. 有哪些表，以及这些表的各种参数
+2. 每个表的各个Partition的组成情况，将所有Partition中涉及到的机器求并集，会顺便解析到一个机器列表
+
+当MetaServer获取了所有的这些信息后，会构建自己的内存数据结构。特别的，ReplicaServer的集合初始化为2中得到的机器列表。
+
+随后，MetaServer开启FD的模块和负载均衡的模块，MetaServer就启动完成了。
