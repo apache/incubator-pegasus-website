@@ -56,3 +56,9 @@ jekyll serve
     Server address: http://127.0.0.1:4000
   Server running... press ctrl-c to stop.
 ```
+
+## 感谢
+
+本站最初基于 [chrisrhymes/bulma-clean-theme](http://www.csrhymes.com/bulma-clean-theme/)，
+它为我提供了如何使用 bulma 和 jekyll 的示例。虽然最终实际使用这个模板的地方不多，
+但文档和博客部分的配色与样式还是有所借鉴，还有整个网站的字体也是沿用该模板。
