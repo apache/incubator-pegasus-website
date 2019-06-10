@@ -21,11 +21,7 @@ Pegasus 的数据模型非常简单，就是 Key-Value 模型，不支持数据 
 
 字节串，长度无限制。
 
------
-
-![pegasus-data-model](/assets/images/pegasus-data-model.png){:class="img-responsive"}
-
------
+![pegasus-data-model](/assets/images/pegasus-data-model.png){:class="img-responsive docs-image"}
 
 之所以这样设计，是因为：
 
@@ -38,11 +34,7 @@ Pegasus 的数据模型非常简单，就是 Key-Value 模型，不支持数据 
 
 譬如用户可以将 HashKey 当作 row key，将 SortKey 当作 attribute name 或者 column name，这样同一 HashKey 的多条数据可以看作一行，同样能表达出 HBase 中 row 的概念。正是考虑到这一点，Pegasus 除了提供存取单条数据的 get/set/del 接口，还提供了存取同一 HashKey 数据的 multi_get/multi_set/multi_del 接口，并且这些接口都是单行原子操作，让用户在使用时更加简单。
 
------
-
-![pegasus-data-model](/assets/images/pegasus-data-model-sample.png){:class="img-responsive"}
-
------
+![pegasus-data-model](/assets/images/pegasus-data-model-sample.png){:class="img-responsive docs-image"}
 
 ## Pegasus vs. Redis
 

@@ -55,7 +55,7 @@ ReplicaGroup的管理就是上文说的对**PartitionConfiguration**的管理。
 1. 所有的ReplicaServer无条件服从MetaServer
 
    当MetaServer认为ReplicaServer不可用时，并不会再借助其他外界信息来做进一步确认。为了更进一步说明问题，考虑以下情况：
-   ![network-partition](https://github.com/XiaoMi/pegasus/blob/master/docs/media-img/network-partition.png?raw=true)
+   ![network-partition](/assets/images/network-partition.png){:class="docs-image"}
    上图给出了一种比较诡异的网络分区情况：即网络中所有其他的组件都可以正常连通，只有MetaServer和一台ReplicaServer发生了网络分区。在这种情况下，仅仅把ReplicaServer的生死交给MetaServer来仲裁可能略显武断。但考虑到这种情况其实极其罕见，并且就简化系统设计出发，我们认为这样处理并无不妥。而且假如我们不开上帝视角的话，判断一个“crash”是不是“真的crash”本身就是非常困难的事情。
 
    与此相对应的是另外一种情况：假如ReplicaServer因为一些原因发生了写流程的阻塞(磁盘阻塞，写线程死锁)，而心跳则由于在另外的线程中得以向MetaServer正常发送。这种情况当前Pegasus是无法处理的。一般来说，应对这种问题的方法还是要在server的写线程里引入心跳，后续Pegasus可以在这方面跟进。
@@ -65,7 +65,7 @@ ReplicaGroup的管理就是上文说的对**PartitionConfiguration**的管理。
    当MetaServer声称一个ReplicaServer不可用时，该ReplicaServer一定要处于不可服务的状态。这一点是由算法本身来保障的。之所以要有这一要求，是为了防止系统中某个ReplicaGroup可能会出现双主的局面。
 
    Pegasus使用基于租约的心跳机制来进行失败检测，其原理如下（以下的worker对应ReplicaServer, master对应MetaServer）：
-   ![perfect-failure-detector](https://github.com/XiaoMi/pegasus/blob/master/docs/media-img/perfect-failure-detector.png?raw=true)
+   ![perfect-failure-detector](/assets/images/perfect-failure-detector.png){:class="docs-image"}
    说明：
    * beacon总是从worker发送给master，发送间隔为beacon_interval
    * 对于worker，超时时间为lease_period
