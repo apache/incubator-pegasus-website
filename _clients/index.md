@@ -1,5 +1,5 @@
 ---
-title: 客户端文档
+title: 客户端库
 layout: page
 show_sidebar: false
 menubar: clients_menu
