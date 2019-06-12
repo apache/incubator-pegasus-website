@@ -598,7 +598,7 @@ USAGE: clear_app_envs              [-a|--all] [-p|--prefix str]
 | multi_del_range | 通过指定SortKey的查询范围和过滤条件，删除同一HashKey下的多条数据
 | incr | [原子增减操作](/api/single-atomic#原子增减)
 | check_and_set | [原子CAS操作](/api/single-atomic#cas操作)
-| check_and_mutate | [原子CAS扩展版本](/clients/java-client#checkAndMutate)
+| check_and_mutate | [原子CAS扩展版本](/clients/java-client#checkandmutate)
 | exist | 查询某条数据是否存在
 | count | 获取同一HashKey下的SortKey的个数
 | ttl | 查询某条数据的TTL（Time To Live）时间，返回剩余的live时间，单位为秒；返回Infinite表示没有TTL限制
@@ -802,7 +802,7 @@ USAGE:  check_and_set          <hash_key> [-c|--check_sort_key str]
 
 
 ### check_and_mutate
-原子CAS扩展版本，参见[原子CAS扩展版本](/clients/java-client#checkAndMutate)
+原子CAS扩展版本，参见[原子CAS扩展版本](/clients/java-client#checkandmutate)
 
 用法：
 ```
