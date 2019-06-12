@@ -23,7 +23,7 @@ Pegasus 的数据模型非常简单，就是 Key-Value 模型，不支持数据 
 
 -----
 
-![pegasus-data-model](/assets/images/pegasus-data-model.png){:class="img-responsive"}
+![pegasus-data-model.png](/assets/images/pegasus-data-model.png){:class="img-responsive"}
 
 -----
 

@@ -8,7 +8,7 @@ menubar: overview_menu
 Pegasus提供了Shell工具，用于查看集群相关信息，创建/删除表，操作数据等。
 
 # 工具获取
-在成功[编译Pegasus](%E7%BC%96%E8%AF%91%E6%9E%84%E5%BB%BA)后，在pegasus目录下启动Shell工具：
+在成功[编译Pegasus](compilation)后，在pegasus目录下启动Shell工具：
 ```bash
 ./run.sh shell
 ```
@@ -281,7 +281,7 @@ USAGE:  timeout                  [time_in_ms]
 * 集群信息主要主要包含：  
 （1）meta_server、zookeeper的节点信息。  
 （2）meta_function_level：负载均衡策略。  
-（3）balance_operation_count：负载均衡操作统计，包括move_pri、move_pri、copy_sec、total。负载均衡信息参见[负载均衡](负载均衡)。  
+（3）balance_operation_count：负载均衡操作统计，包括move_pri、move_pri、copy_sec、total。负载均衡信息参见[负载均衡](/administration/rebalance)。  
 （4）primary_replica_count_stddev：负载均衡衡量指标
 （5）total_replica_count_stddev：负载均衡衡量指标
 
@@ -332,7 +332,7 @@ USAGE:server_stat                [-t all|meta-server|replica-server] [-l ip:port
 ```
 
 说明：
-* 选项参数说明同[server_info说明](shell工具#server_info)。
+* 选项参数说明同[server_info说明](#server_info)。
 
 示例：
 ```
@@ -348,8 +348,8 @@ USAGE:remote_command             [-t all|meta-server|replica-server] [-l ip:port
 ```
 
 说明：
-* `-t`、`-l`选项：用于选择特定目标机器，参见[server_info说明](shell工具#server_info)。
-* 远程命令详细信息，参见[远程命令](远程命令)。
+* `-t`、`-l`选项：用于选择特定目标机器，参见[server_info说明](#server_info)。
+* 远程命令详细信息，参见[远程命令](/administration/remote-commands)。
 
 示例：
 ```
@@ -365,7 +365,7 @@ USAGE:flush_log                  [-t all|meta-server|replica-server] [-l ip:port
 ```
 
 说明：
-* `-t`、`-l`选项：用于选择特定目标机器，参见[server_info说明](shell工具#server_info)。
+* `-t`、`-l`选项：用于选择特定目标机器，参见[server_info说明](#server_info)。
 
 示例：
 ```
@@ -380,12 +380,12 @@ USAGE:flush_log                  [-t all|meta-server|replica-server] [-l ip:port
 | app_stat | 获取表的读写情况和存储统计信息，可加```-a```选项指定单个表，以获取该表各个partition的详细统计信息
 | app_disk | 获取某个表的详细存储信息，可加```-d```选项获取各partition的详细存储信息
 | create | 创建表，可加```-p```和```-r```选项指定分片数和副本数，要求分片数是2的指数倍，不指定 -r 则默认副本数为3（推荐值）
-| drop | 删除表，参见[使用drop命令删除表](Table软删除#使用drop命令删除表)
-| recall | 恢复已删除的表，参见[使用recall命令恢复表](Table软删除#使用recall命令恢复表)
-| get_app_envs | 获取表的环境变量，参见[Table环境变量#get_app_envs](Table环境变量#get_app_envs)
-| set_app_envs | 设置表的环境变量，参见[Table环境变量#set_app_envs](Table环境变量#set_app_envs)
-| del_app_envs | 删除表的环境变量，参见[Table环境变量#del_app_envs](Table环境变量#del_app_envs)
-| clear_app_envs | 清理表的环境变量，参见[Table环境变量#clear_app_envs](Table环境变量#clear_app_envs)
+| drop | 删除表，参见[使用drop命令删除表](/administration/table-soft-delete#使用drop命令删除表)
+| recall | 恢复已删除的表，参见[使用recall命令恢复表](/administration/table-soft-delete#使用recall命令恢复表)
+| get_app_envs | 获取表的环境变量，参见[Table环境变量#get_app_envs](/administration/table-env#get_app_envs)
+| set_app_envs | 设置表的环境变量，参见[Table环境变量#set_app_envs](/administration/table-env#set_app_envs)
+| del_app_envs | 删除表的环境变量，参见[Table环境变量#del_app_envs](/administration/table-env#del_app_envs)
+| clear_app_envs | 清理表的环境变量，参见[Table环境变量#clear_app_envs](/administration/table-env#clear_app_envs)
 
 ### ls
 获取所有表的列表。
@@ -473,7 +473,7 @@ USAGE: create                    <app_name> [-p|--partition_count num] [-r|--rep
 说明：
 * `-p`选项：如果指定，则可以设置分片数，要求分片数是2的指数倍。
 * `-r`选项：如果指定，则可以指定副本数，推荐副本数为3。
-* `-e`选项：如果指定，则可是设置环境变量，参见[Table环境变量](Table环境变量)。
+* `-e`选项：如果指定，则可是设置环境变量，参见[Table环境变量](/administration/table-env)。
 
 示例：
 ```
@@ -489,7 +489,7 @@ USAGE: drop                      <app_name> [-r|--reserve_seconds num]
 ```
 
 说明：
-* `-r`选项：如果指定，则设置数据的保留时间（删除时间开始计算，单位为秒）。如果不指定，则使用配置文件hold_seconds_for_dropped_app指定的值，默认为7天，参见[使用drop命令删除表](Table软删除#使用drop命令删除表)。
+* `-r`选项：如果指定，则设置数据的保留时间（删除时间开始计算，单位为秒）。如果不指定，则使用配置文件hold_seconds_for_dropped_app指定的值，默认为7天，参见[使用drop命令删除表](/administration/table-soft-delete#使用drop命令删除表)。
 
 示例：
 ```
@@ -507,7 +507,7 @@ USAGE: recall                    <app_id> [new_app_name]
 说明：
 * 注意该命令通过app_id进行表恢复。
 * `new_app_name`参数：如果不指定新表名，则会使用原表名，否则使用指定的新表名，如果原表名已存在（删表后新建了同名表），则必须指定另外一个不同的新表名，否则会失败。
-* 详细信息参见[使用recall命令恢复表](Table软删除#使用recall命令恢复表)。
+* 详细信息参见[使用recall命令恢复表](/administration/table-soft-delete#使用recall命令恢复表)。
 
 示例：
 ```
@@ -515,7 +515,7 @@ USAGE: recall                    <app_id> [new_app_name]
 ```
 
 ### get_app_envs
-获取表的环境变量，关于环境变量请参见[Table环境变量](Table环境变量)。
+获取表的环境变量，关于环境变量请参见[Table环境变量](/administration/table-env)。
 
 用法：
 ```
@@ -523,7 +523,7 @@ USAGE: get_app_envs
 ```
 
 说明：
-* 该命令输出当前表的环境变量，使用前请首先使用`use [app_name]`选定特定表，参见[get_app_envs](Table环境变量#get_app_envs)。
+* 该命令输出当前表的环境变量，使用前请首先使用`use [app_name]`选定特定表，参见[get_app_envs](/administration/table-env#get_app_envs)。
 
 示例：
 ```
@@ -532,7 +532,7 @@ USAGE: get_app_envs
 ```
 
 ### set_app_envs
-设置表的环境变量，关于环境变量请参见[Table环境变量](Table环境变量)。
+设置表的环境变量，关于环境变量请参见[Table环境变量](/administration/table-env)。
 
 用法：
 ```
@@ -540,7 +540,7 @@ USAGE: set_app_envs              <key> <value> [key value...]
 ```
 
 说明：
-* 该命令设置当前表的环境变量，使用前请首先使用`use [app_name]`选定特定表，参见[set_app_envs](Table环境变量#set_app_envs)。
+* 该命令设置当前表的环境变量，使用前请首先使用`use [app_name]`选定特定表，参见[set_app_envs](/administration/table-env#set_app_envs)。
 
 示例：
 ```
@@ -549,7 +549,7 @@ USAGE: set_app_envs              <key> <value> [key value...]
 ```
 
 ### del_app_envs
-删除表的环境变量，关于环境变量请参见[Table环境变量](Table环境变量)。
+删除表的环境变量，关于环境变量请参见[Table环境变量](/administration/table-env)。
 
 用法：
 ```
@@ -557,7 +557,7 @@ USAGE: del_app_envs              <key> [key...]
 ```
 
 说明：
-* 该命令删除当前表的环境变量，使用前请首先使用`use [app_name]`选定特定表，参见[del_app_envs](Table环境变量#del_app_envs)。
+* 该命令删除当前表的环境变量，使用前请首先使用`use [app_name]`选定特定表，参见[del_app_envs](/administration/table-env#del_app_envs)。
 
 示例：
 ```
@@ -566,7 +566,7 @@ USAGE: del_app_envs              <key> [key...]
 ```
 
 ### clear_app_envs
-清理表的环境变量，关于环境变量请参见[Table环境变量](Table环境变量)。
+清理表的环境变量，关于环境变量请参见[Table环境变量](/administration/table-env)。
 
 用法：
 ```
@@ -574,7 +574,7 @@ USAGE: clear_app_envs              [-a|--all] [-p|--prefix str]
 ```
 
 说明：
-* 该命令删除当前表的环境变量，使用前请首先使用`use [app_name]`选定特定表，参见[clear_app_envs](Table环境变量#clear_app_envs)。
+* 该命令删除当前表的环境变量，使用前请首先使用`use [app_name]`选定特定表，参见[clear_app_envs](/administration/table-env#clear_app_envs)。
 * `-a`选项：如果指定，则清理所有的环境变量。
 * `-p`选项：如果指定，则可以清理以特定字符串为前缀的环境变量。
 
@@ -596,16 +596,16 @@ USAGE: clear_app_envs              [-a|--all] [-p|--prefix str]
 | del | 删除单条数据
 | multi_del | 通过指定多个SortKey，删除同一HashKey下的多条数据
 | multi_del_range | 通过指定SortKey的查询范围和过滤条件，删除同一HashKey下的多条数据
-| incr | [原子增减操作](单行原子操作#原子增减)
-| check_and_set | [原子CAS操作](单行原子操作#cas操作)
-| check_and_mutate | [原子CAS扩展版本](Java客户端文档#checkAndMutate)
+| incr | [原子增减操作](/api/single-atomic#原子增减)
+| check_and_set | [原子CAS操作](/api/single-atomic#cas操作)
+| check_and_mutate | [原子CAS扩展版本](/clients/java-client#checkAndMutate)
 | exist | 查询某条数据是否存在
 | count | 获取同一HashKey下的SortKey的个数
 | ttl | 查询某条数据的TTL（Time To Live）时间，返回剩余的live时间，单位为秒；返回Infinite表示没有TTL限制
 | hash | 计算键值的哈希值
 | hash_scan | 逐条扫描同一HashKey下的数据，可指定SortKey的查询范围和过滤条件，结果按照SortKey排序
 | full_scan | 对表进行全扫描，可指定HashKey和SortKey和Value的过滤条件，同一HashKey的结果按照SortKey排序，HashKey之间无顺序保证
-| copy_data | 将一个表的数据逐条插入到另外一个表，源表通过```use```命令指定，目标表通过```-c```和```-a```命令执行，目标表可以在另外一个集群，详细用法参见[Table迁移](Table迁移#copy_data迁移)，可指定HashKey和SortKey和Value的过滤条件
+| copy_data | 将一个表的数据逐条插入到另外一个表，源表通过```use```命令指定，目标表通过```-c```和```-a```命令执行，目标表可以在另外一个集群，详细用法参见[Table迁移](#copy_data迁移)，可指定HashKey和SortKey和Value的过滤条件
 | clear_data | 将一个表的数据逐条删除，实际上就是先扫描数据，然后对每一条数据执行删除操作，可指定HashKey和SortKey和Value的过滤条件
 | count_data | 统计一个表的数据条数，可加```-z```选项统计数据大小，可指定HashKey和SortKey和Value的过滤条件
 
@@ -636,7 +636,7 @@ USAGE:  multi_set                    <hash_key> <sort_key> <value> [sort_key val
 ```
 
 说明：
-* sort_key是pegasus定义的一种数据模型，详细信息参见：[数据模型](数据模型)。
+* sort_key是pegasus定义的一种数据模型，详细信息参见：[数据模型](/overview/data-model)。
 * 不同的sort_key名字必须不同，否则会输出“ERROR: duplicate sort key <sort_key>”。
 
 
@@ -752,7 +752,7 @@ USAGE:  multi_del_range        <hash_key> <start_sort_key> <stop_sort_key>
 
 说明：
 * `-i|--silent`参数：如果为`true`表示不打印删除时的日志
-* 其与参数，参见[multi_get_range-说明](shell工具#multi_get_range)
+* 其与参数，参见[multi_get_range-说明](#multi_get_range)
 
 示例：
 ```
@@ -769,7 +769,7 @@ USAGE:  incr                 <hash_key> <sort_key> [increment]
 ```
 
 说明：
-* 操作数increment可以为正数也可以为负数，所以一个incr接口就可以实现原子增或者原子减,详情参照[原子增减](单行原子操作#原子增减)
+* 操作数increment可以为正数也可以为负数，所以一个incr接口就可以实现原子增或者原子减,详情参照[原子增减](/api/single-atomic#原子增减)
 
 示例：
 ```
@@ -792,7 +792,7 @@ USAGE:  check_and_set          <hash_key> [-c|--check_sort_key str]
 ```
 
 说明：
-* 对比交换，最初是表示一条CPU的原子指令，其作用是让CPU先进行比较两个值是否相等，然后原子地更新某个位置的值。参照[CAS操作](单行原子操作#cas操作)
+* 对比交换，最初是表示一条CPU的原子指令，其作用是让CPU先进行比较两个值是否相等，然后原子地更新某个位置的值。参照[CAS操作](/api/single-atomic#cas操作)
 
 示例：  
 该命令表征检查hashKey为“cloud”，且存在sortKey为“90”时，set sortKey-value为“91”-“91”
@@ -802,7 +802,7 @@ USAGE:  check_and_set          <hash_key> [-c|--check_sort_key str]
 
 
 ### check_and_mutate
-原子CAS扩展版本，参见[原子CAS扩展版本](Java客户端文档#checkAndMutate)
+原子CAS扩展版本，参见[原子CAS扩展版本](/clients/java-client#checkAndMutate)
 
 用法：
 ```
@@ -924,7 +924,7 @@ USAGE: full_scan      [-h|--hash_key_filter_type anywhere|prefix|postfix]
                       [-i|--no_value]
 ```
 说明：
-* 参数说明参见[hash_scan](Shell工具#hashKey_scan) 
+* 参数说明参见[hash_scan](#hashKey_scan) 
  
 实例：
 ```
@@ -951,7 +951,7 @@ USAGE:  copy_data          <-c|--target_cluster_name str> <-a|--target_app_name 
 ```
 
 说明：
-* 源表通过use命令指定，目标表通过-c和-a命令执行，目标表可以在另外一个集群，详细用法参见[Table迁移](Table迁移#copy_data迁移)，可指定HashKey和SortKey和Value的过滤条件
+* 源表通过use命令指定，目标表通过-c和-a命令执行，目标表可以在另外一个集群，详细用法参见[Table迁移](#copy_data迁移)，可指定HashKey和SortKey和Value的过滤条件
 
 示例：
 ```
@@ -979,7 +979,7 @@ USAGE:  clear_data             [-p|--partition num]
 * `-p|--partition num`参数：指定删除的分片
 * `-b|--max_batch_count num`参数：指定一次性删除的最大数量
 * `-f|--force`参数：如果为`true`，则表示删除，否则无法删除并打印再次确认信息“ERROR: be careful to clear data!!! Please specify --force if you are determined to do”
-* 其余参数均为过滤条件，参见[multi_get_range](Shell工具#multi_get_range)
+* 其余参数均为过滤条件，参见[multi_get_range](#multi_get_range)
 示例：
 ```
 >>> clear_data
@@ -1007,7 +1007,7 @@ USAGE:  count_data             [-p|--partition num] [-b|--max_batch_count num] [
 * `-n|--top_count`参数：仅展示指定数量的数据
 * `-a|--stat_size`参数：统计当前value的大小，单位字节
 * `-r|--run_seconds num`参数：仅运行指定时间进行统计
-* 其余参数均为过滤条件，参见[multi_get_range](Shell工具#multi_get_range)
+* 其余参数均为过滤条件，参见[multi_get_range](#multi_get_range)
 
 示例：
 ```
@@ -1023,14 +1023,14 @@ USAGE:  count_data             [-p|--partition num] [-b|--max_batch_count num] [
 | propose | 发送partition操作，包括ASSIGN_PRIMARY、ADD_SECONDARY、DOWNGRADE_TO_INACTIVE等
 | balance | 发送balance操作，包括move_pri、copy_pri、copy_sec等
 
-关于负载均衡的详细文档，请参考[负载均衡](负载均衡)。
+关于负载均衡的详细文档，请参考[负载均衡](/administration/rebalance)。
 
 
 ## 数据恢复
 | 子命令 | 功能 
 | ----- | ---- | 
-| recover | 启动数据恢复流程，通过向ReplicaServer收集和学习，重新构建Zookeeper上的元数据信息，参见[元数据恢复](元数据恢复)
-| ddd_diagnose | DDD自动诊断工具，用于恢复所有备份全部不可用的partition，参见[Replica数据恢复](Replica数据恢复)
+| recover | 启动数据恢复流程，通过向ReplicaServer收集和学习，重新构建Zookeeper上的元数据信息，参见[元数据恢复](/administration/meta-recovery)
+| ddd_diagnose | DDD自动诊断工具，用于恢复所有备份全部不可用的partition，参见[Replica数据恢复](/administration/replica-recovery)
 
 ## 冷备份管理
 | 子命令 | 功能 
@@ -1044,11 +1044,11 @@ USAGE:  count_data             [-p|--partition num] [-b|--max_batch_count num] [
 | query_backup_policy | 查询备份策略和上次备份信息
 | query_restore_status | 查询冷备份恢复进度
 
-关于冷备份的详细文档，请参考[冷备份](冷备份)。
+关于冷备份的详细文档，请参考[冷备份](/administration/cold-backup)。
 
 ## 调试工具
 | 子命令 | 功能 
 | ----- | ---- | 
 | sst_dump | 使用RocksDB的```sst_dump```工具，将rocksdb的二进制sstable数据转换为可读的文本数据
 | mlog_dump | 将Pegasus的二进制commit log数据转换为可读的文本数据
-| local_get | 从本地数据库获取值(原来的调试工具)
+| local_get | 从本地数据库获取值（原来的调试工具）
