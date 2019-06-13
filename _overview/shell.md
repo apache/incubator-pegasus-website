@@ -194,12 +194,13 @@ Usage:
 退出shell工具，等同于输入"Ctrl-C"或者"Ctrl-D"。
 
 ## 全局属性
-| 子命令 | 功能 
-| ----- | ---- | 
-| cc | change cluster，改变当前使用的集群
-| use | 指定当前使用的表，有的子命令在使用前需要先指定表，譬如数据操作类命令
-| escape_all | 输出字节类数据时，选择将"所有字符"转换为十六进制编码还是仅将"不可见字符"转换为十六进制编码，默认为后者
-| timeout | 数据操作的默认超时时间
+
+| 子命令 | 功能 |
+| ----- | ----- | 
+| cc | change cluster，改变当前使用的集群 |
+| use | 指定当前使用的表，有的子命令在使用前需要先指定表，譬如数据操作类命令 |
+| escape_all | 输出字节类数据时，选择将"所有字符"转换为十六进制编码还是仅将"不可见字符"转换为十六进制编码，默认为后者 |
+| timeout | 数据操作的默认超时时间 |
 
 ### cc
 change cluster，改变当前使用的集群。
@@ -266,14 +267,15 @@ USAGE:  timeout                  [time_in_ms]
 ```
 
 ## 节点管理
-| 子命令 | 功能 
-| ----- | ---- | 
-| cluster_info | 获取集群基本信息
-| nodes | 获取节点列表，可加```-d```选项获取各节点的负载情况
-| server_info | 各节点的基本信息，主要是server版本、节点启动时间
-| server_stat | 各节点的统计信息，包含一些关键的统计数据，譬如get和put操作的QPS和延迟、内存和存储使用情况
-| remote_command | 向节点发送**远程命令**，以执行某些特殊操作
-| flush_log | 向节点发送**远程命令**，将最近缓冲区中的日志数据刷出到日志文件中
+
+| 子命令 | 功能 |
+| ----- | ----- | 
+| cluster_info | 获取集群基本信息 |
+| nodes | 获取节点列表，可加```-d```选项获取各节点的负载情况 |
+| server_info | 各节点的基本信息，主要是server版本、节点启动时间 |
+| server_stat | 各节点的统计信息，包含一些关键的统计数据，譬如get和put操作的QPS和延迟、内存和存储使用情况 |
+| remote_command | 向节点发送**远程命令**，以执行某些特殊操作 |
+| flush_log | 向节点发送**远程命令**，将最近缓冲区中的日志数据刷出到日志文件中 |
 
 ### cluster_info
 获取集群基本信息。
@@ -374,19 +376,20 @@ USAGE:flush_log                  [-t all|meta-server|replica-server] [-l ip:port
 ```
 
 ## 表管理
-| 子命令 | 功能 
-| ----- | ---- | 
-| ls | 获取所有表的列表，可加```-d```选项获取各表的健康状况，可加```-a```选项包含已删除表的信息
-| app | 获取某个表的信息，可加```-d```选项获取详细信息，包括各partition的分布情况、健康状况
-| app_stat | 获取表的读写情况和存储统计信息，可加```-a```选项指定单个表，以获取该表各个partition的详细统计信息
-| app_disk | 获取某个表的详细存储信息，可加```-d```选项获取各partition的详细存储信息
-| create | 创建表，可加```-p```和```-r```选项指定分片数和副本数，要求分片数是2的指数倍，不指定 -r 则默认副本数为3（推荐值）
-| drop | 删除表，参见[使用drop命令删除表](/administration/table-soft-delete#使用drop命令删除表)
-| recall | 恢复已删除的表，参见[使用recall命令恢复表](/administration/table-soft-delete#使用recall命令恢复表)
-| get_app_envs | 获取表的环境变量，参见[Table环境变量#get_app_envs](/administration/table-env#get_app_envs)
-| set_app_envs | 设置表的环境变量，参见[Table环境变量#set_app_envs](/administration/table-env#set_app_envs)
-| del_app_envs | 删除表的环境变量，参见[Table环境变量#del_app_envs](/administration/table-env#del_app_envs)
-| clear_app_envs | 清理表的环境变量，参见[Table环境变量#clear_app_envs](/administration/table-env#clear_app_envs)
+
+| 子命令 | 功能 |
+| ----- | ----- | 
+| ls | 获取所有表的列表，可加```-d```选项获取各表的健康状况，可加```-a```选项包含已删除表的信息 |
+| app | 获取某个表的信息，可加```-d```选项获取详细信息，包括各partition的分布情况、健康状况 |
+| app_stat | 获取表的读写情况和存储统计信息，可加```-a```选项指定单个表，以获取该表各个partition的详细统计信息 |
+| app_disk | 获取某个表的详细存储信息，可加```-d```选项获取各partition的详细存储信息 |
+| create | 创建表，可加```-p```和```-r```选项指定分片数和副本数，要求分片数是2的指数倍，不指定 -r 则默认副本数为3（推荐值） |
+| drop | 删除表，参见[使用drop命令删除表](/administration/table-soft-delete#使用drop命令删除表) |
+| recall | 恢复已删除的表，参见[使用recall命令恢复表](/administration/table-soft-delete#使用recall命令恢复表) |
+| get_app_envs | 获取表的环境变量，参见[Table环境变量#get_app_envs](/administration/table-env#get_app_envs) |
+| set_app_envs | 设置表的环境变量，参见[Table环境变量#set_app_envs](/administration/table-env#set_app_envs) |
+| del_app_envs | 删除表的环境变量，参见[Table环境变量#del_app_envs](/administration/table-env#del_app_envs) |
+| clear_app_envs | 清理表的环境变量，参见[Table环境变量#clear_app_envs](/administration/table-env#clear_app_envs) |
 
 ### ls
 获取所有表的列表。
@@ -586,29 +589,30 @@ USAGE: clear_app_envs              [-a|--all] [-p|--prefix str]
 ```
 
 ## 数据操作
-| 子命令 | 功能 
-| ----- | ---- | 
-| set | 设置单条数据
-| multi_set | 设置同一HashKey下的多条数据
-| get | 获取单条数据
-| multi_get | 通过指定多个SortKey，获取同一HashKey下的多条数据
-| multi_get_range | 通过指定SortKey的查询范围和过滤条件，获取同一HashKey下的多条数据
-| multi_get_sortkeys | 获取同一HashKey下的所有SortKey
-| del | 删除单条数据
-| multi_del | 通过指定多个SortKey，删除同一HashKey下的多条数据
-| multi_del_range | 通过指定SortKey的查询范围和过滤条件，删除同一HashKey下的多条数据
-| incr | [原子增减操作](/api/single-atomic#原子增减)
-| check_and_set | [原子CAS操作](/api/single-atomic#cas操作)
-| check_and_mutate | [原子CAS扩展版本](/clients/java-client#checkandmutate)
-| exist | 查询某条数据是否存在
-| count | 获取同一HashKey下的SortKey的个数
-| ttl | 查询某条数据的TTL（Time To Live）时间，返回剩余的live时间，单位为秒；返回Infinite表示没有TTL限制
-| hash | 计算键值的哈希值
-| hash_scan | 逐条扫描同一HashKey下的数据，可指定SortKey的查询范围和过滤条件，结果按照SortKey排序
-| full_scan | 对表进行全扫描，可指定HashKey和SortKey和Value的过滤条件，同一HashKey的结果按照SortKey排序，HashKey之间无顺序保证
-| copy_data | 将一个表的数据逐条插入到另外一个表，源表通过```use```命令指定，目标表通过```-c```和```-a```命令执行，目标表可以在另外一个集群，详细用法参见[Table迁移](#copy_data迁移)，可指定HashKey和SortKey和Value的过滤条件
-| clear_data | 将一个表的数据逐条删除，实际上就是先扫描数据，然后对每一条数据执行删除操作，可指定HashKey和SortKey和Value的过滤条件
-| count_data | 统计一个表的数据条数，可加```-z```选项统计数据大小，可指定HashKey和SortKey和Value的过滤条件
+
+| 子命令 | 功能 |
+| ----- | ----- | 
+| set | 设置单条数据 |
+| multi_set | 设置同一HashKey下的多条数据 |
+| get | 获取单条数据 |
+| multi_get | 通过指定多个SortKey，获取同一HashKey下的多条数据 |
+| multi_get_range | 通过指定SortKey的查询范围和过滤条件，获取同一HashKey下的多条数据 |
+| multi_get_sortkeys | 获取同一HashKey下的所有SortKey |
+| del | 删除单条数据 |
+| multi_del | 通过指定多个SortKey，删除同一HashKey下的多条数据 |
+| multi_del_range | 通过指定SortKey的查询范围和过滤条件，删除同一HashKey下的多条数据 |
+| incr | [原子增减操作](/api/single-atomic#原子增减) |
+| check_and_set | [原子CAS操作](/api/single-atomic#cas操作) |
+| check_and_mutate | [原子CAS扩展版本](/clients/java-client#checkandmutate) |
+| exist | 查询某条数据是否存在 |
+| count | 获取同一HashKey下的SortKey的个数 |
+| ttl | 查询某条数据的TTL（Time To Live）时间，返回剩余的live时间，单位为秒；返回Infinite表示没有TTL限制 |
+| hash | 计算键值的哈希值 |
+| hash_scan | 逐条扫描同一HashKey下的数据，可指定SortKey的查询范围和过滤条件，结果按照SortKey排序 |
+| full_scan | 对表进行全扫描，可指定HashKey和SortKey和Value的过滤条件，同一HashKey的结果按照SortKey排序，HashKey之间无顺序保证 |
+| copy_data | 将一个表的数据逐条插入到另外一个表，源表通过```use```命令指定，目标表通过```-c```和```-a```命令执行，目标表可以在另外一个集群，详细用法参见[Table迁移](#copy_data迁移)，可指定HashKey和SortKey和Value的过滤条件 |
+| clear_data | 将一个表的数据逐条删除，实际上就是先扫描数据，然后对每一条数据执行删除操作，可指定HashKey和SortKey和Value的过滤条件 |
+| count_data | 统计一个表的数据条数，可加```-z```选项统计数据大小，可指定HashKey和SortKey和Value的过滤条件 |
 
 ### set
 设置单条数据。
@@ -1017,39 +1021,43 @@ USAGE:  count_data             [-p|--partition num] [-b|--max_batch_count num] [
 
 
 ## 负载均衡
-| 子命令 | 功能 
-| ----- | ---- | 
-| set_meta_level | 设置集群的负载均衡级别，包括stopped、blind、freezed、steady、lively。集群默认为steady，表示不进行自动负载均衡；设置为lively可以开启自动负载均衡。
-| get_meta_level | 获取集群的负载均衡级别
-| propose | 发送partition操作，包括ASSIGN_PRIMARY、ADD_SECONDARY、DOWNGRADE_TO_INACTIVE等
-| balance | 发送balance操作，包括move_pri、copy_pri、copy_sec等
+
+| 子命令 | 功能 |
+| ----- | ----- | 
+| set_meta_level | 设置集群的负载均衡级别，包括stopped、blind、freezed、steady、lively。集群默认为steady，表示不进行自动负载均衡；设置为lively可以开启自动负载均衡 |
+| get_meta_level | 获取集群的负载均衡级别 |
+| propose | 发送partition操作，包括ASSIGN_PRIMARY、ADD_SECONDARY、DOWNGRADE_TO_INACTIVE等 |
+| balance | 发送balance操作，包括move_pri、copy_pri、copy_sec等 |
 
 关于负载均衡的详细文档，请参考[负载均衡](/administration/rebalance)。
 
 
 ## 数据恢复
-| 子命令 | 功能 
-| ----- | ---- | 
-| recover | 启动数据恢复流程，通过向ReplicaServer收集和学习，重新构建Zookeeper上的元数据信息，参见[元数据恢复](/administration/meta-recovery)
-| ddd_diagnose | DDD自动诊断工具，用于恢复所有备份全部不可用的partition，参见[Replica数据恢复](/administration/replica-recovery)
+
+| 子命令 | 功能 |
+| ----- | ----- | 
+| recover | 启动数据恢复流程，通过向ReplicaServer收集和学习，重新构建Zookeeper上的元数据信息，参见[元数据恢复](/administration/meta-recovery) |
+| ddd_diagnose | DDD自动诊断工具，用于恢复所有备份全部不可用的partition，参见[Replica数据恢复](/administration/replica-recovery) |
 
 ## 冷备份管理
-| 子命令 | 功能 
-| ----- | ---- | 
-| add_backup_policy | 增加冷备份策略
-| ls_backup_policy | 查询冷备份策略
-| modify_backup_policy | 修改冷备份策略
-| disable_backup_policy | 禁用冷备份策略
-| enable_backup_policy | 启用冷备份策略
-| restore_app | 从冷备份中恢复表
-| query_backup_policy | 查询备份策略和上次备份信息
-| query_restore_status | 查询冷备份恢复进度
+
+| 子命令 | 功能 |
+| ----- | ----- | 
+| add_backup_policy | 增加冷备份策略 |
+| ls_backup_policy | 查询冷备份策略 |
+| modify_backup_policy | 修改冷备份策略 |
+| disable_backup_policy | 禁用冷备份策略 |
+| enable_backup_policy | 启用冷备份策略 |
+| restore_app | 从冷备份中恢复表 |
+| query_backup_policy | 查询备份策略和上次备份信息 |
+| query_restore_status | 查询冷备份恢复进度 |
 
 关于冷备份的详细文档，请参考[冷备份](/administration/cold-backup)。
 
 ## 调试工具
-| 子命令 | 功能 
-| ----- | ---- | 
-| sst_dump | 使用RocksDB的```sst_dump```工具，将rocksdb的二进制sstable数据转换为可读的文本数据
-| mlog_dump | 将Pegasus的二进制commit log数据转换为可读的文本数据
-| local_get | 从本地数据库获取值（原来的调试工具）
+
+| 子命令 | 功能 |
+| ----- | ----- | 
+| sst_dump | 使用RocksDB的```sst_dump```工具，将rocksdb的二进制sstable数据转换为可读的文本数据 |
+| mlog_dump | 将Pegasus的二进制commit log数据转换为可读的文本数据 |
+| local_get | 从本地数据库获取值（原来的调试工具） |
