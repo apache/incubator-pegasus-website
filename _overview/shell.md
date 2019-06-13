@@ -285,8 +285,8 @@ USAGE:  timeout                  [time_in_ms]
 （1）meta_server、zookeeper的节点信息。  
 （2）meta_function_level：负载均衡策略。  
 （3）balance_operation_count：负载均衡操作统计，包括move_pri、move_pri、copy_sec、total。负载均衡信息参见[负载均衡](/administration/rebalance)。  
-（4）primary_replica_count_stddev：负载均衡衡量指标
-（5）total_replica_count_stddev：负载均衡衡量指标
+（4）primary_replica_count_stddev：负载均衡衡量指标。 
+（5）total_replica_count_stddev：负载均衡衡量指标。 
 
 ### nodes
 获取replica节点列表，默认以IP地址表示各个节点，并输出基本信息。
@@ -335,7 +335,7 @@ USAGE:server_stat                [-t all|meta-server|replica-server] [-l ip:port
 ```
 
 说明：
-* 选项参数说明同[server_info说明](#server_info)。
+* 选项参数说明同[server_info](#server_info)。
 
 示例：
 ```
@@ -351,7 +351,7 @@ USAGE:remote_command             [-t all|meta-server|replica-server] [-l ip:port
 ```
 
 说明：
-* `-t`、`-l`选项：用于选择特定目标机器，参见[server_info说明](#server_info)。
+* `-t`、`-l`选项：用于选择特定目标机器，参见[server_info](#server_info)说明。
 * 远程命令详细信息，参见[远程命令](/administration/remote-commands)。
 
 示例：
@@ -368,7 +368,7 @@ USAGE:flush_log                  [-t all|meta-server|replica-server] [-l ip:port
 ```
 
 说明：
-* `-t`、`-l`选项：用于选择特定目标机器，参见[server_info说明](#server_info)。
+* `-t`、`-l`选项：用于选择特定目标机器，参见[server_info](#server_info)说明。
 
 示例：
 ```
@@ -610,7 +610,7 @@ USAGE: clear_app_envs              [-a|--all] [-p|--prefix str]
 | hash | 计算键值的哈希值 |
 | hash_scan | 逐条扫描同一HashKey下的数据，可指定SortKey的查询范围和过滤条件，结果按照SortKey排序 |
 | full_scan | 对表进行全扫描，可指定HashKey和SortKey和Value的过滤条件，同一HashKey的结果按照SortKey排序，HashKey之间无顺序保证 |
-| copy_data | 将一个表的数据逐条插入到另外一个表，源表通过```use```命令指定，目标表通过```-c```和```-a```命令执行，目标表可以在另外一个集群，详细用法参见[Table迁移](#copy_data迁移)，可指定HashKey和SortKey和Value的过滤条件 |
+| copy_data | 将一个表的数据逐条插入到另外一个表，源表通过```use```命令指定，目标表通过```-c```和```-a```命令执行，目标表可以在另外一个集群，详细用法参见[Table迁移](/administration/table-migrate#copy_data迁移)，可指定HashKey和SortKey和Value的过滤条件 |
 | clear_data | 将一个表的数据逐条删除，实际上就是先扫描数据，然后对每一条数据执行删除操作，可指定HashKey和SortKey和Value的过滤条件 |
 | count_data | 统计一个表的数据条数，可加```-z```选项统计数据大小，可指定HashKey和SortKey和Value的过滤条件 |
 
@@ -756,8 +756,8 @@ USAGE:  multi_del_range        <hash_key> <start_sort_key> <stop_sort_key>
 ```
 
 说明：
-* `-i|--silent`参数：如果为`true`表示不打印删除时的日志
-* 其与参数，参见[multi_get_range-说明](#multi_get_range)
+* `-i|--silent`参数：如果为`true`表示不打印删除时的日志。
+* 其与参数，参见[multi_get_range](#multi_get_range)说明。
 
 示例：
 ```
@@ -774,7 +774,7 @@ USAGE:  incr                 <hash_key> <sort_key> [increment]
 ```
 
 说明：
-* 操作数increment可以为正数也可以为负数，所以一个incr接口就可以实现原子增或者原子减,详情参照[原子增减](/api/single-atomic#原子增减)
+* 操作数increment可以为正数也可以为负数，所以一个incr接口就可以实现原子增或者原子减，详情参照[原子增减](/api/single-atomic#原子增减)。
 
 示例：
 ```
@@ -797,7 +797,7 @@ USAGE:  check_and_set          <hash_key> [-c|--check_sort_key str]
 ```
 
 说明：
-* 对比交换，最初是表示一条CPU的原子指令，其作用是让CPU先进行比较两个值是否相等，然后原子地更新某个位置的值。参照[CAS操作](/api/single-atomic#cas操作)
+* 对比交换，最初是表示一条CPU的原子指令，其作用是让CPU先进行比较两个值是否相等，然后原子地更新某个位置的值。参照[CAS操作](/api/single-atomic#cas操作)。 
 
 示例：  
 该命令表征检查hashKey为“cloud”，且存在sortKey为“90”时，set sortKey-value为“91”-“91”
@@ -893,17 +893,17 @@ USAGE:  hash_scan <hash_key> <start_sort_key> <stop_sort_key> [-a|--start_inclus
 ```
 
 说明：
-* `-a|--start_inclusive`参数：指定是否包含StartSortKey，默认为true
-* `-b|--stop_inclusive`参数：指定是否包含StopSortKey，默认为false
-* `-s|--sort_key_filter_type`参数：指定SortKey的过滤类型，包括无过滤、任意位置匹配、前缀匹配和后缀匹配，默认无过滤
-* `-y|--sort_key_filter_pattern`参数：指定SortKey的过滤模式串，空串相当于无过滤
-* `-v|--value_filter_type`参数：指定value过滤类型，包括任意位置匹配、前缀匹配、后缀匹配等
-* `-z|--value_filter_pattern str`参数：指定value的过滤模式串，空串相当于无过滤
-* `-o|--output file_name`参数：指定输出结果存入的文件名
-* `-n|--max_count num`参数：指定获取值的最大数量
-* `-t|--timeout_ms num`参数：指定获取数据的超时时间
-* `-d|--detailed`参数：输出数据的详细存储信息，包括app_id,partition_index,server_ip
-* `-i|--no_value`参数：不获取value值，仅输出hash_key和sort_key
+* `-a|--start_inclusive`参数：指定是否包含StartSortKey，默认为true。 
+* `-b|--stop_inclusive`参数：指定是否包含StopSortKey，默认为false。 
+* `-s|--sort_key_filter_type`参数：指定SortKey的过滤类型，包括无过滤、任意位置匹配、前缀匹配和后缀匹配，默认无过滤。 
+* `-y|--sort_key_filter_pattern`参数：指定SortKey的过滤模式串，空串相当于无过滤。 
+* `-v|--value_filter_type`参数：指定value过滤类型，包括任意位置匹配、前缀匹配、后缀匹配等。 
+* `-z|--value_filter_pattern str`参数：指定value的过滤模式串，空串相当于无过滤。 
+* `-o|--output file_name`参数：指定输出结果存入的文件名。 
+* `-n|--max_count num`参数：指定获取值的最大数量。 
+* `-t|--timeout_ms num`参数：指定获取数据的超时时间。 
+* `-d|--detailed`参数：输出数据的详细存储信息，包括app_id、partition_index、server_ip。 
+* `-i|--no_value`参数：不获取value值，仅输出hash_key和sort_key。 
 
 示例：
 ```
@@ -912,7 +912,7 @@ USAGE:  hash_scan <hash_key> <start_sort_key> <stop_sort_key> [-a|--start_inclus
 
 
 ### full_scan
-对表进行全扫描，可指定HashKey和SortKey和Value的过滤条件，同一HashKey的结果按照SortKey排序，HashKey之间无顺序保证
+对表进行全扫描，可指定HashKey和SortKey和Value的过滤条件，同一HashKey的结果按照SortKey排序，HashKey之间无顺序保证。 
 
 用法：
 ```
@@ -929,7 +929,7 @@ USAGE: full_scan      [-h|--hash_key_filter_type anywhere|prefix|postfix]
                       [-i|--no_value]
 ```
 说明：
-* 参数说明参见[hash_scan](#hashKey_scan) 
+* 参数说明参见[hash_scan](#hashKey_scan)。
  
 实例：
 ```
@@ -956,7 +956,7 @@ USAGE:  copy_data          <-c|--target_cluster_name str> <-a|--target_app_name 
 ```
 
 说明：
-* 源表通过use命令指定，目标表通过-c和-a命令执行，目标表可以在另外一个集群，详细用法参见[Table迁移](#copy_data迁移)，可指定HashKey和SortKey和Value的过滤条件
+* 源表通过use命令指定，目标表通过-c和-a命令执行，目标表可以在另外一个集群，详细用法参见[Table迁移](/administration/table-migrate#copy_data迁移)，可指定HashKey和SortKey和Value的过滤条件。 
 
 示例：
 ```
@@ -965,7 +965,7 @@ USAGE:  copy_data          <-c|--target_cluster_name str> <-a|--target_app_name 
 
 
 ### clear_data
-将一个表的数据逐条删除，实际上就是先扫描数据，然后对每一条数据执行删除操作，可指定HashKey和SortKey和Value的过滤条件
+将一个表的数据逐条删除，实际上就是先扫描数据，然后对每一条数据执行删除操作，可指定HashKey和SortKey和Value的过滤条件。 
 
 用法：
 ```
@@ -981,17 +981,17 @@ USAGE:  clear_data             [-p|--partition num]
                                [-f|--force]
 ```
 说明：
-* `-p|--partition num`参数：指定删除的分片
-* `-b|--max_batch_count num`参数：指定一次性删除的最大数量
-* `-f|--force`参数：如果为`true`，则表示删除，否则无法删除并打印再次确认信息“ERROR: be careful to clear data!!! Please specify --force if you are determined to do”
-* 其余参数均为过滤条件，参见[multi_get_range](#multi_get_range)
+* `-p|--partition num`参数：指定删除的分片。
+* `-b|--max_batch_count num`参数：指定一次性删除的最大数量。
+* `-f|--force`参数：如果为`true`，则表示删除，否则无法删除并打印再次确认信息“ERROR: be careful to clear data!!! Please specify --force if you are determined to do”。
+* 其余参数均为过滤条件，参见[multi_get_range](#multi_get_range)。
 示例：
 ```
 >>> clear_data
 ```
 
 ### count_data
-统计一个表的数据条数，可指定HashKey和SortKey和Value的过滤条件
+统计一个表的数据条数，可指定HashKey和SortKey和Value的过滤条件。 
 
 用法：
 ```
@@ -1006,13 +1006,13 @@ USAGE:  count_data             [-p|--partition num] [-b|--max_batch_count num] [
 ```
 
 说明：
-* `-p|--partition`参数：指定删除的分片
-* `-b|--max_batch_count`参数：指定一次性删除的最大数量
-* `-d|--diff_hash_key`参数：统计hashKey数量
-* `-n|--top_count`参数：仅展示指定数量的数据
-* `-a|--stat_size`参数：统计当前value的大小，单位字节
-* `-r|--run_seconds num`参数：仅运行指定时间进行统计
-* 其余参数均为过滤条件，参见[multi_get_range](#multi_get_range)
+* `-p|--partition`参数：指定删除的分片。
+* `-b|--max_batch_count`参数：指定一次性删除的最大数量。 
+* `-d|--diff_hash_key`参数：统计hashKey数量。 
+* `-n|--top_count`参数：仅展示指定数量的数据。 
+* `-a|--stat_size`参数：统计当前value的大小，单位字节。 
+* `-r|--run_seconds num`参数：仅运行指定时间进行统计。 
+* 其余参数均为过滤条件，参见[multi_get_range](#multi_get_range)。 
 
 示例：
 ```
@@ -1061,3 +1061,4 @@ USAGE:  count_data             [-p|--partition num] [-b|--max_batch_count num] [
 | sst_dump | 使用RocksDB的```sst_dump```工具，将rocksdb的二进制sstable数据转换为可读的文本数据 |
 | mlog_dump | 将Pegasus的二进制commit log数据转换为可读的文本数据 |
 | local_get | 从本地数据库获取值（原来的调试工具） |
+
