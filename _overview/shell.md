@@ -177,11 +177,11 @@ Usage:
 由于子命令很多，为了方便使用，我们根据功能不同进行分类。
 
 ## 基本命令
-| 子命令 | 功能 
+| 子命令 | 功能 |
 | ----- | ----- | 
-| help | 获取帮助信息
-| version | 获取Shell工具的版本信息
-| exit | 退出shell工具，等同于输入"Ctrl-C"或者"Ctrl-D"
+| help | 获取帮助信息 |
+| version | 获取Shell工具的版本信息 |
+| exit | 退出shell工具，等同于输入"Ctrl-C"或者"Ctrl-D" |
 
 ### help
 获取帮助信息。
