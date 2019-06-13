@@ -24,7 +24,7 @@
                 <div class="column is-one-fourth is-hidden-mobile" style="padding-left: 3rem">
                     {% if page.toc %}
                     <p class="menu-label">本页导航</p>
-                    {% include toc.html html=content class="menu-list" %}
+                    {% include toc.html html=content class="menu-list" sanitize=true %}
                     {% endif %}
                 </div>
             </div>

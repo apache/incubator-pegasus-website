@@ -35,15 +35,21 @@ Pegasus目前只支持在Linux平台运行。当前我们提供如下几种安�
 ## 立即开始
 
 你可以参照文档目录检索你想要了解的内容。如果你对Pegasus完全陌生，可以首先阅读[项目背景](/overview/background)，并通过[体验onebox集群](/overview/onebox)
-来熟悉Pegasus的各项功能。配合阅览下方的分享 PPT 口味更佳。
+来熟悉Pegasus的各项功能。配合阅览下方的 slides 口味更佳。
 
 ## 社区分享
 
-- 2018年10月分享：《深入了解Pegasus》
-  - [【PPT下载】](https://www.slideshare.net/ssuser0a3cdd/pegasus-in-depth)
-- 2018年7月分享：《Pegasus分布式KV系统——让用户专注于业务逻辑》
-  - [【PPT下载】](https://www.slideshare.net/ssuser0a3cdd/pegasus-kv-storage-let-the-users-focus-on-their-work-201807)
-- [ArchSummit深圳2017全球架构师峰会](https://sz2017.archsummit.com/presentation/969)：《分布式实现那些事儿——Pegasus背后的故事》
-  - [【PPT下载】](https://www.slideshare.net/ssuser0a3cdd/behind-pegasus-what-matters-in-a-distributed-system-arch-summit-shenzhen2017)  [【文字记录】](http://www.sohu.com/a/198828662_355140)  [【视频播放】](http://p.bokecc.com/playvideo.bo?vid=2BBEA348D0B369459C33DC5901307461&uid=0575C033D2012A28&playerid=&playertype=&mediatype=)
-- [ArchSummit北京2016全球架构师峰会](http://bj2016.archsummit.com/presentation/3023)：《从Pegasus看分布式系统的设计》
-  - [【PPT下载】](https://www.slideshare.net/ssuser0a3cdd/pegasus-designing-a-distributed-key-value-system-arch-summit-beijing2016)
+- **2018 年**
+
+  《深入了解Pegasus》[【Slides】](https://www.slideshare.net/ssuser0a3cdd/pegasus-in-depth)
+  
+  《Pegasus分布式KV系统——让用户专注于业务逻辑》[【Slides】](https://www.slideshare.net/ssuser0a3cdd/pegasus-kv-storage-let-the-users-focus-on-their-work-201807)
+
+- **2017 年**
+  
+  [ArchSummit-深圳](https://sz2017.archsummit.com/presentation/969)
+    《分布式实现那些事儿：Pegasus背后的故事》 [【Slides】](https://www.slideshare.net/ssuser0a3cdd/behind-pegasus-what-matters-in-a-distributed-system-arch-summit-shenzhen2017)
+
+- **2016 年**
+  
+  [ArchSummit-北京](http://bj2016.archsummit.com/presentation/3023)《从Pegasus看分布式系统的设计》[【Slides】](https://www.slideshare.net/ssuser0a3cdd/pegasus-designing-a-distributed-key-value-system-arch-summit-beijing2016)
