@@ -43,7 +43,7 @@ Pegasus目前只支持在Linux平台运行。当前我们提供如下几种安�
 
   《深入了解Pegasus》[【Slides】](https://www.slideshare.net/ssuser0a3cdd/pegasus-in-depth)
   
-  《Pegasus分布式KV系统——让用户专注于业务逻辑》[【Slides】](https://www.slideshare.net/ssuser0a3cdd/pegasus-kv-storage-let-the-users-focus-on-their-work-201807)
+  《Pegasus分布式KV系统：让用户专注于业务逻辑》[【Slides】](https://www.slideshare.net/ssuser0a3cdd/pegasus-kv-storage-let-the-users-focus-on-their-work-201807)
 
 - **2017 年**
   
