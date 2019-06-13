@@ -44,6 +44,6 @@ Pegasus目前只支持在Linux平台运行。当前我们提供如下几种安�
 - 2018年7月分享：《Pegasus分布式KV系统——让用户专注于业务逻辑》
   - [【Slides】](https://github.com/XiaoMi/pegasus/raw/master/docs/ppt/Pegasus_Intro_2018_07.pptx)
 - 2017年7月[ArchSummit深圳2017全球架构师峰会](https://sz2017.archsummit.com/presentation/969)分享：《分布式实现那些事儿——Pegasus背后的故事》
-  - [【Slides】](https://github.com/XiaoMi/pegasus/raw/master/docs/ppt/ArchSummit_Shenzhen_2017.pptx)  [【文字记录】](http://www.sohu.com/a/198828662_355140)  [【视频播放】](http://p.bokecc.com/playvideo.bo?vid=2BBEA348D0B369459C33DC5901307461&uid=0575C033D2012A28&playerid=&playertype=&mediatype=)
+  - [【Slides】](https://www.slideshare.net/ssuser0a3cdd/behind-pegasus-what-matters-in-a-distributed-system-arch-summit-shenzhen2017)  [【Article】](http://www.sohu.com/a/198828662_355140)
 - 2016年12月[ArchSummit北京2016全球架构师峰会](http://bj2016.archsummit.com/presentation/3023)分享：《从Pegasus看分布式系统的设计》
-  - [【Slides】](https://github.com/XiaoMi/pegasus/raw/master/docs/ppt/ArchSummit_Beijing_2016.pptx)  [【文字记录】](http://www.sohu.com/a/133403216_683783)  [【视频播放】](https://v.qq.com/x/page/s03886w5d16.html)
+  - [【Slides】](https://www.slideshare.net/ssuser0a3cdd/pegasus-designing-a-distributed-key-value-system-arch-summit-beijing2016)  [【Video】](https://v.qq.com/x/page/s03886w5d16.html)
