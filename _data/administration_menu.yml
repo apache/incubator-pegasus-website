@@ -23,6 +23,8 @@
       link: /administration/replica-recovery
     - name: Zookeeper迁移
       link: /administration/zk-migration
+    - name: Table迁移
+      link: /administration/table-migration
     - name: Table软删除
       link: /administration/table-soft-delete
     - name: Table环境变量

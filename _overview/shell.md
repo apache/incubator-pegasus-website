@@ -610,7 +610,7 @@ USAGE: clear_app_envs              [-a|--all] [-p|--prefix str]
 | hash | 计算键值的哈希值 |
 | hash_scan | 逐条扫描同一HashKey下的数据，可指定SortKey的查询范围和过滤条件，结果按照SortKey排序 |
 | full_scan | 对表进行全扫描，可指定HashKey和SortKey和Value的过滤条件，同一HashKey的结果按照SortKey排序，HashKey之间无顺序保证 |
-| copy_data | 将一个表的数据逐条插入到另外一个表，源表通过```use```命令指定，目标表通过```-c```和```-a```命令执行，目标表可以在另外一个集群，详细用法参见[Table迁移](/administration/table-migrate#copy_data迁移)，可指定HashKey和SortKey和Value的过滤条件 |
+| copy_data | 将一个表的数据逐条插入到另外一个表，源表通过```use```命令指定，目标表通过```-c```和```-a```命令执行，目标表可以在另外一个集群，详细用法参见[Table迁移](/administration/table-migration#copy_data迁移)，可指定HashKey和SortKey和Value的过滤条件 |
 | clear_data | 将一个表的数据逐条删除，实际上就是先扫描数据，然后对每一条数据执行删除操作，可指定HashKey和SortKey和Value的过滤条件 |
 | count_data | 统计一个表的数据条数，可加```-z```选项统计数据大小，可指定HashKey和SortKey和Value的过滤条件 |
 
@@ -956,7 +956,7 @@ USAGE:  copy_data          <-c|--target_cluster_name str> <-a|--target_app_name 
 ```
 
 说明：
-* 源表通过use命令指定，目标表通过-c和-a命令执行，目标表可以在另外一个集群，详细用法参见[Table迁移](/administration/table-migrate#copy_data迁移)，可指定HashKey和SortKey和Value的过滤条件。 
+* 源表通过use命令指定，目标表通过-c和-a命令执行，目标表可以在另外一个集群，详细用法参见[Table迁移](/administration/table-migration#copy_data迁移)，可指定HashKey和SortKey和Value的过滤条件。 
 
 示例：
 ```
