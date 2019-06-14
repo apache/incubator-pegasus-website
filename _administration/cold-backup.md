@@ -36,7 +36,7 @@ FDS是小米生态云提供的存储产品，目前仅面向小米的生态链�
 ### 配置
 需要先设定一些参数来配置系统的冷备份功能：
 
-1. [meta_server].cold_backup_disable
+* 配置 [meta_server].cold_backup_disable ：
 
 ```
 [meta_server]
@@ -46,7 +46,7 @@ cold_backup_disabled = false
 ...
 ```
 
-2. [apps.meta].pools 和 [apps.replica]
+* 配置 [apps.meta].pools 和 [apps.replica].pools ：
 
 ```
 [apps.meta]
@@ -60,7 +60,7 @@ pools = ...,THREAD_POOL_LOCAL_SERVICE
 pools = ...,THREAD_POOL_LOCAL_SERVICE
 ```
 
-3. [replication].cold_backup_root 和 [replication].max_concurrent_uploading_file_count
+* 配置 [replication].cold_backup_root 和 [replication].max_concurrent_uploading_file_count ：
 
 ```
 [replication]
@@ -70,7 +70,7 @@ cold_backup_root = onebox
 max_concurrent_uploading_file_count = 5
 ```
 
-4. 添加或修改[block_service.xxxx]的section
+* 添加或修改 [block_service.xxxx] ：
 
 ```
 ;; 这样的一个section, 就指定了一种存储介质。可以按照自己的需求添加
@@ -81,10 +81,7 @@ type = local_service
 args = /home/weijiesun/pegasus_cold_backup
 ```
 
-在上面的配置中，一定要区分清楚[replication].cold_backup_root和[block_service.my_backup_media].args所配置的两个路径：
-* 前者指定了数据在某种存储介质下的存放目录。
-* 后者是存储介质本身的初始化参数，是和type相关的。对于local_service而言，这个参数是一个绝对路径。换种说法来看，**本地文件系统的某个目录**，就是一种存储介质。
-* 对于当前的配置情况而言，冷备数据会保存到/home/weijiesun/pegasus_cold_backup/onebox这个目录下。
+在上面的配置中，一定要区分清楚[replication].cold_backup_root和[block_service.my_backup_media].args所配置的两个路径：前者指定了数据在某种存储介质下的存放目录；后者是存储介质本身的初始化参数，是和type相关的，对于local_service而言，这个参数是一个绝对路径，换种说法来看，**本地文件系统的某个目录**，就是一种存储介质。对于当前的配置情况而言，冷备数据会保存到`/home/weijiesun/pegasus_cold_backup/onebox`这个目录下。
 
 ### 创建冷备份策略
 
