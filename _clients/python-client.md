@@ -9,7 +9,7 @@ menubar: clients_menu
 
 ## 项目地址
 
-https://github.com/XiaoMi/pegasus-python-client
+<https://github.com/XiaoMi/pegasus-python-client>
 
 ## 版本要求
 

@@ -6,7 +6,7 @@ menubar: clients_menu
 ---
 
 # 获取Cpp客户端
-首先需要[编译Pegasus](%E7%BC%96%E8%AF%91%E6%9E%84%E5%BB%BA)，编译完成后运行以下命令可以打包生产Cpp客户端库：
+首先需要[编译Pegasus](/overview/compilation)，编译完成后运行以下命令可以打包生产Cpp客户端库：
 ```
 ./run.sh pack_client
 ```
@@ -90,7 +90,7 @@ rpc_timeout_milliseconds = 5000
 onebox = @LOCAL_IP@:34601,@LOCAL_IP@:34602,@LOCAL_IP@:34603
 another_cluster = @SOME_IP@:34601,@SOME_IP@:34601,@SOME_IP@:34601
 ```
-配置文件的具体解释，请移步[配置说明](%E9%85%8D%E7%BD%AE%E8%AF%B4%E6%98%8E)
+配置文件的具体解释，请移步[配置说明](/administration/config)。
 
 # 接口定义
 ## 创建Client实例

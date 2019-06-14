@@ -2094,7 +2094,7 @@ Pegasus的key和value都是原始的字节串（Java中就是byte[]），而用�
 * 业务集群：user_cluster，meta配置地址为`${user_cluster_meta_list}`，其中用户表为user_table。
 * 测试集群：test_cluster，meta配置地址为`${test_cluster_meta_list}`。
 * [Shell工具](/overview/shell)：使用1.11.3及以上版本；修改配置文件`src/shell/config.ini`，添加访问test_cluster集群的配置项。
-* [Java客户端工具](#Java客户端工具)：使用1.11.4及以上版本；修改配置文件`pegasus.properties`，设置`meta_servers = ${test_cluster_meta_list}`。
+* [Java客户端工具](#java客户端工具)：使用1.11.4及以上版本；修改配置文件`pegasus.properties`，设置`meta_servers = ${test_cluster_meta_list}`。
 
 步骤：
 * 使用Shell工具的create命令，在test_cluster集群中新建测试表user_table_no_compress和user_table_zstd_compress：
