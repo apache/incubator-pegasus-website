@@ -167,24 +167,24 @@ Peagsus提供以下几种命令来控制集群的负载均衡：
    **注意在使用时，请保证meta server处在steady状态，不然命令无法生效。**
 
    参见以下样例（不相关的输出已经被删去）：
-```
->>> get_meta_level
-current meta level is fl_steady
-
->>> app temp -d
-pidx      ballot    replica_count       primary                                 secondaries
-0         3         3/3                 10.231.58.233:34803                     [10.231.58.233:34802,10.231.58.233:34801]
-
-list app temp succeed
-
->>> balance -g 1.0 -p move_pri -f 10.231.58.233:34803 -t 10.231.58.233:34802
-send balance proposal result: ERR_OK
-
->>> app temp -d
-pidx      ballot    replica_count       primary                                 secondaries
-0         5         3/3                 10.231.58.233:34802                     [10.231.58.233:34801,10.231.58.233:34803]
-list app temp succeed
-```
+   ```
+   >>> get_meta_level
+   current meta level is fl_steady
+   
+   >>> app temp -d
+   pidx      ballot    replica_count       primary                                 secondaries
+   0         3         3/3                 10.231.58.233:34803                     [10.231.58.233:34802,10.231.58.233:34801]
+   
+   list app temp succeed
+   
+   >>> balance -g 1.0 -p move_pri -f 10.231.58.233:34803 -t 10.231.58.233:34802
+   send balance proposal result: ERR_OK
+   
+   >>> app temp -d
+   pidx      ballot    replica_count       primary                                 secondaries
+   0         5         3/3                 10.231.58.233:34802                     [10.231.58.233:34801,10.231.58.233:34803]
+   list app temp succeed
+   ```
 
 3. propose
    
@@ -196,18 +196,19 @@ list app temp succeed
    * downgrade_to_secondary：把某个partition下的primary降级为secondary
    * downgrade_to_inactive：把某个partition下的primary/secondary降级为inactive状态
    * remove：移除掉某个partition下的某个副本
-```
->>> app temp -d
-pidx      ballot    replica_count       primary                                 secondaries                             
-0         5         3/3                 10.231.58.233:34802                     [10.231.58.233:34801,10.231.58.233:34803]
-list app temp succeed
->>> propose -g 1.0 -p downgrade_to_inactive -t 10.231.58.233:34802 -n 10.231.58.233:34801
-send proposal response: ERR_OK
->>> app temp -d
-pidx      ballot    replica_count       primary                                 secondaries                             
-0         7         3/3                 10.231.58.233:34802                     [10.231.58.233:34803,10.231.58.233:34801]
-list app temp succeed
-```
+
+   ```
+   >>> app temp -d
+   pidx      ballot    replica_count       primary                                 secondaries                             
+   0         5         3/3                 10.231.58.233:34802                     [10.231.58.233:34801,10.231.58.233:34803]
+   list app temp succeed
+   >>> propose -g 1.0 -p downgrade_to_inactive -t 10.231.58.233:34802 -n 10.231.58.233:34801
+   send proposal response: ERR_OK
+   >>> app temp -d
+   pidx      ballot    replica_count       primary                                 secondaries                             
+   0         7         3/3                 10.231.58.233:34802                     [10.231.58.233:34803,10.231.58.233:34801]
+   list app temp succeed
+   ```
 
    在上面的例子中，propose命令希望把10.231.38.233:34801降级。所以需要把这个命令发给partition的primary(10.231.58.233:34802)，由它来执行具体某个副本降级的事宜。注意这里体现了pegasus系统的设计理念：**meta server负责管理primary , pimary负责管理partition下的其他副本**。
    
@@ -272,6 +273,7 @@ CALL [meta-server] [127.0.0.1:34603] succeed: unknown command 'meta.lb.assign_de
 Succeed count: 3
 Failed count: 0
 ```
+
 如例所示，命令不加参数表示返回当前设定的值。加参数表示期望的新值。
 
 #### assign_secondary_black_list
@@ -289,22 +291,18 @@ Failed count: 0
 * 带宽总量是有限的, 如果由分给多个添加分片的任务去分享这些带宽, 那么每个任务执行的时常都会拉长, 从而让系统长期处在一个**大量分片都不健康的状态下**, 增加了稳定性的风险。
 
 所以, pegasus用两个命令来对流控做支持：
-
-1. meta.lb.add_secondary_enable_flow_control: 表示是否开启流控的feature
-
+1. meta.lb.add_secondary_enable_flow_control: 表示是否开启流控的feature。
 2. meta.lb.add_secondary_max_count_for_one_node: 表示对于每个节点，同时执行多少个add_secondary的动作。
 
 #### 精细控制balancer
 
 balancer表示把各节点个数调匀的过程。在目前的pegasus实现中，balancer过程大概可以用四点来概括：
-
 1. 尽量通过角色互换来做到primary均衡
 2. 如果1做不到让primary变均匀，通过拷数据来做到primary均衡
 3. 在2做完后，通过拷数据做到secondary的均衡
 4. 分别针对每个表做1-2-3的动作
 
-pegasus提供了一些控制参数给些过程可以提供更精细的控制：
-
+Pegasus提供了一些控制参数给些过程可以提供更精细的控制：
 * meta.lb.only_primary_balancer: 对于每个表，只进行1和2(减少copy secondary带来的数据拷贝)
 * meta.lb.only_move_primary: 对于每个表，primary调节的时候只考虑方法1(减少copy primary带来的数据拷贝)
 * meta.lb.balancer_in_turn：各个表的balancer用串行的方式做，而不是并行进行(用于调试，观察系统行为)
@@ -329,4 +327,4 @@ pegasus提供了一些控制参数给些过程可以提供更精细的控制：
 
 ## 设计篇
 
-TBD
+待补充。
