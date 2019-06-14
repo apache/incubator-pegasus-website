@@ -48,14 +48,14 @@ menubar: administration_menu
 
    可以用来观察系统中每个节点的partition个数: 
 
-```
->>> nodes -d
-address              status              replica_count       primary_count       secondary_count
-10.132.5.1:32801     ALIVE               54                  18                  36
-10.132.5.2:32801     ALIVE               54                  18                  36
-10.132.5.3:32801     ALIVE               54                  18                  36
-10.132.5.5:32801     ALIVE               54                  18                  36
-```
+   ```
+   >>> nodes -d
+   address              status              replica_count       primary_count       secondary_count
+   10.132.5.1:32801     ALIVE               54                  18                  36
+   10.132.5.2:32801     ALIVE               54                  18                  36
+   10.132.5.3:32801     ALIVE               54                  18                  36
+   10.132.5.5:32801     ALIVE               54                  18                  36
+   ```
 
    如果节点间的partition个数分布差异太大，可以采用"set_meta_level lively"的命令来进行调整。
 
@@ -63,77 +63,77 @@ address              status              replica_count       primary_count      
    
    可以用来某张表的所有partition的分布情况：可以观察到某个具体partition的组成，也可以汇总每个节点服务该表的partition个数。
 
-```
->>> app temp -d
-[Parameters]
-app_name: temp
-detailed: true
-
-[Result]
-app_name          : temp
-app_id            : 14
-partition_count   : 8
-max_replica_count : 3
-details           :
-pidx      ballot    replica_count       primary                                 secondaries
-0         22344     3/3                 10.132.5.2:32801                        [10.132.5.3:32801,10.132.5.5:32801]
-1         20525     3/3                 10.132.5.3:32801                        [10.132.5.2:32801,10.132.5.5:32801]
-2         19539     3/3                 10.132.5.1:32801                        [10.132.5.3:32801,10.132.5.5:32801]
-3         18819     3/3                 10.132.5.5:32801                        [10.132.5.3:32801,10.132.5.1:32801]
-4         18275     3/3                 10.132.5.5:32801                        [10.132.5.2:32801,10.132.5.1:32801]
-5         18079     3/3                 10.132.5.3:32801                        [10.132.5.2:32801,10.132.5.1:32801]
-6         17913     3/3                 10.132.5.2:32801                        [10.132.5.1:32801,10.132.5.5:32801]
-7         17692     3/3                 10.132.5.1:32801                        [10.132.5.3:32801,10.132.5.2:32801]
-
-node                                    primary   secondary total
-10.132.5.1:32801                        2         4         6
-10.132.5.2:32801                        2         4         6
-10.132.5.3:32801                        2         4         6
-10.132.5.5:32801                        2         4         6
-                                        8         16        24
-
-fully_healthy_partition_count   : 8
-unhealthy_partition_count       : 0
-write_unhealthy_partition_count : 0
-read_unhealthy_partition_count  : 0
-
-list app temp succeed
-```
+   ```
+   >>> app temp -d
+   [Parameters]
+   app_name: temp
+   detailed: true
+   
+   [Result]
+   app_name          : temp
+   app_id            : 14
+   partition_count   : 8
+   max_replica_count : 3
+   details           :
+   pidx      ballot    replica_count       primary                                 secondaries
+   0         22344     3/3                 10.132.5.2:32801                        [10.132.5.3:32801,10.132.5.5:32801]
+   1         20525     3/3                 10.132.5.3:32801                        [10.132.5.2:32801,10.132.5.5:32801]
+   2         19539     3/3                 10.132.5.1:32801                        [10.132.5.3:32801,10.132.5.5:32801]
+   3         18819     3/3                 10.132.5.5:32801                        [10.132.5.3:32801,10.132.5.1:32801]
+   4         18275     3/3                 10.132.5.5:32801                        [10.132.5.2:32801,10.132.5.1:32801]
+   5         18079     3/3                 10.132.5.3:32801                        [10.132.5.2:32801,10.132.5.1:32801]
+   6         17913     3/3                 10.132.5.2:32801                        [10.132.5.1:32801,10.132.5.5:32801]
+   7         17692     3/3                 10.132.5.1:32801                        [10.132.5.3:32801,10.132.5.2:32801]
+   
+   node                                    primary   secondary total
+   10.132.5.1:32801                        2         4         6
+   10.132.5.2:32801                        2         4         6
+   10.132.5.3:32801                        2         4         6
+   10.132.5.5:32801                        2         4         6
+                                           8         16        24
+   
+   fully_healthy_partition_count   : 8
+   unhealthy_partition_count       : 0
+   write_unhealthy_partition_count : 0
+   read_unhealthy_partition_count  : 0
+   
+   list app temp succeed
+   ```
 
 3. server_stat
    
    可以用来观察各个replica server当前的一些监控数据。如果想分析流量的均衡程度，要重点观察各个操作的qps和latency。对于数据值明显异常的节点(和其他节点差异太大)，需要排查下partition个数是不是分布不均，或者是不是出现了某个分片的读写热点。
 
-```
->>> server_stat -t replica-server
-COMMAND: server-stat
-
-CALL [replica-server] [10.132.5.1:32801] succeed: manual_compact_enqueue_count=0, manual_compact_running_count=0, closing_replica_count=0, disk_available_max_ratio=88, disk_available_min_ratio=78, disk_available_total_ratio=85, disk_capacity_total(MB)=8378920, opening_replica_count=0, serving_replica_count=54, commit_throughput=0, learning_count=0, shared_log_size(MB)=4, memused_res(MB)=2499, memused_virt(MB)=4724, get_p99(ns)=0, get_qps=0, multi_get_p99(ns)=0, multi_get_qps=0, multi_put_p99(ns)=0, multi_put_qps=0, put_p99(ns)=0, put_qps=0
-CALL [replica-server] [10.132.5.2:32801] succeed: manual_compact_enqueue_count=0, manual_compact_running_count=0, closing_replica_count=0, disk_available_max_ratio=88, disk_available_min_ratio=79, disk_available_total_ratio=86, disk_capacity_total(MB)=8378920, opening_replica_count=0, serving_replica_count=54, commit_throughput=0, learning_count=0, shared_log_size(MB)=4, memused_res(MB)=2521, memused_virt(MB)=4733, get_p99(ns)=0, get_qps=0, multi_get_p99(ns)=0, multi_get_qps=0, multi_put_p99(ns)=0, multi_put_qps=0, put_p99(ns)=0, put_qps=0
-CALL [replica-server] [10.132.5.3:32801] succeed: manual_compact_enqueue_count=0, manual_compact_running_count=0, closing_replica_count=0, disk_available_max_ratio=90, disk_available_min_ratio=78, disk_available_total_ratio=85, disk_capacity_total(MB)=8378920, opening_replica_count=0, serving_replica_count=54, commit_throughput=0, learning_count=0, shared_log_size(MB)=4, memused_res(MB)=2489, memused_virt(MB)=4723, get_p99(ns)=0, get_qps=0, multi_get_p99(ns)=0, multi_get_qps=0, multi_put_p99(ns)=0, multi_put_qps=0, put_p99(ns)=0, put_qps=0
-CALL [replica-server] [10.132.5.5:32801] succeed: manual_compact_enqueue_count=0, manual_compact_running_count=0, closing_replica_count=0, disk_available_max_ratio=88, disk_available_min_ratio=82, disk_available_total_ratio=85, disk_capacity_total(MB)=8378920, opening_replica_count=0, serving_replica_count=54, commit_throughput=0, learning_count=0, shared_log_size(MB)=4, memused_res(MB)=2494, memused_virt(MB)=4678, get_p99(ns)=0, get_qps=0, multi_get_p99(ns)=0, multi_get_qps=0, multi_put_p99(ns)=0, multi_put_qps=0, put_p99(ns)=0, put_qps=0
-
-Succeed count: 4
-Failed count: 0
-```
+   ```
+   >>> server_stat -t replica-server
+   COMMAND: server-stat
+   
+   CALL [replica-server] [10.132.5.1:32801] succeed: manual_compact_enqueue_count=0, manual_compact_running_count=0, closing_replica_count=0, disk_available_max_ratio=88, disk_available_min_ratio=78, disk_available_total_ratio=85, disk_capacity_total(MB)=8378920, opening_replica_count=0, serving_replica_count=54, commit_throughput=0, learning_count=0, shared_log_size(MB)=4, memused_res(MB)=2499, memused_virt(MB)=4724, get_p99(ns)=0, get_qps=0, multi_get_p99(ns)=0, multi_get_qps=0, multi_put_p99(ns)=0, multi_put_qps=0, put_p99(ns)=0, put_qps=0
+   CALL [replica-server] [10.132.5.2:32801] succeed: manual_compact_enqueue_count=0, manual_compact_running_count=0, closing_replica_count=0, disk_available_max_ratio=88, disk_available_min_ratio=79, disk_available_total_ratio=86, disk_capacity_total(MB)=8378920, opening_replica_count=0, serving_replica_count=54, commit_throughput=0, learning_count=0, shared_log_size(MB)=4, memused_res(MB)=2521, memused_virt(MB)=4733, get_p99(ns)=0, get_qps=0, multi_get_p99(ns)=0, multi_get_qps=0, multi_put_p99(ns)=0, multi_put_qps=0, put_p99(ns)=0, put_qps=0
+   CALL [replica-server] [10.132.5.3:32801] succeed: manual_compact_enqueue_count=0, manual_compact_running_count=0, closing_replica_count=0, disk_available_max_ratio=90, disk_available_min_ratio=78, disk_available_total_ratio=85, disk_capacity_total(MB)=8378920, opening_replica_count=0, serving_replica_count=54, commit_throughput=0, learning_count=0, shared_log_size(MB)=4, memused_res(MB)=2489, memused_virt(MB)=4723, get_p99(ns)=0, get_qps=0, multi_get_p99(ns)=0, multi_get_qps=0, multi_put_p99(ns)=0, multi_put_qps=0, put_p99(ns)=0, put_qps=0
+   CALL [replica-server] [10.132.5.5:32801] succeed: manual_compact_enqueue_count=0, manual_compact_running_count=0, closing_replica_count=0, disk_available_max_ratio=88, disk_available_min_ratio=82, disk_available_total_ratio=85, disk_capacity_total(MB)=8378920, opening_replica_count=0, serving_replica_count=54, commit_throughput=0, learning_count=0, shared_log_size(MB)=4, memused_res(MB)=2494, memused_virt(MB)=4678, get_p99(ns)=0, get_qps=0, multi_get_p99(ns)=0, multi_get_qps=0, multi_put_p99(ns)=0, multi_put_qps=0, put_p99(ns)=0, put_qps=0
+   
+   Succeed count: 4
+   Failed count: 0
+   ```
 
 4. app_stat -a <app_name>
 
    可以用来观察某个表中，各个partition的统计信息。对于数据值明显异常的分片，要关注是不是出现了分片热点。
 
-```
->>> app_stat -a temp
-pidx                 GET   MULTI_GET         PUT   MULTI_PUT         DEL   MULTI_DEL        INCR         CAS        SCAN     expired    filtered    abnormal  storage_mb  file_count
-0                      0           0           0           0           0           0           0           0           0           0           0           0           0           3
-1                      0           0           0           0           0           0           0           0           0           0           0           0           0           1
-2                      0           0           0           0           0           0           0           0           0           0           0           0           0           4
-3                      0           0           0           0           0           0           0           0           0           0           0           0           0           2
-4                      0           0           0           0           0           0           0           0           0           0           0           0           0           3
-5                      0           0           0           0           0           0           0           0           0           0           0           0           0           2
-6                      0           0           0           0           0           0           0           0           0           0           0           0           0           1
-7                      0           0           0           0           0           0           0           0           0           0           0           0           0           3
-                       0           0           0           0           0           0           0           0           0           0           0           0           0          19
-```
+   ```
+   >>> app_stat -a temp
+   pidx                 GET   MULTI_GET         PUT   MULTI_PUT         DEL   MULTI_DEL        INCR         CAS        SCAN     expired    filtered    abnormal  storage_mb  file_count
+   0                      0           0           0           0           0           0           0           0           0           0           0           0           0           3
+   1                      0           0           0           0           0           0           0           0           0           0           0           0           0           1
+   2                      0           0           0           0           0           0           0           0           0           0           0           0           0           4
+   3                      0           0           0           0           0           0           0           0           0           0           0           0           0           2
+   4                      0           0           0           0           0           0           0           0           0           0           0           0           0           3
+   5                      0           0           0           0           0           0           0           0           0           0           0           0           0           2
+   6                      0           0           0           0           0           0           0           0           0           0           0           0           0           1
+   7                      0           0           0           0           0           0           0           0           0           0           0           0           0           3
+                          0           0           0           0           0           0           0           0           0           0           0           0           0          19
+   ```
 
 ### 控制集群的负载均衡
 
