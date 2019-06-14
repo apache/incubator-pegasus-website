@@ -25,7 +25,7 @@ menubar: overview_menu
 
 # 设计考虑
 
-在设计Pegasus时，我们要在目标、实现难度、开发效率等方面做一些权衡和选择。关于这方面的考虑，我在ArchSummit 2016上做的分享中有具体介绍，参见[ArchSummit_Beijing_2016.pptx](https://www.slideshare.net/ssuser0a3cdd/pegasus-designing-a-distributed-key-value-system-arch-summit-beijing2016)。总的来说，包括这几个方面：
+在设计Pegasus时，我们要在目标、实现难度、开发效率等方面做一些权衡和选择。关于这方面的考虑，我在ArchSummit 2016上做的分享中有具体介绍，参见[slides](https://www.slideshare.net/ssuser0a3cdd/pegasus-designing-a-distributed-key-value-system-arch-summit-beijing2016)。总的来说，包括这几个方面：
 * 开发语言：基于性能考虑，我们选择了C++。当然，我们也要忍受开发效率相对较低的问题。
 * 数据模型：采用简单的key-value数据模型。这是为了简化开发，而且我们认为key-value已经能够满足大部分业务需求。同时我们又对key-value模型做了一些改进，将key分为了HashKey和SortKey，使其表达能力更强。
 * 数据分布：采用固定Hash分布。相比Range分布和一致性Hash分布，固定Hash分布实现更简单，数据倾斜和可伸缩性可以通过合理设计Hash键和Hash函数、预设更多的桶等措施来缓解。当然我们后续还会提供partition split的功能，支持扩展分片数量。

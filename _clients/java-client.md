@@ -5,7 +5,7 @@ show_sidebar: false
 menubar: clients_menu
 ---
 
-## 获取Java客户端
+# 获取Java客户端
 
 项目地址：[Pegasus Java Client](https://github.com/XiaoMi/pegasus-java-client)
 
@@ -16,7 +16,7 @@ git clone https://github.com/XiaoMi/pegasus-java-client.git
 cd pegasus-java-client
 ```
 
-选择所使用的版本并构建，建议使用最新的release版本：
+选择所使用的版本并构建，建议使用[最新的release版本](https://github.com/xiaomi/pegasus-java-client/releases)：
 
 ```bash
 git checkout 1.11.5-thrift-0.11.0-inlined-release
@@ -39,7 +39,7 @@ mvn clean install -DskipTests
 </dependency>
 ```
 
-## 配置文件
+# 配置文件
 
 Java客户端需要准备配置文件，用以确定Pegasus集群的位置，以及配置默认超时时间等。
 
@@ -76,7 +76,7 @@ PegasusClientInterface client = PegasusClientFactory.getSingletonClient(configPa
   * 样例1：zk://127.0.0.1:2181/databases/pegasus/pegasus.properties
   * 样例2：zk://127.0.0.1:2181,127.0.0.1:2182/databases/pegasus/pegasus.properties
 
-## 接口定义
+# 接口定义
 
 Java客户端的类都在```com.xiaomi.infra.pegasus.client```包下面，主要提供了三个类：
 
@@ -151,6 +151,7 @@ client.close();
 ```
 
 ## PegasusClientInterface接口
+
 ### get  
 读单行数据。
 ```java
@@ -665,7 +666,7 @@ public int batchMultiDel2(String tableName, List<Pair<byte[], List<byte[]>>> key
  * 注意：该方法不是原子的，有可能出现部分成功部分失败的情况，用户可以选择只使用成功的结果。
 
 ### incr
-单行原子增(减)操作。详细说明参见[单行原子操作](单行原子操作#原子增减)。
+单行原子增(减)操作。详细说明参见[单行原子操作](/api/single-atomic#原子增减)。
 
 该操作先将key所指向的value的字节串转换为int64类型（实现上类似于Java的[Long.parseLong()](https://docs.oracle.com/javase/7/docs/api/java/lang/Long.html#parseLong(java.lang.String))函数），然后加上increment，将结果转换为字节串设置为新值。
 
@@ -724,7 +725,7 @@ public long incr(String tableName, byte[] hashKey, byte[] sortKey, long incremen
    * 如果参数ttlSeconds == -1，则清理掉TTL，即新值不再设置TTL。
 
 ### checkAndSet
-单HashKey数据的原子CAS操作（可以理解为**单行原子操作**）。详细说明参见[单行原子操作](单行原子操作#cas操作)。
+单HashKey数据的原子CAS操作（可以理解为**单行原子操作**）。详细说明参见[单行原子操作](/api/single-atomic#cas操作)。
 
 该操作先对某个SortKey（称之为CheckSortKey）的value做条件检查：
   * 如果检查的条件满足，则将另一个SortKey（称之为SetSortKey）的value设置为新值。
@@ -820,7 +821,7 @@ public PegasusTableInterface.CheckAndSetResult checkAndSet(String tableName, byt
    * 如果CheckType为`int compare`类型的操作，且CheckOperand或者CheckValue转换为int64时出错，譬如不是合法的数字或者超出int64范围。
 
 ### checkAndMutate
-checkAndMutate是[checkAndSet](#checkAndSet)的扩展版本：checkAndSet只允许set一个值，而checkAndMutate允许在单个原子操作中set或者del多个值。该接口从[1.11.0](https://github.com/XiaoMi/pegasus-java-client/releases/tag/1.11.0-thrift-0.11.0-inlined-release)版本开始提供。
+checkAndMutate是[checkAndSet](#checkandset)的扩展版本：checkAndSet只允许set一个值，而checkAndMutate允许在单个原子操作中set或者del多个值。该接口从[1.11.0](https://github.com/XiaoMi/pegasus-java-client/releases/tag/1.11.0-thrift-0.11.0-inlined-release)版本开始提供。
 
 为此，我们提供了一个包装类[Mutations](https://github.com/XiaoMi/pegasus-java-client/blob/thrift-0.11.0-inlined/src/main/java/com/xiaomi/infra/pegasus/client/Mutations.java)，用户可以预先设置需要实施的set或者del操作。
 
@@ -893,7 +894,7 @@ compareExchange是[checkAndSet](#checkandset)的特化版本：
   * CheckSortKey和SetSortKey相同。
   * CheckType为CT_VALUE_BYTES_EQUAL。
 
-该方法语义就是：如果SortKey对应的value存在且等于期望的值，则将其设置为新值。详细说明参见[单行原子操作](单行原子操作#cas操作)。
+该方法语义就是：如果SortKey对应的value存在且等于期望的值，则将其设置为新值。详细说明参见[单行原子操作](/api/single-atomic#cas操作)。
 
 该方法与C++库中常见的[atomic_compare_exchange](https://en.cppreference.com/w/cpp/atomic/atomic_compare_exchange)语义基本保持一致。
 
@@ -1175,6 +1176,7 @@ future.await();
 ```
 
 ## PegasusTableInterface接口
+
 ### asyncGet
 异步读单行数据。
 ```java
@@ -1871,6 +1873,7 @@ public Future<MultiGetSortKeysResult> asyncMultiGetSortKeys(byte[] hashKey, int 
    * allFetched：如果用户指定了maxFetchCount或者maxFetchSize，单次查询可能只获取到部分结果。如果所有满足条件的数据都已经获取到，则设置为true；否则设置为false。
 
 ## PegasusScannerInterface接口
+
 ### next
 在scan操作时，同步获取下一条数据。
 ```java
@@ -1924,7 +1927,7 @@ public Future<Pair<Pair<byte[], byte[]>, byte[]>> asyncNext();
 
 ### ERR_BUSY
 服务端流控达到限制。原因是：
-* 集群服务端对表设置了[表级写流量控制](流量控制#服务端流控)。
+* 集群服务端对表设置了[表级写流量控制](/administration/throttling#服务端流控)。
 * 此时该表的瞬时流量（在这1秒内的写入操作数）达到了阈值，触发了reject流控操作，返回`ERR_BUSY`错误码。
 
 # Java客户端工具
@@ -1966,6 +1969,7 @@ USAGE: PegasusCli <config-path> <table-name> <op-name> ...
 ```
 
 # 最佳实践
+
 ## 流量控制
 经常有业务有集中灌数据的场景，灌数据的过程可能是单机的也可能是分布式的，譬如使用Spark处理后将数据写入Pegasus中。
 
@@ -2089,7 +2093,7 @@ Pegasus的key和value都是原始的字节串（Java中就是byte[]），而用�
 原料：
 * 业务集群：user_cluster，meta配置地址为`${user_cluster_meta_list}`，其中用户表为user_table。
 * 测试集群：test_cluster，meta配置地址为`${test_cluster_meta_list}`。
-* [Shell工具](Shell工具)：使用1.11.3及以上版本；修改配置文件`src/shell/config.ini`，添加访问test_cluster集群的配置项。
+* [Shell工具](/overview/shell)：使用1.11.3及以上版本；修改配置文件`src/shell/config.ini`，添加访问test_cluster集群的配置项。
 * [Java客户端工具](#Java客户端工具)：使用1.11.4及以上版本；修改配置文件`pegasus.properties`，设置`meta_servers = ${test_cluster_meta_list}`。
 
 步骤：
@@ -2143,4 +2147,5 @@ Pegasus的key和value都是原始的字节串（Java中就是byte[]），而用�
 
 与此同时，可以使用后台工具将未压缩数据逐渐替换掉为已压缩数据，并在替换过程中保证数据的一致性：扫描表，逐条读取数据，如果数据是未压缩的，则将其转换为已压缩的，使用check_and_set原子操作进行数据替换。
 
-## 常见问题
+# 常见问题
+
