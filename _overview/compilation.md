@@ -7,14 +7,14 @@ menubar: overview_menu
 
 Pegasus目前只支持Linux平台。目前在CentOS、Ubuntu上都测试运行过。
 
-编译过程中遇到问题，请先参考下面的**常见问题**，如果还不能解决，可以通过 [Github Issue](https://github.com/XiaoMi/pegasus/issues) 向我们咨询。
+编译过程中遇到问题，请先参考下面的**常见问题**，如果还不能解决，可以通过[Github Issues](https://github.com/XiaoMi/pegasus/issues)向我们咨询。
 
 ## 用docker编译
 
 如果你的机器支持运行docker,推荐使用我们提供的dockerfile进行编译:
 
 * centos: [请点击此处](https://github.com/XiaoMi/pegasus/blob/master/docker/dev/centos7/Dockerfile)
-* Ubuntu: TBD
+* Ubuntu: 敬请期待
 
 ## 安装依赖
 
@@ -53,8 +53,7 @@ sudo make install -j8
 
 ## 源码编译
 
-从github获取Pegasus源代码，并递归获取其依赖的[rDSN](https://github.com/xiaomi/rdsn)和
-[Rocksdb](https://github.com/XiaoMi/pegasus-rocksdb)：
+从github获取Pegasus源代码，并递归获取其依赖的[rDSN](https://github.com/xiaomi/rdsn)和[Rocksdb](https://github.com/XiaoMi/pegasus-rocksdb)：
 
 ```bash
 git clone https://github.com/xiaomi/pegasus.git --recursive

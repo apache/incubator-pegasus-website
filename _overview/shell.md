@@ -36,9 +36,9 @@ Shell工具采用子命令模式，进入子命令模式执行```help```后会�
 
 ```
 Usage:
-        help                   
-        version                
-        cluster_info           
+        help
+        version
+        cluster_info
         app                    <app_name> [-d|--detailed] [-o|--output file_name]
         app_disk               <app_name> [-d|--detailed] [-o|--output file_name]
         ls                     [-a|-all] [-d|--detailed] [-j|--json_pretty]
@@ -51,7 +51,7 @@ Usage:
         drop                   <app_name> [-r|--reserve_seconds num]
         recall                 <app_id> [new_app_name]
         set_meta_level         <stopped|blind|freezed|steady|lively>
-        get_meta_level         
+        get_meta_level
         balance                <-g|--gpid appid.pidx> <-p|--type move_pri|copy_pri|copy_sec>
                                <-f|--from from_address> <-t|--to to_address>
         propose                [-f|--force] <-g|--gpid appid.pidx>
@@ -153,7 +153,7 @@ Usage:
         add_backup_policy      <-p|--policy_name str> <-b|--backup_provider_type str>
                                <-a|--app_ids 1,2...> <-i|--backup_interval_seconds num>
                                <-s|--start_time hour:minute> <-c|--backup_history_cnt num>
-        ls_backup_policy       
+        ls_backup_policy
         query_backup_policy    <-p|--policy_name p1,p2...> [-b|--backup_info_cnt num]
         modify_backup_policy   <-p|--policy_name str> [-a|--add_app 1,2...] [-r|--remove_app 1,2...]
                                [-i|--backup_interval_seconds num] [-c|--backup_history_count num]
@@ -165,13 +165,13 @@ Usage:
                                <-t|--timestamp/backup_id timestamp> <-b|--backup_provider_type str>
                                [-n|--new_app_name str] [-s|--skip_bad_partition]
         query_restore_status   <restore_app_id> [-d|--detailed]
-        get_app_envs           
+        get_app_envs
         set_app_envs           <key> <value> [key value...]
         del_app_envs           <key> [key...]
         clear_app_envs         [-a|--all] [-p|--prefix str]
         ddd_diagnose           [-g|--gpid appid|appid.pidx] [-d|--diagnose] [-a|--auto_diagnose]
                                [-s|--skip_prompt] [-o|--output file_name]
-        exit                   
+        exit
 ```
 
 由于子命令很多，为了方便使用，我们根据功能不同进行分类。
@@ -179,7 +179,7 @@ Usage:
 ## 基本命令
 
 | 子命令 | 功能 |
-| ----- | ----- | 
+| ----- | ----- |
 | help | 获取帮助信息 |
 | version | 获取Shell工具的版本信息 |
 | exit | 退出shell工具，等同于输入"Ctrl-C"或者"Ctrl-D" |
@@ -196,7 +196,7 @@ Usage:
 ## 全局属性
 
 | 子命令 | 功能 |
-| ----- | ----- | 
+| ----- | ----- |
 | cc | change cluster，改变当前使用的集群 |
 | use | 指定当前使用的表，有的子命令在使用前需要先指定表，譬如数据操作类命令 |
 | escape_all | 输出字节类数据时，选择将"所有字符"转换为十六进制编码还是仅将"不可见字符"转换为十六进制编码，默认为后者 |
@@ -235,7 +235,7 @@ USAGE:  use                      [app_name]
 ```
 
 ### escape_all
-输出字节类数据时，选择将"所有字符"转换为十六进制编码还是仅将"不可见字符"转换为十六进制编码,默认为后者。
+输出字节类数据时，选择将"所有字符"转换为十六进制编码还是仅将"不可见字符"转换为十六进制编码，默认为后者。
 
 用法：
 ```
@@ -251,7 +251,7 @@ USAGE:  escape_all               [true|false]
 ```
 
 ### timeout
-设置数据操作的默认超时时间,单位ms。
+设置数据操作的默认超时时间，单位ms。
 
 用法：
 ```
@@ -269,7 +269,7 @@ USAGE:  timeout                  [time_in_ms]
 ## 节点管理
 
 | 子命令 | 功能 |
-| ----- | ----- | 
+| ----- | ----- |
 | cluster_info | 获取集群基本信息 |
 | nodes | 获取节点列表，可加```-d```选项获取各节点的负载情况 |
 | server_info | 各节点的基本信息，主要是server版本、节点启动时间 |
@@ -281,12 +281,12 @@ USAGE:  timeout                  [time_in_ms]
 获取集群基本信息。
 
 说明：
-* 集群信息主要主要包含：  
-（1）meta_server、zookeeper的节点信息。  
-（2）meta_function_level：负载均衡策略。  
-（3）balance_operation_count：负载均衡操作统计，包括move_pri、move_pri、copy_sec、total。负载均衡信息参见[负载均衡](/administration/rebalance)。  
-（4）primary_replica_count_stddev：负载均衡衡量指标。 
-（5）total_replica_count_stddev：负载均衡衡量指标。 
+* 集群信息主要主要包含：
+  * meta_server、zookeeper的节点信息。
+  * meta_function_level：负载均衡策略。
+  * balance_operation_count：负载均衡操作统计，包括move_pri、move_pri、copy_sec、total。负载均衡信息参见[负载均衡](/administration/rebalance)。
+  * primary_replica_count_stddev：负载均衡衡量指标。
+  * total_replica_count_stddev：负载均衡衡量指标。
 
 ### nodes
 获取replica节点列表，默认以IP地址表示各个节点，并输出基本信息。
@@ -319,7 +319,7 @@ USAGE:server_info                [-t all|meta-server|replica-server] [-l ip:port
 
 说明：
 * `-t`选项：如果指定，则选择输出服务器节点类别的信息，包含all、meta-server、replica-server。
-* `-l`选项：如果指定，则选择输出特定IP地址节点的信息，多个节点使用`，`连接。
+* `-l`选项：如果指定，则选择输出特定IP地址节点的信息，多个节点使用`,`连接。
 
 示例：
 ```
@@ -378,7 +378,7 @@ USAGE:flush_log                  [-t all|meta-server|replica-server] [-l ip:port
 ## 表管理
 
 | 子命令 | 功能 |
-| ----- | ----- | 
+| ----- | ----- |
 | ls | 获取所有表的列表，可加```-d```选项获取各表的健康状况，可加```-a```选项包含已删除表的信息 |
 | app | 获取某个表的信息，可加```-d```选项获取详细信息，包括各partition的分布情况、健康状况 |
 | app_stat | 获取表的读写情况和存储统计信息，可加```-a```选项指定单个表，以获取该表各个partition的详细统计信息 |
@@ -457,7 +457,7 @@ USAGE: app_disk                   <app_name> [-d|--detailed] [-o|--output file_n
 ```
 
 说明：
-* `-d`选项：如果指定，则可以获取表的详细信息，如primary和second情况。
+* `-d`选项：如果指定，则可以获取表的详细信息，如primary和secondary情况。
 * `-o`选项：如果指定，则将结果输出到参数所指定的文件中。
 
 示例：
@@ -493,7 +493,7 @@ USAGE: drop                      <app_name> [-r|--reserve_seconds num]
 ```
 
 说明：
-* `-r`选项：如果指定，则设置数据的保留时间（删除时间开始计算，单位为秒）。如果不指定，则使用配置文件hold_seconds_for_dropped_app指定的值，默认为7天，参见[使用drop命令删除表](/administration/table-soft-delete#使用drop命令删除表)。
+* `-r`选项：如果指定，则设置数据的保留时间（删除时间开始计算，单位为秒）。如果不指定，则使用配置文件hold_seconds_for_dropped_app指定的值，默认为7天，参见[Table软删除#使用drop命令删除表](/administration/table-soft-delete#使用drop命令删除表)。
 
 示例：
 ```
@@ -501,7 +501,7 @@ USAGE: drop                      <app_name> [-r|--reserve_seconds num]
 ```
 
 ### recall
-恢复已经删除的表
+恢复已经删除的表。
 
 用法：
 ```
@@ -511,7 +511,7 @@ USAGE: recall                    <app_id> [new_app_name]
 说明：
 * 注意该命令通过app_id进行表恢复。
 * `new_app_name`参数：如果不指定新表名，则会使用原表名，否则使用指定的新表名，如果原表名已存在（删表后新建了同名表），则必须指定另外一个不同的新表名，否则会失败。
-* 详细信息参见[使用recall命令恢复表](/administration/table-soft-delete#使用recall命令恢复表)。
+* 详细信息参见[Table软删除#使用recall命令恢复表](/administration/table-soft-delete#使用recall命令恢复表)。
 
 示例：
 ```
@@ -523,7 +523,7 @@ USAGE: recall                    <app_id> [new_app_name]
 
 用法：
 ```
-USAGE: get_app_envs                      
+USAGE: get_app_envs
 ```
 
 说明：
@@ -540,7 +540,7 @@ USAGE: get_app_envs
 
 用法：
 ```
-USAGE: set_app_envs              <key> <value> [key value...]        
+USAGE: set_app_envs              <key> <value> [key value...]
 ```
 
 说明：
@@ -557,7 +557,7 @@ USAGE: set_app_envs              <key> <value> [key value...]
 
 用法：
 ```
-USAGE: del_app_envs              <key> [key...]    
+USAGE: del_app_envs              <key> [key...]
 ```
 
 说明：
@@ -591,7 +591,7 @@ USAGE: clear_app_envs              [-a|--all] [-p|--prefix str]
 ## 数据操作
 
 | 子命令 | 功能 |
-| ----- | ----- | 
+| ----- | ----- |
 | set | 设置单条数据 |
 | multi_set | 设置同一HashKey下的多条数据 |
 | get | 获取单条数据 |
@@ -609,10 +609,10 @@ USAGE: clear_app_envs              [-a|--all] [-p|--prefix str]
 | ttl | 查询某条数据的TTL（Time To Live）时间，返回剩余的live时间，单位为秒；返回Infinite表示没有TTL限制 |
 | hash | 计算键值的哈希值 |
 | hash_scan | 逐条扫描同一HashKey下的数据，可指定SortKey的查询范围和过滤条件，结果按照SortKey排序 |
-| full_scan | 对表进行全扫描，可指定HashKey和SortKey和Value的过滤条件，同一HashKey的结果按照SortKey排序，HashKey之间无顺序保证 |
-| copy_data | 将一个表的数据逐条插入到另外一个表，源表通过```use```命令指定，目标表通过```-c```和```-a```命令执行，目标表可以在另外一个集群，详细用法参见[Table迁移](/administration/table-migration#copy_data迁移)，可指定HashKey和SortKey和Value的过滤条件 |
-| clear_data | 将一个表的数据逐条删除，实际上就是先扫描数据，然后对每一条数据执行删除操作，可指定HashKey和SortKey和Value的过滤条件 |
-| count_data | 统计一个表的数据条数，可加```-z```选项统计数据大小，可指定HashKey和SortKey和Value的过滤条件 |
+| full_scan | 对表进行全扫描，可指定HashKey、SortKey和Value的过滤条件，同一HashKey的结果按照SortKey排序，HashKey之间无顺序保证 |
+| copy_data | 将一个表的数据逐条插入到另外一个表，源表通过```use```命令指定，目标表通过```-c```和```-a```命令执行，目标表可以在另外一个集群，详细用法参见[Table迁移#copy_data迁移](/administration/table-migration#copy_data迁移)，可指定HashKey、SortKey和Value的过滤条件 |
+| clear_data | 将一个表的数据逐条删除，实际上就是先扫描数据，然后对每一条数据执行删除操作，可指定HashKey、SortKey和Value的过滤条件 |
+| count_data | 统计一个表的数据条数，可加```-z```选项统计数据大小，可指定HashKey、SortKey和Value的过滤条件 |
 
 ### set
 设置单条数据。
@@ -641,7 +641,7 @@ USAGE:  multi_set                    <hash_key> <sort_key> <value> [sort_key val
 ```
 
 说明：
-* sort_key是pegasus定义的一种数据模型，详细信息参见：[数据模型](/overview/data-model)。
+* sort_key是pegasus定义的一种数据模型，详细信息参见[数据模型](/overview/data-model)。
 * 不同的sort_key名字必须不同，否则会输出“ERROR: duplicate sort key <sort_key>”。
 
 
@@ -690,14 +690,13 @@ USAGE:  multi_get_range        <hash_key> <start_sort_key> <stop_sort_key>
 
 
 说明：
-* `-a|--start_inclusive`参数：指定是否包含StartSortKey，默认为true
-* `-b|--stop_inclusive`参数：指定是否包含StopSortKey，默认为false
-* `-s|--sort_key_filter_type`参数：指定SortKey的过滤类型，包括无过滤、任意位置匹配、前缀匹配和后缀匹配，默认无过滤
-* `-y|--sort_key_filter_pattern`参数：指定SortKey的过滤模式串，空串相当于无过滤
-* `-n|--max_count`参数：指定最多读取的数据条数
-* `-i|--no_value`参数：指定是否只返回HashKey和SortKey，不返回Value数据，默认为false
-* `-r|--reverse`参数：是否逆向扫描数据库，从后往前查找数据。但是查找得到的结果在list中还是按照SortKey从小到大顺序存放。从Pegasus 
-                     Server 1.8.0时开始支持
+* `-a|--start_inclusive`参数：指定是否包含StartSortKey，默认为true。
+* `-b|--stop_inclusive`参数：指定是否包含StopSortKey，默认为false。
+* `-s|--sort_key_filter_type`参数：指定SortKey的过滤类型，包括无过滤、任意位置匹配、前缀匹配和后缀匹配，默认无过滤。
+* `-y|--sort_key_filter_pattern`参数：指定SortKey的过滤模式串，空串相当于无过滤。
+* `-n|--max_count`参数：指定最多读取的数据条数。
+* `-i|--no_value`参数：指定是否只返回HashKey和SortKey，不返回Value数据，默认为false。
+* `-r|--reverse`参数：是否逆向扫描数据库，从后往前查找数据，但是查找得到的结果在list中还是按照SortKey从小到大顺序存放。该参数从[v1.8.0版本](https://github.com/xiaomi/pegasus/releases/tag/v1.8.0)开始支持。
 
 示例：
 ```
@@ -757,7 +756,7 @@ USAGE:  multi_del_range        <hash_key> <start_sort_key> <stop_sort_key>
 
 说明：
 * `-i|--silent`参数：如果为`true`表示不打印删除时的日志。
-* 其与参数，参见[multi_get_range](#multi_get_range)说明。
+* 其余参数，参见[multi_get_range](#multi_get_range)说明。
 
 示例：
 ```
@@ -797,17 +796,17 @@ USAGE:  check_and_set          <hash_key> [-c|--check_sort_key str]
 ```
 
 说明：
-* 对比交换，最初是表示一条CPU的原子指令，其作用是让CPU先进行比较两个值是否相等，然后原子地更新某个位置的值。参照[CAS操作](/api/single-atomic#cas操作)。 
+* 对比交换，最初是表示一条CPU的原子指令，其作用是让CPU先进行比较两个值是否相等，然后原子地更新某个位置的值。参照[CAS操作](/api/single-atomic#cas操作)。
 
-示例：  
-该命令表征检查hashKey为“cloud”，且存在sortKey为“90”时，set sortKey-value为“91”-“91”
+示例：
+该命令检查hashKey=cloud的数据，若sortKey=90的value存在，则将sortKey=91的value设置为92，且返回sortKey=90的value值。
 ```
->>> check_and_set cloud -c 90 -t exist match_anywhere bytes_less int_less  -s 91 -v 91 -r
+>>> check_and_set cloud -c 90 -t exist -s 91 -v 92 -r
 ```
 
 
 ### check_and_mutate
-原子CAS扩展版本，参见[原子CAS扩展版本](/clients/java-client#checkandmutate)
+原子CAS扩展版本，参见[原子CAS扩展版本](/clients/java-client#checkandmutate)。
 
 用法：
 ```
@@ -862,7 +861,9 @@ USAGE:  ttl <hash_key> <sort_key>
 
 
 ### hash
-查询某条数据的TTL（Time To Live）时间，返回剩余的live时间，单位为秒；返回Infinite表示没有TTL限制。
+查询某条数据的hash值，返回hash值的整数形式。
+
+如果在使用该命令前通过`use [app_name]`选定了特定表，还会根据hash值计算数据所对应的partition_id，并返回当前服务该partition的primary和secondary节点信息。
 
 用法：
 ```
@@ -879,31 +880,32 @@ USAGE:  hash <hash_key> <sort_key>
 
 用法：
 ```
-USAGE:  hash_scan <hash_key> <start_sort_key> <stop_sort_key> [-a|--start_inclusive true|false] 
-                                                              [-b|--stop_inclusive true|false] 
-                                                              [-s|--sort_key_filter_type anywhere|prefix]
-                                                              [-y|--sort_key_filter_pattern str]
-                                                              [-v|--value_filter_type anywhere|prefix|postfix|exact
-                                                              [-z|--value_filter_pattern str]
-                                                              [-o|--output file_name] 
-                                                              [-n|--max_count num] 
-                                                              [-t|--timeout_ms num]
-                                                              [-d|--detailed] 
-                                                              [-i|--no_value]
+USAGE:  hash_scan     <hash_key> <start_sort_key> <stop_sort_key>
+                      [-a|--start_inclusive true|false]
+                      [-b|--stop_inclusive true|false]
+                      [-s|--sort_key_filter_type anywhere|prefix]
+                      [-y|--sort_key_filter_pattern str]
+                      [-v|--value_filter_type anywhere|prefix|postfix|exact
+                      [-z|--value_filter_pattern str]
+                      [-o|--output file_name]
+                      [-n|--max_count num]
+                      [-t|--timeout_ms num]
+                      [-d|--detailed]
+                      [-i|--no_value]
 ```
 
 说明：
-* `-a|--start_inclusive`参数：指定是否包含StartSortKey，默认为true。 
-* `-b|--stop_inclusive`参数：指定是否包含StopSortKey，默认为false。 
-* `-s|--sort_key_filter_type`参数：指定SortKey的过滤类型，包括无过滤、任意位置匹配、前缀匹配和后缀匹配，默认无过滤。 
-* `-y|--sort_key_filter_pattern`参数：指定SortKey的过滤模式串，空串相当于无过滤。 
-* `-v|--value_filter_type`参数：指定value过滤类型，包括任意位置匹配、前缀匹配、后缀匹配等。 
-* `-z|--value_filter_pattern str`参数：指定value的过滤模式串，空串相当于无过滤。 
-* `-o|--output file_name`参数：指定输出结果存入的文件名。 
-* `-n|--max_count num`参数：指定获取值的最大数量。 
-* `-t|--timeout_ms num`参数：指定获取数据的超时时间。 
-* `-d|--detailed`参数：输出数据的详细存储信息，包括app_id、partition_index、server_ip。 
-* `-i|--no_value`参数：不获取value值，仅输出hash_key和sort_key。 
+* `-a|--start_inclusive`参数：指定是否包含StartSortKey，默认为true。
+* `-b|--stop_inclusive`参数：指定是否包含StopSortKey，默认为false。
+* `-s|--sort_key_filter_type`参数：指定SortKey的过滤类型，包括无过滤、任意位置匹配、前缀匹配和后缀匹配，默认无过滤。
+* `-y|--sort_key_filter_pattern`参数：指定SortKey的过滤模式串，空串相当于无过滤。
+* `-v|--value_filter_type`参数：指定value过滤类型，包括任意位置匹配、前缀匹配、后缀匹配等。
+* `-z|--value_filter_pattern str`参数：指定value的过滤模式串，空串相当于无过滤。
+* `-o|--output file_name`参数：指定输出结果存入的文件名。
+* `-n|--max_count num`参数：指定获取值的最大数量。
+* `-t|--timeout_ms num`参数：指定获取数据的超时时间。
+* `-d|--detailed`参数：输出数据的详细存储信息，包括app_id、partition_index、server_ip。
+* `-i|--no_value`参数：不获取value值，仅输出hash_key和sort_key。
 
 示例：
 ```
@@ -912,7 +914,7 @@ USAGE:  hash_scan <hash_key> <start_sort_key> <stop_sort_key> [-a|--start_inclus
 
 
 ### full_scan
-对表进行全扫描，可指定HashKey和SortKey和Value的过滤条件，同一HashKey的结果按照SortKey排序，HashKey之间无顺序保证。 
+对表进行全扫描，可指定HashKey、SortKey和Value的过滤条件，同一HashKey的结果按照SortKey排序，HashKey之间无顺序保证。
 
 用法：
 ```
@@ -922,18 +924,18 @@ USAGE: full_scan      [-h|--hash_key_filter_type anywhere|prefix|postfix]
                       [-y|--sort_key_filter_pattern str]
                       [-v|--value_filter_type anywhere|prefix|postfix|exact
                       [-z|--value_filter_pattern str]
-                      [-o|--output file_name] 
-                      [-n|--max_count num] 
+                      [-o|--output file_name]
+                      [-n|--max_count num]
                       [-t|--timeout_ms num]
-                      [-d|--detailed] 
+                      [-d|--detailed]
                       [-i|--no_value]
 ```
 说明：
 * 参数说明参见[hash_scan](#hashKey_scan)。
- 
+
 实例：
 ```
->>> full_scan 
+>>> full_scan
 ```
 
 ### copy_data
@@ -941,22 +943,23 @@ USAGE: full_scan      [-h|--hash_key_filter_type anywhere|prefix|postfix]
 
 用法：
 ```
-USAGE:  copy_data          <-c|--target_cluster_name str> <-a|--target_app_name str> [-s|--max_split_count num] 
-                                                                                     [-p|--partition num]
-                                                                                     [-b|--max_batch_count num]
-	                                                                             [-t|--timeout_ms num]
-                                                                                     [-h|--hash_key_filter_type anywhere|prefix|postfix] 
-                                                                                     [-x|--hash_key_filter_pattern str]
-                                                                                     [-s|--sort_key_filter_type anywhere|prefix|postfix|exact]
-                                                                                     [-y|--sort_key_filter_pattern str]
-                                                                                     [-v|--value_filter_type anywhere|prefix|postfix|exact]
-                                                                                     [-z|--value_filter_pattern str]
-                                                                                     [-n|--no_overwrite] [-i|--no_value] [-g|--geo_data]
-                                                                                     
+USAGE:  copy_data     <-c|--target_cluster_name str> <-a|--target_app_name str>
+                      [-s|--max_split_count num]
+                      [-p|--partition num]
+                      [-b|--max_batch_count num]
+	                  [-t|--timeout_ms num]
+                      [-h|--hash_key_filter_type anywhere|prefix|postfix]
+                      [-x|--hash_key_filter_pattern str]
+                      [-s|--sort_key_filter_type anywhere|prefix|postfix|exact]
+                      [-y|--sort_key_filter_pattern str]
+                      [-v|--value_filter_type anywhere|prefix|postfix|exact]
+                      [-z|--value_filter_pattern str]
+                      [-n|--no_overwrite] [-i|--no_value] [-g|--geo_data]
+
 ```
 
 说明：
-* 源表通过use命令指定，目标表通过-c和-a命令执行，目标表可以在另外一个集群，详细用法参见[Table迁移](/administration/table-migration#copy_data迁移)，可指定HashKey和SortKey和Value的过滤条件。 
+* 源表通过use命令指定，目标表通过-c和-a命令执行，目标表可以在另外一个集群，详细用法参见[Table迁移#copy_data迁移](/administration/table-migration#copy_data迁移)，可指定HashKey、SortKey和Value的过滤条件。
 
 示例：
 ```
@@ -965,65 +968,67 @@ USAGE:  copy_data          <-c|--target_cluster_name str> <-a|--target_app_name 
 
 
 ### clear_data
-将一个表的数据逐条删除，实际上就是先扫描数据，然后对每一条数据执行删除操作，可指定HashKey和SortKey和Value的过滤条件。 
+将一个表的数据逐条删除，实际上就是先扫描数据，然后对每一条数据执行删除操作，可指定HashKey、SortKey和Value的过滤条件。
 
 用法：
 ```
-USAGE:  clear_data             [-p|--partition num] 
-                               [-b|--max_batch_count num] 
-                               [-t|--timeout_ms num]
-                               [-h|--hash_key_filter_type anywhere|prefix|postfix]
-                               [-x|--hash_key_filter_pattern str]
-                               [-s|--sort_key_filter_type anywhere|prefix|postfix|exact]
-                               [-y|--sort_key_filter_pattern str]
-                               [-v|--value_filter_type anywhere|prefix|postfix|exact]
-                               [-z|--value_filter_pattern str]
-                               [-f|--force]
+USAGE:  clear_data    [-p|--partition num]
+                      [-b|--max_batch_count num]
+                      [-t|--timeout_ms num]
+                      [-h|--hash_key_filter_type anywhere|prefix|postfix]
+                      [-x|--hash_key_filter_pattern str]
+                      [-s|--sort_key_filter_type anywhere|prefix|postfix|exact]
+                      [-y|--sort_key_filter_pattern str]
+                      [-v|--value_filter_type anywhere|prefix|postfix|exact]
+                      [-z|--value_filter_pattern str]
+                      [-f|--force]
 ```
+
 说明：
 * `-p|--partition num`参数：指定删除的分片。
 * `-b|--max_batch_count num`参数：指定一次性删除的最大数量。
-* `-f|--force`参数：如果为`true`，则表示删除，否则无法删除并打印再次确认信息“ERROR: be careful to clear data!!! Please specify --force if you are determined to do”。
+* `-f|--force`参数：如果为true，则表示删除，否则无法删除并打印再次确认信息“ERROR: be careful to clear data!!! Please specify --force if you are determined to do”。
 * 其余参数均为过滤条件，参见[multi_get_range](#multi_get_range)。
+
 示例：
 ```
 >>> clear_data
 ```
 
 ### count_data
-统计一个表的数据条数，可指定HashKey和SortKey和Value的过滤条件。 
+统计一个表的数据条数，可指定HashKey、SortKey和Value的过滤条件。
 
 用法：
 ```
-USAGE:  count_data             [-p|--partition num] [-b|--max_batch_count num] [-t|--timeout_ms num]
-                               [-h|--hash_key_filter_type anywhere|prefix|postfix]
-                               [-x|--hash_key_filter_pattern str]
-                               [-s|--sort_key_filter_type anywhere|prefix|postfix|exact]
-                               [-y|--sort_key_filter_pattern str]
-                               [-v|--value_filter_type anywhere|prefix|postfix|exact]
-                               [-z|--value_filter_pattern str] [-d|--diff_hash_key] [-a|--stat_size]
-                               [-n|--top_count num] [-r|--run_seconds num]
+USAGE:  count_data    [-p|--partition num] [-b|--max_batch_count num] [-t|--timeout_ms num]
+                      [-h|--hash_key_filter_type anywhere|prefix|postfix]
+                      [-x|--hash_key_filter_pattern str]
+                      [-s|--sort_key_filter_type anywhere|prefix|postfix|exact]
+                      [-y|--sort_key_filter_pattern str]
+                      [-v|--value_filter_type anywhere|prefix|postfix|exact]
+                      [-z|--value_filter_pattern str] [-d|--diff_hash_key] [-a|--stat_size]
+                      [-n|--top_count num] [-r|--run_seconds num]
 ```
 
 说明：
 * `-p|--partition`参数：指定删除的分片。
-* `-b|--max_batch_count`参数：指定一次性删除的最大数量。 
-* `-d|--diff_hash_key`参数：统计hashKey数量。 
-* `-n|--top_count`参数：仅展示指定数量的数据。 
-* `-a|--stat_size`参数：统计当前value的大小，单位字节。 
-* `-r|--run_seconds num`参数：仅运行指定时间进行统计。 
-* 其余参数均为过滤条件，参见[multi_get_range](#multi_get_range)。 
+* `-b|--max_batch_count`参数：指定一次性删除的最大数量。
+* `-d|--diff_hash_key`参数：统计hashKey数量。
+* `-n|--top_count`参数：仅展示指定数量的数据。
+* `-a|--stat_size`参数：统计当前value的大小，单位字节。
+* `-r|--run_seconds num`参数：仅运行指定时间进行统计。
+* 其余参数均为过滤条件，参见[multi_get_range](#multi_get_range)。
 
 示例：
 ```
->>> count
+>>> count_data
 ```
 
 
 ## 负载均衡
 
 | 子命令 | 功能 |
-| ----- | ----- | 
+| ----- | ----- |
 | set_meta_level | 设置集群的负载均衡级别，包括stopped、blind、freezed、steady、lively。集群默认为steady，表示不进行自动负载均衡；设置为lively可以开启自动负载均衡 |
 | get_meta_level | 获取集群的负载均衡级别 |
 | propose | 发送partition操作，包括ASSIGN_PRIMARY、ADD_SECONDARY、DOWNGRADE_TO_INACTIVE等 |
@@ -1035,14 +1040,14 @@ USAGE:  count_data             [-p|--partition num] [-b|--max_batch_count num] [
 ## 数据恢复
 
 | 子命令 | 功能 |
-| ----- | ----- | 
+| ----- | ----- |
 | recover | 启动数据恢复流程，通过向ReplicaServer收集和学习，重新构建Zookeeper上的元数据信息，参见[元数据恢复](/administration/meta-recovery) |
 | ddd_diagnose | DDD自动诊断工具，用于恢复所有备份全部不可用的partition，参见[Replica数据恢复](/administration/replica-recovery) |
 
 ## 冷备份管理
 
 | 子命令 | 功能 |
-| ----- | ----- | 
+| ----- | ----- |
 | add_backup_policy | 增加冷备份策略 |
 | ls_backup_policy | 查询冷备份策略 |
 | modify_backup_policy | 修改冷备份策略 |
@@ -1057,7 +1062,7 @@ USAGE:  count_data             [-p|--partition num] [-b|--max_batch_count num] [
 ## 调试工具
 
 | 子命令 | 功能 |
-| ----- | ----- | 
+| ----- | ----- |
 | sst_dump | 使用RocksDB的```sst_dump```工具，将rocksdb的二进制sstable数据转换为可读的文本数据 |
 | mlog_dump | 将Pegasus的二进制commit log数据转换为可读的文本数据 |
 | local_get | 从本地数据库获取值（原来的调试工具） |

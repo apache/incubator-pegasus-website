@@ -26,16 +26,15 @@ Pegasus目前只支持在Linux平台运行。当前我们提供如下几种安�
 
 - **手动编译**
 
-请参照在 [编译构建](/overview/compilation) 页面中的指示进行编译。
+请参照在[编译构建](/overview/compilation)页面中的指示进行编译。
 
 - **下载 Docker 镜像**
 
-尚未支持，敬请期待
+尚未支持，敬请期待。
 
 ## 立即开始
 
-你可以参照文档目录检索你想要了解的内容。如果你对Pegasus完全陌生，可以首先阅读[项目背景](/overview/background)，并通过[体验onebox集群](/overview/onebox)
-来熟悉Pegasus的各项功能。配合阅览下方的 slides 口味更佳。
+你可以参照文档目录检索你想要了解的内容。如果你对Pegasus完全陌生，可以首先阅读[项目背景](/overview/background)，并通过[体验onebox集群](/overview/onebox)来熟悉Pegasus的各项功能。配合阅览下方的slides口味更佳。
 
 ## 社区分享
 
