@@ -10,7 +10,7 @@ menubar: api_menu
 
 在pegasus上添加了redis proxy后，用户可以通过redis协议直接访问proxy，从而间接访问pegasus服务。整体架构如下：
 
-![redis proxy](https://github.com/acelyc111/pegasus/blob/a988aca5f525411fbc04f931e4a71e4207593ba2/docs/media-img/redis_proxy_arch.png)
+![redis_proxy_arch.png](/assets/images/redis_proxy_arch.png){:class="img-responsive"}
 
 redis客户端与redis proxy之间使用[redis协议](https://redis.io/topics/protocol)，目前proxy已支持所有redis 数据类型（Simple Strings、Errors、Integers、Bulk Strings、Arrays）。
 
@@ -22,7 +22,7 @@ redis proxy与pegasus集群之间使用pegasus的thrift协议，proxy在这里�
 
 ## 配置
 
-redis proxy的配置文件规则遵循[配置说明](https://github.com/XiaoMi/pegasus/wiki/%E9%85%8D%E7%BD%AE%E8%AF%B4%E6%98%8E)，参考[示例](https://github.com/XiaoMi/pegasus/blob/master/src/geo/bench/config.ini)
+redis proxy的配置文件规则遵循[配置说明](/administration/config)，参考[示例](https://github.com/XiaoMi/pegasus/blob/master/src/geo/bench/config.ini)
 
 在redis proxy中有几项特有的配置项需要注意：
 
@@ -120,7 +120,7 @@ DECRBY key decrement
 
 ### GEODIST
 
-[GEO接口的实现原理](https://github.com/XiaoMi/pegasus/wiki/GEO%E6%94%AF%E6%8C%81)
+[GEO接口的实现原理](geo)
 
 ```
 GEODIST key member1 member2 [unit]

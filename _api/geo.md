@@ -120,13 +120,13 @@ S2CellUnion GetCovering(const S2Region& region);
 
 默认情况下，集合中总的cell数量尽可能少，但同时单个cell面积尽可能小。比如：
 
-![cap s2](https://github.com/XiaoMi/pegasus/blob/master/docs/media-img/s2_cap_1.png)
+![s2_cap_1.png](/assets/images/s2_cap_1.png){:class="img-responsive"}
 
 虽然这样的结果更精确，但在实际测试中发现当cell越小时，API返回越慢。同时，在真实的应用场景中，太小的cell意义不大，反而会增加cell的个数，这会带来RPC次数的增加。
 
 所以，在当前的Pegasus实现中，只联合使用两层cell,12层和16层。
 
-![cap s2 b](https://github.com/XiaoMi/pegasus/blob/master/docs/media-img/s2_cap_2.png)
+![s2_cap_2.png](/assets/images/s2_cap_2.png){:class="img-responsive"}
 
 对于这些跟目标区域有交集的cell，我们将scan他的key空间。
 
@@ -163,7 +163,7 @@ Pegasus GEO特性的使用有两种方式，一是直接使用C++ geo client；�
 
 [C++ geo client代码](https://github.com/XiaoMi/pegasus/blob/master/src/geo/lib/geo_client.h)中有详细的API说明，这里不再赘述。
 
-redis proxy的使用请参考[Redis适配](https://github.com/XiaoMi/pegasus/wiki/Redis%E9%80%82%E9%85%8D)
+redis proxy的使用请参考[Redis适配](redis)。
 
 ## 自定义extrator
 
@@ -201,7 +201,7 @@ copy_data -c target_cluster -a temp -g
 
 在进行`copy_data`操作之前，目标集群以及两个目标表都需要提前创建好。
 
-数据导入完成后就可以搭建`redis_proxy`了，具体的说明参考：[redis适配](https://github.com/XiaoMi/pegasus/wiki/Redis%E9%80%82%E9%85%8D)，需要注意的是配置项：
+数据导入完成后就可以搭建`redis_proxy`了，具体的说明参考：[redis适配](redis)，需要注意的是配置项：
 
 ```
 [apps.proxy]
@@ -222,7 +222,7 @@ arguments = redis_cluster temp temp_geo
 
 集群配置：
 
-- 节点数：5个replica server节点 (使用[v1.9.2](https://github.com/XiaoMi/pegasus/releases/tag/v1.9.2)版本)
+- 节点数：5个replica server节点（使用[v1.9.2版本](https://github.com/XiaoMi/pegasus/releases/tag/v1.9.2)）
 - 测试表的Partition数：128个
 - 单条数据大小：120字节
 
