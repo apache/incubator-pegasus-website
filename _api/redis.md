@@ -22,7 +22,7 @@ redis proxy与pegasus集群之间使用pegasus的thrift协议，proxy在这里�
 
 ## 配置
 
-redis proxy的配置文件规则遵循[配置说明](/administration/config)，参考[示例](https://github.com/XiaoMi/pegasus/blob/master/src/geo/bench/config.ini)
+redis proxy的配置文件规则遵循[配置说明](/administration/config)，参考[示例](https://github.com/XiaoMi/pegasus/blob/master/src/geo/bench/config.ini)。
 
 在redis proxy中有几项特有的配置项需要注意：
 
@@ -42,7 +42,7 @@ run = true
 
 ## APIs
 
-redis的原生命令请见[这里](https://redis.io/commands) 
+redis的原生命令请见[这里](https://redis.io/commands) 。
 
 以下接口说明都兼容redis原生命令，但支持的参数可能少于redis，以下接口说明中都给出了目前Pegasus代理所支持的所有参数，未给出的目前不支持。
 

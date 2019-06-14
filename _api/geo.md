@@ -201,7 +201,7 @@ copy_data -c target_cluster -a temp -g
 
 在进行`copy_data`操作之前，目标集群以及两个目标表都需要提前创建好。
 
-数据导入完成后就可以搭建`redis_proxy`了，具体的说明参考：[redis适配](redis)，需要注意的是配置项：
+数据导入完成后就可以搭建`redis_proxy`了，具体的说明参考[redis适配](redis)，需要注意的是配置项：
 
 ```
 [apps.proxy]

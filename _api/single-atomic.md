@@ -36,7 +36,7 @@ Pegasus采用Hash分片，同一个HashKey的数据总是存储在同一个Parti
 # CAS操作
 另一类很有用的原子操作就是CAS（Compare-And-Swap），直译就是对比交换，最初是表示一条CPU的原子指令，其作用是让CPU先进行比较两个值是否相等，然后原子地更新某个位置的值。基于CAS操作，可以实现很多高级的并发特性，譬如锁。因此很多编程语言也原生地提供CAS操作。
 
-Pegasus提供了check_and_set的CAS操作，其语义就是：根据HashKey的某一个SortKey的值是否满足某种条件，来决定是否修改另一个SortKey的值。我们将用于判断条件的SortKey称之为`CheckSortKey`，将用于设置值的SortKey称之为`SetSortKey`。对应地，CheckSortKey的value称之为`CheckValue`，SetSortKey要设置的value称之为`SetValue`。接口参见[checkAndSet](/clients/java-client#checkandset)，以及其扩展版本[checkAndMutate](/clients/java-client#checkAndMutate)和[compareExchange](/clients/java-client#compareexchange)。
+Pegasus提供了check_and_set的CAS操作，其语义就是：根据HashKey的某一个SortKey的值是否满足某种条件，来决定是否修改另一个SortKey的值。我们将用于判断条件的SortKey称之为`CheckSortKey`，将用于设置值的SortKey称之为`SetSortKey`。对应地，CheckSortKey的value称之为`CheckValue`，SetSortKey要设置的value称之为`SetValue`。接口参见[checkAndSet](/clients/java-client#checkandset)，以及其扩展版本[checkAndMutate](/clients/java-client#checkandmutate)和[compareExchange](/clients/java-client#compareexchange)。
 
 语义解释：
 * 只有当CheckValue满足指定的条件时，才会设置SetSortKey的值。
