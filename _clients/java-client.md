@@ -695,7 +695,7 @@ public long incr(String tableName, byte[] hashKey, byte[] sortKey, long incremen
    * 如果旧值不存在，则把旧值当做0处理，即新值等于increment。
    * TTL语义：如果旧值存在，新值的TTL和旧值保持一致；如果旧值不存在，新值将不设TTL。
 
-从Pegasus Server [v1.11.1](https://github.com/XiaoMi/pegasus/releases/tag/v1.11.1)开始支持在incr操作时修改TTL，需使用Pegasus Java Client [1.11.2-thrift-0.11.0-inlined-release](https://github.com/XiaoMi/pegasus-java-client/releases/tag/1.11.2-thrift-0.11.0-inlined-release)及以上版本来使用这个功能。
+从Pegasus Server [v1.11.1版本](https://github.com/XiaoMi/pegasus/releases/tag/v1.11.1)开始支持在incr操作时修改TTL，需使用Pegasus Java Client [1.11.2-thrift-0.11.0-inlined-release](https://github.com/XiaoMi/pegasus-java-client/releases/tag/1.11.2-thrift-0.11.0-inlined-release)及以上版本来使用这个功能。
 ```
 /**
  * Atomically increment value.
@@ -821,7 +821,7 @@ public PegasusTableInterface.CheckAndSetResult checkAndSet(String tableName, byt
    * 如果CheckType为`int compare`类型的操作，且CheckOperand或者CheckValue转换为int64时出错，譬如不是合法的数字或者超出int64范围。
 
 ### checkAndMutate
-checkAndMutate是[checkAndSet](#checkandset)的扩展版本：checkAndSet只允许set一个值，而checkAndMutate允许在单个原子操作中set或者del多个值。该接口从[1.11.0](https://github.com/XiaoMi/pegasus-java-client/releases/tag/1.11.0-thrift-0.11.0-inlined-release)版本开始提供。
+checkAndMutate是[checkAndSet](#checkandset)的扩展版本：checkAndSet只允许set一个值，而checkAndMutate允许在单个原子操作中set或者del多个值。该接口从Pegasus Java Client [1.11.0-thrift-0.11.0-inlined-release](https://github.com/XiaoMi/pegasus-java-client/releases/tag/1.11.0-thrift-0.11.0-inlined-release)版本开始提供。
 
 为此，我们提供了一个包装类[Mutations](https://github.com/XiaoMi/pegasus-java-client/blob/thrift-0.11.0-inlined/src/main/java/com/xiaomi/infra/pegasus/client/Mutations.java)，用户可以预先设置需要实施的set或者del操作。
 
@@ -2062,7 +2062,7 @@ Pegasus的key和value都是原始的字节串（Java中就是byte[]），而用�
 
 对于value较大（>=2kb）的业务，我们推荐在客户端使用[facebook/Zstandard](https://github.com/facebook/zstd)压缩算法（简称 Zstd）对数据进行压缩，以减少value的数据长度，提升Pegasus的服务稳定性和读写性能。Zstd算法在压缩比和压缩速率上取得较好的平衡，适合通用场景。
 
-从版本[1.11.3-thrift-0.11.0-inlined-release](https://github.com/XiaoMi/pegasus-java-client/releases/tag/1.11.3-thrift-0.11.0-inlined-release)开始，我们提供了Zstd压缩工具类[com.xiaomi.infra.pegasus.tools.ZstdWrapper](https://github.com/XiaoMi/pegasus-java-client/blob/thrift-0.11.0-inlined/src/main/java/com/xiaomi/infra/pegasus/tools/ZstdWrapper.java)，方便用户实现压缩功能。
+从版本Pegasus Java Client [1.11.3-thrift-0.11.0-inlined-release](https://github.com/XiaoMi/pegasus-java-client/releases/tag/1.11.3-thrift-0.11.0-inlined-release)开始，我们提供了Zstd压缩工具类[com.xiaomi.infra.pegasus.tools.ZstdWrapper](https://github.com/XiaoMi/pegasus-java-client/blob/thrift-0.11.0-inlined/src/main/java/com/xiaomi/infra/pegasus/tools/ZstdWrapper.java)，方便用户实现压缩功能。
 
 使用示例：
 ```java
