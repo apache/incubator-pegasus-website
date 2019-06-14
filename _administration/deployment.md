@@ -73,7 +73,7 @@ Pegasus集群依赖Zookeeper进行元数据存储和MetaServer抢锁，因此需
 ## 准备部署包
 ReplicaServer/MetaServer/Collector三种角色的Server共用一套server程序和配置文件。
 
-首先[编译Pegasus](%E7%BC%96%E8%AF%91%E6%9E%84%E5%BB%BA)，编译完成后运行以下命令可以打包生产server端部署包：
+首先[编译Pegasus](/overview/compilation)，编译完成后运行以下命令可以打包生产server端部署包：
 ```
 ./run.sh pack_server
 ```
@@ -103,7 +103,7 @@ cd bin/
 
 集群启动成功后，会默认创建一个``temp``表，该表也用于Collector的集群可用度检查，最好不要删除。
 
-你可以使用[Shell工具](Shell%E5%B7%A5%E5%85%B7)查看集群的各种状态。如果启动失败，可以到``%{app.dir}/log``下面查看错误日志，排查问题。
+你可以使用[Shell工具](/overview/shell)查看集群的各种状态。如果启动失败，可以到``%{app.dir}/log``下面查看错误日志，排查问题。
 
 # 分布式部署工具
 

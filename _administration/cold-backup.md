@@ -23,7 +23,7 @@ Pegasus的冷备份功能用来将Pegasus中的数据定期生成快照文件，
 
 ### FDS
 
-FDS是小米生态云提供的存储产品，目前仅面向小米的生态链业务开放。更多详细的介绍[请戳这里](https://cnbj6.cloud.mi.com/react/index.html#/index/product/fds?_k=b6rukd)
+FDS是小米生态云提供的存储产品，目前仅面向小米的生态链业务开放。更多详细的介绍[请戳这里](https://cnbj6.cloud.mi.com/react/index.html#/index/product/fds?_k=b6rukd)。
 
 ### 本地文件系统
 
@@ -84,7 +84,7 @@ args = /home/weijiesun/pegasus_cold_backup
 
 ### 创建冷备份策略
 
-通过[pegasus shell](https://github.com/XiaoMi/pegasus/wiki/Shell%E5%B7%A5%E5%85%B7#%E5%86%B7%E5%A4%87%E4%BB%BD%E7%AE%A1%E7%90%86)的add_backup_policy命令可以创建一个冷备份策略：
+通过[Shell工具的add_backup_policy命令](/overview/shell#冷备份管理)可以创建一个冷备份策略：
 
 ```
 >>> add_backup_policy -p policy1 -b my_backup_media -a 1 -i 300 -s 16:00 -c 3
@@ -244,8 +244,8 @@ sleep 1 second to wait complete...
 * -i：旧表的id
 * -t：旧的备份的时间戳编号
 * -b：存储介质名称
-* -n：新表的名称，如果不指定就使用旧名字，如果和新的名字冲突则报错。
-* -s：是否跳过损坏的partition, 默认不跳过。
+* -n：新表的名称，如果不指定就使用旧名字，如果和新的名字冲突则报错
+* -s：是否跳过损坏的partition, 默认不跳过
 
 对于恢复进度，可以用query_restore_status进行查看
 ```
@@ -271,4 +271,4 @@ annotations:
 
 ## 怎样将数据备份到HDFS
 
-采用HDFS fuse即可，可以参考[这篇文章](https://www.jianshu.com/p/1beb5325c6d8)
+采用HDFS fuse即可，可以参考[这篇文章](https://www.jianshu.com/p/1beb5325c6d8)。

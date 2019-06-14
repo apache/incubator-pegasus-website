@@ -20,16 +20,16 @@ menubar: administration_menu
 
 # 客户端流控
 
-目前Java客户端提供了流控工具，参见[Java客户端文档#流量控制](Java客户端文档#流量控制)。
+目前Java客户端提供了流控工具，参见[Java客户端文档#流量控制](/clients/java-client#流量控制)。
 
 # 服务端流控
 
 # 表级流控
 
-从[1.11.2版本](https://github.com/XiaoMi/pegasus/releases/tag/v1.11.2)开始，Pegasus支持Server端表级流控，目前只针对写操作。
+从[v1.11.2版本](https://github.com/XiaoMi/pegasus/releases/tag/v1.11.2)开始，Pegasus支持Server端表级流控，目前只针对写操作。
 
 实现原理：
-* 用户在[Table环境变量](Table环境变量)中设置`replica.write_throttling`环境变量。
+* 用户在[Table环境变量](table-env)中设置`replica.write_throttling`环境变量。
 * MetaServer将环境变量异步地通知到各个ReplicaServer，使该表的每个replica都获取到该环境变量，这个过程大约有几秒到几十秒不等的延迟，但是不会超过一分钟。
 * replica获得环境变量后，解析获得write_throttling流控配置，并立即开始生效。
 

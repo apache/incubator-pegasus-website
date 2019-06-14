@@ -32,7 +32,7 @@ drop命令用于删除一个表，通过`-r`选项指定数据的保留时间，
 
 ## 过期表数据的物理删除
 过期表的数据在各个replica server上也未必能立即被物理删除，因为：
-* 表的保留时间过期后，只有通过shell设置了`set_meta_level lively`，使meta server进入[负载均衡模式](负载均衡#控制集群的负载均衡)，meta server才会通过`config_sync`RPC通知replica server删除相关的replica。而replica server在收到meta server的通知后，就会将需删除的replica文件夹通过添加`.gar`后缀进行重命名，表示这是可以被删除的垃圾数据。但此时数据仍未被真正物理删除。
+* 表的保留时间过期后，只有通过shell设置了`set_meta_level lively`，使meta server进入[负载均衡模式](rebalance#控制集群的负载均衡)，meta server才会通过`config_sync`RPC通知replica server删除相关的replica。而replica server在收到meta server的通知后，就会将需删除的replica文件夹通过添加`.gar`后缀进行重命名，表示这是可以被删除的垃圾数据。但此时数据仍未被真正物理删除。
 * replica server会定期（配置文件`disk_stat_interval_seconds`）扫描各个数据文件夹（配置文件`data_dirs`），统计文件夹的使用情况。对于标记为`.gar`后缀的replica文件夹，获取其最后修改时间，并和当前时间进行比较，只有当两者时间差超过了阈值（配置文件`gc_disk_garbage_replica_interval_seconds`）后，在会将文件夹删除掉。此时数据才算被真正物理删除。
 
 所以综上所述，能够影响表被删除后进行物理删除的时间点的配置项包括：
@@ -110,8 +110,7 @@ list apps succeed
 关键点：
 * 表的生命周期定义要清晰：对于正在删除/召回的表，其他的create/recall/drop的操作要禁止。
 * 表的过期时间要在各个meta server之间达成一致，这需要各个meta server做时钟同步。
-* 如果表格被多次的删除和召回，当这些消息以乱序的方式送达到replica server时，一定要保证replica server能处理这些情况。最好能把
-drop操作映射成replica configuration元数据的变更。
+* 如果表格被多次的删除和召回，当这些消息以乱序的方式送达到replica server时，一定要保证replica server能处理这些情况。最好能把drop操作映射成replica configuration元数据的变更。
 
 实现要点简述：
 * meta server对删除动作的响应：当收到客户端响应时，meta server需要把信息更新到zookeeper: (1) app的状态改为dropped, 记录过期时间 (2) 升级configuration的状态，并记录到zookeeper。

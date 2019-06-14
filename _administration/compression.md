@@ -6,7 +6,7 @@ menubar: administration_menu
 
 # 客户端压缩
 
-请参考 [Java客户端文档#数据序列化](Java客户端文档#数据序列化) 和 [Java客户端文档#数据压缩](Java客户端文档#数据压缩) 。
+请参考 [Java客户端文档#数据序列化](/clients/java-client#数据序列化) 和 [Java客户端文档#数据压缩](/clients/java-client#数据压缩) 。
 
 # 服务端压缩
 
@@ -16,10 +16,10 @@ menubar: administration_menu
 
 Pegasus服务端支持的压缩算法：
 * snappy
-* lz4 (从[1.11.2](https://github.com/XiaoMi/pegasus/releases/tag/v1.11.2)版本开始支持)
-* zstd (从[1.11.2](https://github.com/XiaoMi/pegasus/releases/tag/v1.11.2)版本开始支持)
+* lz4 (从[v1.11.2版本](https://github.com/XiaoMi/pegasus/releases/tag/v1.11.2)开始支持)
+* zstd (从[v1.11.2版本](https://github.com/XiaoMi/pegasus/releases/tag/v1.11.2)开始支持)
 
-通过[配置文件](配置说明)来配置压缩算法，譬如：
+通过[配置文件](config)来配置压缩算法，譬如：
 ```ini
 [pegasus.server]
     rocksdb_compression_type = lz4
@@ -38,7 +38,7 @@ lz4 1.8.1 | 2.101 | 750 | 3700
 snappy 1.1.4 | 2.091 | 530 | 1800
 lzf 3.6 -1 | 2.077 | 400 | 860
 
-![1](https://user-images.githubusercontent.com/528445/49912828-60741480-fec6-11e8-8ff7-6b415e669067.png)
+![compression-comparation.png](/assets/images/compression-comparation.png){:class="img-responsive"}
 
 这个结果与[lz4官方的benchmark](https://github.com/lz4/lz4#benchmarks)也是一致的。
 

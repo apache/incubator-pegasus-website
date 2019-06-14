@@ -18,7 +18,7 @@ menubar: administration_menu
 
 扩容流程非常简单：
 * 要扩容多个机器，就在这些新增机器上启动replica server进程，启动后replica server会主动联系meta server，加入节点列表中。
-* 在meta level为steady的情况下，不会进行[负载均衡](负载均衡)，因此用shell工具的`nodes -d`命令查看，可以看到新节点的状态为ALIVE，但是服务的replica个数为0。
+* 在meta level为steady的情况下，不会进行[负载均衡](rebalance)，因此用shell工具的`nodes -d`命令查看，可以看到新节点的状态为ALIVE，但是服务的replica个数为0。
 * 通过shell工具的`set_meta_level lively`启动负载均衡，meta server会逐渐将部分replica迁移到新节点上。
 * 通过shell工具的`nodes -d`命令查看个节点服务replica的情况，在达到均衡状态后，通过`set_meta_level steady`关闭负载均衡，扩容完成。
 
@@ -31,11 +31,11 @@ menubar: administration_menu
 
 推荐的缩容流程：
 * 计算缩容后ALIVE的节点比例会不会低于配置参数`node_live_percentage_threshold_for_update`，如果低于，就将该配置参数改小些，然后升级meta server。
-* 使用shell工具将集群的meta level设置为steady，关闭[负载均衡功能](负载均衡)，避免不必要的replica迁移
+* 使用shell工具将集群的meta * level设置为steady，关闭[负载均衡功能](rebalance)，避免不必要的replica迁移。
   ```
   >>> set_meta_level steady
   ```
-* 使用shell工具向meta server发送[远程命令](远程命令#meta-server)，设置black_list：
+* 使用shell工具向meta server发送[远程命令](remote-commands#meta-server)，设置black_list：
   ```
   >>> remote_command -t meta-server meta.lb.assign_secondary_black_list $address_list
   ```
@@ -61,4 +61,4 @@ menubar: administration_menu
 通过先**扩容**后**缩容**，可以实现集群的节点迁移。为了尽量减少数据的重复拷贝和移动，建议按照如下步骤：
 * 先扩容：把需要扩容的机器加入到集群中，但是在加入后**暂时不进行负载均衡**。
 * 再缩容：将需要缩容的机器通过上面的[缩容流程](#缩容流程)进行下线，**特别注意参数`node_live_percentage_threshold_for_update`的配置**。
-* 进行[负载均衡](负载均衡)。
+* 进行[负载均衡](rebalance)。

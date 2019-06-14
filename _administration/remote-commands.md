@@ -70,8 +70,8 @@ Pegasus不同角色的进程支持不同的远程命令。但是collector没有�
 | replica.verbose-client-log | 动态修改配置`verbose_client_log_on_start`，控制回复客户端的请求时是否打印ERROR日志
 | replica.verbose-commit-log | 动态修改配置`verbose_commit_log_on_start`，控制在提交写请求时是否打印DEBUG日志
 | replica.trigger-checkpoint | 对指定的replica手动触发`async_checkpoint`操作
-| replica.query-compact | 对指定的replica查询其执行[Manual-Compact](Manual-Compact功能)操作的状态
-| replica.query-app-envs | 对指定的replica查询其当前的[Table环境变量](Table环境变量)
+| replica.query-compact | 对指定的replica查询其执行[Manual-Compact](manual-compact)操作的状态
+| replica.query-app-envs | 对指定的replica查询其当前的[Table环境变量](table-env)
 
 # 如何使用
 

@@ -10,7 +10,7 @@ Zookeeper迁移提供了两种办法：通过元数据恢复迁移；通过zkcop
 
 # 通过元数据恢复迁移
 
-Pegasus提供了[元数据恢复](元数据恢复)功能，这个功能也可用于Zookeeper迁移。基本思路就是配置新的Zookeeper后，通过recover命令发起元数据恢复，这样元数据就写入新的Zookeeper上。
+Pegasus提供了[元数据恢复](meta-recovery)功能，这个功能也可用于Zookeeper迁移。基本思路就是配置新的Zookeeper后，通过recover命令发起元数据恢复，这样元数据就写入新的Zookeeper上。
 
 1. 备份app列表
 
@@ -56,7 +56,7 @@ Pegasus提供了[元数据恢复](元数据恢复)功能，这个功能也可用
    ```
    >>> recover -f recover_node_list
    ```
-   检查恢复结果，如果出错请参考[常见问题整理](元数据恢复#常见问题整理)排查问题。
+   检查恢复结果，如果出错请参考[常见问题整理](meta-recovery#常见问题整理)排查问题。
 
 7. 修改配置文件并重启meta
 
@@ -80,7 +80,7 @@ Pegasus提供了[元数据恢复](元数据恢复)功能，这个功能也可用
 
 2. 修改主meta server状态为blind
 
-   将主meta server的level设置为blind（关于meta server的level介绍请参见[负载均衡](负载均衡#控制集群的负载均衡)），以禁止任何对Zookeeper数据的更新操作，防止在copy过程中出现不一致：
+   将主meta server的level设置为blind（关于meta server的level介绍请参见[负载均衡](rebalance#控制集群的负载均衡)），以禁止任何对Zookeeper数据的更新操作，防止在copy过程中出现不一致：
    ```
    >>> set_meta_level blind
    ```

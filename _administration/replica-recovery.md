@@ -8,7 +8,7 @@ menubar: administration_menu
 
 通常来说，Pegasus的数据会存储3个副本。对于每个partition，正常情况下应当都有一主两备3个replica提供服务。
 
-但是，集群不可避免会发生节点宕机、网络异常、心跳失联等情况，造成副本丢失，对服务可用性产生影响。副本丢失的程度会影响读写的能力（在[负载均衡](负载均衡#概念篇)里也有介绍）：
+但是，集群不可避免会发生节点宕机、网络异常、心跳失联等情况，造成副本丢失，对服务可用性产生影响。副本丢失的程度会影响读写的能力（在[负载均衡](rebalance#概念篇)里也有介绍）：
 * 一主两备都可用：partition完全健康，可以**正常读和写**。
 * 一主一备可用：根据PacificA一致性协议，同样可以**安全地读和写**。
 * 只有一主可用：此时**不可写**，但是**可读**。
@@ -22,7 +22,7 @@ menubar: administration_menu
 
 # DDD诊断工具
 
-从版本[1.11.0](https://github.com/XiaoMi/pegasus/releases/tag/v1.11.0)开始，Pegasus在Shell工具中提供了`ddd_diagnose`命令，以支持DDD自动诊断功能。
+从[v1.11.0版本](https://github.com/XiaoMi/pegasus/releases/tag/v1.11.0)开始，Pegasus在Shell工具中提供了`ddd_diagnose`命令，以支持DDD自动诊断功能。
 
 命令用法：
 ```
@@ -38,7 +38,8 @@ ddd_diagnose [-g|--gpid appid|appid.pidx] [-d|--diagnose] [-a|--auto_diagnose]
 * `-o`：将结果输出到指定文件。
 
 使用示例（如果看不清楚，请在单独的页面中打开图片）：
-![ddd-diagnose](https://github.com/XiaoMi/pegasus/blob/master/docs/media-img/ddd-diagnose.png)
+
+![ddd-diagnose.png](/assets/images/ddd-diagnose.png){:class="img-responsive"}
 
 上图是使用`ddd_diagnose`命令时的输出，我们通过红色的箭头标识依次进行说明：
 * 1：当前正在诊断的partition id。

@@ -4,7 +4,7 @@ layout: page
 menubar: administration_menu
 ---
 
-注：Usage Scenario功能从[1.8.1版本](https://github.com/XiaoMi/pegasus/releases/tag/v1.8.1)开始支持。
+注：Usage Scenario功能从[v1.8.1版本](https://github.com/XiaoMi/pegasus/releases/tag/v1.8.1)开始支持。
 
 # 原理
 Usage Scenario功能，是指对于Pegasus的表，可以指定其使用场景。针对不同的场景，通过优化底层RocksDB的配置，以获得更好的读写性能。
@@ -43,7 +43,7 @@ A: A fast way to direct insert data to the DB:
 ```
 
 而我们的思路正是：通过针对不同业务场景，设置不同的RocksDB参数，调节RocksDB的行为，以提供更好的读写性能。具体来说：
-* 通过[Table环境变量](Table环境变量)设置`rocksdb.usage_scenario`来指定当前的业务场景。
+* 通过[Table环境变量](table-env)设置`rocksdb.usage_scenario`来指定当前的业务场景。
 * Replica在检测到该环境变量发生变化时，就会根据业务场景，动态修改RocksDB的配置参数。具体设置了哪些参数，请参见[src/server/pegasus_server_impl.cpp](https://github.com/XiaoMi/pegasus/blob/master/src/server/pegasus_server_impl.cpp)中的`set_usage_scenario()`方法。
 
 # 支持场景
@@ -51,7 +51,7 @@ A: A fast way to direct insert data to the DB:
 目前支持三种场景：
 * normal：正常场景，读写兼顾。这也是表的默认场景，该场景不会对写进行特别的优化，适合大部分读多写少或者读写均衡的应用。
 * prefer_write：写较多的场景。主要是增大`write_buffer_size`以降低sstable的产生速度。
-* bulk_load：灌数据场景。应用上面RocksDB-FAQ中提到的优化，避免compaction过程。因为Bulk load模式停止compaction，所以写入的数据都会堆放在level-0层，对读不友好。因此，Bulk load模式通常与[Manual Compact功能](Manual-Compact功能)配合使用，在数据加载完成后进行一次Manual Compact，以去除垃圾数据、提升读性能（参见后面的[应用示例](#应用示例)）。另外，当不需要加载数据时，应当恢复为Normal模式。典型的灌数据流程：
+* bulk_load：灌数据场景。应用上面RocksDB-FAQ中提到的优化，避免compaction过程。因为Bulk load模式停止compaction，所以写入的数据都会堆放在level-0层，对读不友好。因此，Bulk load模式通常与[Manual Compact功能](manual-compact)配合使用，在数据加载完成后进行一次Manual Compact，以去除垃圾数据、提升读性能（参见后面的[应用示例](#应用示例)）。另外，当不需要加载数据时，应当恢复为Normal模式。典型的灌数据流程：
   * 设置表的Usage Scenario模式为bulk_load
   * 灌数据：在bulk load模式下灌数据的QPS会更高，流量更稳定
   * 执行Manual Compact：该过程消耗大量的CPU和IO，可能对集群读写性能有影响
@@ -59,7 +59,7 @@ A: A fast way to direct insert data to the DB:
 
 # 如何设置
 ## 通过shell设置
-通过shell的[set_app_envs命令](Table环境变量#set_app_envs)来设置，譬如设置temp表为bulk_load模式：
+通过shell的[set_app_envs命令](/overview/shell#set_app_envs)来设置，譬如设置temp表为bulk_load模式：
 ```
 >>> use temp
 >>> set_app_envs rocksdb.usage_scenario bulk_load
@@ -85,4 +85,4 @@ bulk_load模式通常用于灌数据，但是在灌数据过程中因为消耗�
 * 第一步：​设置B模式为bulk_load -> 灌数据至B -> Manual Compact B -> 设置B模式为normal​​ -> 切线上流量至B
 * 第二步：设置A模式为bulk_load -> 灌数据至A -> Manual Compact A -> 设置A模式为normal -> 切线上流量至A
 
-关于如何Manual Compact，请参考[Manual-Compact功能](Manual-Compact功能)。
+关于如何Manual Compact，请参考[Manual-Compact功能](manual-compact)。
