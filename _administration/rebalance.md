@@ -139,9 +139,9 @@ menubar: administration_menu
 
 Peagsus提供以下几种命令来控制集群的负载均衡：
 
-1. set_meta_level <freezed|steady|lively>
+1. set_meta_level
 
-   这个命令用来控制meta的运行level：
+   这个命令用来控制meta的运行level，使用方式为`set_meta_level <freezed|steady|lively>`：
    * freezed：meta server会停止unhealthy partition的cure工作，一般在集群出现较多节点宕机或极其不稳定的情况下使用，另外如果集群的节点数掉到一个数量或者比例以下（通过配置文件`min_live_node_count_for_unfreeze`和`node_live_percentage_threshold_for_update`控制）就会自动变为freezed，等待人工介入。
    * steady：meta server的默认level, 只做cure，不做balance。
    * lively：meta server会调整分片数，力求均衡。
