@@ -48,14 +48,14 @@ menubar: administration_menu
 
    可以用来观察系统中每个节点的partition个数: 
 
-```
->>> nodes -d
-address              status              replica_count       primary_count       secondary_count
-10.132.5.1:32801     ALIVE               54                  18                  36
-10.132.5.2:32801     ALIVE               54                  18                  36
-10.132.5.3:32801     ALIVE               54                  18                  36
-10.132.5.5:32801     ALIVE               54                  18                  36
-```
+   ```
+   >>> nodes -d
+   address              status              replica_count       primary_count       secondary_count
+   10.132.5.1:32801     ALIVE               54                  18                  36
+   10.132.5.2:32801     ALIVE               54                  18                  36
+   10.132.5.3:32801     ALIVE               54                  18                  36
+   10.132.5.5:32801     ALIVE               54                  18                  36
+   ```
 
    如果节点间的partition个数分布差异太大，可以采用"set_meta_level lively"的命令来进行调整。
 
@@ -63,85 +63,85 @@ address              status              replica_count       primary_count      
    
    可以用来某张表的所有partition的分布情况：可以观察到某个具体partition的组成，也可以汇总每个节点服务该表的partition个数。
 
-```
->>> app temp -d
-[Parameters]
-app_name: temp
-detailed: true
-
-[Result]
-app_name          : temp
-app_id            : 14
-partition_count   : 8
-max_replica_count : 3
-details           :
-pidx      ballot    replica_count       primary                                 secondaries
-0         22344     3/3                 10.132.5.2:32801                        [10.132.5.3:32801,10.132.5.5:32801]
-1         20525     3/3                 10.132.5.3:32801                        [10.132.5.2:32801,10.132.5.5:32801]
-2         19539     3/3                 10.132.5.1:32801                        [10.132.5.3:32801,10.132.5.5:32801]
-3         18819     3/3                 10.132.5.5:32801                        [10.132.5.3:32801,10.132.5.1:32801]
-4         18275     3/3                 10.132.5.5:32801                        [10.132.5.2:32801,10.132.5.1:32801]
-5         18079     3/3                 10.132.5.3:32801                        [10.132.5.2:32801,10.132.5.1:32801]
-6         17913     3/3                 10.132.5.2:32801                        [10.132.5.1:32801,10.132.5.5:32801]
-7         17692     3/3                 10.132.5.1:32801                        [10.132.5.3:32801,10.132.5.2:32801]
-
-node                                    primary   secondary total
-10.132.5.1:32801                        2         4         6
-10.132.5.2:32801                        2         4         6
-10.132.5.3:32801                        2         4         6
-10.132.5.5:32801                        2         4         6
-                                        8         16        24
-
-fully_healthy_partition_count   : 8
-unhealthy_partition_count       : 0
-write_unhealthy_partition_count : 0
-read_unhealthy_partition_count  : 0
-
-list app temp succeed
-```
+   ```
+   >>> app temp -d
+   [Parameters]
+   app_name: temp
+   detailed: true
+   
+   [Result]
+   app_name          : temp
+   app_id            : 14
+   partition_count   : 8
+   max_replica_count : 3
+   details           :
+   pidx      ballot    replica_count       primary                                 secondaries
+   0         22344     3/3                 10.132.5.2:32801                        [10.132.5.3:32801,10.132.5.5:32801]
+   1         20525     3/3                 10.132.5.3:32801                        [10.132.5.2:32801,10.132.5.5:32801]
+   2         19539     3/3                 10.132.5.1:32801                        [10.132.5.3:32801,10.132.5.5:32801]
+   3         18819     3/3                 10.132.5.5:32801                        [10.132.5.3:32801,10.132.5.1:32801]
+   4         18275     3/3                 10.132.5.5:32801                        [10.132.5.2:32801,10.132.5.1:32801]
+   5         18079     3/3                 10.132.5.3:32801                        [10.132.5.2:32801,10.132.5.1:32801]
+   6         17913     3/3                 10.132.5.2:32801                        [10.132.5.1:32801,10.132.5.5:32801]
+   7         17692     3/3                 10.132.5.1:32801                        [10.132.5.3:32801,10.132.5.2:32801]
+   
+   node                                    primary   secondary total
+   10.132.5.1:32801                        2         4         6
+   10.132.5.2:32801                        2         4         6
+   10.132.5.3:32801                        2         4         6
+   10.132.5.5:32801                        2         4         6
+                                           8         16        24
+   
+   fully_healthy_partition_count   : 8
+   unhealthy_partition_count       : 0
+   write_unhealthy_partition_count : 0
+   read_unhealthy_partition_count  : 0
+   
+   list app temp succeed
+   ```
 
 3. server_stat
    
    可以用来观察各个replica server当前的一些监控数据。如果想分析流量的均衡程度，要重点观察各个操作的qps和latency。对于数据值明显异常的节点(和其他节点差异太大)，需要排查下partition个数是不是分布不均，或者是不是出现了某个分片的读写热点。
 
-```
->>> server_stat -t replica-server
-COMMAND: server-stat
-
-CALL [replica-server] [10.132.5.1:32801] succeed: manual_compact_enqueue_count=0, manual_compact_running_count=0, closing_replica_count=0, disk_available_max_ratio=88, disk_available_min_ratio=78, disk_available_total_ratio=85, disk_capacity_total(MB)=8378920, opening_replica_count=0, serving_replica_count=54, commit_throughput=0, learning_count=0, shared_log_size(MB)=4, memused_res(MB)=2499, memused_virt(MB)=4724, get_p99(ns)=0, get_qps=0, multi_get_p99(ns)=0, multi_get_qps=0, multi_put_p99(ns)=0, multi_put_qps=0, put_p99(ns)=0, put_qps=0
-CALL [replica-server] [10.132.5.2:32801] succeed: manual_compact_enqueue_count=0, manual_compact_running_count=0, closing_replica_count=0, disk_available_max_ratio=88, disk_available_min_ratio=79, disk_available_total_ratio=86, disk_capacity_total(MB)=8378920, opening_replica_count=0, serving_replica_count=54, commit_throughput=0, learning_count=0, shared_log_size(MB)=4, memused_res(MB)=2521, memused_virt(MB)=4733, get_p99(ns)=0, get_qps=0, multi_get_p99(ns)=0, multi_get_qps=0, multi_put_p99(ns)=0, multi_put_qps=0, put_p99(ns)=0, put_qps=0
-CALL [replica-server] [10.132.5.3:32801] succeed: manual_compact_enqueue_count=0, manual_compact_running_count=0, closing_replica_count=0, disk_available_max_ratio=90, disk_available_min_ratio=78, disk_available_total_ratio=85, disk_capacity_total(MB)=8378920, opening_replica_count=0, serving_replica_count=54, commit_throughput=0, learning_count=0, shared_log_size(MB)=4, memused_res(MB)=2489, memused_virt(MB)=4723, get_p99(ns)=0, get_qps=0, multi_get_p99(ns)=0, multi_get_qps=0, multi_put_p99(ns)=0, multi_put_qps=0, put_p99(ns)=0, put_qps=0
-CALL [replica-server] [10.132.5.5:32801] succeed: manual_compact_enqueue_count=0, manual_compact_running_count=0, closing_replica_count=0, disk_available_max_ratio=88, disk_available_min_ratio=82, disk_available_total_ratio=85, disk_capacity_total(MB)=8378920, opening_replica_count=0, serving_replica_count=54, commit_throughput=0, learning_count=0, shared_log_size(MB)=4, memused_res(MB)=2494, memused_virt(MB)=4678, get_p99(ns)=0, get_qps=0, multi_get_p99(ns)=0, multi_get_qps=0, multi_put_p99(ns)=0, multi_put_qps=0, put_p99(ns)=0, put_qps=0
-
-Succeed count: 4
-Failed count: 0
-```
+   ```
+   >>> server_stat -t replica-server
+   COMMAND: server-stat
+   
+   CALL [replica-server] [10.132.5.1:32801] succeed: manual_compact_enqueue_count=0, manual_compact_running_count=0, closing_replica_count=0, disk_available_max_ratio=88, disk_available_min_ratio=78, disk_available_total_ratio=85, disk_capacity_total(MB)=8378920, opening_replica_count=0, serving_replica_count=54, commit_throughput=0, learning_count=0, shared_log_size(MB)=4, memused_res(MB)=2499, memused_virt(MB)=4724, get_p99(ns)=0, get_qps=0, multi_get_p99(ns)=0, multi_get_qps=0, multi_put_p99(ns)=0, multi_put_qps=0, put_p99(ns)=0, put_qps=0
+   CALL [replica-server] [10.132.5.2:32801] succeed: manual_compact_enqueue_count=0, manual_compact_running_count=0, closing_replica_count=0, disk_available_max_ratio=88, disk_available_min_ratio=79, disk_available_total_ratio=86, disk_capacity_total(MB)=8378920, opening_replica_count=0, serving_replica_count=54, commit_throughput=0, learning_count=0, shared_log_size(MB)=4, memused_res(MB)=2521, memused_virt(MB)=4733, get_p99(ns)=0, get_qps=0, multi_get_p99(ns)=0, multi_get_qps=0, multi_put_p99(ns)=0, multi_put_qps=0, put_p99(ns)=0, put_qps=0
+   CALL [replica-server] [10.132.5.3:32801] succeed: manual_compact_enqueue_count=0, manual_compact_running_count=0, closing_replica_count=0, disk_available_max_ratio=90, disk_available_min_ratio=78, disk_available_total_ratio=85, disk_capacity_total(MB)=8378920, opening_replica_count=0, serving_replica_count=54, commit_throughput=0, learning_count=0, shared_log_size(MB)=4, memused_res(MB)=2489, memused_virt(MB)=4723, get_p99(ns)=0, get_qps=0, multi_get_p99(ns)=0, multi_get_qps=0, multi_put_p99(ns)=0, multi_put_qps=0, put_p99(ns)=0, put_qps=0
+   CALL [replica-server] [10.132.5.5:32801] succeed: manual_compact_enqueue_count=0, manual_compact_running_count=0, closing_replica_count=0, disk_available_max_ratio=88, disk_available_min_ratio=82, disk_available_total_ratio=85, disk_capacity_total(MB)=8378920, opening_replica_count=0, serving_replica_count=54, commit_throughput=0, learning_count=0, shared_log_size(MB)=4, memused_res(MB)=2494, memused_virt(MB)=4678, get_p99(ns)=0, get_qps=0, multi_get_p99(ns)=0, multi_get_qps=0, multi_put_p99(ns)=0, multi_put_qps=0, put_p99(ns)=0, put_qps=0
+   
+   Succeed count: 4
+   Failed count: 0
+   ```
 
 4. app_stat -a <app_name>
 
    可以用来观察某个表中，各个partition的统计信息。对于数据值明显异常的分片，要关注是不是出现了分片热点。
 
-```
->>> app_stat -a temp
-pidx                 GET   MULTI_GET         PUT   MULTI_PUT         DEL   MULTI_DEL        INCR         CAS        SCAN     expired    filtered    abnormal  storage_mb  file_count
-0                      0           0           0           0           0           0           0           0           0           0           0           0           0           3
-1                      0           0           0           0           0           0           0           0           0           0           0           0           0           1
-2                      0           0           0           0           0           0           0           0           0           0           0           0           0           4
-3                      0           0           0           0           0           0           0           0           0           0           0           0           0           2
-4                      0           0           0           0           0           0           0           0           0           0           0           0           0           3
-5                      0           0           0           0           0           0           0           0           0           0           0           0           0           2
-6                      0           0           0           0           0           0           0           0           0           0           0           0           0           1
-7                      0           0           0           0           0           0           0           0           0           0           0           0           0           3
-                       0           0           0           0           0           0           0           0           0           0           0           0           0          19
-```
+   ```
+   >>> app_stat -a temp
+   pidx                 GET   MULTI_GET         PUT   MULTI_PUT         DEL   MULTI_DEL        INCR         CAS        SCAN     expired    filtered    abnormal  storage_mb  file_count
+   0                      0           0           0           0           0           0           0           0           0           0           0           0           0           3
+   1                      0           0           0           0           0           0           0           0           0           0           0           0           0           1
+   2                      0           0           0           0           0           0           0           0           0           0           0           0           0           4
+   3                      0           0           0           0           0           0           0           0           0           0           0           0           0           2
+   4                      0           0           0           0           0           0           0           0           0           0           0           0           0           3
+   5                      0           0           0           0           0           0           0           0           0           0           0           0           0           2
+   6                      0           0           0           0           0           0           0           0           0           0           0           0           0           1
+   7                      0           0           0           0           0           0           0           0           0           0           0           0           0           3
+                          0           0           0           0           0           0           0           0           0           0           0           0           0          19
+   ```
 
 ### 控制集群的负载均衡
 
 Peagsus提供以下几种命令来控制集群的负载均衡：
 
-1. set_meta_level <freezed|steady|lively>
+1. set_meta_level
 
-   这个命令用来控制meta的运行level：
+   这个命令用来控制meta的运行level，支持以下几种level：
    * freezed：meta server会停止unhealthy partition的cure工作，一般在集群出现较多节点宕机或极其不稳定的情况下使用，另外如果集群的节点数掉到一个数量或者比例以下（通过配置文件`min_live_node_count_for_unfreeze`和`node_live_percentage_threshold_for_update`控制）就会自动变为freezed，等待人工介入。
    * steady：meta server的默认level, 只做cure，不做balance。
    * lively：meta server会调整分片数，力求均衡。
@@ -167,24 +167,24 @@ Peagsus提供以下几种命令来控制集群的负载均衡：
    **注意在使用时，请保证meta server处在steady状态，不然命令无法生效。**
 
    参见以下样例（不相关的输出已经被删去）：
-```
->>> get_meta_level
-current meta level is fl_steady
-
->>> app temp -d
-pidx      ballot    replica_count       primary                                 secondaries
-0         3         3/3                 10.231.58.233:34803                     [10.231.58.233:34802,10.231.58.233:34801]
-
-list app temp succeed
-
->>> balance -g 1.0 -p move_pri -f 10.231.58.233:34803 -t 10.231.58.233:34802
-send balance proposal result: ERR_OK
-
->>> app temp -d
-pidx      ballot    replica_count       primary                                 secondaries
-0         5         3/3                 10.231.58.233:34802                     [10.231.58.233:34801,10.231.58.233:34803]
-list app temp succeed
-```
+   ```
+   >>> get_meta_level
+   current meta level is fl_steady
+   
+   >>> app temp -d
+   pidx      ballot    replica_count       primary                                 secondaries
+   0         3         3/3                 10.231.58.233:34803                     [10.231.58.233:34802,10.231.58.233:34801]
+   
+   list app temp succeed
+   
+   >>> balance -g 1.0 -p move_pri -f 10.231.58.233:34803 -t 10.231.58.233:34802
+   send balance proposal result: ERR_OK
+   
+   >>> app temp -d
+   pidx      ballot    replica_count       primary                                 secondaries
+   0         5         3/3                 10.231.58.233:34802                     [10.231.58.233:34801,10.231.58.233:34803]
+   list app temp succeed
+   ```
 
 3. propose
    
@@ -196,18 +196,19 @@ list app temp succeed
    * downgrade_to_secondary：把某个partition下的primary降级为secondary
    * downgrade_to_inactive：把某个partition下的primary/secondary降级为inactive状态
    * remove：移除掉某个partition下的某个副本
-```
->>> app temp -d
-pidx      ballot    replica_count       primary                                 secondaries                             
-0         5         3/3                 10.231.58.233:34802                     [10.231.58.233:34801,10.231.58.233:34803]
-list app temp succeed
->>> propose -g 1.0 -p downgrade_to_inactive -t 10.231.58.233:34802 -n 10.231.58.233:34801
-send proposal response: ERR_OK
->>> app temp -d
-pidx      ballot    replica_count       primary                                 secondaries                             
-0         7         3/3                 10.231.58.233:34802                     [10.231.58.233:34803,10.231.58.233:34801]
-list app temp succeed
-```
+
+   ```
+   >>> app temp -d
+   pidx      ballot    replica_count       primary                                 secondaries                             
+   0         5         3/3                 10.231.58.233:34802                     [10.231.58.233:34801,10.231.58.233:34803]
+   list app temp succeed
+   >>> propose -g 1.0 -p downgrade_to_inactive -t 10.231.58.233:34802 -n 10.231.58.233:34801
+   send proposal response: ERR_OK
+   >>> app temp -d
+   pidx      ballot    replica_count       primary                                 secondaries                             
+   0         7         3/3                 10.231.58.233:34802                     [10.231.58.233:34803,10.231.58.233:34801]
+   list app temp succeed
+   ```
 
    在上面的例子中，propose命令希望把10.231.38.233:34801降级。所以需要把这个命令发给partition的primary(10.231.58.233:34802)，由它来执行具体某个副本降级的事宜。注意这里体现了pegasus系统的设计理念：**meta server负责管理primary , pimary负责管理partition下的其他副本**。
    
@@ -272,6 +273,7 @@ CALL [meta-server] [127.0.0.1:34603] succeed: unknown command 'meta.lb.assign_de
 Succeed count: 3
 Failed count: 0
 ```
+
 如例所示，命令不加参数表示返回当前设定的值。加参数表示期望的新值。
 
 #### assign_secondary_black_list
@@ -289,22 +291,18 @@ Failed count: 0
 * 带宽总量是有限的, 如果由分给多个添加分片的任务去分享这些带宽, 那么每个任务执行的时常都会拉长, 从而让系统长期处在一个**大量分片都不健康的状态下**, 增加了稳定性的风险。
 
 所以, pegasus用两个命令来对流控做支持：
-
-1. meta.lb.add_secondary_enable_flow_control: 表示是否开启流控的feature
-
+1. meta.lb.add_secondary_enable_flow_control: 表示是否开启流控的feature。
 2. meta.lb.add_secondary_max_count_for_one_node: 表示对于每个节点，同时执行多少个add_secondary的动作。
 
 #### 精细控制balancer
 
 balancer表示把各节点个数调匀的过程。在目前的pegasus实现中，balancer过程大概可以用四点来概括：
-
 1. 尽量通过角色互换来做到primary均衡
 2. 如果1做不到让primary变均匀，通过拷数据来做到primary均衡
 3. 在2做完后，通过拷数据做到secondary的均衡
 4. 分别针对每个表做1-2-3的动作
 
-pegasus提供了一些控制参数给些过程可以提供更精细的控制：
-
+Pegasus提供了一些控制参数给些过程可以提供更精细的控制：
 * meta.lb.only_primary_balancer: 对于每个表，只进行1和2(减少copy secondary带来的数据拷贝)
 * meta.lb.only_move_primary: 对于每个表，primary调节的时候只考虑方法1(减少copy primary带来的数据拷贝)
 * meta.lb.balancer_in_turn：各个表的balancer用串行的方式做，而不是并行进行(用于调试，观察系统行为)
@@ -329,4 +327,4 @@ pegasus提供了一些控制参数给些过程可以提供更精细的控制：
 
 ## 设计篇
 
-TBD
+待补充。
