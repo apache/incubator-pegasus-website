@@ -36,8 +36,7 @@ FDS是小米生态云提供的存储产品，目前仅面向小米的生态链�
 ### 配置
 需要先设定一些参数来配置系统的冷备份功能：
 
-1. [meta_server].cold_backup_disable
-
+1. 配置 [meta_server].cold_backup_disable ：
 ```
 [meta_server]
 ...
@@ -46,8 +45,7 @@ cold_backup_disabled = false
 ...
 ```
 
-2. [apps.meta].pools 和 [apps.replica]
-
+2. 配置 [apps.meta].pools 和 [apps.replica].pools ：
 ```
 [apps.meta]
 ...
@@ -60,8 +58,7 @@ pools = ...,THREAD_POOL_LOCAL_SERVICE
 pools = ...,THREAD_POOL_LOCAL_SERVICE
 ```
 
-3. [replication].cold_backup_root 和 [replication].max_concurrent_uploading_file_count
-
+3. 配置 [replication].cold_backup_root 和 [replication].max_concurrent_uploading_file_count ：
 ```
 [replication]
 ;; 这个参数指定了冷备数据要保存到存储介质的什么文件夹下，一般建议填写集群名字
@@ -70,8 +67,7 @@ cold_backup_root = onebox
 max_concurrent_uploading_file_count = 5
 ```
 
-4. 添加或修改[block_service.xxxx]的section
-
+4. 添加或修改 [block_service.xxxx] ：
 ```
 ;; 这样的一个section, 就指定了一种存储介质。可以按照自己的需求添加
 [block_service.my_backup_media]
