@@ -25,6 +25,8 @@
     link: /community/coding-guides
   - name: Roadmap
     link: /community/roadmap
+  - name: Bug Tracking
+    link: https://github.com/XiaoMi/pegasus/labels/type%2Fbug
 - name: Github
   link: https://github.com/XiaoMi/pegasus
   icon: fab fa-github-alt

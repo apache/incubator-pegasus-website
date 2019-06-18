@@ -36,6 +36,10 @@ Apache 2 协议（部分代码为 MIT 协议）发布。
 你在使用 Pegasus 的过程中遇到的问题，和 Pegasus 当前对你所缺乏的需求，都可以及时反馈给我们。
 当然，我们希望在 Issue 中你能提供尽可能多的信息，方便我们跟进。
 
+当前已知的 bug 会被整理在 [Issues: type/bug](https://github.com/XiaoMi/pegasus/labels/type%2Fbug)。
+
+与新功能相关的提案会被整理在 [Issues: type/enhancement](https://github.com/XiaoMi/pegasus/labels/type%2Fenhancement)。
+
 ### 提交代码和测试
 
 我们的开发流程使用 [Github Pull Request](https://github.com/XiaoMi/pegasus/pulls) 机制。
