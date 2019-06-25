@@ -83,6 +83,11 @@ ReplicaServer/MetaServer/Collector三种角色的Server共用一套server程序�
 
 ## 启动服务
 
+在启动程序之前，需要先把程序所依赖的动态链接库的路径加入到`LD_LIBRARY_PATH`中，譬如：
+```
+export LD_LIBRARY_PATH=/path/to/your/pegasus/bin:$LD_LIBRARY_PATH
+```
+
 启动MetaServer：
 ```
 cd bin/
