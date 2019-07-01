@@ -1,7 +1,6 @@
 ---
 title: Pegasus Proposal
-layout: community
-header_style: is-black
+layout: page
 ---
 
 ## Abstract
