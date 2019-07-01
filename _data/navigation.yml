@@ -27,6 +27,8 @@
     link: /community/roadmap
   - name: Bug Tracking
     link: https://github.com/XiaoMi/pegasus/labels/type%2Fbug
+  - name: Apache Proposal
+    link: /community/proposal
 - name: Github
   link: https://github.com/XiaoMi/pegasus
   icon: fab fa-github-alt
