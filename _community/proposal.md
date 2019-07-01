@@ -10,18 +10,18 @@ be scalable, strong consistent and efficient.
 
 ## Background
 
-HBase used to be the only large scale KV store solution in XiaoMi,
+HBase used to be the only large scale KV store solution in XiaoMi
 until Pegasus came out in 2015 to solve the problem of high latency
-of HBase because of its Java GC and RPC overhead of the distributed filesystem.
+of HBase because of its Java GC and RPC overhead of the underlying distributed filesystem.
 
 Pegasus targets to fill the gap between Redis and HBase. As the former
-is in-memory, low latency, but does not provide strong-consistency guarantee.
-And unlike the latter, Pegasus is completely written in C++ and its write path
+is in-memory, low latency, but does not provide a strong-consistency guarantee.
+And unlike the latter, Pegasus is entirely written in C++ and its write path
 relies merely on the local filesystem.
 
-Apart from the performance requirements, we also need the abilities of our
-storage system to ensure multiple-level data safety, fast data migration between data centers,
-online load balancing and partition split.
+Apart from the performance requirements, we also need the ability of our
+storage system to ensure multiple-level data safety and support fast data
+migration between data centers, automatic load balancing, and online partition split.
 
 After investigating the existing storage systems in the open-source world,
 we could hardly find a suitable solution to satisfy all the requirements.
