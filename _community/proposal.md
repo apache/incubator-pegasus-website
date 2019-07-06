@@ -8,6 +8,9 @@ layout: page
 Pegasus is a distributed key-value storage system which is designed to
 be horizontally scalable, strong consistent and high-performance.
 
+- Pegasus code base: <https://github.com/XiaoMi/pegasus>
+- Web site: <https://pegasus-kv.github.io>
+
 ## Proposal
 
 Pegasus is a key-value database that delivers low-latency data access together
@@ -59,8 +62,14 @@ and free of any commercial, political or legal faults.
 
 ## Current Status
 
-Pegasus has been an open source project on GitHub <https://github.com/XiaoMi/pegasus> since October 2017.
-At XiaoMi.
+Pegasus has been an open source project on GitHub <https://github.com/XiaoMi/pegasus>
+since October 2017.
+
+### Meritocracy
+
+The intent of this proposal is to start building a diverse developer and user community
+around Pegasus following the ASF meritocracy model.
+We plan to invite more people as committers if they contribute to this project.
 
 ### Releases
 
@@ -73,25 +82,21 @@ We will adopt the ASF source release process upon joining the incubator.
 
 Pegasus’s code reviews are currently public on Github <https://github.com/XiaoMi/pegasus/pulls>.
 
-### Meritocracy
-
-Pegasus has been deployed in production at XiaoMi and is applying more than <TODO> lines of business.
-It has demonstrated great performance benefits and has proved to be a better way for storing large
-scale key value data with low latency.
-
-Still We look forward to growing a rich user and developer community.
-
 ### Community
 
 Pegasus seeks to develop developer and user communities during incubation.
 
 ### Core Developers
 
+Currently most of the core developers of Pegasus are working in
+XiaoMi KV-Storage Team. Yingchun Lai is one of the Apache Kudu PMC members.
+Zuoyan Qin is an experienced open source developer who created [sofa-pbrpc](https://github.com/baidu/sofa-pbrpc)
+inside baidu. Among them, Weijie Sun from ByteDance is a very important contributor.
+
 - Zuoyan Qin (<https://github.com/qinzuoyan>)
 - Yuchen He (<https://github.com/hycdong>)
-- Liuyang Cai (<https://github.com/LoveHeat>)
+- Weijie Sun (<https://github.com/shengofsun>)
 - Tao Wu (<https://github.com/neverchanje>)
-- Yuannan Shen (<>)
 - Yingchun Lai (<https://github.com/acelyc111>)
 - Wei Huang (<https://github.com/vagetablechicken>)
 
@@ -107,10 +112,10 @@ We are planing to support offline analysis on checkpoint powered by Apache Spark
 
 ### Orphaned Products
 
-3 of the core developers of Pegasus plan to work full time on this project.
+The core developers of XiaoMi Pegasus team plan to work full time on this project.
 There is very little risk of Pegasus getting orphaned since at least one large
 company (XiaoMi) is extensively using it in their production.
-For example, currently there are more than XXX Pegasus applications in production.
+For example, currently there are more than 40 Pegasus applications in production.
 Furthermore, since Pegasus was open sourced at the beginning of October 2017,
 it has received more than 1047 stars and been forked nearly 186 times.
 We plan to extend and diversify this community further through Apache.
@@ -127,11 +132,19 @@ individuals with Apache open source experience on to the project.
 
 ### Homogenous Developers
 
-TODO
+The project has received some contributions from developers outside of XiaoMi,
+and is starting to attract a user community as well. We hope to continue to
+encourage contributions from these developers and community members and grow
+them into committers after they have had time to continue their contributions.
 
 ### Reliance on Salaried Developers
 
-TODO
+XiaoMi invested in Pegasus as a general key-value storage used in company widely.
+The core developers have been dedicated to this project for about four years.
+
+Besides, we look forward to attracting more people outside XiaoMi to contribute this project,
+either payed engineers working on storage area, or individual volunteers, as long as they have
+enthusiasm for the Pegasus project.
 
 ### An Excessive Fascination with the Apache Brand
 
@@ -147,7 +160,25 @@ a marketing tool.
 Information about Pegasus can be found at <https://github.com/XiaoMi/pegasus>.
 The following links provide more information about Pegasus in open source:
 
-- <https://pegasus-kv.github.io>
+- Pegasus web-site: <https://pegasus-kv.github.io>
+
+## Initial Source
+
+Besides the core code base, Pegasus also hosts its side projects on github under XiaoMi Group.
+Specifically, the initial source includes:
+
+Client libraries with different Languages:
+
+- Java-Client: <https://github.com/XiaoMi/pegasus-java-client>
+- Scala-Client: <https://github.com/XiaoMi/pegasus-scala-client>
+- NodeJs-Client: <https://github.com/XiaoMi/pegasus-nodejs-client>
+- Go-Client: <https://github.com/XiaoMi/pegasus-go-client>
+- Python-Client: <https://github.com/XiaoMi/pegasus-python-client>
+
+Components of Pegasus:
+
+- rDSN: <https://github.com/XiaoMi/rdsn>
+- RocksDB: <https://github.com/XiaoMi/pegasus-rocksdb>
 
 ## External Dependencies
 
@@ -177,7 +208,8 @@ Build and test dependencies:
 
 ### Mailing List
 
-There are currently no mailing lists. The usual mailing lists are expected to be set up when entering incubation:
+There are currently no mailing lists.
+The usual mailing lists are expected to be set up when entering incubation:
 
 TODO
 
