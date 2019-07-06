@@ -6,7 +6,18 @@ layout: page
 ## Abstract
 
 Pegasus is a distributed key-value storage system which is designed to
-be scalable, strong consistent and efficient.
+be horizontally scalable, strong consistent and high-performance.
+
+## Proposal
+
+Pegasus is a key-value database that delivers low-latency data access together
+with horizontal scalability, using hash-based partitioning. Pegasus uses PacificA
+protocol for strong consistency and RocksDB as the underlying storage engine.
+
+We propose to contribute the Pegasus codebase and associated artifacts
+(e.g. documentation, web-site content etc.) to the Apache Software Foundation,
+and aim to build an open community around Pegasus’s continued development
+in the ‘Apache Way’.
 
 ## Background
 
@@ -21,26 +32,30 @@ relies merely on the local filesystem.
 
 Apart from the performance requirements, we also need the abilities of our
 storage system to ensure multiple-level data safety, fast data migration between data centers,
-online load balancing and partition split.
+online load balancing and dynamic partition split.
 
 After investigating the existing storage systems in the open-source world,
 we could hardly find a suitable solution to satisfy all the requirements.
 So the journey of Pegasus begins.
 
-## Proposal
-
-We propose to contribute the Pegasus codebase and associated artifacts
-(e.g. documentation, web-site content etc.) to the Apache Software Foundation,
-and aim to build an open community around Pegasus’s continued development
-in the ‘Apache Way’.
-
-### Overview of Pegasus
-
-Pegasus’s implementation consists of the following parts:
-
-Pegasus Server:
-
 ### Rationale
+
+Pegasus is a mature, active project that has been widely adopted in XiaoMi.
+After our initial open source project release in 2017, we have seen a great amount
+of interest across a diverse set of users and companies.
+
+Our experiences at committers and PMC members on other Apache projects have convince
+us that having a long-term home at Apache foundation would be a great fit for the project,
+to ensure that processes and procedures are in place to keep project and community “healthy”
+and free of any commercial, political or legal faults.
+
+### Initial Goal
+
+- Move the existing codebase, website, documentation, and mailing lists to
+  Apache-hosted infrastructure.
+- Work with the infrastructure team to implement and approve our code review, build,
+  and testing workflows in the context of the ASF.
+- Incremental development and releases per Apache guidelines.
 
 ## Current Status
 
@@ -76,6 +91,7 @@ Pegasus seeks to develop developer and user communities during incubation.
 - Yuchen He (<https://github.com/hycdong>)
 - Liuyang Cai (<https://github.com/LoveHeat>)
 - Tao Wu (<https://github.com/neverchanje>)
+- Yuannan Shen (<>)
 - Yingchun Lai (<https://github.com/acelyc111>)
 - Wei Huang (<https://github.com/vagetablechicken>)
 
@@ -128,7 +144,7 @@ a marketing tool.
 
 ## Documentation
 
-Information about Pegasus can be found at <https://github.com/baidu/pegasus>.
+Information about Pegasus can be found at <https://github.com/XiaoMi/pegasus>.
 The following links provide more information about Pegasus in open source:
 
 - <https://pegasus-kv.github.io>
@@ -195,7 +211,7 @@ ownership to ASF via a Software Grant Agreement.
 
 ## Affiliations
 
-<!-- The initial committers are employees of XiaoMi Inc. -->
+The initial committers are employees of XiaoMi Inc.
 
 ## Sponsors
 
