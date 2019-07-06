@@ -18,7 +18,7 @@ with horizontal scalability, using hash-based partitioning. Pegasus uses Pacific
 protocol for strong consistency and RocksDB as the underlying storage engine.
 
 We propose to contribute the Pegasus codebase and associated artifacts
-(e.g, documentation, website content etc.) to the Apache Software Foundation,
+(e.g., documentation, website content, etc.) to the Apache Software Foundation,
 and aim to build an open community around Pegasus’s continued development
 in the "Apache Way".
 
@@ -44,7 +44,7 @@ So the journey of Pegasus begins.
 ### Rationale
 
 Pegasus is a mature, active project that has been widely adopted in XiaoMi.
-After our initial open source project release in 2017, we have seen a great amount
+After the initial release open source project in 2017, we have seen a great amount
 of interest across a diverse set of users and companies.
 
 Our experiences at committers and PMC members on other Apache projects have convinced
