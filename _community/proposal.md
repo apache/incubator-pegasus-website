@@ -182,12 +182,13 @@ Components of Pegasus:
 - rDSN: <https://github.com/XiaoMi/rdsn>
 - RocksDB: <https://github.com/XiaoMi/pegasus-rocksdb>
 
-rDSN was originally a distributed framework developed by Zhenyu Guo from Microsoft,
-and it is heavily refactored to be more fit in Pegasus. rDSN is a MIT licensed project.
-It's in our plan to merge Pegasus and rDSN together as one project.
+rDSN was initially a distributed framework developed by Zhenyu Guo from Microsoft,
+and it is heavily refactored to be more fit in Pegasus. rDSN is an MIT licensed project.
+It's in our plan to merge Pegasus and rDSN as one project.
 
-RocksDB is a facebook-developed storage engine. Pegasus added some enhancements and modifications
-that may be incompatible with original RocksDB. RocksDB is licensed under Apache 2.0 License.
+RocksDB is a Facebook-developed storage engine. Pegasus added some enhancements and modifications
+that may be incompatible with the original implementation.
+RocksDB is licensed under Apache 2.0 License.
 
 ## External Dependencies
 
