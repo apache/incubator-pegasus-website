@@ -6,10 +6,10 @@ layout: page
 ## Abstract
 
 Pegasus is a distributed key-value storage system which is designed to
-be horizontally scalable, strong consistent and high-performance.
+be horizontally scalable, strongly consistent and high-performance.
 
-- Pegasus code base: <https://github.com/XiaoMi/pegasus>
-- Web site: <https://pegasus-kv.github.io>
+- Pegasus codebase: <https://github.com/XiaoMi/pegasus>
+- Website: <https://pegasus-kv.github.io>
 
 ## Proposal
 
@@ -18,26 +18,26 @@ with horizontal scalability, using hash-based partitioning. Pegasus uses Pacific
 protocol for strong consistency and RocksDB as the underlying storage engine.
 
 We propose to contribute the Pegasus codebase and associated artifacts
-(e.g. documentation, web-site content etc.) to the Apache Software Foundation,
+(e.g, documentation, website content etc.) to the Apache Software Foundation,
 and aim to build an open community around Pegasus’s continued development
-in the ‘Apache Way’.
+in the "Apache Way".
 
 ## Background
 
-HBase used to be the only large scale KV store solution in XiaoMi
+HBase was recognized as the only large-scale KV store solution in XiaoMi
 until Pegasus came out in 2015 to solve the problem of high latency
 of HBase because of its Java GC and RPC overhead of the underlying distributed filesystem.
 
 Pegasus targets to fill the gap between Redis and HBase. As the former
 is in-memory, low latency, but does not provide a strong-consistency guarantee.
-And unlike the latter, Pegasus is entirely written in C++ and its write path
+And unlike the latter, Pegasus is entirely written in C++ and its write-path
 relies merely on the local filesystem.
 
-Apart from the performance requirements, we also need the ability of our
-storage system to ensure multiple-level data safety and support fast data
-migration between data centers, automatic load balancing, and online partition split.
+Apart from the performance requirements, we also need a storage system
+to ensure multiple-level data safety and support fast data migration
+between data centers, automatic load balancing, and online partition split.
 
-After investigating the existing storage systems in the open-source world,
+After investigating the existing storage systems in the open source world,
 we could hardly find a suitable solution to satisfy all the requirements.
 So the journey of Pegasus begins.
 
@@ -47,9 +47,9 @@ Pegasus is a mature, active project that has been widely adopted in XiaoMi.
 After our initial open source project release in 2017, we have seen a great amount
 of interest across a diverse set of users and companies.
 
-Our experiences at committers and PMC members on other Apache projects have convince
+Our experiences at committers and PMC members on other Apache projects have convinced
 us that having a long-term home at Apache foundation would be a great fit for the project,
-to ensure that processes and procedures are in place to keep project and community “healthy”
+to ensure that processes and procedures are in place to keep project and community "healthy"
 and free of any commercial, political or legal faults.
 
 ### Initial Goal
@@ -162,11 +162,11 @@ a marketing tool.
 Information about Pegasus can be found at <https://github.com/XiaoMi/pegasus>.
 The following links provide more information about Pegasus in open source:
 
-- Pegasus web-site: <https://pegasus-kv.github.io>
+- Pegasus website: <https://pegasus-kv.github.io>
 
 ## Initial Source
 
-Besides the core code base, Pegasus also hosts its side projects on github under XiaoMi Group.
+Besides the core codebase, Pegasus also hosts its side projects on github under XiaoMi Group.
 Specifically, the initial source includes:
 
 Client libraries with different Languages:
