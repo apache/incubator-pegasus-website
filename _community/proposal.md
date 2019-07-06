@@ -194,25 +194,25 @@ RocksDB is licensed under Apache 2.0 License.
 
 Pegasus has the following external dependencies.
 
-* RocksDB (Apache)
-* Apache Thrift (Apache Software License v2.0)
-* Boost (Boost Software License)
-* Apache Zookeeper (Apache)
-* Microsoft rDSN (MIT)
-* Google s2geometry (BSD)
-* Google gflags (BSD)
-* fmtlib ()
-* POCO ()
-* rapidjson (Tencent)
-* libevent ()
-* gperftools ()
+- RocksDB (Apache)
+- Apache Thrift (Apache Software License v2.0)
+- Boost (Boost Software License)
+- Apache Zookeeper (Apache)
+- Microsoft rDSN (MIT)
+- Google s2geometry (BSD)
+- Google gflags (BSD)
+- fmtlib (BSD)
+- POCO (Boost Software License)
+- rapidjson (Tencent)
+- libevent (BSD)
+- gperftools (BSD)
 
 Build and test dependencies:
 
-* Apache Maven (Apache Software License v2.0)
-* cmake (BSD)
-* clang (BSD)
-* Google gtest (Apache Software License v2.0)
+- Apache Maven (Apache Software License v2.0)
+- cmake (BSD)
+- clang (BSD)
+- Google gtest (Apache Software License v2.0)
 
 ## Required Resources
 
