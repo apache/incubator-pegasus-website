@@ -126,9 +126,11 @@ The core developers are all active users and followers of open source.
 They are already committers and contributors to the Pegasus Github project.
 All have been involved with the source code that has been released under an
 open source license, and several of them also have experience developing
-code in an open source environment. Though the core set of Developers do
-not have Apache Open Source experience, there are plans to onboard
-individuals with Apache open source experience on to the project.
+code in an open source environment.
+
+Several of the developers among XiaoMi Storage Team are committers and/or PMC
+members on other ASF projects (Kudu, HBase et al). They will guide others to practice
+the Apache Way together along with other incubator mentors.
 
 ### Homogenous Developers
 
@@ -179,6 +181,13 @@ Components of Pegasus:
 
 - rDSN: <https://github.com/XiaoMi/rdsn>
 - RocksDB: <https://github.com/XiaoMi/pegasus-rocksdb>
+
+rDSN was originally a distributed framework developed by Zhenyu Guo from Microsoft,
+and it is heavily refactored to be more fit in Pegasus. rDSN is a MIT licensed project.
+It's in our plan to merge Pegasus and rDSN together as one project.
+
+RocksDB is a facebook-developed storage engine. Pegasus added some enhancements and modifications
+that may be incompatible with original RocksDB. RocksDB is licensed under Apache 2.0 License.
 
 ## External Dependencies
 
