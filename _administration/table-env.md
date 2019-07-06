@@ -125,4 +125,4 @@ manual_compact.periodic.target_level | int | -1 \| >=1 | 2 | [Manual-Compact](ma
 manual_compact.periodic.bottommost_level_compaction | string | force \| skip | force | [Manual-Compact](manual-compact) | 1.8.1
 rocksdb.checkpoint.reserve_min_count | int | >=1 | 2 | [Rocksdb-Checkpoint管理](resource-management#rocksdb-checkpoint管理) | 1.11.3
 rocksdb.checkpoint.reserve_time_seconds | int | >=0 | 600 | [Rocksdb-Checkpoint管理](resource-management#rocksdb-checkpoint管理) | 1.11.3
-bussiness.info | string | 特定格式(使用utf-8编码) | depart=云平台部-存储平台,user=qinzuoyan&wutao1 | 记录表的业务归属信息，可用于生成账单 | -
+business.info | string | 特定格式(使用utf-8编码) | depart=云平台部-存储平台,user=qinzuoyan&wutao1 | 记录表的业务归属信息，可用于生成账单 | -
