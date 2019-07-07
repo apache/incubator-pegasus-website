@@ -24,7 +24,7 @@ in the "Apache Way".
 
 ## Background
 
-HBase was recognized as the only large-scale KV store solution in XiaoMi
+Apache HBase was recognized as the only large-scale KV store solution in XiaoMi
 until Pegasus came out in 2015 to solve the problem of high latency
 of HBase because of its Java GC and RPC overhead of the underlying distributed filesystem.
 
