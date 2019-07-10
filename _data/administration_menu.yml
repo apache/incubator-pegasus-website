@@ -45,3 +45,5 @@
       link: /administration/manual-compact
     - name: Usage Scenario功能
       link: /administration/usage-scenario
+    - name: 坏盘检修
+      link: /administration/bad-disk
