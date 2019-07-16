@@ -128,7 +128,7 @@ GEODIST key member1 member2 [unit]
 
 注意：  
 
-1. key规则遵循GEO AP的key规则：这里的key只能是``""``，而这里member对应于`SET`操作时的key。
+1. key规则遵循GEO API的key规则：这里的key只能是``""``，而这里member对应于`SET`操作时的key。
 
 ### GEORADIUS
 
@@ -137,7 +137,7 @@ GEORADIUS key longitude latitude radius m|km|ft|mi [WITHCOORD][WITHDIST] [WITHHA
 ```
 
 注意：  
-1. key规则遵循GEO AP的key规则：这里的key只能是``""``，而这里member对应于`SET`操作时的key。  
+1. key规则遵循GEO API的key规则：这里的key只能是``""``，而这里member对应于`SET`操作时的key。
 2. 我们对redis的``WITHHASH``参数进行了修改，使用它将会返回该member的value。
 
 ### GEORADIUSBYMEMBER
