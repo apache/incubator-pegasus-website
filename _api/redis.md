@@ -18,7 +18,9 @@ redis proxy与pegasus集群之间使用pegasus的thrift协议，proxy在这里�
 
 ## 提供服务的形式
 
-跟redis服务一样，以``host:port``形式提供，如果服务压力大，可以提供多个``host:port``来避免单点压力过大造成瓶颈。当提供多个redis proxy地址时，由于后端访问的都是同一个集群的同一张表，数据是完全相同的。用户可以round robin, hash等方式进行负载均衡。
+跟redis服务一样，以``host:port``形式提供，如果服务压力大，可以提供多个``host:port``来避免单点proxy压力过大造成瓶颈。当提供多个redis proxy地址时，由于后端访问的都是同一个集群的同一张表，数据是完全相同的。用户可以采用round robin, hash等方式进行负载均衡。
+
+>proxy的可执行文件为``pegasus_rproxy``, 由``./run.sh pack_tools``打包生成。
 
 ## 配置
 
@@ -31,13 +33,20 @@ redis proxy的配置文件规则遵循[配置说明](/administration/config)，�
 name = proxy
 type = proxy
 ; which pegasus cluster and table dose this proxy redirect to
-; if using GEO APIs, an extra table name which store geo index data should be appened, i.e.
-; arguments = redis_cluster temp temp_geo
-arguments = redis_cluster temp
+; 'onebox' is the cluster name which will be used in the next section
+; 'temp' is the table name in the cluster 
+arguments = onebox temp
+; if using GEO APIs, an extra table name which will store geo index data
+; should be appended, i.e.
+; arguments = onebox temp temp_geo
 ; port serve for redis clients
 ports = 6379
 pools = THREAD_POOL_DEFAULT
 run = true
+
+[pegasus.clusters]
+; meta serer list the proxy redirect to
+onebox = 127.0.0.1:34601,127.0.0.1:34602,127.0.0.1:34603
 ```
 
 ## APIs
