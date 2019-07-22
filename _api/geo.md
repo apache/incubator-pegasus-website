@@ -12,23 +12,23 @@ menubar: api_menu
 
 pegasus的GEO(Geographic)支持使用了[S2](https://github.com/google/s2geometry)库, 主要利用其中将二维地理坐标（经纬度）与一维编码的相互转换、基于圆形的范围查询、Hilbert曲线规则等特性。在Pegasus中如何充分利用S2的这些特性，并结合Pegasus的数据分布、数据存储特性，是本文的阐述重点。
 
-关于S2的实现原理细节请参考S2官网: http://s2geometry.io/
+关于S2的实现原理细节请参考[S2官网](http://s2geometry.io/)
 
 ## 坐标转换
 
 在S2中，可以把二维经纬度编码成一维编码，一维编码由两部分组成：立方体面、平面坐标编码，比如：
 
-经纬度(116.334441,40.030202)的编码是：1/223320022232200331010110113301（32位），在S2中称为cellid。
+经纬度(116.334441,40.030202)的编码是：`1/223320022232200331010110113301`（32位），在S2中称为cellid。
 
-其中，"1"代表地球立方体投影的面索引，索引范围是0~5，如下图所示：
+其中，首位的`1`代表地球立方体投影的面索引，索引范围是0~5，如下图所示：
 
-![img](http://s2geometry.io/devguide/img/s2cell_global.jpg)
+![geo_faces.png](/assets/images/geo_faces.png){:class="img-responsive"}
 
-"/"是分隔符
+`/`是分隔符
 
-"223320022232200331010110113301"(30位)是经纬度坐标经过一系列转换得到的编码，具体转换过程这里不详细描述。需要指出的是，这是一个名为Hilbert曲线编码，它最大的特点是具有稳定性、连续性。
+`223320022232200331010110113301`(30位)是经纬度坐标经过一系列转换得到的编码，具体转换过程这里不详细描述。需要指出的是，这是一个名为Hilbert曲线编码，它最大的特点是具有稳定性、连续性。
 
-![Figures from Hilbert's 1891 paper](http://s2geometry.io/devguide/img/hilbert-figure.gif)
+![hilbert.png](/assets/images/hilbert.png){:class="img-responsive"}
 
 编码由前往后按层进行，完整编码是前缀编码的子区域，每个父区域由4个子区域组成，比如`00`,`01`,`02`,`03`是`0`的子区域，且前者的区域范围的并集就是后者的区域范围。最多有30层，每层都有相应的cellid集合，高层cell是底层cell的父区域，高层cellid是底层cellid的前缀。
 
@@ -107,13 +107,13 @@ hashkey直接由一维编码的前缀构成。比如在我们的LBS业务场景�
     |--------------32 bytes-------------|
     |---14 bytes---||-----18 bytes------||--原始hashkey--||--原始sortkey--|
     |--GEO hashkey-||----------------------GEO sortkey-------------------|
+
+
 > 在相同地理范围内进行数据查询时，使用短cellid查询数据查询的范围大，查询的次数更少，但得到的在区域外的无用数据更多，反之亦然---这需要在查询次数与查询到的有用数据之间做权衡。
 
 ### value
 
-GEO API的value必须能够解析出经纬度，解析方式参考[源代码](https://github.com/XiaoMi/pegasus/blob/master/src/geo/lib/latlng_extractor.h)。
-
-需要配置文件
+GEO API的value必须能够解析出经纬度，具体的解析方式参考[自定义extrator](https://pegasus-kv.github.io/api/geo#%E8%87%AA%E5%AE%9A%E4%B9%89extrator)。
 
 GEO索引数据的value跟原始数据的value完全相同。这里会存在一份冗余，但通常在相对廉价的磁盘存储介质上，这是可以接受的。
 
@@ -123,7 +123,7 @@ GEO索引数据的value跟原始数据的value完全相同。这里会存在一�
 
 ### set
 
-`set`操作会同时更新两个table的数据: Pegasus原始数据和GEO索引数据（数据构造方式如上所述），需要保证`value`能够被正确的解析出经纬度，具体的解析方式参考[自定义extrator](https://pegasus-kv.github.io/api/geo#%E8%87%AA%E5%AE%9A%E4%B9%89extrator)。
+`set`操作会同时更新两个table的数据: Pegasus原始数据和GEO索引数据（数据构造方式如上所述）。
 
 > `set`操作的hashkey, sortkey是业务自己的格式，使用GEO API时并不做约束， 只是在geo client转存GEO索引数据时，会自动做如上所述的编码转换。
 
