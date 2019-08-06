@@ -47,3 +47,5 @@
       link: /administration/usage-scenario
     - name: 坏盘检修
       link: /administration/bad-disk
+    - name: HTTP接口
+      link: /administration/http
