@@ -6,6 +6,10 @@ $primary: #188eac !default;
 
 $tabs-link-active-color: $primary;
 $tabs-link-active-border-bottom-color: $primary;
+$navbar-height: 4.0rem;
+
+$input-icon-active-color: white;
+$input-placeholder-color: hsl(0, 0%, 86%);
 
 @import "../node_modules/bulma/bulma.sass";
 @import "layout";
