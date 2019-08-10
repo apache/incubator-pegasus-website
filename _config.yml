@@ -3,19 +3,19 @@ title: Pegasus
 collections:
   overview:
     output: true
-    layout: page 
+    layout: page
     permalink: /:collection/:path
   clients:
     output: true
-    layout: page 
+    layout: page
     permalink: /:collection/:path
   api:
     output: true
-    layout: page 
+    layout: page
     permalink: /:collection/:path
   administration:
     output: true
-    layout: page 
+    layout: page
     permalink: /:collection/:path
   blogs:
     output: true
@@ -33,16 +33,14 @@ plugins:
   - rouge
 
 defaults:
-  -
-    # docs
+  - # docs
     scope:
       path: ""
     values:
       show_sidebar: false
       toc: true
       front: false
-  -
-    scope:
+  - scope:
       path: ""
       type: posts
     values:
@@ -52,8 +50,7 @@ defaults:
       layout: post
       header_style: is-dark
       hero_style: is-small is-light
-  -
-    scope:
+  - scope:
       path: ""
       type: community
     values:
@@ -63,3 +60,12 @@ defaults:
       layout: post
       hero_style: is-white is-centered
       header_style: is-black
+
+exclude:
+  - vendor
+
+algolia:
+  application_id: 50E27EHNIK
+  index_name: pegasus-kv
+  search_only_api_key: 384e9a24e20ffe7cd7ffa708ceb08253
+  powered_by: true

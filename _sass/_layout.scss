@@ -38,12 +38,6 @@
     bottom: 0;
     left: 0;
     height: 1px;
-    width: 100%;
+    width: 0;
     background: white;
-    transform: scaleX(0);
-    transform-origin: 0 0;
-    transition: all .5s ease;
-}
-.navbar-searchbox input:focus + .border {
-    transform: scaleX(1);
 }
