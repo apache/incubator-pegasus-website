@@ -48,8 +48,8 @@ defaults:
       toc: true
       front: false
       layout: post
-      header_style: is-dark
-      hero_style: is-small is-light
+      header_style: is-info
+      hero_style: is-info
   - scope:
       path: ""
       type: community

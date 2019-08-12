@@ -14,8 +14,10 @@
 
     $('.searchbox-input').focus(function () {
         $('.navbar-searchbox .border').animate({ left: '0', width: '100%' })
+        $('.searchbox-icon').css({ color: 'white' })
     })
     $('.searchbox-input').focusout(function () {
         $('.navbar-searchbox .border').animate({ left: '0', width: '0' })
+        $('.searchbox-icon').css({ color: 'hsl(0, 0%, 86%)' })
     })
 </script>

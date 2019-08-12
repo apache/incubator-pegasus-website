@@ -1,8 +1,8 @@
 ---
 title: Pegasus 技术专栏
 layout: blog
-header_style: is-dark
-hero_style: is-small is-light
+header_style: is-info
+hero_style: is-info
 toc: false
 ---
 

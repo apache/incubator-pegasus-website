@@ -4,7 +4,8 @@ layout: page
 menubar: administration_menu
 ---
 
-目前Pegasus的集群监控提供了这些途径：
+目前Pegasus的可视化监控提供了这些途径：
+
 * 使用[Shell工具](/overview/shell)查看集群的各种状态。
 * 使用[Falcon](http://www.open-falcon.com/)的监控页面查看各种统计数据的曲线。
 * 使用Prometheus+Grafana的监控页面查看各种统计数据的曲线。
