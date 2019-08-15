@@ -9,3 +9,5 @@
       link: /api/redis
     - name: GEO支持
       link: /api/geo
+    - name: HTTP接口
+      link: /api/http

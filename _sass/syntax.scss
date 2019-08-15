@@ -1,8 +1,35 @@
 .highlighter-rouge div {
-  margin-bottom: 1rem
+  margin-bottom: 1rem;
+  border: 1px solid $primary;
 }
 .highlight table td { padding: 5px; }
 .highlight table pre { margin: 0; }
+.highlighter-rouge pre {
+  background-color: white;
+}
+code.highlighter-rouge {
+  color: $grey-darker;
+}
+h3 code.highlighter-rouge {
+  font-weight: bold;
+}
+.docs-image {
+  margin-bottom: 1.3rem;
+  margin-top: 1.3rem;
+}
+.content ul li {
+  margin-bottom: 1em
+}
+.content h1 {
+  margin-bottom: 1em;
+}
+.content h2 {
+  margin-bottom: 1em;
+}
+.content h3 {
+  margin-bottom: 1em;
+}
+
 .highlight .cm {
   color: #999988;
   font-style: italic;
@@ -209,17 +236,4 @@
 }
 .highlight {
   background-color: #f8f8f8;
-}
-
-.docs-image {
-  margin-bottom: 1.3rem;
-  margin-top: 1.3rem;
-}
-
-.content ul li {
-  margin-bottom: 1em
-}
-
-.content h2 {
-  margin-bottom: 0.8em;
 }
