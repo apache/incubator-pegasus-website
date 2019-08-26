@@ -157,8 +157,28 @@ lb_interval_ms = 10000 ;meta server跑负载均衡的周期
 [pegasus.server]
 ;;; rocksdb相关配置
 rocksdb_verbose_log = false ;是否打印rocksdb中一些调试日志
-rocksdb_write_buffer_size = 10485760 
-updating_rocksdb_sstsize_interval_seconds = 30
+rocksdb_abnormal_get_time_threshold_ns = 100000000 ;如果get操作的时长超过了该数值，那么将会被写入日志。0代表不会写入
+rocksdb_abnormal_get_size_threshold = 1000000 ;如果get操作获取的value的长度大于了该数值，那么将会被写入日志。0代表不会写入
+rocksdb_abnormal_multi_get_time_threshold_ns = 100000000 ;如果multi-get操作的时长超过了该数值，那么将会被写入日志。0代表不会写入
+rocksdb_abnormal_multi_get_size_threshold = 10000000 ;如果multi-get操作的key-value的size之和超过了该数值，那么将会被写入日志。0代表不会写入
+rocksdb_abnormal_multi_get_iterate_count_threshold = 1000 ;如果multi-get操作的key-value的数量超过了该数值，那么将会被写入日志。0代表不会写入
+rocksdb_write_buffer_size = 67108864 ;单个memtable的最大size。一旦memtable大小超过该数值，将会被标记为不可修改的，并且会创建一个新的memtable。然后，一个后台线程会把memtable的内容落盘到一个SST文件
+rocksdb_max_write_buffer_number = 3 ;memtable的最大数量，包括active-memtable和immutable-memtable，如果active memtable被填满，并且memtable的总数量大于该数值，那么将会被延缓写入
+rocksdb_max_background_flushes = 4 ;后台flush线程数量。flush线程在高优先级的线程池中
+rocksdb_max_background_compactions = 12 ;后台compaction线程数量。conpaction线程在低优先级的线程池中
+rocksdb_num_levels = 6 ;rocksdb LSM tree层数
+rocksdb_target_file_size_base = 67108864 ;level 1层的文件大小最大为target_file_size_base字节
+rocksdb_target_file_size_multiplier = 1 ;每高一层其文件大小是前面一层的rocksdb_target_file_size_multiplier倍。默认情况下rocksdb_target_file_size_multiplier是１，也就是说每层的文件大小相同。
+rocksdb_max_bytes_for_level_base = 671088640 ;level 1层中的所有文件的总大小
+rocksdb_target_file_size_multiplier = 10 ;每高一层其所有总文件大小是前面一层的rocksdb_target_file_size_multiplier倍。默认情况下rocksdb_target_file_size_multiplier是１，也就是说每层的文件大小相同。
+rocksdb_level0_file_num_compaction_trigger = 4 ;如果level 0中的文件数量超过了该指定数值，L0->L1 compaction将会被触发
+rocksdb_level0_slowdown_writes_trigger = 30 ;如果level 0中的文件数量超过了该指定数值，那么写入速度将会被降低
+rocksdb_level0_stop_writes_trigger = 60 ;如果level 0中的文件数量超过了该指定数值，那么写入将会被禁止
+rocksdb_compression_type = lz4 ;压缩算法类型
+rocksdb_disable_table_block_cache = false ;如果该值被设置为true，则表示禁用block cache功能
+rocksdb_block_cache_capacity = 10737418240 ;block cache总的内存使用量
+rocksdb_block_cache_num_shard_bits = -1 ;表示shard id的bit位数。为了并发操作，block cache被分成很多shard, shard的数量为2^rocksdb_block_ache_num_shard_bits.
+rocksdb_disable_bloom_filter = false ;如果该值被设置为true,则表示禁用bloom filter功能
 
 ;;; 监控相关配置，部分和小米的开源监控系统open-falcon相关
 perf_counter_cluster_name = onebox
