@@ -4,6 +4,10 @@ layout: post
 author: 吴涛
 ---
 
+本文主要为大家梳理 `last_flushed_decree` 的原理。
+
+-------
+
 一般的强一致性存储分为 **replicated log** 和 **db storage** 两层。replicated log 用于日志的复制，通过一致性协议（如 PacificA）进行组间复制同步，日志同步完成后，数据方可写入 db storage。通常来讲，在数据写入 db storage 之后，与其相对应的那一条日志即可被删除。因为 db storage 具备持久性，既然 db storage 中已经存有一份数据，在日志中就不需要再留一份。为了避免日志占用空间过大，我们需要定期删除日志，这一过程被称为 **log compaction**。
 
 这个简单的过程在 pegasus 中，问题稍微复杂了一些。
