@@ -29,14 +29,14 @@ Pegasus编译依赖以下软件：
 如果是Ubuntu，可以使用apt-get安装依赖库：
 
 ```bash
-sudo apt-get install build-essential cmake libboost-all-dev libaio-dev libsnappy-dev libzstd-dev liblz4-dev libgflags-dev zlib1g zlib1g.dev patch git curl zip automake libtool libssl-dev
+sudo apt-get install build-essential cmake libboost-all-dev libaio-dev libsnappy-dev libzstd-dev liblz4-dev libgflags-dev zlib1g zlib1g.dev patch git curl zip automake libtool libssl-dev bison flex
 ```
 
 如果是CentOS，可以使用yum安装依赖库（不含gflags）：
 
 ```bash
 yum -y groupinstall "Development Tools"
-yum -y install cmake boost-devel libaio-devel snappy-devel zstd-devel lz4-devel gflags-devel zlib zlib-devel patch openssl-devel
+yum -y install cmake boost-devel libaio-devel snappy-devel zstd-devel lz4-devel gflags-devel zlib zlib-devel patch openssl-devel bison flex
 ```
 
 如果你的系统没有提供zstd的软件源，你可以尝试手动安装，这里提供一个安装脚本：
