@@ -125,6 +125,8 @@ cd pegasus
 ./src/idl/recompile_thrift.sh
 ```
 
+thrift 是 Pegasus 的第三方库依赖之一，在运行 `./run.sh build` 后会自动安装。
+
 ## 开发建议
 
 总的来说，我们推崇 [Google Code Style](https://google.github.io/styleguide/cppguide.html)，除了：
