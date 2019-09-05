@@ -107,6 +107,24 @@ export TCMALLOC_SAMPLE_PARAMETER=524288
 pprof --svg http://127.0.0.1:34801/pprof/heap > heap.svg
 ```
 
+## Thrift
+
+Pegasus 借助 [apache/thrift](https://thrift.apache.org/) 来进行 RPC 数据的序列化/反序列化。
+如果你想要修改 Pegasus 内一些 RPC 结构定义，或者你想要增加 RPC，在修改相应 `.thrift` 文件后，
+你可以运行：
+
+```sh
+cd rdsn
+./compile_thrift.py
+```
+
+或者
+
+```sh
+cd pegasus
+./src/idl/recompile_thrift.sh
+```
+
 ## 开发建议
 
 总的来说，我们推崇 [Google Code Style](https://google.github.io/styleguide/cppguide.html)，除了：
