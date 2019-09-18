@@ -2005,40 +2005,97 @@ cntl.stop();
 
 ## 分页查询
 
-有时候业务需要分页查询功能，类似实现前端的分页功能。典型地，一个HashKey下有很多SortKey，一页只显示固定数量的SortKey，下一页时再显示接下来的固定数量的SortKey。
+类似实现网页列表的分页功能。
+典型地，一个HashKey下有很多SortKey，一页只显示固定数量的SortKey，下一页时再显示接下来的固定数量的SortKey。
 
 分页查询在Pegasus下有多种实现方式：
-  * 一次性获取HaskKey下的全部数据，在业务端缓存下来，由业务端自己实现分页逻辑。
-  * 实现**顺序分页**，可以使用[multiGet()](#multiget)和[getScanner()](#getscanner)方法，这两者都支持SortKey的范围查询：
-    * 查第一页：
-      * startSortKey = null
-      * startInclusive = true
-      * stopSortKey = null
-      * stopInclusive = false
-      * maxFetchCount = countPerPage
-    * 通过判断返回值（同步接口）或者allFetched（异步接口）可以知道是否还有更多数据。如果还有更多数据，则查下一页。
-    * 查下一页：记录当前页的最大SortKey（假设为maxSortKey），通过MultiGetOptions或者ScanOptions指定：
-      * startSortKey = maxSortKey
-      * startInclusive = false
-      * stopSortKey = null
-      * stopInclusive = false
-      * maxFetchCount = countPerPage
-  * 实现**逆序分页**，请使用[multiGet()](#multiget)方法，其支持SortKey的逆序查询：
-    * 查第一页：
-      * startSortKey = null
-      * startInclusive = true
-      * stopSortKey = null
-      * stopInclusive = false
-      * maxFetchCount = countPerPage
-      * reverse = true
-    * 通过判断返回值（同步接口）或者allFetched（异步接口）可以知道是否还有更多数据。如果还有更多数据，则查下一页。
-    * 查下一页：记录当前页的最小SortKey（假设为minSortKey）。如果还有更多数据，则获取下一页数据，可以在MultiGetOptions中指定：
-      * startSortKey = null
-      * startInclusive = true
-      * stopSortKey = minSortKey
-      * stopInclusive = false
-      * maxFetchCount = countPerPage
-      * reverse = true
+
+1. 一次性获取HaskKey下的全部数据，在业务端缓存下来，由业务端自己实现分页逻辑。
+2. **顺序分页**：可以使用[multiGet()](#multiget)和[getScanner()](#getscanner)方法，这两者都支持SortKey的范围查询
+3. **逆序分页**：请使用[multiGet()](#multiget)方法，其支持SortKey的逆序查询
+
+### 顺序分页
+
+使用 `getScanner` 接口：
+
+```java
+ScanOptions options = new ScanOptions();
+options.startInclusive = true;
+options.stopInclusive = false;
+options.batchSize = 20; // 限制每页的大小为 20
+byte[] startSortKey = null;
+byte[] stopSortKey = null;
+PegasusScannerInterface scanner =
+  client.getScanner(tableName, hashKey, startSortKey, stopSortKey, options);
+
+// 同步方式获取
+Pair<Pair<byte[], byte[]>, byte[]> item;
+while ((item = scanner.next()) != null) {
+  // ... //
+}
+
+// 异步方式获取
+Future<Pair<Pair<byte[], byte[]>, byte[]>> item;
+while (true) {
+  item = scanner.asyncNext();
+  try {
+    Pair<Pair<byte[], byte[]>, byte[]> pair = item.get();
+    if (pair == null) {
+      break;
+    }
+    // ... //
+  } catch (Exception e) {
+    e.printStackTrace();
+  }
+}
+```
+
+如果你使用 `multiGet`，在 `MultiGetOptions` 中还需设置 `maxFetchCount`，限制每页条数：
+
+```java
+// 查第一页
+MultiGetOptions options = new MultiGetOptions();
+options.startInclusive = true;
+options.stopInclusive = false;
+int maxFetchCount = 20; // 限制每页的大小为 20
+int maxFetchSize = 20000; // 限制每页的总字节数为 20000
+byte[] startSortKey = null;
+byte[] stopSortKey = null;
+List<Pair<byte[], byte[]>> values = new ArrayList<>();
+boolean allFetched =
+    client.multiGet(
+        tableName, hashKey, startSortKey, stopSortKey, options,
+        maxFetchCount, maxFetchSize, values);
+if (allFetched) {
+  return;
+}
+
+// ... //
+
+// 查下一页
+options.startInclusive = false;
+options.stopInclusive = false;
+startSortKey = values.get(values.size() - 1); // 以上一页的最后（最大）一个值作为下一页查询的开始
+stopSortKey = null;
+allFetched =
+    client.multiGet(
+        tableName, hashKey, startSortKey, stopSortKey, options,
+        maxFetchCount, maxFetchSize, values);
+if (allFetched) {
+  return;
+}
+```
+
+### 逆序分页
+
+逆序分页需要使用`multiGet`接口，并在选项中设置`reverse=true`。
+
+```java
+MultiGetOptions options = new MultiGetOptions();
+options.startInclusive = true;
+options.stopInclusive = false;
+options.reverse = true;
+```
 
 ## 数据序列化
 
