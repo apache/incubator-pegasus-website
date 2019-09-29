@@ -3,6 +3,8 @@
       link: /overview
     - name: 项目背景
       link: /overview/background
+    - name: 系统架构
+      link: /overview/architecture
     - name: 数据模型
       link: /overview/data-model
     - name: Benchmark
