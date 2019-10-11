@@ -102,19 +102,43 @@ Java客户端的类都在```com.xiaomi.infra.pegasus.client```包下面，主要
 
 如果程序中只需要访问**单个集群**，那么用单例是比较合适的，这样可以共享各种资源，譬如线程池、连接等。
 
-**注意**：如果在多个地方调用```getSingletonClient()```获取单例对象，需要保证传入的configPath是一致的，不然就会抛出异常，这样是为了保证多次调用获取到的是同一个实例。
+**注意**：如果在多个地方调用```getSingletonClient()```获取单例对象，需要保证传入的configPath或者ClientOptions对象是一致的，不然就会抛出异常，这样是为了保证多次调用获取到的是同一个实例。
 
 调用```PegasusClientFactory::getSingletonClient()```方法获取PegasusClientInterface的单例对象：
 
 ```java
-// Get the singleton client instance.
-// After used, should call PegasusClientFactory.closeSingletonClient() to release resource.
-//
-// configPath could be:
-// - zookeeper path  : zk://host1:port1,host2:port2,host3:port3/path/to/config
-// - local file path : file:///path/to/config
-// - java resource   : resource:///path/to/config
+/**
+  * Get the singleton client instance with default config path of "resource:///pegasus.properties".
+  * After used, should call PegasusClientFactory.closeSingletonClient() to release resource.
+  *
+  * @return PegasusClientInterface PegasusClientInterface.
+  * @throws PException throws exception if any error occurs.
+  */
+public static PegasusClientInterface getSingletonClient() throws PException；
+
+/**
+  * Get the singleton client instance with customized config path. After used, should call
+  * PegasusClientFactory.closeSingletonClient() to release resource.
+  *
+  * @param configPath configPath could be:
+  * - zookeeper path  : zk://host1:port1,host2:port2,host3:port3/path/to/config
+  * - local file path : file:///path/to/config
+  * - java resource   : resource:///path/to/config
+  *
+  * @return PegasusClientInterface PegasusClientInterface.
+  * @throws PException throws exception if any error occurs.
+  */
 public static PegasusClientInterface getSingletonClient(String configPath) throws PException;
+
+/**
+  * Get the singleton client instance instance with ClientOptions. After used, should call
+  * PegasusClientFactory.closeSingletonClient() to release resource.
+  *
+  * @param options The client option
+  * @return PegasusClientInterface PegasusClientInterface.
+  * @throws PException throws exception if any error occurs.
+  */
+public static PegasusClientInterface getSingletonClient(ClientOptions options) throws PException；
 ```
 
 使用完毕后，记得close单例以释放资源，譬如：
@@ -129,16 +153,35 @@ PegasusClientFactory.closeSingletonClient();
 
 ### 非单例
 
-如果在程序中需要访问多个集群，就不能用单例了。因此我们提供了创建普通实例的接口，创建时传入一个configPath，不同集群使用不同的configPath。
+如果在程序中需要访问多个集群，就不能用单例了。因此我们提供了创建普通实例的接口，创建时传入一个configPath或者ClientOptions对象，不同集群使用不同的configPath或者ClientOptions对象。
 
 **注意**：每个实例都拥有自己独立的资源，互不影响，因此要尽量避免重复创建实例，造成资源浪费，并且使用完后要记得调用close()释放资源。
 
 调用```PegasusClientFactory::createClient()```方法，获取非单例的client实例：
 
 ```java
-// Create a client instance.
-// After used, should call client.close() to release resource.
+/**
+  * Create a client instance. After used, should call client.close() to release resource.
+  *
+  * @param configPath client config path,could be:
+  * - zookeeper path  : zk://host1:port1,host2:port2,host3:port3/path/to/config
+  * - local file path : file:///path/to/config
+  * - java resource   : resource:///path/to/config
+  *
+  * @return PegasusClientInterface.
+  * @throws PException throws exception if any error occurs.
+  */
 public static PegasusClientInterface createClient(String configPath) throws PException;
+
+/**
+  * Create a client instance instance with ClientOptions. After used, should call
+  * client.close() to release resource.
+  *
+  * @param options The client option
+  * @return PegasusClientInterface.
+  * @throws PException throws exception if any error occurs.
+  */
+public static PegasusClientInterface createClient(ClientOptions options) throws PException；
 ```
 
 譬如：
