@@ -11,7 +11,7 @@ menubar: overview_menu
 
 * CPU：Intel(R) Xeon(R) CPU E5-2620 v3 @ 2.40GHz （24 cores）
 * 内存​：128GB
-* 存储：480G SSD *8
+* 存储：480G RAID0 SSD *8
 * 网卡：10Gb
 
 **集群配置：**
