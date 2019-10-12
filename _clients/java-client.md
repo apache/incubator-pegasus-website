@@ -85,7 +85,7 @@ PegasusClientInterface client = PegasusClientFactory.getSingletonClient(configPa
 * asyncWorkers：后台工作线程数，内部实际是Netty NIO处理客户端和replica_server之间RPC的线程，默认：4
 * enablePerfCounter：是否开启性能指标监控数据，如果开启则则客户端会周期性的上报监控数据，目前仅支持[Falcon](http://open-falcon.org/)，默认：false
 * falconPerfCounterTags：falcon监控数据标签，默认：空
-* falconPushInterval:falcon监控数据上报间隔，默认：10s
+* falconPushInterval：falcon监控数据上报间隔，默认：10s
 
 其中ClientOptions实例提供两种创建方式，你可以使用：
 ```java
