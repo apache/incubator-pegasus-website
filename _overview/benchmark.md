@@ -30,9 +30,9 @@ menubar: overview_menu
 * QPS单位：条/秒。
 * 延迟单位：微秒。
 
-## V1.11.6 测试结果（multi_get/batch_set）
-
-**特别注意：测试环境和参数以此为准**
+## V1.11.6 测试结果
+### multi_get/batch_set
+特别注意：测试环境和参数以此为准
 * 测试case：读使用multi_get，写使用batch_set，1QPS的batch_set等于3QPS的set操作
 * 数据大小：单条数据3KB，sort_key数量为3
 * 测试表的Partition数：128个
