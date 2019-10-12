@@ -39,8 +39,10 @@ mvn clean install -DskipTests
 </dependency>
 ```
 
-# 配置文件
+# 客户端配置
+创建Java client实例需要配置相关参数，用户可以选择两种方式进行配置：文件配置方式和参数传递方式
 
+## 文件配置
 Java客户端需要准备配置文件，用以确定Pegasus集群的位置，以及配置默认超时时间等。
 
 配置文件一般命名为```pegasus.properties```，样例：
@@ -76,6 +78,31 @@ PegasusClientInterface client = PegasusClientFactory.getSingletonClient(configPa
   * 样例1：zk://127.0.0.1:2181/databases/pegasus/pegasus.properties
   * 样例2：zk://127.0.0.1:2181,127.0.0.1:2182/databases/pegasus/pegasus.properties
 
+## 参数传递
+用户可以选择构造ClientOptions实例作为创建客户端实例的参数，ClientOptions包含下列参数：  
+* metaServers：meta_servers地址，默认：127.0.0.1:34601,127.0.0.1:34602,127.0.0.1:34603
+* operationTimeout：客户端请求的超时阈值，默认：1000ms
+* asyncWorkers：后台工作线程数，内部实际是Netty NIO处理客户端和replica_server之间RPC的线程，默认：4
+* enablePerfCounter：是否开启性能指标监控数据，如果开启则则客户端会周期性的上报监控数据，目前仅支持[Falcon](http://open-falcon.org/)，默认：false
+* falconPerfCounterTags：falcon监控数据标签，默认：空
+* falconPushInterval:falcon监控数据上报间隔，默认：10s
+
+其中ClientOptions实例提供两种创建方式，你可以使用：
+```java
+ClientOptions clientOptions = ClientOptions.create()
+```
+创建默认的ClientOptions实例。否则，可以参照下列样例创建自定义的实例：
+```java
+ClientOptions clientOptions =
+      ClientOptions.builder()
+          .metaServers("127.0.0.1:34601,127.0.0.1:34602,127.0.0.1:34603")
+          .operationTimeout(Duration.ofMillis(1000))
+          .asyncWorkers(4)
+          .enablePerfCounter(false)
+          .falconPerfCounterTags("")
+          .falconPushInterval(Duration.ofSeconds(10))
+          .build();
+```
 # 接口定义
 
 Java客户端的类都在```com.xiaomi.infra.pegasus.client```包下面，主要提供了三个类：
@@ -114,7 +141,7 @@ Java客户端的类都在```com.xiaomi.infra.pegasus.client```包下面，主要
   * @return PegasusClientInterface PegasusClientInterface.
   * @throws PException throws exception if any error occurs.
   */
-public static PegasusClientInterface getSingletonClient() throws PException；
+public static PegasusClientInterface getSingletonClient() throws PException;
 
 /**
   * Get the singleton client instance with customized config path. After used, should call
@@ -138,7 +165,7 @@ public static PegasusClientInterface getSingletonClient(String configPath) throw
   * @return PegasusClientInterface PegasusClientInterface.
   * @throws PException throws exception if any error occurs.
   */
-public static PegasusClientInterface getSingletonClient(ClientOptions options) throws PException；
+public static PegasusClientInterface getSingletonClient(ClientOptions options) throws PException;
 ```
 
 使用完毕后，记得close单例以释放资源，譬如：
@@ -181,7 +208,7 @@ public static PegasusClientInterface createClient(String configPath) throws PExc
   * @return PegasusClientInterface.
   * @throws PException throws exception if any error occurs.
   */
-public static PegasusClientInterface createClient(ClientOptions options) throws PException；
+public static PegasusClientInterface createClient(ClientOptions options) throws PException;
 ```
 
 譬如：
