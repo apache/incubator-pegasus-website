@@ -256,3 +256,22 @@ Pegasus为MetaServer和ReplicaServer提供了HTTP接口，用于查看集群相�
     }
 }
 ```
+
+### `/meta/app_envs?name=<app_name>`
+
+**功能：**获取某个表的所有环境变量。
+
+**参数：**
+
+- name： 待查的表名
+  
+**示例：**`127.0.0.1:34601/meta/app_envs?name=temp`
+
+**返回：**
+  
+```json
+{
+    "replica.enable_slow_query_log": "true",
+    "replica.slow_query_threshold": "20"
+}
+```
