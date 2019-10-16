@@ -24,9 +24,8 @@ copy_data命令：
 * 在目标集群上建表。由于copy_data命令并不会自动在目标集群上创建表，所以需要自己先建表。相对源表，新表的表名可以不同，partition count也可以不同。假设在目标集群上新建的表名为TableB。
 * 在Shell工具的配置文件中添加目标集群的配置。因为copy_data命令需要通过```-c```参数指定目标集群，所以需要配置目标集群的MetaServer地址列表。在执行Shell所在文件夹，修改配置文件[src/shell/config.ini](https://github.com/XiaoMi/pegasus/blob/master/src/shell/config.ini)，在文件最后添加如下几行（将ClusterB替换为你自己的集群名）：
 ```
-[uri-resolver.dsn://ClusterB]
-    factory = partition_resolver_simple
-    arguments = {ClusterB的MetaServer地址}
+[pegasus.clusters]
+    ClusterB = {ClusterB的MetaServer地址}
 ```
 * 在Shell中执行命令：
 ```
