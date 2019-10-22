@@ -685,7 +685,6 @@ public void multiDel(String tableName, byte[] hashKey, List<byte[]> sortKeys) th
    * SortKeys不允许为空，如果不知道该HashKey下面有哪些SortKey，可以通过下面的multiGetSortKeys方法获取。
  * 返回值：无。
  * 异常：如果出现异常，譬如网络错误、超时错误、服务端错误等，会抛出 PException。
-
 ### batchMultiDel
 对multiDel函数的批量封装。该函数并发地向server发送异步请求，并等待结果。如果有任意一个请求失败，就提前终止并抛出异常。
 ```java
@@ -734,6 +733,30 @@ public int batchMultiDel2(String tableName, List<Pair<byte[], List<byte[]>>> key
  * 返回值：请求成功的个数。
  * 异常：如果出现异常，譬如参数错误、表名不存在等，会抛出 PException。
  * 注意：该方法不是原子的，有可能出现部分成功部分失败的情况，用户可以选择只使用成功的结果。
+
+### delRange
+删除同一HashKey下，SortKey值在startSortKey和stopSortKey范围内的数据。该函数首先从server获取当前在该范围内存在SortKey集合, 再分批次删除(100个SortKey作为一次, 最后不足100的作为一次)。删除过程中若发生错误，不影响已经删除的数据，同时会标记该范围内未删除的第一个SortKey。
+```java
+/**
+   * Delete key-values within range of startSortKey and stopSortKey under hashKey. Will terminate
+   * immediately if any error occurs.
+   *
+   * @param tableName table name
+   * @param hashKey used to decide which partition the key may exist, should not be null or empty.
+   * @param startSortKey the start sort key. null or "" means fetch to the first sort key.
+   * @param stopSortKey the stop sort key. null or "" means fetch to the last sort key.
+   * @param options del range options.
+   * @throws PException throws exception if any error occurs.
+   */
+  public void delRange(String tableName, byte[] hashKey, byte[] startSortKey, byte[] stopSortKey,DelRangeOptions options) throws PException;
+```
+注：
+* 参数：
+  * 传入参数：startSortKey和stopSortKey是sortkey的起止key值，你可以通过`options`配置更多的选项，如是否包含起止的sortkey值。
+  * 传出参数：无。
+* 返回值：无。
+* 异常：如果出现异常，譬如参数错误、表名不存在、超时等，会抛出 PException。
+* 注意：该方法不是原子的，有可能出现部分成功部分失败的情况。其中`DelRangeOptions`中包含参数`nextSortkey`，用于标记该范围内未删除的第一个SortKey值，当删除过程出现错误时，用户可以使用该参数继续接下来的操作。
 
 ### incr
 单行原子增(减)操作。详细说明参见[单行原子操作](/api/single-atomic#原子增减)。
