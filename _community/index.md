@@ -20,6 +20,8 @@ Pegasus 目前是由小米主导的开源项目，至今在敝公司内部已稳
 Pegasus 是 100% 开源的项目，我们所有的开发都在 Github 之上，所有的组件都使用
 Apache 2 协议（部分代码为 MIT 协议）发布。
 
+我们的版本发布详情在 [Labels: release-note](https://github.com/XiaoMi/pegasus/labels/release-note) 下可以看到。
+
 ## 参与贡献
 
 我们欢迎社区用户为 Pegasus 做出贡献，贡献的方式有很多，能力各异的参与者都可以为 Pegasus 添砖加瓦，
