@@ -127,6 +127,14 @@ cd pegasus
 
 thrift 是 Pegasus 的第三方库依赖之一，在运行 `./run.sh build` 后会自动安装。
 
+## 持续集成（CI）
+
+我们使用 Travis CI 来保证每个 pull-request 符合质量要求。其中我们会：
+
+1. 检查 PR 的标题是否符合 [conventional commit](https://www.conventionalcommits.org/en/v1.0.0-beta.2/#specification) 的要求。
+2. 检查代码格式是否符合标准，不符合的提交将无法通过 CI，请参考 [clang-format](#Clang-Format) 一节。
+3. 保证你的改动能够通过单元测试。你可以运行 `./run.sh test` 来验证。
+
 ## 开发建议
 
 总的来说，我们推崇 [Google Code Style](https://google.github.io/styleguide/cppguide.html)，除了：
