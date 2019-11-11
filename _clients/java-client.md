@@ -19,7 +19,7 @@ cd pegasus-java-client
 选择所使用的版本并构建，建议使用[最新的release版本](https://github.com/xiaomi/pegasus-java-client/releases)：
 
 ```bash
-git checkout 1.11.8-thrift-0.11.0-inlined-release
+git checkout 1.11.9-thrift-0.11.0-inlined-release
 mvn clean package -DskipTests
 ```
 
@@ -35,7 +35,7 @@ mvn clean install -DskipTests
 <dependency>
   <groupId>com.xiaomi.infra</groupId>
   <artifactId>pegasus-client</artifactId>
-  <version>1.11.8-thrift-0.11.0-inlined</version>
+  <version>1.11.9-thrift-0.11.0-inlined</version>
 </dependency>
 ```
 
