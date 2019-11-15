@@ -199,7 +199,7 @@ replica
 
 - detail：是否打印详细信息
   
-**示例：**`127.0.0.1:34601/meta/apps&detail`
+**示例：**`127.0.0.1:34601/meta/apps?detail`
 
 **返回：**
   
@@ -292,7 +292,7 @@ replica
 
 - detail：是否打印详细信息
 
-**示例：**`127.0.0.1:34601/meta/nodes&detail`
+**示例：**`127.0.0.1:34601/meta/nodes?detail`
 
 **返回：**
 
