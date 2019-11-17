@@ -32,3 +32,6 @@
 - name: Github
   link: https://github.com/XiaoMi/pegasus
   icon: fab fa-github-alt
+- name: 版本发布
+  link: https://github.com/XiaoMi/pegasus/issues?utf8=%E2%9C%93&q=label%3Arelease-note+
+  icon: fas fa-fire
