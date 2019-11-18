@@ -7,7 +7,7 @@ document.addEventListener('DOMContentLoaded', () => {
   if ($navbarBurgers.length > 0) {
 
     // Add a click event on each of them
-    $navbarBurgers.forEach( el => {
+    $navbarBurgers.forEach(el => {
       el.addEventListener('click', () => {
 
         // Get the target from the "data-target" attribute
@@ -22,4 +22,15 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   }
 
+});
+
+$('.release-button').click(function () {
+  var target = $(this).data('target');
+  $('html').addClass('is-clipped');
+  $(target).addClass('is-active');
+});
+
+$('.modal-background, .modal-close').click(function () {
+  $('html').removeClass('is-clipped');
+  $(this).parent().removeClass('is-active');
 });
