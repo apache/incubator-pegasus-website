@@ -67,3 +67,7 @@ No configuration update is needed in this release.
 # Release Notes of v1.11.4
 
 <button class="button release-button" data-target="#modal_v1_11_4">Released at 10/6/2019</button>
+
+# Other Releases
+
+For earlier releases, please refer to <https://github.com/XiaoMi/pegasus/releases>.
