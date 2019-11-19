@@ -9,6 +9,8 @@ content-toc-title: Releases
 
 # Release Notes of v1.12.0 (Latest)
 
+Release page on Github: <https://github.com/XiaoMi/pegasus/releases/tag/v1.12.0>
+
 The following are the highlights in this release:
 
 ## HTTP Support
@@ -67,13 +69,19 @@ replica*eon.replica*table.level.RPC_RRDB_RRDB_GET.latency(ns)@${for.each.table}.
 
 # Release Notes of v1.11.6
 
+Release page on Github: <https://github.com/XiaoMi/pegasus/releases/tag/v1.11.6>
+
 <button class="button release-button" data-target="#modal_v1_11_6">Released at 26/8/2019</button>
 
 # Release Notes of v1.11.5
 
+Release page on Github: <https://github.com/XiaoMi/pegasus/releases/tag/v1.11.5>
+
 <button class="button release-button" data-target="#modal_v1_11_5">Released at 24/6/2019</button>
 
 # Release Notes of v1.11.4
+
+Release page on Github: <https://github.com/XiaoMi/pegasus/releases/tag/v1.11.4>
 
 <button class="button release-button" data-target="#modal_v1_11_4">Released at 10/6/2019</button>
 
