@@ -23,7 +23,7 @@ Related Docs: <https://pegasus-kv.github.io/api/http>
 
 In XiaoMi as our user base grows, improvements on our multi-tenant support become increasingly needed for stability. For example, we lack monitoring support for table-level latency (only server-level latency). When a table is observed unreasonably slow, we need to refine our slow query mechanism in order to dynamically configure the "slow" threshold per table without system reboot. Another requirement is to support size-based write throttling to reduce the influence of a high-throughput-low-QPS table to other tables in the same cluster.
 
-Related PR: [XiaoMi/rdsn#314](https://github.com/XiaoMi/rdsn/pull/314), [XiaoMi/rdsn#298](https://github.com/XiaoMi/rdsn/pull/298), [#400](https://github.com/XiaoMi/pegasus/pull/400)
+Related PR: [XiaoMi/rdsn#314](https://github.com/XiaoMi/rdsn/pull/314), [XiaoMi/rdsn#298](https://github.com/XiaoMi/rdsn/pull/298), [#400](https://github.com/XiaoMi/pegasus/pull/400), [XiaoMi/rdsn#336](https://github.com/XiaoMi/rdsn/pull/336), [XiaoMi/rdsn#340](https://github.com/XiaoMi/rdsn/pull/340)
 
 Docs on table-level latency: TBD
 
@@ -55,6 +55,15 @@ Related Docs: TBD
 ## Upgrade from the previous version
 
 No configuration update is needed in this release.
+
+For table-level latency, some new perf-counters are added. Every read/write operation to a table has  two perf-counters (p99&p999) for latency.
+
+```txt
+replica*eon.replica*table.level.RPC_RRDB_RRDB_PUT.latency(ns)@${for.each.table}
+replica*eon.replica*table.level.RPC_RRDB_RRDB_PUT.latency(ns)@${for.each.table}.p999
+replica*eon.replica*table.level.RPC_RRDB_RRDB_GET.latency(ns)@${for.each.table}
+replica*eon.replica*table.level.RPC_RRDB_RRDB_GET.latency(ns)@${for.each.table}.p999
+```
 
 # Release Notes of v1.11.6
 
