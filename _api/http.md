@@ -340,3 +340,24 @@ replica
     "replica.slow_query_threshold": "20"
 }
 ```
+
+### `/perfCounter?name=<perf_counter_name>`
+
+**功能：** 获取某个perf counter的详细信息。如果perf counter名字中含有特殊字符时，需要先对其进行uri编码。
+
+**参数：**
+
+- name： 待查的perf counter名字
+  
+**示例：**`127.0.0.1:34101/perfCounter?name=collector*app.pegasus*app.stat.read_qps%23_all_`
+
+**返回：**
+  
+```json
+{
+    "name": "collector*app.pegasus*app.stat.read_qps#_all_",
+    "value": "0.00",
+    "type": "NUMBER",
+    "description": "statistic the read_qps of app _all_"
+}
+```
