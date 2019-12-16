@@ -1,0 +1,49 @@
+---
+layout: default
+---
+
+{% assign content-toc-title = page.content-toc-title | default: 'Contents' %}
+{% include content-toc.html html=content class='menu-list' h_min=1 h_max=1 content-toc-title=content-toc-title %}
+
+<div class="content">
+    {{ content }}
+
+    {% capture release_info %}
+    {% include_relative v1.11.6.md %}
+    {% endcapture %}
+    <div class="modal" id="modal_v1_11_6">
+        <div class="modal-background"></div>
+        <div class="modal-card">
+            <section class="modal-card-body">
+                {{ release_info | markdownify }}
+            </section>
+        </div>
+        <button class="modal-close is-large" aria-label="close"></button>
+    </div>
+
+    {% capture release_info %}
+    {% include_relative v1.11.5.md %}
+    {% endcapture %}
+    <div class="modal" id="modal_v1_11_5">
+        <div class="modal-background"></div>
+        <div class="modal-card">
+            <section class="modal-card-body">
+                {{ release_info | markdownify }}
+            </section>
+        </div>
+        <button class="modal-close is-large" aria-label="close"></button>
+    </div>
+
+    {% capture release_info %}
+    {% include_relative v1.11.4.md %}
+    {% endcapture %}
+    <div class="modal" id="modal_v1_11_4">
+        <div class="modal-background"></div>
+        <div class="modal-card">
+            <section class="modal-card-body">
+                {{ release_info | markdownify }}
+            </section>
+        </div>
+        <button class="modal-close is-large" aria-label="close"></button>
+    </div>
+</div>

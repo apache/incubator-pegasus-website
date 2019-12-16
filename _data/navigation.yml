@@ -1,4 +1,4 @@
-- name: 文档
+- name: Documentation
   link: /overview
   icon: fas fa-book
   dropdown:
@@ -13,7 +13,7 @@
 - name: Blog
   link: /blogs
   icon: fas fa-rss
-- name: 社区
+- name: Community
   link: /community
   icon: fas fa-user-plus
   dropdown:
@@ -21,7 +21,7 @@
     link: /community/#联系我们
   - name: 参与贡献
     link: /community/#参与贡献
-  - name: 开发工具栈
+  - name: Coding Guides
     link: /community/coding-guides
   - name: Roadmap
     link: /community/roadmap
@@ -32,3 +32,6 @@
 - name: Github
   link: https://github.com/XiaoMi/pegasus
   icon: fab fa-github-alt
+- name: Releases
+  icon: fas fa-fire
+  link: /releases

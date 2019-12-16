@@ -467,9 +467,9 @@ public void set(String tableName, byte[] hashKey, byte[] sortKey, byte[] value) 
 ```
 注：
  * 提供了两个版本的接口，其中第一个接口可以指定TTL时间。
- * 参数：需传入TableName、HashKey、SortKey、value；选择性传入TTL。
+ * 参数：需传入TableName、HashKey、SortKey、value；选择性传入TTL，TTL必须>=0, 当<0时会抛出PException异常。
  * 返回值：无。
- * 异常：如果出现异常，譬如网络错误、超时错误、服务端错误等，会抛出 PException。
+ * 异常：如果出现异常，譬如网络错误、超时错误、服务端错误、TTL<0等，会抛出 PException。
 
 ### batchSet
 写一批数据，对set函数的批量封装。该函数并发地向server发送异步请求，并等待结果。如果有任意一个请求失败，就提前终止并抛出异常。
@@ -538,10 +538,10 @@ public void multiSet(String tableName, byte[] hashKey, List<Pair<byte[], byte[]>
 ```
 注：
  * 提供了两个版本的接口，其中第一个接口可以指定TTL时间。
- * 参数：需传入TableName、HashKey、Values；选择性传入TTL。
+ * 参数：需传入TableName、HashKey、Values；选择性传入TTL，TTL必须>=0, 当<0时会抛出PException异常。
    * Values是Pair列表，Pair的第一个元素是SortKey，第二个元素为value。
  * 返回值：无。
- * 异常：如果出现异常，譬如网络错误、超时错误、服务端错误等，会抛出 PException。
+ * 异常：如果出现异常，譬如网络错误、超时错误、服务端错误、TTL<0等，会抛出 PException。
 
 ### batchMultiSet
 对multiSet函数的批量封装。该函数并发地向server发送异步请求，并等待结果。如果有任意一个请求失败，就提前终止并抛出异常。
@@ -562,9 +562,9 @@ public void batchMultiSet(String tableName, List<HashKeyData> items) throws PExc
 ```
 注：
  * 提供了两个版本的接口，其中第一个接口可以指定TTL时间。
- * 参数：需传入TableName、Items；选择性传入TTL。
+ * 参数：需传入TableName、Items；选择性传入TTL，TTL必须>=0, 当<0时会抛出PException异常。
  * 返回值：无。
- * 异常：如果出现异常，譬如网络错误、超时错误、服务端错误等，会抛出 PException。
+ * 异常：如果出现异常，譬如网络错误、超时错误、服务端错误、TTL<0等，会抛出 PException。
  * 注意：该方法不是原子的，有可能出现部分成功部分失败的情况，只要任意一个失败都会抛出异常。
 
 ### batchMultiSet2
@@ -592,10 +592,10 @@ public int batchMultiSet2(String tableName, List<HashKeyData> items, List<PExcep
 注：
  * 提供了两个版本的接口，其中第一个接口可以指定TTL时间。
  * 参数：
-   * 传入参数：TableName、Items；选择性传入TTL。
+   * 传入参数：TableName、Items；选择性传入TTL，TTL必须>=0, 当<0时会抛出PException异常。
    * 传出参数：Results。该变量需由调用者创建；Results[i]中存放Items[i]对应的结果；如果Results[i]不为null（PException已设置），表示对Items[i]的请求失败。
  * 返回值：请求成功的个数。
- * 异常：如果出现异常，譬如参数错误、表名不存在等，会抛出 PException。
+ * 异常：如果出现异常，譬如参数错误、表名不存在、TTL<0等，会抛出 PException。
  * 注意：该方法不是原子的，有可能出现部分成功部分失败的情况，用户可以选择只使用成功的结果。
 
 ### del
@@ -685,6 +685,7 @@ public void multiDel(String tableName, byte[] hashKey, List<byte[]> sortKeys) th
    * SortKeys不允许为空，如果不知道该HashKey下面有哪些SortKey，可以通过下面的multiGetSortKeys方法获取。
  * 返回值：无。
  * 异常：如果出现异常，譬如网络错误、超时错误、服务端错误等，会抛出 PException。
+
 ### batchMultiDel
 对multiDel函数的批量封装。该函数并发地向server发送异步请求，并等待结果。如果有任意一个请求失败，就提前终止并抛出异常。
 ```java
@@ -816,6 +817,7 @@ public long incr(String tableName, byte[] hashKey, byte[] sortKey, long incremen
    * 如果参数ttlSeconds == 0，则和redis语义保持一致：如果旧值存在，新值的TTL和旧值保持一致；如果旧值不存在，新值将不设TTL。
    * 如果参数ttlSeconds > 0，则将TTL设置为新值。
    * 如果参数ttlSeconds == -1，则清理掉TTL，即新值不再设置TTL。
+   * 如果参数ttlSeconds < -1，则抛出异常。
 
 ### checkAndSet
 单HashKey数据的原子CAS操作（可以理解为**单行原子操作**）。详细说明参见[单行原子操作](/api/single-atomic#cas操作)。
@@ -903,14 +905,14 @@ public PegasusTableInterface.CheckAndSetResult checkAndSet(String tableName, byt
    * checkSortKey、checkType、checkOperand：用于指定检查的条件。
    * setSortKey、setValue：用于指定条件检查成功后要set的新值。
    * options：其他选项，包括：
-     * setValueTTLSeconds：新值的TTL时间；0表示不设置TTL限制。
+     * setValueTTLSeconds：新值的TTL时间；TTL必须>=0，0表示不设置TTL限制，当<0时将抛出PException异常。
      * returnCheckValue：是否需要返回CheckSortKey对应的value。
  * 返回值：CheckAndSetResult，包括：
    * setSucceed：是否set成功。
    * checkValueReturned：是否返回了CheckSortKey对应的value。
    * checkValueExist：CheckSortKey对应的value是否存在；该域只有在`checkValueReturned=true`时有意义。
    * checkValue：CheckSortKey对应的value值；该域只有在`checkValueExist=true`时有意义。
- * 异常：如果出现异常，譬如网络错误、超时错误、服务端错误等，会抛出 PException。另外以下情况也会抛出异常：
+ * 异常：如果出现异常，譬如网络错误、超时错误、服务端错误、TTL<0等，会抛出 PException。另外以下情况也会抛出异常：
    * 如果CheckType为`int compare`类型的操作，且CheckOperand或者CheckValue转换为int64时出错，譬如不是合法的数字或者超出int64范围。
 
 ### checkAndMutate
@@ -972,7 +974,6 @@ Future<CheckAndMutateResult> asyncCheckAndMutate(
    * checkSortKey、checkType、checkOperand：用于指定检查的条件。
    * mutations：用于指定条件检查成功后要实施的set或者del操作。
    * options：其他选项，包括：
-     * setValueTTLSeconds：新值的TTL时间；0表示不设置TTL限制。
      * returnCheckValue：是否需要返回CheckSortKey对应的value。
  * 返回值：CheckAndMutateResult，包括：
    * mutateSucceed：是否实施成功。
@@ -1032,11 +1033,11 @@ public PegasusTableInterface.CompareExchangeResult compareExchange(String tableN
    * hashKey、sortKey：用于指定数据的key。
    * expectedValue：期望的旧值。
    * desiredValue：如果旧值等于expectedValue，需要设置的新值。
-   * ttlSeconds：新值的TTL时间；0表示不设置TTL限制。
+   * ttlSeconds：新值的TTL时间；TTL必须>=0，0表示不设置TTL限制，当TTL<0时将抛出PException异常。
  * 返回值：CompareExchangeResult，包括：
    * setSucceed：是否set成功，如果旧数据不存在，则set失败。
    * actualValue：如果set失败，返回该value的实际值；null表示不存在。
- * 异常：如果出现异常，譬如网络错误、超时错误、服务端错误等，会抛出 PException。
+ * 异常：如果出现异常，譬如网络错误、超时错误、服务端错误、TTL<0等，会抛出 PException。
 
 ### ttl
 获取单行数据的TTL时间。TTL表示Time To Live，表示该数据还能存活多久。如果超过存活时间，数据就读不到了。
@@ -1465,7 +1466,7 @@ public Future<Void> asyncSet(byte[] hashKey, byte[] sortKey, byte[] value, int t
  * 提供了两个版本的接口，其中第一个接口可以指定TTL时间。
  * 参数：需传入HashKey、SortKey、Value、timeout；选择性传入TTL。
    * timeout单位为毫秒，如果<=0，表示使用配置文件中的默认超时。
-   * ttlSeconds是数据的TTL时间，单位为秒。0表示不设置TTL时间。
+   * ttlSeconds是数据的TTL时间，单位为秒。TTL必须>=0, 0表示不设置TTL时间，当TTL<0时将抛出PException异常。
  * 返回值：Future\<Void\>。
 
 ### asyncMultiSet
@@ -1514,7 +1515,7 @@ public Future<Void> asyncMultiSet(byte[] hashKey, List<Pair<byte[], byte[]>> val
  * 参数：需传入HashKey、Values、timeout；选择性传入ttlSeconds。
    * Values是Pair列表，Pair的第一个元素是SortKey，第二个元素为value。
    * timeout单位为毫秒，如果<=0，表示使用配置文件中的默认超时。
-   * ttlSeconds是数据的TTL时间，单位为秒。0表示不设置TTL时间。
+   * ttlSeconds是数据的TTL时间，单位为秒。TTL必须>=0, 0表示不设置TTL时间，当TTL<0时将抛出PException异常。
  * 返回值：Future\<Void\>。
 
 ### asyncDel

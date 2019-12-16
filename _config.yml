@@ -23,6 +23,9 @@ collections:
   community:
     output: true
     permalink: /:collection/:path
+  releases:
+    output: true
+    permalink: /:collection/:path
 
 plugins:
   - jekyll-sitemap
