@@ -1,10 +1,10 @@
 ---
-title: 跨机房同步设计原理
+title: 跨机房同步设计文档
 layout: post
 author: 吴涛
 ---
 
-关于热备份的基本概念和使用可以参照 [wiki:跨机房同步](https://github.com/XiaoMi/pegasus/wiki/跨机房同步)，这里将主要描述跨机房同步的设计方案和执行细节。
+关于热备份的基本概念和使用可以参照 [administration/duplication](https://pegasus-kv.github.io/administration/duplication)，这里将主要描述跨机房同步的设计方案和执行细节。
 
 -----
 
@@ -36,6 +36,7 @@ author: 吴涛
 
 只用两机房，使用 raft 协议进行进行跨机房同步依然无法避免机房故障时的停服。（5节点同理）
 ```
+
 ```
           +---+                     +---+
           | A |                     | B |
@@ -57,7 +58,7 @@ author: 吴涛
 
 1. **各集群单副本**：这种方案考虑到多集群已存在冗余的情况下，可以减少单集群内的副本数，同时既然一致性已没有保证，大可以索性脱离一致性协议，完全依赖于稳定的集群间网络，保证即使单机房宕机，损失的数据量也是仅仅几十毫秒内的请求量级。考虑机房数为 5 的时候，如果每个机房都是 3 副本，那么全量数据就是 3*5=15 副本，这时候简化为各集群单副本的方案就是几乎最自然的选择。
 
-2. **同步工具作为外部依赖使用**：工具自然是尽可能不影响服务是最好，所以同步工具可以作为外部依赖部署，单纯到节点上读日志（WAL），发日志。这个方案对日志 GC 有前提条件，即日志不可以在同步完成前被删除，否则就丢数据了，但存储服务日志的 GC 是外部工具难以控制的。所以可以把日志强行保留一周以上，但缺点是磁盘空间的成本较大。同步工具作为外部依赖的优点在于稳定性强，不影响服务，缺点在于对服务的控制能力差，很难处理一些琐碎的一致性问题（后面会讲到），**难以实现最终一致性**。
+2. **同步工具作为外部依赖使用**：跨机房同步自然是尽可能不影响服务是最好，所以同步工具可以作为外部依赖部署，单纯访问节点磁盘的日志（WAL）并转发日志。这个方案对日志 GC 有前提条件，即**日志不可以在同步完成前被删除**，否则就丢数据了，但存储服务日志的 GC 是外部工具难以控制的。所以可以把日志强行保留一周以上，但缺点是磁盘空间的成本较大。同步工具作为外部依赖的优点在于稳定性强，不影响服务，缺点在于对服务的控制能力差，很难处理一些琐碎的一致性问题（后面会讲到），**难以实现最终一致性**。
 
 3. **同步工具嵌入到服务内部**：这种做法在工具稳定前会有一段阵痛期，即工具的稳定性影响服务的稳定性。但实现的灵活性肯定是最强的。
 
@@ -103,7 +104,7 @@ pegasus 的热备份以表为粒度。支持单向和双向的复制。为了运
                                       cluster B
 ```
 
-如上图所示，每个 replica （这里特指每个分片的 primary，注意 secondary 不负责热备份复制）独自复制自己的 private log 到远端，replica 之间互不影响。复制直接通过 pegasus client 来完成。每一条写入 A 的记录（如 set / multiset）都会通过 pegasus client 回放到 B。为了将热备份的写与常规写区别开，我们这里定义 ***duplicate_rpc*** 表示热备写。
+如上图所示，每个 replica （这里特指每个分片的 primary，注意 secondary 不负责热备份复制）独自复制自己的 private log 到远端，replica 之间互不影响。复制直接通过 pegasus client 来完成。每一条写入 A 的记录（如 set / multiset）都会通过 pegasus client 复制到 B。为了将热备份的写与常规写区别开，我们这里定义 ***duplicate_rpc*** 表示热备写。
 
 A->B 的热备写，B 也同样会经由三副本的 PacificA 协议提交，并且写入 private log 中。这里有一个问题是，在 A，B 互相同步的场景，一份写操作将形成循环：A->B->A，同样的写会无数次地被重放。为了避免循环写，我们引入 ***cluster id*** 的概念，每条 duplicate_rpc 都会标记发送者的 cluster id。
 
@@ -113,13 +114,13 @@ A->B 的热备写，B 也同样会经由三副本的 PacificA 协议提交，并
  B=2
 ```
 
-所以当 B 重放某条 duplicate_rpc 时，发现其 cluster_id = 1，则不会将它发往 A。
+所以当 B 重放某条 duplicate_rpc 时，发现其 cluster_id = 1，识别到这是一条发自 A 的热备写，则不会将它再发往 A。
 
-热备份同时也需要容忍在 replica 主备切换下复制的进度不会丢失，例如当前 replica1 复制到日志 decree=5001，此时发生主备切换，我们不想看到 replica1 从 0 开始，所以为了能够支持 ***断点续传***，我们引入 ***confirmed_decree***。replica 定期向 meta 汇报当前进度（如 decree=5001），一旦 meta 将该进度持久化至 zookeeper，当 replica 恢复时即可安全地从 confirmed_decree=5001 开始热备份复制。
+热备份同时也需要容忍在 replica 主备切换下复制的进度不会丢失，例如当前 replica1 复制到日志 decree=5001，此时发生主备切换，我们不想看到 replica1 从 0 开始，所以为了能够支持 ***断点续传***，我们引入 ***confirmed_decree***。replica 定期向 meta 汇报当前进度（如 confirmed_decree=5001），一旦 meta 将该进度持久化至 zookeeper，当 replica 故障恢复时即可安全地从 confirmed_decree=5001 重新开始热备份。
 
 ## 流程
 
-热备份相关的元信息首先会记录至 meta server 上，replica server 通过 duplication sync 定期同步元信息，包括各个分片的  confirmed_decree。
+热备份相关的元信息首先会记录至 meta server 上，replica server 通过 ***duplication sync*** 定期同步元信息，包括各个分片的 confirmed_decree。
 
 ```
 +----------+  add dup  +----------+
@@ -133,7 +134,7 @@ A->B 的热备写，B 也同样会经由三副本的 PacificA 协议提交，并
                       +-----------+
 ```
 
-每个 replica 首先读取 private log，为了限制流量，每次只会读入一个日志块而非一整个日志文件。每一批日志统一传递给 mutation_duplicator 进行发送。mutation_duplicator 是一个接口类，目前只实现用 pegasus client 将日志分发至目标集群，未来如有需求也可接入 HBase 等系统。
+每个 replica 首先读取 private log，为了限制流量，每次只会读入一个日志块而非一整个日志文件。每一批日志统一传递给 `mutation_duplicator` 进行发送。mutation_duplicator 是一个接口类，目前只实现用 pegasus client 将日志分发至目标集群，未来如有需求也可接入 HBase 等系统。
 
 ```
 +----------------------+      2
@@ -155,32 +156,15 @@ A->B 的热备写，B 也同样会经由三副本的 PacificA 协议提交，并
 
 ## 日志完整性
 
-在引入热备份之前，Pegasus 的日志会定期被清理，无用的日志文件会被删除。如果有被删除的日志还没有被复制到远端集群，两集群就会数据不一致。为了避免这一问题，我们引入了几个机制来保证日志的完整性，从而实现两集群的最终一致性。
+在引入热备份之前，Pegasus 的日志会定期被清理，无用的日志文件会被删除（通常日志的保留时间为5分钟）。但在引入热备份之后，如果有被删除的日志还没有被复制到远端集群，两集群就会数据不一致。我们引入了几个机制来保证日志的完整性，从而实现两集群的最终一致性：
 
-- **delay gc**
+### GC Delay
 
-Pegasus 认为 last_durable_decree 之后的日志即可被删除（Garbage Collected），因为它们已经被持久化至 rocksdb 的 sst files 中，即使宕机重启数据也不会丢失。但考虑如果热备份的进度较慢，我们则需要延迟 GC，保证数据只有在 confirmed_decree 之后的日志才可被 GC。
+Pegasus 认为 `last_durable_decree` 之后的日志即可被删除回收（Garbage Collected），因为它们已经被持久化至 rocksdb 的 sst files 中，即使宕机重启数据也不会丢失。但考虑如果热备份的进度较慢，我们则需要延迟 GC，保证数据只有在 `confirmed_decree` 之后的日志才可被 GC。当然我们也可以将日志 GC 的时间设置的相当长，例如一周，因为此时数据必然已复制到远端集群（什么环境下复制一条日志需要超过 1 周时间？）。
 
-- **init info**
+最终我们的方案选择了前者，因为前者不难实现，而且比较优雅。
 
-另一种导致日志丢失的情况是在 replica 重启时，原先默认 last_durable_decree 之前的日志可以被跳过。我们需要保证 confirmed_decree 后的日志不会在重启时被忽略，如下图，我们要保证 log.2 不会被跳过。
-
-```
-+-------+rocksdb+-------+
-|                      last_committed_decree    +-----+
-|   +--------------+    +                       |  3  | last_durable_decree
-|   |   memtable   |    |                       +-----+
-|   +--------------+    |                       |  2  |
-|                       +                       +-----+
-|  +-----------------+ last_durable_decree      |  1  | confirmed_decree
-|  |    sst files    |  +                       +-----+
-|  +-----------------+  |
-+-----------------------+                           private logs
-```
-
-然而在重启时我们并不知晓是否正在进行热备份，也不知道 confirmed_decree 具体值，因为此时我们还未进行 duplication_sync。所以目前的做法是在 init_info 存储 duplicating=true 这一项，表明正在进行热备份，则保证不会跳过任一日志。
-
-- **group check**
+### Broadcast confirmed_decree through Group Check
 
 虽然 primary 不会 GC 那些未被热备的日志，但 secondary 并未遵守这一约定，这些丢失日志的 secondary 有朝一日也会被提拔为 primary，从而影响日志完整性。所以 primary 需要将 confirmed_decree 通过组间心跳（group check）的方式通知 secondary，保证它们不会误删日志。
 
@@ -198,25 +182,63 @@ Pegasus 认为 last_durable_decree 之后的日志即可被删除（Garbage Coll
       group check      +-----------+
 ```
 
-- **replica learn**
+当然我们也可以让所有的 replica，不管是 primary 还是 secondary，都在 1 周内不进行 GC，如上一条机制讨论。
 
-当一个 replica 新加入3副本组中，由于它的数据滞后于 primary，它会通过 replica learn 来拷贝新日志，跟上组员的进度。此时从何处开始拷贝日志（称为 `learn_start_decree`）就是一个问题：
+### Replica Learn Step Back
+
+当一个 replica 新加入3副本组中，由于它的数据滞后于 primary，它会通过 ***replica learn*** 来拷贝新日志以跟上组员的进度。此时从何处开始拷贝日志（称为 `learn_start_decree`）就是一个问题。
 
 ```
-+-------+rocksdb+-------+                        +----+
-|                      last_committed_decree=51  | 51 |
-|  +-----------------+  +                        +----+
-|  |    sst files    |  |                        +----+
-|  +-----------------+  |                        | 50 |
-|                       |                        +----+
-+-----------------------+
-                                               private logs
+learnee confirmed_decree=300
 
-            learner's state, confirmed_decree=20
-                 primary's committed_decree = 62
++-----------------------------------+
+|   +---rocksdb+---+                |
+|   |              |                |
+|   |  checkpoint  |                |
+|   |              |                |
+|   +-------last_durable_decree=500 |
+|                                   |
+|   +--+--+--+--+--+--+             |
+|   |  |  |  |  |  |  | private log |
+|   +--+--+--+--+--+--+             |
+|  201                900           |
+|                                   |
++-----------------------------------+
 ```
 
-显然，primary 不光需要让 learner 跟上进度，拷贝 [52, 62] 的日志，也需要补齐那些未热备的日志。所以 primary 需要完整拷贝 [21-62] 的日志。
+如上图显示，primary(learnee) 的完整数据集包括 rocksdb + private log，且 private log 的范围为 [201, 900]。
+
+假设 learner 数据为空，普通情况下，此时显然日志拷贝应该从 decree=501 开始。因为小于 501 的数据全部都已经在 rocksdb checkpoint 里了，这些老旧的日志在 learn 的时候不需要再拷贝。
+
+但考虑到热备份情况，因为 [301, 900] 的日志都还没有热备份，所以我们需要相比普通情况多复制 [301, 500] 的日志。这意味着热备份一定程度上会降低 learn 的效率，也就是降低负载均衡，数据迁移的效率。
+
+原来从 decree=501 开始的 learn，在热备份时需要从 decree=301 开始，这个策略我们称为 ***"Learn Step Back"***。注意虽然我们上述讨论的是 learner 数据为空的情况，但 learner 数据非空的情况同理：
+
+```
+learner
+
++-----------------------------------+
+|   +--+rocksdb+---+                |
+|   |              |                |
+|   |  checkpoint  |                |
+|   |              +                |
+|   +------+last_durable_decree=500 |
+|                                   |
+|   +--+--+--+                      |
+|   |  |  |  |  private log         |
+|   +--+--+--+                      |
+|  251      400                     |
+|                                   |
++-----------------------------------+
+```
+
+我们假设 learner 已经持有 [251, 400] 的日志，下一步 learnee 显然需要复制 [401, 900] 的日志，这点与普通的 learn 流程的区别在于，普通流程下一步会从 last_committed_decree=501 开始，而热备份流程需要 learn step back，从 decree=401 开始。
+
+### Sync is_duplicating to every replica
+
+不管是考虑 GC，还是考虑 learn，我们都需要让每一个 replica 知道“自己正在进行热备份”，因为普通的表不应该考虑 GC Delay，也不应该考虑在 learn 的过程中补齐未热备份的日志，只有热备份的表需要额外考虑这些事情。所以我们需要向所有 replica 同步一个标识（`is_duplicating`）。
+
+这个同步不需要考虑强一致性：不需要在 `is_duplicating` 的值改变时强一致地通知所有 replica。但我们需要保证在 replica learn 的过程中，该标识能够立刻同步给 learner。因此，我们让这个标识通过 config sync 同步。
 
 - **apply learned state**
 
