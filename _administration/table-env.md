@@ -114,6 +114,7 @@ key名称 | value类型 | value约束 | value示例 | 功能说明 | 支持版�
 rocksdb.usage_scenario | string | normal \| prefer_write \| bulk_load | bulk_load | [Usage-Scenario](usage-scenario) | 1.8.1
 replica.deny_client_write | bool | true \| false | true | 拒绝写请求 | 1.11.2
 replica.write_throttling | string | 特定格式 | 1000\*delay\*100 | [流量控制#表级流控](throttling#表级流控) | 1.11.2
+replica.write_throttling_by_size | string | 特定格式 | 1000\*delay\*100 | [流量控制#表级流控](throttling#表级流控) | 1.12.0
 default_ttl | int | >=0 | 86400 | [表级TTL](/api/ttl#表级TTL) | 1.11.2
 manual_compact.disabled | bool | true \| false | true | [Manual-Compact](manual-compact) | 1.9.0
 manual_compact.max_concurrent_running_count | int | >=0 | 10 | [Manual-Compact](manual-compact) | 1.11.3
@@ -126,3 +127,4 @@ manual_compact.periodic.bottommost_level_compaction | string | force \| skip | f
 rocksdb.checkpoint.reserve_min_count | int | >=1 | 2 | [Rocksdb-Checkpoint管理](resource-management#rocksdb-checkpoint管理) | 1.11.3
 rocksdb.checkpoint.reserve_time_seconds | int | >=0 | 600 | [Rocksdb-Checkpoint管理](resource-management#rocksdb-checkpoint管理) | 1.11.3
 business.info | string | 特定格式(使用utf-8编码) | depart=云平台部-存储平台,user=qinzuoyan&wutao1 | 记录表的业务归属信息，可用于生成账单 | -
+replica.slow_query_threshold | int | >=20 | 30 | 慢查询阈值 | 1.12.0

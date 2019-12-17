@@ -26,10 +26,10 @@ menubar: administration_menu
 
 # 表级流控
 
-从[v1.11.2版本](https://github.com/XiaoMi/pegasus/releases/tag/v1.11.2)开始，Pegasus支持Server端表级流控，目前只针对写操作。
+从[v1.11.2版本](https://github.com/XiaoMi/pegasus/releases/tag/v1.11.2)开始，Pegasus支持Server端表级流控，目前只针对写操作。另外，从[v1.12.0版本](https://github.com/XiaoMi/pegasus/releases/tag/v1.12.0)开始增加了基于吞吐量的限流。
 
 实现原理：
-* 用户在[Table环境变量](table-env)中设置`replica.write_throttling`环境变量。
+* 用户可以在[Table环境变量](table-env)中设置`replica.write_throttling`和`replica.write_throttling_by_size`环境变量。其中`replica.write_throttling`是基于qps的限流，`replica.write_throttling_by_size`是基于吞吐量的限流。
 * MetaServer将环境变量异步地通知到各个ReplicaServer，使该表的每个replica都获取到该环境变量，这个过程大约有几秒到几十秒不等的延迟，但是不会超过一分钟。
 * replica获得环境变量后，解析获得write_throttling流控配置，并立即开始生效。
 
@@ -37,7 +37,7 @@ write_throttling流控目前支持两种操作类型：
 * delay：server端收到请求后不立即处理，而是推迟一段时间后再处理，这样使client端的写延迟增大，间接达到流控的目的。
 * reject：server端收到请求后不进行处理，而是返回ERR_BUSY的错误码。可以推迟一段时间再返回错误码，以增大客户端收到错误的延迟，避免客户端立即重试，造成频繁的不必要重试。
 
-环境变量`replica.write_throttling`的value格式：
+环境变量`replica.write_throttling`/`replica.write_throttling_by_size`的value格式：
 ```
 {delay_qps_threshold}*delay*{delay_ms},{reject_qps_threshold}*reject*{delay_ms_before_reject}
 ```
