@@ -160,11 +160,11 @@ A->B 的热备写，B 也同样会经由三副本的 PacificA 协议提交，并
 
 ### GC Delay
 
-Pegasus 认为 `last_durable_decree` 之后的日志即可被删除回收（Garbage Collected），因为它们已经被持久化至 rocksdb 的 sst files 中，即使宕机重启数据也不会丢失。但考虑如果热备份的进度较慢，我们则需要延迟 GC，保证数据只有在 `confirmed_decree` 之后的日志才可被 GC。当然我们也可以将日志 GC 的时间设置的相当长，例如一周，因为此时数据必然已复制到远端集群（什么环境下复制一条日志需要超过 1 周时间？）。
+Pegasus 认为 `last_durable_decree` 之后的日志即可被删除回收（Garbage Collected），因为它们已经被持久化至 rocksdb 的 sst files 中，即使宕机重启数据也不会丢失。但考虑如果热备份的进度较慢，我们则需要延后 GC，保证数据只有在 `confirmed_decree` 之后的日志才可被 GC。
 
-最终我们的方案选择了前者，因为前者不难实现，而且比较优雅。
+当然我们也可以将日志 GC 的时间设置的相当长，例如一周，因为此时数据必然已复制到远端集群（什么环境下复制一条日志需要超过 1 周时间？）。最终我们没有选择这种方法。
 
-### Broadcast confirmed_decree through Group Check
+### Broadcast confirmed_decree
 
 虽然 primary 不会 GC 那些未被热备的日志，但 secondary 并未遵守这一约定，这些丢失日志的 secondary 有朝一日也会被提拔为 primary，从而影响日志完整性。所以 primary 需要将 confirmed_decree 通过组间心跳（group check）的方式通知 secondary，保证它们不会误删日志。
 
@@ -182,7 +182,7 @@ Pegasus 认为 `last_durable_decree` 之后的日志即可被删除回收（Garb
       group check      +-----------+
 ```
 
-当然我们也可以让所有的 replica，不管是 primary 还是 secondary，都在 1 周内不进行 GC，如上一条机制讨论。
+这里有一个问题：由于 secondary 滞后于 primary 了解到热备份正在进行，所以在创建热备份后，secondary 有一定概率误删日志。这是一个已知的设计bug。我们会在后续引入新机制来修复该问题。
 
 ### Replica Learn Step Back
 
@@ -201,16 +201,16 @@ learnee confirmed_decree=300
 |   +--+--+--+--+--+--+             |
 |   |  |  |  |  |  |  | private log |
 |   +--+--+--+--+--+--+             |
-|  201                900           |
+|  201                800           |
 |                                   |
 +-----------------------------------+
 ```
 
-如上图显示，primary(learnee) 的完整数据集包括 rocksdb + private log，且 private log 的范围为 [201, 900]。
+如上图显示，primary(learnee) 的完整数据集包括 rocksdb + private log，且 private log 的范围为 [201, 800]。
 
 假设 learner 数据为空，普通情况下，此时显然日志拷贝应该从 decree=501 开始。因为小于 501 的数据全部都已经在 rocksdb checkpoint 里了，这些老旧的日志在 learn 的时候不需要再拷贝。
 
-但考虑到热备份情况，因为 [301, 900] 的日志都还没有热备份，所以我们需要相比普通情况多复制 [301, 500] 的日志。这意味着热备份一定程度上会降低 learn 的效率，也就是降低负载均衡，数据迁移的效率。
+但考虑到热备份情况，因为 [301, 800] 的日志都还没有热备份，所以我们需要相比普通情况多复制 [301, 500] 的日志。这意味着热备份一定程度上会降低 learn 的效率，也就是降低负载均衡，数据迁移的效率。
 
 原来从 decree=501 开始的 learn，在热备份时需要从 decree=301 开始，这个策略我们称为 ***"Learn Step Back"***。注意虽然我们上述讨论的是 learner 数据为空的情况，但 learner 数据非空的情况同理：
 
@@ -232,7 +232,7 @@ learner
 +-----------------------------------+
 ```
 
-我们假设 learner 已经持有 [251, 400] 的日志，下一步 learnee 显然需要复制 [401, 900] 的日志，这点与普通的 learn 流程的区别在于，普通流程下一步会从 last_committed_decree=501 开始，而热备份流程需要 learn step back，从 decree=401 开始。
+我们假设 learner 已经持有 [251, 400] 的日志，下一步 learnee 将会复制 [301, 800] 的日志，与 learner 数据为空的情况相同。新的日志集将会把旧的日志集覆盖。
 
 ### Sync is_duplicating to every replica
 
@@ -240,7 +240,7 @@ learner
 
 这个同步不需要考虑强一致性：不需要在 `is_duplicating` 的值改变时强一致地通知所有 replica。但我们需要保证在 replica learn 的过程中，该标识能够立刻同步给 learner。因此，我们让这个标识通过 config sync 同步。
 
-- **apply learned state**
+### Apply Learned State
 
 原先 learner 收到 [21-60] 之间的日志后首先会放入 learn/ 目录下，然后简单地重放每一条日志并写入 rocksdb，并不会写入日志中。为了保证日志完整性，我们会将 learn/ 目录 rename 至 plog 目录，替代之前所有的日志。
 
