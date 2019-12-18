@@ -28,7 +28,7 @@ This is a patch release. We strongly recommend you to upgrade to this version in
 + mem_release_max_reserved_mem_percentage = 10
 ```
 
-# Release Notes of v1.12.0 (Latest)
+# Release Notes of v1.12.0
 
 Release page on Github: <https://github.com/XiaoMi/pegasus/releases/tag/v1.12.0>
 
