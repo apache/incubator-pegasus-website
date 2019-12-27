@@ -4,7 +4,7 @@ layout: page
 menubar: administration_menu
 ---
 
-在 pegasus 中，跨机房同步又被成为 **_热备份_**，或 **_duplication_**，简称 **_dup_**。这一功能的主要目的是保证 **数据中心级别的可用性**。当业务需要保证服务与数据能够容忍机房故障时，可以考虑使用此功能。
+在 pegasus 中，跨机房同步又被称为 **_热备份_**，或 **_duplication_**，简称 **_dup_**。这一功能的主要目的是保证 **数据中心级别的可用性**。当业务需要保证服务与数据能够容忍机房故障时，可以考虑使用此功能。
 
 此外，当 Pegasus 客户端在多机房分布时，时常会遇到跨机房访问 Pegasus 服务带来的高延时问题，这时我们可以将 Pegasus 的服务与客户端部署在相同的机房内，客户端可以只读写本地机房的服务，然后由热备份功能将写同步到各个机房上。这种做法既能保证各个机房都有完整数据，又能避免跨机房的延时开销。
 
@@ -52,7 +52,7 @@ duplications of app [account_xiaomi] are listed as below:
 
 通过 `add_dup` 命令，bjsrv-account 集群的表 account_xiaomi 将会近实时地把数据复制到 tjsrv-account 上，这意味着，每一条在北京机房的写入，最终都一定会复制到天津机房。
 
-热备份使用日志异步复制的方式来实现跨集群的同步，可与 mysql 的 binlog 复制和 hbase replication 类比。每个 replica 单独发送自己的日志到远端集群上，replica 之间互不干扰，保证了。
+热备份使用日志异步复制的方式来实现跨集群的同步，可与 mysql 的 binlog 复制和 hbase replication 类比。每个 replica 单独发送自己的日志到远端集群上，保证了 replica 之间互不干扰。
 
 热备份的两集群的表名需要保持一致，但 partition 的个数不需要相同。例如用户可以建表如下：
 ```
