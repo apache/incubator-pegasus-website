@@ -104,9 +104,17 @@ pegasus 的热备份以表为粒度。支持单向和双向的复制。为了运
                                       cluster B
 ```
 
+### duplicate_rpc
+
 如上图所示，每个 replica （这里特指每个分片的 primary，注意 secondary 不负责热备份复制）独自复制自己的 private log 到远端，replica 之间互不影响。复制直接通过 pegasus client 来完成。每一条写入 A 的记录（如 set / multiset）都会通过 pegasus client 复制到 B。为了将热备份的写与常规写区别开，我们这里定义 ***duplicate_rpc*** 表示热备写。
 
-A->B 的热备写，B 也同样会经由三副本的 PacificA 协议提交，并且写入 private log 中。这里有一个问题是，在 A，B 互相同步的场景，一份写操作将形成循环：A->B->A，同样的写会无数次地被重放。为了避免循环写，我们引入 ***cluster id*** 的概念，每条 duplicate_rpc 都会标记发送者的 cluster id。
+A->B 的热备写，B 也同样会经由三副本的 PacificA 协议提交，并且写入 private log 中。
+
+### 集群间写冲突
+
+假设 A,B 两集群故障断连1小时，那么 B 可能在1小时后才收到来自 A 的热备写，这时候 A 的热备写可能比 B 的数据更老，我们就要引入**“数据时间戳”(timestamp)**的概念，避免老的写却覆盖了新的数据。实现的方式就是在每次写之前进行一次读操作，并校验数据时间戳是否小于写的时间戳，如果是则允许写入，不是的话就忽略这个写。
+
+显然从“直接写”到“读后写”，多了一次读操作的开销，损害了我们的写性能。
 
 ```
 [duplication-group]
@@ -114,7 +122,7 @@ A->B 的热备写，B 也同样会经由三副本的 PacificA 协议提交，并
  B=2
 ```
 
-所以当 B 重放某条 duplicate_rpc 时，发现其 cluster_id = 1，识别到这是一条发自 A 的热备写，则不会将它再发往 A。
+### confirmed_decree
 
 热备份同时也需要容忍在 replica 主备切换下复制的进度不会丢失，例如当前 replica1 复制到日志 decree=5001，此时发生主备切换，我们不想看到 replica1 从 0 开始，所以为了能够支持 ***断点续传***，我们引入 ***confirmed_decree***。replica 定期向 meta 汇报当前进度（如 confirmed_decree=5001），一旦 meta 将该进度持久化至 zookeeper，当 replica 故障恢复时即可安全地从 confirmed_decree=5001 重新开始热备份。
 
