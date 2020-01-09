@@ -59,13 +59,12 @@ git submodule update
 mkdir _build
 cd _build
 cmake .. -DBUILD_SHARED_LIBS=ON
-cd ..
 make -j 4
 ```
 
 **注**：如果在执行cmake过程中遇到`Could not find CURL (missing: CURL_LIBRARY CURL_INCLUDE_DIR)`的错误，可以通过`apt-get install libcurl4-openssl-dev`先安装curl的开发包。
 
-以上过程原则上已经实现了构建，此后在文件夹`prometheus-cpp/pull/tests/integration`中可以看到sample_server，在`prometheus-cpp/push/tests/integration`中可以看到sample_client。
+以上过程原则上已经实现了构建，此后在文件夹`prometheus-cpp/_build/pull/tests/integration`中可以看到sample_server，在`prometheus-cpp/_build/push/tests/integration`中可以看到sample_client。
 
  **Prometheus有两种收集数据的方式:**
  1. Prometheus server 定期从配置好的 jobs 或者 exporters 中拉 metrics。
@@ -240,7 +239,7 @@ tar -xzf postman.tar.gz
 
 ![grafana-addAPIKey](/assets/images/grafana-addAPIKey.png)
 
-会得到如下内容（马赛克里面的），只出现一次，请记得保存。
+会得到如下内容（key之后的马赛克内容），只出现一次，请记得保存。
 
 ![grafana-getAPIKey](/assets/images/grafana-getAPIKey.png)
 
@@ -250,7 +249,7 @@ tar -xzf postman.tar.gz
 
 选择POST，输入网址
 ```
-http://your_host:3000/api/dashboard/dx
+http://your_host:3000/api/dashboards/db
 ```
 
 在Headers处输入
