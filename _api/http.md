@@ -5,17 +5,48 @@ show_sidebar: false
 menubar: api_menu
 ---
 
-## 功能目标
+## 功能介绍
 
-Pegasus为MetaServer和ReplicaServer提供了HTTP接口，用于查看集群相关信息，查询服务器信息等。
+Pegasus为MetaServer，ReplicaServer和Collector都提供了HTTP接口，用于查看集群相关信息，查询服务状态等。
+
+**注意**
+
+- 由于最新数据由主MetaServer维护，当访问备用MetaServer的元数据查询接口时，会自动重定向至主MetaServer对应的接口。
+举个例子，假设 `127.0.0.1:34601` 和 `127.0.0.1:34602` 分别是主备MetaServer，访问 `127.0.0.1:34602/meta/cluster`
+会自动跳转到 `127.0.0.1:34601/meta/cluster`。
 
 ## 接口介绍
 
-接口共分为服务器信息查询、表管理和节点管理三类，其中服务器信息查询类中的指令同时支持对ReplicaServer和MetaServer的访问，其它指令支持MetaServer。
+所有接口均返回JSON格式。使用浏览器查看JSON时，建议使用[Chrome插件json-formatter](https://chrome.google.com/webstore/detail/json-formatter/bcjindcccaagfpapjjmafapmmgkkhgoa)以优化阅读体验。
 
-当访问备用MetaServer的表管理和节点管理类接口时，由于相关信息保存在主MetaServer中，会自动重定向至主MetaServer对应的接口。
+### `/`
 
-所有接口均返回JSON格式。
+**功能：** 主页面，获取所有接口的使用帮助
+
+**示例：**`127.0.0.1:34801`
+
+**返回：**
+
+```json
+{
+    "/": "ip:port/",
+    "/meta/app": "ip:port/meta/app?app_name=temp",
+    "/meta/app/duplication": "ip:port/meta/app/duplication?name=<app_name>",
+    "/meta/app_envs": "ip:port/meta/app_envs?name=temp",
+    "/meta/apps": "ip:port/meta/apps",
+    "/meta/backup_policy": "ip:port/meta/backup_policy",
+    "/meta/cluster": "ip:port/meta/cluster",
+    "/meta/nodes": "ip:port/meta/nodes",
+    "/perfCounter": "ip:port/perfCounter?name={perf_counter_name}",
+    "/pprof/cmdline": "ip:port/pprof/cmdline",
+    "/pprof/growth": "ip:port/pprof/growth",
+    "/pprof/heap": "ip:port/pprof/heap",
+    "/pprof/profile": "ip:port/pprof/profile",
+    "/pprof/symbol": "ip:port/pprof/symbol",
+    "/recentStartTime": "ip:port/recentStartTime",
+    "/version": "ip:port/version"
+}
+```
 
 ### `/version`
 
