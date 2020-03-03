@@ -23,7 +23,7 @@ Pegasus的冷备份功能用来将Pegasus中的数据定期生成快照文件，
 
 ### FDS
 
-FDS是小米生态云提供的存储产品，目前仅面向小米的生态链业务开放。更多详细的介绍[请戳这里](https://cnbj6.cloud.mi.com/react/index.html#/index/product/fds?_k=b6rukd)。
+FDS是小米生态云提供的存储产品，目前仅面向小米的生态链业务开放。更多详细的介绍[请戳这里](https://cnbj6.cloud.mi.com/#/index/product/fds?_k=rq2znr)。
 
 ### 本地文件系统
 
@@ -97,7 +97,7 @@ add backup policy succeed, policy_name = policy1
 
 几个参数的含义如下：
 * -p: policy的名字，创建后就不能修改，某个集群只能有唯一的名字
-* -b: 存储介质的名称。系统会按制定的名称寻找对应的section, 并初始化存储介质。在上例中，系统从[block_service.my_backup_media]这一配置section中进行初始化。
+* -b: 存储介质的名称。系统会按指定的名称寻找对应的section, 并初始化存储介质。在上例中，系统从[block_service.my_backup_media]这一配置section中进行初始化。
 * -a: policy下app_id的集合。如果有多个，用逗号隔开。
 * -i: 备份周期，以秒为单位。
 * -s: 开始时间，精确到分钟。这个参数含义略显复杂，后文专门介绍。
