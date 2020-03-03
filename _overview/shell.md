@@ -36,142 +36,152 @@ Shell工具采用子命令模式，进入子命令模式执行```help```后会�
 
 ```
 Usage:
-        help
-        version
-        cluster_info
-        app                    <app_name> [-d|--detailed] [-o|--output file_name]
-        app_disk               <app_name> [-d|--detailed] [-o|--output file_name]
-        ls                     [-a|-all] [-d|--detailed] [-j|--json_pretty]
-                               [-o|--output file_name][-s|--status all|available|creating|dropping|dropped]
-        nodes                  [-d|--detailed] [-j|--json_pretty] [-r|--resolve_ip]
-                               [-u|--resource_usage][-o|--output file_name]
-                               [-s|--status all|alive|unalive]
-        create                 <app_name> [-p|--partition_count num] [-r|--replica_count num]
-                               [-e|--envs k1=v1,k2=v2...]
-        drop                   <app_name> [-r|--reserve_seconds num]
-        recall                 <app_id> [new_app_name]
-        set_meta_level         <stopped|blind|freezed|steady|lively>
-        get_meta_level
-        balance                <-g|--gpid appid.pidx> <-p|--type move_pri|copy_pri|copy_sec>
-                               <-f|--from from_address> <-t|--to to_address>
-        propose                [-f|--force] <-g|--gpid appid.pidx>
-                               <-p|--type ASSIGN_PRIMARY|ADD_SECONDARY|DOWNGRADE_TO_INACTIVE...>
-                               <-t|--target node_to_exec_command> <-n|--node node_to_be_affected>
-        use                    [app_name]
-        cc                     [cluster_name]
-        escape_all             [true|false]
-        timeout                [time_in_ms]
-        hash                   <hash_key> <sort_key>
-        set                    <hash_key> <sort_key> <value> [ttl_in_seconds]
-        multi_set              <hash_key> <sort_key> <value> [sort_key value...]
-        get                    <hash_key> <sort_key>
-        multi_get              <hash_key> [sort_key...]
-        multi_get_range        <hash_key> <start_sort_key> <stop_sort_key>
-                               [-a|--start_inclusive true|false] [-b|--stop_inclusive true|false]
-                               [-s|--sort_key_filter_type anywhere|prefix|postfix]
-                               [-y|--sort_key_filter_pattern str] [-n|--max_count num]
-                               [-i|--no_value] [-r|--reverse]
-        multi_get_sortkeys     <hash_key>
-        del                    <hash_key> <sort_key>
-        multi_del              <hash_key> <sort_key> [sort_key...]
-        multi_del_range        <hash_key> <start_sort_key> <stop_sort_key>
-                               [-a|--start_inclusive true|false] [-b|--stop_inclusive true|false]
-                               [-s|--sort_key_filter_type anywhere|prefix|postfix]
-                               [-y|--sort_key_filter_pattern str] [-o|--output file_name]
-                               [-i|--silent]
-        incr                   <hash_key> <sort_key> [increment]
-        check_and_set          <hash_key> [-c|--check_sort_key str]
-                               [-t|--check_type not_exist|not_exist_or_empty|exist|not_empty]
-                               [match_anywhere|match_prefix|match_postfix]
-                               [bytes_less|bytes_less_or_equal|bytes_equal|bytes_greater_or_equal|bytes_greater]
-                               [int_less|int_less_or_equal|int_equal|int_greater_or_equal|int_greater]
-                               [-o|--check_operand str] [-s|--set_sort_key str] [-v|--set_value str]
-                               [-l|--set_value_ttl_seconds num] [-r|--return_check_value]
-        check_and_mutate       <hash_key> [-c|--check_sort_key str]
-                               [-t|--check_type not_exist|not_exist_or_empty|exist|not_empty]
-                               [match_anywhere|match_prefix|match_postfix]
-                               [bytes_less|bytes_less_or_equal|bytes_equal|bytes_greater_or_equal|bytes_greater]
-                               [int_less|int_less_or_equal|int_equal|int_greater_or_equal|int_greater]
-                               [-o|--check_operand str] [-r|--return_check_value]
-        exist                  <hash_key> <sort_key>
-        count                  <hash_key>
-        ttl                    <hash_key> <sort_key>
-        hash_scan              <hash_key> <start_sort_key> <stop_sort_key>
-                               [-a|--start_inclusive true|false] [-b|--stop_inclusive true|false]
-                               [-s|--sort_key_filter_type anywhere|prefix|postfix]
-                               [-y|--sort_key_filter_pattern str]
-                               [-v|--value_filter_type anywhere|prefix|postfix|exact]
-                               [-z|--value_filter_pattern str] [-o|--output file_name]
-                               [-n|--max_count num] [-t|--timeout_ms num] [-d|--detailed]
-                               [-i|--no_value]
-        full_scan              [-h|--hash_key_filter_type anywhere|prefix|postfix]
-                               [-x|--hash_key_filter_pattern str]
-                               [-s|--sort_key_filter_type anywhere|prefix|postfix|exact]
-                               [-y|--sort_key_filter_pattern str]
-                               [-v|--value_filter_type anywhere|prefix|postfix|exact]
-                               [-z|--value_filter_pattern str] [-o|--output file_name]
-                               [-n|--max_count num] [-t|--timeout_ms num] [-d|--detailed]
-                               [-i|--no_value] [-p|--partition num]
-        copy_data              <-c|--target_cluster_name str> <-a|--target_app_name str>
-                               [-p|--partition num] [-b|--max_batch_count num] [-t|--timeout_ms num]
-                               [-h|--hash_key_filter_type anywhere|prefix|postfix]
-                               [-x|--hash_key_filter_pattern str]
-                               [-s|--sort_key_filter_type anywhere|prefix|postfix|exact]
-                               [-y|--sort_key_filter_pattern str]
-                               [-v|--value_filter_type anywhere|prefix|postfix|exact]
-                               [-z|--value_filter_pattern str] [-n|--no_overwrite] [-i|--no_value]
-                               [-g|--geo_data]
-        clear_data             [-p|--partition num] [-b|--max_batch_count num] [-t|--timeout_ms num]
-                               [-h|--hash_key_filter_type anywhere|prefix|postfix]
-                               [-x|--hash_key_filter_pattern str]
-                               [-s|--sort_key_filter_type anywhere|prefix|postfix|exact]
-                               [-y|--sort_key_filter_pattern str]
-                               [-v|--value_filter_type anywhere|prefix|postfix|exact]
-                               [-z|--value_filter_pattern str] [-f|--force]
-        count_data             [-p|--partition num] [-b|--max_batch_count num] [-t|--timeout_ms num]
-                               [-h|--hash_key_filter_type anywhere|prefix|postfix]
-                               [-x|--hash_key_filter_pattern str]
-                               [-s|--sort_key_filter_type anywhere|prefix|postfix|exact]
-                               [-y|--sort_key_filter_pattern str]
-                               [-v|--value_filter_type anywhere|prefix|postfix|exact]
-                               [-z|--value_filter_pattern str] [-d|--diff_hash_key] [-a|--stat_size]
-                               [-n|--top_count num] [-r|--run_seconds num]
-        remote_command         [-t all|meta-server|replica-server] [-l ip:port,ip:port...] <command>
-                               [arguments...]
-        server_info            [-t all|meta-server|replica-server] [-l ip:port,ip:port...]
-        server_stat            [-t all|meta-server|replica-server] [-l ip:port,ip:port...]
-        app_stat               [-a|--app_name str] [-q|--only_qps] [-u|--only_usage]
-                               [-o|--output file_name]
-        flush_log              [-t all|meta-server|replica-server] [-l ip:port,ip:port...]
-        local_get              <db_path> <hash_key> <sort_key>
-        sst_dump               [--command=check|scan|none|raw] <--file=data_dir_OR_sst_file>
-                               [--from=user_key] [--to=user_key] [--read_num=num] [--show_properties]
-        mlog_dump              <-i|--input log_dir> [-o|--output file_name] [-d|--detailed]
-        recover                [-f|--node_list_file file_name] [-s|--node_list_str str]
-                               [-w|--wait_seconds num] [-b|--skip_bad_nodes]
-                               [-l|--skip_lost_partitions] [-o|--output file_name]
-        add_backup_policy      <-p|--policy_name str> <-b|--backup_provider_type str>
-                               <-a|--app_ids 1,2...> <-i|--backup_interval_seconds num>
-                               <-s|--start_time hour:minute> <-c|--backup_history_cnt num>
-        ls_backup_policy
-        query_backup_policy    <-p|--policy_name p1,p2...> [-b|--backup_info_cnt num]
-        modify_backup_policy   <-p|--policy_name str> [-a|--add_app 1,2...] [-r|--remove_app 1,2...]
-                               [-i|--backup_interval_seconds num] [-c|--backup_history_count num]
-                               [-s|--start_time hour:minute]
-        disable_backup_policy  <-p|--policy_name str>
-        enable_backup_policy   <-p|--policy_name str>
-        restore_app            <-c|--old_cluster_name str> <-p|--old_policy_name str>
-                               <-a|--old_app_name str> <-i|--old_app_id id>
-                               <-t|--timestamp/backup_id timestamp> <-b|--backup_provider_type str>
-                               [-n|--new_app_name str] [-s|--skip_bad_partition]
-        query_restore_status   <restore_app_id> [-d|--detailed]
-        get_app_envs
-        set_app_envs           <key> <value> [key value...]
-        del_app_envs           <key> [key...]
-        clear_app_envs         [-a|--all] [-p|--prefix str]
-        ddd_diagnose           [-g|--gpid appid|appid.pidx] [-d|--diagnose] [-a|--auto_diagnose]
-                               [-s|--skip_prompt] [-o|--output file_name]
-        exit
+	help
+	version
+	cluster_info           [-r|--resolve_ip] [-o|--output file_name] [-j|--json]
+	app                    <app_name> [-d|--detailed] [-r|--resolve_ip] [-o|--output file_name]
+	                       [-j|--json]
+	app_disk               <app_name> [-d|--detailed] [-r|--resolve_ip] [-j|--json]
+	                       [-o|--output file_name]
+	ls                     [-a|-all] [-d|--detailed] [-j|--json]
+	                       [-o|--output file_name][-s|--status all|available|creating|dropping|dropped]
+	nodes                  [-d|--detailed] [-j|--json] [-r|--resolve_ip]
+	                       [-u|--resource_usage][-o|--output file_name]
+	                       [-s|--status all|alive|unalive] [-q|--qps]
+	create                 <app_name> [-p|--partition_count num] [-r|--replica_count num]
+	                       [-e|--envs k1=v1,k2=v2...]
+	drop                   <app_name> [-r|--reserve_seconds num]
+	recall                 <app_id> [new_app_name]
+	set_meta_level         <stopped|blind|freezed|steady|lively>
+	get_meta_level
+	balance                <-g|--gpid appid.pidx> <-p|--type move_pri|copy_pri|copy_sec>
+	                       <-f|--from from_address> <-t|--to to_address>
+	propose                [-f|--force] <-g|--gpid appid.pidx>
+	                       <-p|--type ASSIGN_PRIMARY|ADD_SECONDARY|DOWNGRADE_TO_INACTIVE...>
+	                       <-t|--target node_to_exec_command> <-n|--node node_to_be_affected>
+	use                    [app_name]
+	cc                     [cluster_name]
+	escape_all             [true|false]
+	timeout                [time_in_ms]
+	hash                   <hash_key> <sort_key>
+	set                    <hash_key> <sort_key> <value> [ttl_in_seconds]
+	multi_set              <hash_key> <sort_key> <value> [sort_key value...]
+	get                    <hash_key> <sort_key>
+	multi_get              <hash_key> [sort_key...]
+	multi_get_range        <hash_key> <start_sort_key> <stop_sort_key>
+	                       [-a|--start_inclusive true|false] [-b|--stop_inclusive true|false]
+	                       [-s|--sort_key_filter_type anywhere|prefix|postfix]
+	                       [-y|--sort_key_filter_pattern str] [-n|--max_count num]
+	                       [-i|--no_value] [-r|--reverse]
+	multi_get_sortkeys     <hash_key>
+	del                    <hash_key> <sort_key>
+	multi_del              <hash_key> <sort_key> [sort_key...]
+	multi_del_range        <hash_key> <start_sort_key> <stop_sort_key>
+	                       [-a|--start_inclusive true|false] [-b|--stop_inclusive true|false]
+	                       [-s|--sort_key_filter_type anywhere|prefix|postfix]
+	                       [-y|--sort_key_filter_pattern str] [-o|--output file_name]
+	                       [-i|--silent]
+	incr                   <hash_key> <sort_key> [increment]
+	check_and_set          <hash_key> [-c|--check_sort_key str]
+	                       [-t|--check_type not_exist|not_exist_or_empty|exist|not_empty]
+	                       [match_anywhere|match_prefix|match_postfix]
+	                       [bytes_less|bytes_less_or_equal|bytes_equal|bytes_greater_or_equal|bytes_greater]
+	                       [int_less|int_less_or_equal|int_equal|int_greater_or_equal|int_greater]
+	                       [-o|--check_operand str] [-s|--set_sort_key str] [-v|--set_value str]
+	                       [-l|--set_value_ttl_seconds num] [-r|--return_check_value]
+	check_and_mutate       <hash_key> [-c|--check_sort_key str]
+	                       [-t|--check_type not_exist|not_exist_or_empty|exist|not_empty]
+	                       [match_anywhere|match_prefix|match_postfix]
+	                       [bytes_less|bytes_less_or_equal|bytes_equal|bytes_greater_or_equal|bytes_greater]
+	                       [int_less|int_less_or_equal|int_equal|int_greater_or_equal|int_greater]
+	                       [-o|--check_operand str] [-r|--return_check_value]
+	exist                  <hash_key> <sort_key>
+	count                  <hash_key>
+	ttl                    <hash_key> <sort_key>
+	hash_scan              <hash_key> <start_sort_key> <stop_sort_key>
+	                       [-a|--start_inclusive true|false] [-b|--stop_inclusive true|false]
+	                       [-s|--sort_key_filter_type anywhere|prefix|postfix]
+	                       [-y|--sort_key_filter_pattern str]
+	                       [-v|--value_filter_type anywhere|prefix|postfix|exact]
+	                       [-z|--value_filter_pattern str] [-o|--output file_name]
+	                       [-n|--max_count num] [-t|--timeout_ms num] [-d|--detailed]
+	                       [-i|--no_value]
+	full_scan              [-h|--hash_key_filter_type anywhere|prefix|postfix]
+	                       [-x|--hash_key_filter_pattern str]
+	                       [-s|--sort_key_filter_type anywhere|prefix|postfix|exact]
+	                       [-y|--sort_key_filter_pattern str]
+	                       [-v|--value_filter_type anywhere|prefix|postfix|exact]
+	                       [-z|--value_filter_pattern str] [-o|--output file_name]
+	                       [-n|--max_count num] [-t|--timeout_ms num] [-d|--detailed]
+	                       [-i|--no_value] [-p|--partition num]
+	copy_data              <-c|--target_cluster_name str> <-a|--target_app_name str>
+	                       [-p|--partition num] [-b|--max_batch_count num] [-t|--timeout_ms num]
+	                       [-h|--hash_key_filter_type anywhere|prefix|postfix]
+	                       [-x|--hash_key_filter_pattern str]
+	                       [-s|--sort_key_filter_type anywhere|prefix|postfix|exact]
+	                       [-y|--sort_key_filter_pattern str]
+	                       [-v|--value_filter_type anywhere|prefix|postfix|exact]
+	                       [-z|--value_filter_pattern str] [-n|--no_overwrite] [-i|--no_value]
+	                       [-g|--geo_data]
+	clear_data             [-p|--partition num] [-b|--max_batch_count num] [-t|--timeout_ms num]
+	                       [-h|--hash_key_filter_type anywhere|prefix|postfix]
+	                       [-x|--hash_key_filter_pattern str]
+	                       [-s|--sort_key_filter_type anywhere|prefix|postfix|exact]
+	                       [-y|--sort_key_filter_pattern str]
+	                       [-v|--value_filter_type anywhere|prefix|postfix|exact]
+	                       [-z|--value_filter_pattern str] [-f|--force]
+	count_data             [-p|--partition num] [-b|--max_batch_count num] [-t|--timeout_ms num]
+	                       [-h|--hash_key_filter_type anywhere|prefix|postfix]
+	                       [-x|--hash_key_filter_pattern str]
+	                       [-s|--sort_key_filter_type anywhere|prefix|postfix|exact]
+	                       [-y|--sort_key_filter_pattern str]
+	                       [-v|--value_filter_type anywhere|prefix|postfix|exact]
+	                       [-z|--value_filter_pattern str] [-d|--diff_hash_key] [-a|--stat_size]
+	                       [-n|--top_count num] [-r|--run_seconds num]
+	remote_command         [-t all|meta-server|replica-server] [-r|--resolve_ip]
+	                       [-l ip:port,ip:port...]<command> [arguments...]
+	server_info            [-t all|meta-server|replica-server] [-l ip:port,ip:port...]
+	                       [-r|--resolve_ip]
+	server_stat            [-t all|meta-server|replica-server] [-l ip:port,ip:port...]
+	                       [-r|--resolve_ip]
+	app_stat               [-a|--app_name str] [-q|--only_qps] [-u|--only_usage] [-j|--json]
+	                       [-o|--output file_name]
+	flush_log              [-t all|meta-server|replica-server]
+	                       [-l ip:port,ip:port...][-r|--resolve_ip]
+	local_get              <db_path> <hash_key> <sort_key>
+	rdb_key_str2hex        <hash_key> <sort_key>
+	rdb_key_hex2str        <rdb_key_in_hex>
+	rdb_value_hex2str      <value_in_hex>
+	sst_dump               [--command=check|scan|none|raw] <--file=data_dir_OR_sst_file>
+	                       [--from=user_key] [--to=user_key] [--read_num=num] [--show_properties]
+	                       [--pegasus_data]
+	mlog_dump              <-i|--input log_dir> [-o|--output file_name] [-d|--detailed]
+	recover                [-f|--node_list_file file_name] [-s|--node_list_str str]
+	                       [-w|--wait_seconds num] [-b|--skip_bad_nodes]
+	                       [-l|--skip_lost_partitions] [-o|--output file_name]
+	add_backup_policy      <-p|--policy_name str> <-b|--backup_provider_type str>
+	                       <-a|--app_ids 1,2...> <-i|--backup_interval_seconds num>
+	                       <-s|--start_time hour:minute> <-c|--backup_history_cnt num>
+	ls_backup_policy
+	query_backup_policy    <-p|--policy_name p1,p2...> [-b|--backup_info_cnt num]
+	modify_backup_policy   <-p|--policy_name str> [-a|--add_app 1,2...] [-r|--remove_app 1,2...]
+	                       [-i|--backup_interval_seconds num] [-c|--backup_history_count num]
+	                       [-s|--start_time hour:minute]
+	disable_backup_policy  <-p|--policy_name str>
+	enable_backup_policy   <-p|--policy_name str>
+	restore_app            <-c|--old_cluster_name str> <-p|--old_policy_name str>
+	                       <-a|--old_app_name str> <-i|--old_app_id id>
+	                       <-t|--timestamp/backup_id timestamp> <-b|--backup_provider_type str>
+	                       [-n|--new_app_name str] [-s|--skip_bad_partition]
+	query_restore_status   <restore_app_id> [-d|--detailed]
+	get_app_envs           [-j|--json]
+	set_app_envs           <key> <value> [key value...]
+	del_app_envs           <key> [key...]
+	clear_app_envs         [-a|--all] [-p|--prefix str]
+	ddd_diagnose           [-g|--gpid appid|appid.pidx] [-d|--diagnose] [-a|--auto_diagnose]
+	                       [-s|--skip_prompt] [-o|--output file_name]
+	exit
+
 ```
 
 由于子命令很多，为了方便使用，我们根据功能不同进行分类。
