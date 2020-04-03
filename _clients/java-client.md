@@ -2215,7 +2215,7 @@ Pegasus的key和value都是原始的字节串（Java中就是byte[]），而用�
 
 对于value较大（>=2kb）的业务，我们推荐在客户端使用[facebook/Zstandard](https://github.com/facebook/zstd)压缩算法（简称 Zstd）对数据进行压缩，以减少value的数据长度，提升Pegasus的服务稳定性和读写性能。Zstd算法在压缩比和压缩速率上取得较好的平衡，适合通用场景。
 
-从[Pegasus Java Client 1.11.3-thrift-0.11.0-inlined-release](https://github.com/XiaoMi/pegasus-java-client/releases/tag/1.11.3-thrift-0.11.0-inlined-release)版本开始，我们提供了Zstd压缩工具类[com.xiaomi.infra.pegasus.tools.ZstdWrapper](https://github.com/XiaoMi/pegasus-java-client/blob/thrift-0.11.0-inlined/src/main/java/com/xiaomi/infra/pegasus/tools/ZstdWrapper.java)，方便用户实现压缩功能。
+从Java Client 1.11.3版本开始，我们提供了Zstd压缩工具类[com.xiaomi.infra.pegasus.tools.ZstdWrapper](https://github.com/XiaoMi/pegasus-java-client/blob/thrift-0.11.0-inlined/src/main/java/com/xiaomi/infra/pegasus/tools/ZstdWrapper.java)，方便用户实现压缩功能。
 
 使用示例：
 ```java
