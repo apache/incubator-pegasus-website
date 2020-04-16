@@ -392,3 +392,5 @@ replica
     "description": "statistic the read_qps of app _all_"
 }
 ```
+
+**NOTE:** http中的字符`#`代表锚，是一种特殊字符，所以对于perf counter名字中包含'#'字符的需要转换成`%23`
