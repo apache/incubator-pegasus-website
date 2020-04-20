@@ -6,19 +6,19 @@ menubar: administration_menu
 
 ## 组件
 
-Pegasus 使用 [Prometheus](https://prometheus.io/) 和 [Grafana](https://grafana.com/) 进项监控项的采集和展示。
+从[v1.12.0](https://github.com/XiaoMi/pegasus/releases)开始, Pegasus 支持使用 [Prometheus](https://prometheus.io/) 和 [Grafana](https://grafana.com/) 进项监控项的采集和展示。
 
-1. Prometheus
+- Prometheus
 
-    Prometheus 是一款开源的系统监控和报警套件。它可以通过将采集被监控系统的监控项存入自身的时序数据库中，并且通过丰富的多维数据查询语言，满足用户的不同数据展示需求。
+> Prometheus 是一款开源的系统监控和报警套件。它可以通过将采集被监控系统的监控项存入自身的时序数据库中，并且通过丰富的多维数据查询语言，满足用户的不同数据展示需求。
 
-2. Grafana
+- Grafana
 
-    Grafana 是一款开源的数据分析和展示平台。支持包括 Prometheus 在内的多个主流时序数据库源。通过对应的数据库查询语句，从数据源中获取展现数据。通过灵活可配置的 Dashboard，快速的将这些数据以图表的形式展示给用户。
+> Grafana 是一款开源的数据分析和展示平台。支持包括 Prometheus 在内的多个主流时序数据库源。通过对应的数据库查询语句，从数据源中获取展现数据。通过灵活可配置的 Dashboard，快速的将这些数据以图表的形式展示给用户。
 
 ***注意***
 
-本文档仅提供一种使用 Prometheus 和 Grafana 进行 Pegasus 监控数据采集和展示的方式。原则上不开发、维护这些组件。更多关于这些组件的详细介绍，请移步对应官方文档进行查阅。
+本文档仅提供一种使用 Prometheus 和 Grafana 进行 Pegasus 监控数据采集和展示的方式。Pegasus**不包含、不维护这些组件**。更多关于这些组件的详细介绍，请移步对应官方文档进行查阅。
 
 ## 开始搭建
 
@@ -27,45 +27,49 @@ Pegasus 使用 [Prometheus](https://prometheus.io/) 和 [Grafana](https://grafan
 ### Prometheus安装与使用
 
 获取Prometheus
-```
+
+```sh
 wget https://github.com/prometheus/prometheus/releases/download/v2.15.2/prometheus-2.15.2.linux-amd64.tar.gz
 tar xvfz prometheus-2.15.2.linux-amd64.tar.gz
 cd prometheus-2.15.2.linux-amd64
 ```
 
-修改prometheus.yml文件，如下所示： 
+修改prometheus目录下的prometheus.yml文件，如下所示：
+
 ```yaml
 global:
-  scrape_interval:     5s # By default, scrape targets every 15 seconds.
+  scrape_interval: 5s
 
-# A scrape configuration containing exactly one endpoint to scrape:
-# Here it's Prometheus itself.
 scrape_configs:
-  # The job name is added as a label `job=<job_name>` to any timeseries scraped from this config.
   - job_name: 'pegasus'
-    # Override the global default and scrape targets from this job every 5 seconds.
-    #scrape_interval: 5s
     static_configs:
-        - targets: ['collector_host:9091']
-          labels:
-              group: collector
+      - targets: ['collector_host:9091']
+        labels:
+          group: collector
 
-        - targets: ['meta_host1:9091', 'meta_host2:9091', 'meta_host3:9091']
-          labels:
-              group: meta
+      - targets: ['meta_host1:9091', 'meta_host2:9091', 'meta_host3:9091']
+        labels:
+          group: meta
 
-        - targets: ['replica_host1:9091', 'replica_host2:9091', 'replica_host3:9091']
-          labels:
-              group: replica
-
-        - targets: ['node_exporter_host1:9100', 'node_exporter_host2:9100', ... 'node_exporter_hostn:9100']
-          labels:
-              group: node_exporter
-
+      - targets: ['replica_host1:9091', 'replica_host2:9091', 'replica_host3:9091']
+        labels:
+          group: replica
+      #
+      # NOTE: Add the following lines if node exporter is deployed.
+      # - targets:
+      #     [
+      #       'node_exporter_host1:9100',
+      #       'node_exporter_host2:9100',
+      #       ...
+      #       'node_exporter_hostn:9100',
+      #     ]
+      #   labels:
+      #     group: node_exporter
 ```
 
 修改完prometheus.yml之后，启动prometheus:
-```
+
+```sh
 ./prometheus --config.file=prometheus.yml
 ```
 
@@ -75,10 +79,9 @@ scrape_configs:
 
 在Expression框内输入需要查找的内容，点击Excute即可在Element中展示查找到的内容，当选择Graph时可以显示该内容一段时间内数值变化情况。
 
-
 ***注意***
 
-1.由于我们需要使用node exporter来获取一些关于硬件平台以及操作系统的metrics, 所以在部署Pegasus集群的时候，需要在每一台机器上单独开启一个node exporter实例，具体可参考: [Node Exporter](https://github.com/prometheus/node_exporter)
+1.实际运维过程中, 我们通常需要获取一些机器及操作系统的监控指标, 如cpu.busy, disk.iostat等等, 所以在部署Pegasus集群的时候，可以考虑在每一台机器上部署一个node exporter后台实例，具体可参考: [Node Exporter](https://github.com/prometheus/node_exporter)
 
 2.[Alert Manager](https://github.com/prometheus/alertmanager) 为 Prometheus 报警组件，需单独部署（暂不提供方案，可参照官方文档自行搭建）。通过 Alert Manager，用户可以配置报警策略，接收邮件、短信等报警。
 
@@ -87,14 +90,16 @@ scrape_configs:
 ### Grafana安装与使用
 
 获取Grafana
-```
+
+```sh
 wget https://dl.grafana.com/oss/release/grafana-6.0.0.linux-amd64.tar.gz //如果报错，可以尝试在后面添加--no-check-certificate
 tar -zxvf grafana-6.0.0.linux-amd64.tar.gz
 cd grafana-6.0.0
 ```
 
 启动Grafana
-```
+
+```sh
 ./bin/grafana-server web
 ```
 
@@ -102,43 +107,16 @@ cd grafana-6.0.0
 
 ```Linux
 INFO[07-24|14:36:59] Starting Grafana                         logger=server version=6.0.0 commit=34a9a62 branch=HEAD compiled=2019-02-25T22:47:26+0800
-INFO[07-24|14:36:59] Config loaded from                       logger=settings file=/home/mi/Documents/myPorject/grafana-6.0.0/conf/defaults.ini
-INFO[07-24|14:36:59] Path Home                                logger=settings path=/home/mi/Documents/myPorject/grafana-6.0.0
-INFO[07-24|14:36:59] Path Data                                logger=settings path=/home/mi/Documents/myPorject/grafana-6.0.0/data
-INFO[07-24|14:36:59] Path Logs                                logger=settings path=/home/mi/Documents/myPorject/grafana-6.0.0/data/log
-INFO[07-24|14:36:59] Path Plugins                             logger=settings path=/home/mi/Documents/myPorject/grafana-6.0.0/data/plugins
-INFO[07-24|14:36:59] Path Provisioning                        logger=settings path=/home/mi/Documents/myPorject/grafana-6.0.0/conf/provisioning
-INFO[07-24|14:36:59] App mode production                      logger=settings
-INFO[07-24|14:36:59] Initializing HTTPServer                  logger=server
-INFO[07-24|14:37:00] Initializing SqlStore                    logger=server
-INFO[07-24|14:37:00] Connecting to DB                         logger=sqlstore dbtype=sqlite3
-INFO[07-24|14:37:00] Starting DB migration                    logger=migrator
-INFO[07-24|14:37:00] Initializing InternalMetricsService      logger=server
-INFO[07-24|14:37:00] Initializing SearchService               logger=server
-INFO[07-24|14:37:00] Initializing PluginManager               logger=server
-INFO[07-24|14:37:00] Starting plugin search                   logger=plugins
-INFO[07-24|14:37:00] Initializing RenderingService            logger=server
-INFO[07-24|14:37:00] Initializing AlertingService             logger=server
-INFO[07-24|14:37:00] Initializing DatasourceCacheService      logger=server
-INFO[07-24|14:37:00] Initializing HooksService                logger=server
-INFO[07-24|14:37:00] Initializing LoginService                logger=server
-INFO[07-24|14:37:00] Initializing QuotaService                logger=server
-INFO[07-24|14:37:00] Initializing ServerLockService           logger=server
-INFO[07-24|14:37:00] Initializing UserAuthTokenService        logger=server
-INFO[07-24|14:37:00] Initializing CleanUpService              logger=server
-INFO[07-24|14:37:00] Initializing NotificationService         logger=server
-INFO[07-24|14:37:00] Initializing ProvisioningService         logger=server
-INFO[07-24|14:37:00] Initializing TracingService              logger=server
-INFO[07-24|14:37:00] Initializing Stream Manager 
+...
 INFO[07-24|14:37:00] HTTP Server Listen                       logger=http.server address=0.0.0.0:3000 protocol=http subUrl= socket=
 INFO[07-24|14:37:00] cleanup of expired auth tokens done      logger=auth count=2
 ```
 
-启动之后打开 localhost:3000 即可进入Grafana界面如下图所示（初始用户名和密码为admin:admin）
+启动之后打开 [localhost:3000](localhost:3000) 即可进入Grafana界面如下图所示（初始用户名和密码为admin:admin）
 
 ![grafana-login](/assets/images/grafana-login.png)
 
-### Grafana DashBoard配置
+### Pegasus DashBoard配置
 
 目前Pegasus拥有一个DashBoard，用于提供一些基本的监控信息。其相应的json文件: [Pegasus json文件](https://github.com/pegasus-kv/pegasus-kv.github.io/tree/master/assets/json/grafana-dashboard.json)
 
@@ -158,11 +136,45 @@ INFO[07-24|14:37:00] cleanup of expired auth tokens done      logger=auth count=
 
 从图中可以看出，Pegasus的DashBoard分为两个row: Pegasus-Cluster和Pegasus-Table，分别代表集群级别监控和表级监控。在左上角的cluster_name后输入具体的集群名字，便可以查看该集群相应的各种监控信息。
 
-## ONEBOX与集群部署
+## Onebox使用Prometheus
 
-1. 如果使用onebox进行测试，将src/server/config.min.ini中perf_counter_enable_prometheus改为true。
+如果使用onebox进行测试，请修改src/server/config.min.ini配置如下:
 
-2. 由于onebox部署在一台机器上，因此各replica、meta、collector的host相同，所以需要在prometheus.yml中分别为其配置不同的port。目前collector的prometheus port是9091, meta是[9092, 9094], replica则为[9095-9097]
+```ini
+[pegasus.server]
+  perf_counter_sink = prometheus
+```
 
-3. 在集群部署的时候，在.cfg文件中添加 `perf_counter_enable_prometheus = true` 以及 `prometheus_host = your_host`。
+由于onebox模式下多个Pegasus服务进程部署在一台机器上，因此各replica、meta、collector的prometheus端口存在冲突问题.
 
+我们的解决办法是对每个服务节点配置单独的prometheus port:
+
+- collector : 9091
+- meta: [9092, 9093, 9094...]
+- replica: [9092+{META_COUNT}, 9093+{META_COUNT}, 9094+{META_COUNT}...]
+
+例如一个2 meta, 3 replica, 1 collector的onebox集群, 其prometheus.yml应如下配置:
+
+```sh
+./run.sh start_onebox -r 3 -m 2 -c
+```
+
+```yml
+global:
+  scrape_interval: 5s
+
+scrape_configs:
+  - job_name: "pegasus"
+    static_configs:
+      - targets: ["collector_host:9091"]
+        labels:
+          group: collector
+
+      - targets: ["meta_host1:9092", "meta_host2:9093"]
+        labels:
+          group: meta
+
+      - targets: ["replica_host1:9094", "replica_host2:9095", "replica_host3:9096"]
+        labels:
+          group: replica
+```
