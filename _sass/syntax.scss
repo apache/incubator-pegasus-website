@@ -22,14 +22,16 @@ h3 code.highlighter-rouge {
 }
 .content h1 {
   padding-bottom: 0.4em;
-  margin-bottom: 0.6em;
   border-bottom: 1px solid;
 }
-.content h2 {
-  margin-bottom: 1em;
+.content p {
+  margin: 0.7rem 0;
+  line-height: 1.7;
+  color: #3e3e3e;
 }
-.content h3 {
-  margin-bottom: 1em;
+.content blockquote {
+  padding: .3rem 1.5rem;
+  margin-bottom: 16px;
 }
 
 .highlight .cm {
