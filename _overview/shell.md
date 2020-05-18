@@ -148,6 +148,8 @@ Usage:
 	                       [-o|--output file_name]
 	flush_log              [-t all|meta-server|replica-server]
 	                       [-l ip:port,ip:port...][-r|--resolve_ip]
+	disk_replica           [-n|--node replica_server(ip:port)][-a|-app app_name][-o|--out file_name][-j|--json]
+	disk_capacity          [-n|--node replica_server(ip:port)][-o|--out file_name][-j|-json][-d|--detail]
 	local_get              <db_path> <hash_key> <sort_key>
 	rdb_key_str2hex        <hash_key> <sort_key>
 	rdb_key_hex2str        <rdb_key_in_hex>
@@ -286,6 +288,8 @@ USAGE:  timeout                  [time_in_ms]
 | server_stat | 各节点的统计信息，包含一些关键的统计数据，譬如get和put操作的QPS和延迟、内存和存储使用情况 |
 | remote_command | 向节点发送**远程命令**，以执行某些特殊操作 |
 | flush_log | 向节点发送**远程命令**，将最近缓冲区中的日志数据刷出到日志文件中 |
+| disk_replica | 各节点的副本在磁盘上的分布 |
+| disk_capacity | 各节点的磁盘空间占用 |
 
 ### cluster_info
 获取集群基本信息。
@@ -383,6 +387,44 @@ USAGE:flush_log                  [-t all|meta-server|replica-server] [-l ip:port
 示例：
 ```
 >>> flush_log -t meta-server
+```
+
+### disk_replica
+查询副本在replica_server节点的磁盘分布，1.12.3版本提供支持
+
+用法：
+```
+USAGE:disk_replica             [-n|--node replica_server(ip:port)][-a|-app app_name][-o|--out file_name][-j|--json]
+```
+
+说明：
+* `-n`选项：用于查看特定节点磁盘上的副本分布，格式为ip:port
+* `-a`选项：用于查看某个表的副本在节点磁盘上的分布
+* `-o`选项：把结果输出到某个文件
+* `-j`选项：以json格式输出查询结果
+
+示例：
+```
+>>> disk_replica -n 127.0.0.1:34608 -a temp
+```
+
+### disk_capacity
+查询replica_server节点的磁盘空间占用，1.12.3版本提供支持
+
+用法：
+```
+USAGE:disk_capacity            [-n|--node replica_server(ip:port)][-o|--out file_name][-j|-json][-d|--detail]
+```
+
+说明：
+* `-n`选项：用于查看特定节点磁盘上的副本分布，格式为ip:port
+* `-d`选项：用于查看节点上每个磁盘的空间占用信息
+* `-o`选项：把结果输出到某个文件
+* `-j`选项：以json格式输出查询结果
+
+示例：
+```
+>>> disk_capacity -n 127.0.0.1:34608 -d
 ```
 
 ## 表管理
