@@ -14,7 +14,7 @@ be horizontally scalable, strongly consistent and high-performance.
 ## Proposal
 
 Pegasus is a key-value database that delivers low-latency data access together
-with horizontal scalability, using hash-based partitioning. Pegasus uses PacificA
+with horizontal scalability, using hash-based partitioning. Pegasus uses [PacificA](https://www.microsoft.com/en-us/research/wp-content/uploads/2008/02/tr-2008-25.pdf)
 protocol for strong consistency and RocksDB as the underlying storage engine.
 
 We propose to contribute the Pegasus codebase and associated artifacts
@@ -75,7 +75,7 @@ We plan to invite more people as committers if they contribute to this project.
 
 Pegasus has undergone multiple public releases, listed here: <https://github.com/XiaoMi/pegasus/releases>.
 
-These old releases was not performed in the typical ASF fashion.
+These old releases were not performed in the typical ASF fashion.
 We will adopt the ASF source release process upon joining the incubator.
 
 ### Code review
@@ -89,16 +89,17 @@ Pegasus seeks to develop developer and user communities during incubation.
 ### Core Developers
 
 Currently most of the core developers of Pegasus are working in
-XiaoMi KV-Storage Team. Yingchun Lai is one of the Apache Kudu PMC members.
+XiaoMi KV-Storage Team. Yingchun Lai is one of the [Apache Kudu](https://github.com/apache/kudu) PMC members.
 Zuoyan Qin is an experienced open source developer who created [sofa-pbrpc](https://github.com/baidu/sofa-pbrpc)
-inside baidu. Among them, Weijie Sun from ByteDance is a very important contributor.
+inside Baidu. Wei Huang is also an active contributor of [Apache Doris (Incubating)](https://github.com/apache/incubator-doris).
 
 - Zuoyan Qin (<https://github.com/qinzuoyan>)
 - Yuchen He (<https://github.com/hycdong>)
-- Weijie Sun (<https://github.com/shengofsun>)
 - Tao Wu (<https://github.com/neverchanje>)
 - Yingchun Lai (<https://github.com/acelyc111>)
 - Wei Huang (<https://github.com/vagetablechicken>)
+- Shuo Jia (<https://github.com/Shuo-Jia>)
+- Liwei Zhao (<https://github.com/levy5307>)
 
 ### Alignment
 
@@ -106,18 +107,18 @@ Pegasus is aligned with several other ASF projects.
 
 We are working on a new feature to load data stored in the HDFS filesystem.
 Pegasus can also upload checkpoints to HDFS, for both backup and analysis purpose.
-We are planing to support offline analysis on checkpoint powered by Apache Spark.
+We currently support offline analysis on checkpoint powered by Apache Spark.
 
 ## Known Risks
 
 ### Orphaned Products
 
-The core developers of XiaoMi Pegasus team plan to work full time on this project.
-There is very little risk of Pegasus getting orphaned since at least one large
-company (XiaoMi) is extensively using it in their production.
-For example, currently there are more than 40 Pegasus applications in production.
+The core developers of XiaoMi Pegasus team work full time on this project.
+There is very little risk of Pegasus getting orphaned since
+XiaoMi is extensively using it in production, with currently a scale of
+70+ clusters, 800+ tables (about 70+TB).
 Furthermore, since Pegasus was open sourced at the beginning of October 2017,
-it has received more than 1047 stars and been forked nearly 186 times.
+it has received more than 1200+ stars and been forked nearly 200+ times.
 We plan to extend and diversify this community further through Apache.
 
 ### Inexperience with Open Source
@@ -142,7 +143,7 @@ them into committers after they have had time to continue their contributions.
 ### Reliance on Salaried Developers
 
 XiaoMi invested in Pegasus as a general key-value storage used in company widely.
-The core developers have been dedicated to this project for about four years.
+The core developers have been dedicated to this project for about five years.
 
 Besides, we look forward to attracting more people outside XiaoMi to contribute this project,
 either payed engineers working on storage area, or individual volunteers, as long as they have
@@ -153,7 +154,7 @@ enthusiasm for the Pegasus project.
 Pegasus is proposing to enter incubation at Apache in order to help efforts
 to diversify the committer-base, not so much to capitalize on the Apache brand.
 The Pegasus project is in production use already inside XiaoMi,
-but is not expected to be an Baidu product for external customers.
+but is not expected to be an XiaoMi product for external customers.
 As such, the Pegasus project is not seeking to use the Apache brand as
 a marketing tool.
 
@@ -169,7 +170,7 @@ The following links provide more information about Pegasus in open source:
 Besides the core codebase, Pegasus also hosts its side projects on github under XiaoMi Group.
 Specifically, the initial source includes:
 
-Client libraries with different Languages:
+Client libraries with different languages:
 
 - Java-Client: <https://github.com/XiaoMi/pegasus-java-client>
 - Scala-Client: <https://github.com/XiaoMi/pegasus-scala-client>
@@ -183,7 +184,8 @@ Components of Pegasus:
 - RocksDB: <https://github.com/XiaoMi/pegasus-rocksdb>
 
 rDSN was initially a distributed framework developed by Zhenyu Guo from Microsoft,
-and it is heavily refactored to be more fit in Pegasus. rDSN is an MIT licensed project.
+and it is heavily refactored and developed to be more fit for Pegasus. rDSN is MIT&Apache2.0 dual-licensed.
+The code licensed Apache2.0 belongs to XiaoMi and the copyright of MIT-licensed code is assigned to Microsoft.
 It's in our plan to merge Pegasus and rDSN as one project.
 
 RocksDB is a Facebook-developed storage engine. Pegasus added some enhancements and modifications
@@ -198,20 +200,27 @@ Pegasus has the following external dependencies.
 - Apache Thrift (Apache Software License v2.0)
 - Boost (Boost Software License)
 - Apache Zookeeper (Apache)
-- Microsoft rDSN (MIT)
 - Google s2geometry (BSD)
 - Google gflags (BSD)
 - fmtlib (BSD)
 - POCO (Boost Software License)
 - rapidjson (Tencent)
 - libevent (BSD)
-- gperftools (BSD)
+- Google gperftools (BSD)
+- cameron314/concurrentqueue (BSD)
+- cameron314/readerwriterqueue (BSD)
+- XiaoMi/galaxy-fds-sdk-cpp (No License)
+- jupp0r/prometheus-cpp (MIT)
+- curl ([The curl license](https://curl.haxx.se/docs/copyright.html))
+- nlohmann/json (MIT)
+- abseil-cpp (Apache 2.0)
+- antirez/linenoise (BSD-2)
+- antirez/sds (BSD-2)
 
 Build and test dependencies:
 
 - Apache Maven (Apache Software License v2.0)
 - cmake (BSD)
-- clang (BSD)
 - Google gtest (Apache Software License v2.0)
 
 ## Required Resources
@@ -238,9 +247,14 @@ The existing code already has unit tests so we will make use of existing Apache 
 
 ## Source and Intellectual Property Submission Plan
 
-Current code is Apache 2.0 licensed and the copyright is assigned to XiaoMi.
+Most of the current code is Apache 2.0 licensed and the copyright is assigned to XiaoMi.
 If the project enters incubator, XiaoMi will transfer the source code & trademark
 ownership to ASF via a Software Grant Agreement.
+
+But due to historical issues, Pegasus was based on an MIT licensed code that was initially
+written by [microsoft/rDSN](https://github.com/microsoft/rDSN), which has long been actively developed by Pegasus
+because the original project is unmaintained (modified code is licensed under AL 2.0).
+We aren't sure if we should request microsoft for any CLA during IP-clearance process.
 
 ## Initial Committers
 
@@ -250,6 +264,8 @@ ownership to ASF via a Software Grant Agreement.
 - Tao Wu (<https://github.com/neverchanje>)
 - Yingchun Lai (<https://github.com/acelyc111>)
 - Wei Huang (<https://github.com/vagetablechicken>)
+- Shuo Jia (<https://github.com/Shuo-Jia>)
+- Liwei Zhao (<https://github.com/levy5307>)
 
 ## Affiliations
 
