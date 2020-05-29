@@ -18,12 +18,14 @@ menubar: administration_menu
 
 1. Partition的健康状况
 
-   Pegasus为Partition定义了几种种健康状况：
+   Pegasus为Partition定义了几种健康状况：
    * 【fully healthy】: 健康的，完全满足一主两备
    * 【unreadable】: 分片不可读了。指的是分片缺少primary, 但有一个或两个secondary。
    * 【readable but unwritable】: 分片可读但是不可写。指的是只剩下了一个primary，两个secondary副本全部丢失
    * 【readable and writable but unhealthy】: 分片可读可写，但仍旧不健康。指的是三副本里面少了一个secondary
    * 【dead】: partition的所有副本全不可用了，又称之为DDD状态。
+
+![pegasus-healthy-status](/assets/images/pegasus-healthy-status.png){:class="img-responsive"}
 
    当通过pegasus shell来查看集群、表以及分片的状态时，会经常看到对分片健康情况的整体统计或单个描述。譬如通过`ls -d`命令，可以看到各个表处于不同健康状况的partition的个数，包括这些：
    * fully_healthy：完全健康。
