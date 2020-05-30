@@ -8,7 +8,7 @@ layout: page
 Pegasus is a distributed key-value storage system which is designed to
 be horizontally scalable, strongly consistent and high-performance.
 
-- Pegasus Codebase: <https://github.com/XiaoMi/pegasus>
+- Pegasus codebase: <https://github.com/XiaoMi/pegasus>
 - Website: <https://pegasus-kv.github.io>
 
 ## Proposal
@@ -19,7 +19,7 @@ protocol for strong consistency and [RocksDB](https://github.com/facebook/rocksd
 
 We propose to contribute the Pegasus codebase and associated artifacts
 (e.g., documentation, website content, etc.) to the Apache Software Foundation,
-and aim to build an open community around Pegasus’s continued development
+and aim to build an open community around Pegasus's continued development
 in the 'Apache Way'.
 
 ## Background
@@ -31,7 +31,7 @@ because of Java GC and RPC overhead of the underlying distributed filesystem, an
 failover time because of single point of RegionServer and recovery overhead of splitting
 and replaying the HLog files.
 
-Pegasus arms to fill the gap between [Redis](https://redis.io/) and HBase. As the former
+Pegasus aims to fill the gap between [Redis](https://redis.io/) and HBase. As the former
 is in-memory, low latency, but does not provide a strong-consistency guarantee.
 And unlike the latter, Pegasus server is entirely written in C++ and its read-write path
 relies merely on the local filesystem.
@@ -83,7 +83,7 @@ We will adopt the ASF source release process upon joining the incubator.
 
 ### Code Reviews
 
-Pegasus’s code reviews are currently public on Github <https://github.com/XiaoMi/pegasus/pulls>.
+Pegasus's code reviews are currently public on Github <https://github.com/XiaoMi/pegasus/pulls>.
 
 ### Community
 
@@ -116,14 +116,14 @@ We currently support offline analysis on checkpoints powered by [Apache Spark](h
 
 ### Orphaned Products
 
-The core developers of XiaoMi Pegasus team work full time on this project.
+The core developers of XiaoMi's Pegasus team work full time on this project.
 There is very little risk of Pegasus getting orphaned since at least one large company
 (XiaoMi) is extensively using it in production, with currently a scale of
 70+ clusters, 800+ tables, and more than 70TB data.
 Furthermore, since Pegasus was open sourced at the beginning of October 2017,
 it has received more than 1200 stars and been forked more than 200 times, and also
 received some [issues](https://github.com/XiaoMi/pegasus/issues) and pull requests
-from ourside developers and users.
+from developers and users outside XiaoMi.
 We plan to extend and diversify this community further through Apache.
 
 ### Inexperience with Open Source
@@ -134,7 +134,7 @@ All have been involved with the source code that has been released under an
 open source license, and several of them also have experience developing
 code in an open source environment.
 
-Several of the developers in XiaoMi Storage Team are committers and/or PMC
+Several of the developers in XiaoMi's storage team are committers and/or PMC
 members on other ASF projects (Kudu, HBase, Doris, etc.). They will guide others to practice
 the Apache Way together along with other incubator mentors.
 
@@ -159,7 +159,7 @@ enthusiasm for the Pegasus project.
 Pegasus is proposing to enter incubation at Apache in order to help efforts
 to diversify the committer-base, not so much to capitalize on the Apache brand.
 The Pegasus project is in production use already inside XiaoMi,
-but is not expected to be an XiaoMi product for external customers.
+but is not expected to be a XiaoMi product for external customers.
 As such, the Pegasus project is not seeking to use the Apache brand as
 a marketing tool.
 
@@ -176,14 +176,14 @@ The following links provide more information about Pegasus in open source:
 
 ## Initial Source
 
-Besides the core codebase, Pegasus also hosts its side projects on github under XiaoMi Group.
+Besides the core codebase, Pegasus also hosts its side projects on Github under XiaoMi Group.
 Specifically, the initial source includes:
 
 Client libraries with different languages:
 
 - Java-Client: <https://github.com/XiaoMi/pegasus-java-client>
 - Scala-Client: <https://github.com/XiaoMi/pegasus-scala-client>
-- NodeJs-Client: <https://github.com/XiaoMi/pegasus-nodejs-client>
+- NodeJS-Client: <https://github.com/XiaoMi/pegasus-nodejs-client>
 - Go-Client: <https://github.com/XiaoMi/pegasus-go-client>
 - Python-Client: <https://github.com/XiaoMi/pegasus-python-client>
 
@@ -193,8 +193,8 @@ Components of Pegasus:
 - RocksDB: <https://github.com/XiaoMi/pegasus-rocksdb>
 
 rDSN was initially a distributed framework developed by Zhenyu Guo from Microsoft,
-and we have heavily refactored and developed it to make it more fit for Pegasus. rDSN is MIT&Apache2.0 dual-licensed.
-The code licensed Apache2.0 belongs to XiaoMi and the copyright of MIT-licensed code is assigned to Microsoft.
+and we have heavily refactored and improved it to make it more fit for Pegasus. rDSN is MIT & Apache-2.0 dual-licensed.
+The code licensed Apache-2.0 belongs to XiaoMi and the copyright of MIT-licensed code is assigned to Microsoft.
 It's in our plan to merge Pegasus and rDSN as one project.
 
 RocksDB is a Facebook-developed storage engine. Pegasus added some enhancements and modifications
@@ -245,7 +245,7 @@ The usual mailing lists are expected to be set up when entering incubation:
 
 ### Git Repositories
 
-Upon entering incubation, we want to move the existing repo from <https://github.com/XiaoMi/pegasus>
+Upon entering incubation, we want to move the existing repository from <https://github.com/XiaoMi/pegasus>
 to Apache infrastructure like <https://github.com/apache/incubator-pegasus>.
 
 ### Issue Tracking
@@ -265,7 +265,7 @@ ownership to ASF via a Software Grant Agreement.
 But due to historical issues, Pegasus was based on an MIT licensed code that was initially
 written by [microsoft/rDSN](https://github.com/microsoft/rDSN), which has long been actively developed by Pegasus
 because the original project is unmaintained (modified code is licensed under Apache License 2.0).
-We aren't sure if we should request microsoft for any CLA during IP-clearance process.
+We aren't sure if we should request Microsoft for any Contributor License Agreement (CLA) during the IP clearance process.
 
 ## Initial Committers
 
