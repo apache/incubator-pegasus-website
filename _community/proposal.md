@@ -25,10 +25,13 @@ in the 'Apache Way'.
 ## Background
 
 [Apache HBase](https://hbase.apache.org/) was recognized as mostly the only large-scale KV store solution in [XiaoMi Corp](https://www.mi.com/global)
-until Pegasus came out in 2015 to solve the problem of high latency
-of HBase because of its Java GC and RPC overhead of the underlying distributed filesystem.
+until Pegasus came out in 2015. The original purpose of Pegasus was to solve the problems
+caused by HBase's two-level architecture and implementation, including high latency
+because of Java GC and RPC overhead of the underlying distributed filesystem, and long
+failover time because of single point of RegionServer and recovery overhead of splitting
+and replaying the HLog files.
 
-Pegasus targets to fill the gap between [Redis](https://redis.io/) and HBase. As the former
+Pegasus arms to fill the gap between [Redis](https://redis.io/) and HBase. As the former
 is in-memory, low latency, but does not provide a strong-consistency guarantee.
 And unlike the latter, Pegasus server is entirely written in C++ and its read-write path
 relies merely on the local filesystem.
@@ -118,7 +121,9 @@ There is very little risk of Pegasus getting orphaned since at least one large c
 (XiaoMi) is extensively using it in production, with currently a scale of
 70+ clusters, 800+ tables, and more than 70TB data.
 Furthermore, since Pegasus was open sourced at the beginning of October 2017,
-it has received more than 1200 stars and been forked more than 200 times.
+it has received more than 1200 stars and been forked more than 200 times, and also
+received some [issues](https://github.com/XiaoMi/pegasus/issues) and pull requests
+from ourside developers and users.
 We plan to extend and diversify this community further through Apache.
 
 ### Inexperience with Open Source
