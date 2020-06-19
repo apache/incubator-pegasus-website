@@ -1,5 +1,5 @@
 ---
-title: partition split设计文档
+title: Partition Split设计文档
 layout: post
 author: 何昱晨
 ---
@@ -16,17 +16,17 @@ Pegasus在创建table时需要指定partition个数，且该个数为2的幂次�
 
 下图显示了表id为1，0号partition在split前后的示意图：
 
-```
+```txt
  +------+   +------+    +------+
  | 1.0  |   | 1.0  |    | 1.0  |
- +------+   +------+    +------+   
+ +------+   +------+    +------+
  primary    secondary   secondary
                 |
                 |
  +------+   +------+    +------+
  | 1.0  |   | 1.0  |    | 1.0  |
  | 1.8  |   | 1.8  |    | 1.8  |
- +------+   +------+    +------+   
+ +------+   +------+    +------+
  primary    secondary   secondary
                 |
                 |
@@ -37,13 +37,16 @@ Pegasus在创建table时需要指定partition个数，且该个数为2的幂次�
 ```
 
 ## 整体流程
+
 为了方便描述和画示意图，我们将整体流程分为下面3个部分：
+
 - 开始partition split
 - replica执行partition split
 - 注册child partition
 
-###  Start partition split
-```
+### Start partition split
+
+```txt
   
 +--------+  split   +------------+ partition_count*2 +-----------+  
 | client ----------> meta_server --------------------> zookeeper |
@@ -54,9 +57,11 @@ Pegasus在创建table时需要指定partition个数，且该个数为2的幂次�
                  +--------v----------+
                  | primary partition |
                  +-------------------+
-                    
+
 ```
+
 开始partition split的流程如上图所示：
+
 1. client发送partition split请求给meta server；
 2. meta_server收到请求后，将执行如下操作：
  - 检查请求的参数，如app是否存在、partition_count是否正确等，若参数检查正常则继续执行，否则返回错误给client;
@@ -66,14 +71,16 @@ Pegasus在创建table时需要指定partition个数，且该个数为2的幂次�
 3. 每个partition的primary通过与meta server之间的config_sync发现meta_server同步的partition_count为本地partition_count的2倍，则开始执行本replica group的split
 
 ### Execute partition split
+
 partition split是指replica group中的每个replica一分为二的过程。一般来说，一个replica group会包括一个primary和两个secondary共三个replica，分裂后，会新增三个replica，并分别对应前面的一主两备。我们称之前的三个replica为parent，新增的为child。
 
 partition split的过程与learn比较类似，但也有一定的区别。learn是potential secondary从primary上拷贝数据，它们位于两台不同的机器；而split是三个child分别从它们对应的parent复制数据，child与parent在同一台机器上，并在同一个盘上。因此，child可以：
+
 - 直接复制parent内存中的mutation，而无需对mutation进行序列化和反序列化；
 - 直接读取private log并replay private log，而无需再拷贝private log；
 - 直接apply parent生成的rocksdb checkpoint，而无需进行sst文件的拷贝。
 
-```
+```txt
 +--------+                          +-------+
 | parent |                          | child |
 +--------+                          +-------+
@@ -101,6 +108,7 @@ partition split的过程与learn比较类似，但也有一定的区别。learn�
 ```
 
 replica执行partition split的流程如上图所示：
+
 4. primary parent创建自己的child，child的ballot以及app_info.partition_count设为与parent相等，同时，让child的数据与parent位于同一块磁盘。并且，通过group_check通知各个secondary创建他们的child;
 5. child异步learn parent的状态
  - 复制parent的prepare list;
@@ -115,10 +123,9 @@ replica执行partition split的流程如上图所示：
 8. primary通知所有的child更新partition_count为新partition_count，并把该信息写入磁盘文件.app_info中
 9. 当primary收到所有child更新partition_count成功的ack后，准备向meta_server注册child
 
-
 ### Register child
 
-```
+```txt
 +----------------+ 10. register child +-------------+                         +-----------+
 |                |------------------->|             | 11. update child config |           |
 | parent primary |                    | meta_server |------------------------>| zookeeper |
@@ -130,7 +137,9 @@ replica执行partition split的流程如上图所示：
 |  child primary  |
 +-----------------+
 ```
+
 注册child的流程如上图所示：
+
 10. primary向meta server注册child partition
  - 将child的ballot设为ballot(parent) + 1
  - parent暂时拒绝读写访问，此时，parent和child都不响应client的读写请求
@@ -151,6 +160,7 @@ replica执行partition split的流程如上图所示：
 
 client在向server端发读写请求时，会在请求的header中带上所访问的hash_key的hash值，primary将此hash值与partition_version进行按位与操作，检查结果是否等于partitionId。
 检查的过程用伪代码表示如下：
+
 ```
 if partition_version == -1
     return ERR_OBJECT_NOT_FOUND
@@ -163,21 +173,26 @@ client收到ERR_OBJECT_NOT_FOUND时，会从meta_server更新当前partition的�
 
 下面举一个例子来分析partition_version的作用：  
 假设split前，table的partition个数为4，split后为8，client需要读写hash_key的hash值为5的key-value，
+
 1. split前，hash % partition_count = 5%4 = 1，访问replica1，正确
 2. split命令发出后
+3. 
 ```
 partition_count(meta) = 8 
 ballot(replica5) = -1 
 partition_count(replica1) = 4  
 partition_version(replica1) = 4–1 = 3
 ```
+
  - 对于之前加入的client，由于缓存，`partition_count(client-old) = 4`，会访问replica1
  - 对于此时新加入的client，它从meta得到新的状态，`partition_count(client-new) = 8`，通过`hash % partition_count = 5%8 = 5`得知应该访问replica5，但是，ballot(replica5) = -1，client知道replica5暂不存在，所以根据`hash % (partition_count / 2) = 1`，会访问replica1，replica1收到请求后，检查`hash & partition_version(replica1) = 5&3 = 1`，正确
 3. split完成后
+
 ```
 partition_count(replica1) = partition_count(replica5) = 8
 partition_version(replica1) = partition_version(replica5) = 7
 ```
+
  - 对于之前的cilent，由于缓存的原因，继续访问replica1，但replica1收到请求后，检查`hash & partition(replica1) = 5 % 8 = 5`，由于5不等于partitionId，所以拒绝访问，并通知client从meta_server更新config，client更新后，将会访问replica5，读写也正确
  - 对于此时新加入的client，将会直接访问replica5，读写也正确
 
