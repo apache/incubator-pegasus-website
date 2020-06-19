@@ -4,7 +4,20 @@ layout: default
 
 <div class="content">
 
-    <p>Published: {{ page.date | date: "%b %-d, %Y" }} by {{ page.author }}</p>
+    <ul class="blog-post-meta">
+        <li class="blog-post-meta-item">
+            <span class="icon" style="margin-right: .25em">
+                <i class="far fa-calendar-check" aria-hidden="true"></i>
+            </span>
+            {{ page.date | date: "%B %-d, %Y" }}
+        </li>
+        <li class="blog-post-meta-item">
+            <span class="icon" style="margin-right: .25em">
+                <i class="fas fa-edit" aria-hidden="true"></i>
+            </span>
+            {{ page.author }}
+        </li>
+    </ul>
 
     {{ content }}
 </div>
