@@ -287,11 +287,17 @@ Seven of the initial committers are employees of Xiaomi.
 
 ### Champion
 
-TODO
+Von Gosling, vongosling@apache.org
 
 ### Nominated Mentors
 
-TODO
+Kevin A. McGrail, kmcgrail@apache.org
+
+Duo Zhang, zhangduo@apache.org
+
+Von Gosling, vongosling@apache.org
+
+Liang Chen, chenliang613@apache.org
 
 ### Sponsoring Entity
 
