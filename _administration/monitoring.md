@@ -204,7 +204,7 @@ INFO[07-24|14:37:00] cleanup of expired auth tokens done      logger=auth count=
 
 ### 第三步: 导入 Pegasus DashBoard
 
-目前Pegasus拥有一个DashBoard，用于提供一些基本的监控信息。其相应的json文件: [Pegasus json文件](https://github.com/pegasus-kv/pegasus-kv.github.io/tree/master/assets/json/grafana-dashboard.json)
+目前Pegasus拥有一个DashBoard，用于提供一些基本的监控信息。其相应的json文件: [Pegasus json文件](https://github.com/XiaoMi/pegasus-common/releases/download/deps/grafana-dashboard.json)
 
 下载了json文件后，可以通过import的方式将其导入进去。其步骤如下：
 
