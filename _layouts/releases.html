@@ -9,6 +9,58 @@ layout: default
     {{ content }}
 
     {% capture release_info %}
+    {% include_relative v1.12.3.md %}
+    {% endcapture %}
+    <div class="modal" id="modal_v1_12_3">
+        <div class="modal-background"></div>
+        <div class="modal-card">
+            <section class="modal-card-body">
+                {{ release_info | markdownify }}
+            </section>
+        </div>
+        <button class="modal-close is-large" aria-label="close"></button>
+    </div>
+
+    {% capture release_info %}
+    {% include_relative v1.12.2.md %}
+    {% endcapture %}
+    <div class="modal" id="modal_v1_12_2">
+        <div class="modal-background"></div>
+        <div class="modal-card">
+            <section class="modal-card-body">
+                {{ release_info | markdownify }}
+            </section>
+        </div>
+        <button class="modal-close is-large" aria-label="close"></button>
+    </div>
+
+    {% capture release_info %}
+    {% include_relative v1.12.1.md %}
+    {% endcapture %}
+    <div class="modal" id="modal_v1_12_1">
+        <div class="modal-background"></div>
+        <div class="modal-card">
+            <section class="modal-card-body">
+                {{ release_info | markdownify }}
+            </section>
+        </div>
+        <button class="modal-close is-large" aria-label="close"></button>
+    </div>
+
+    {% capture release_info %}
+    {% include_relative v1.12.0.md %}
+    {% endcapture %}
+    <div class="modal" id="modal_v1_12_0">
+        <div class="modal-background"></div>
+        <div class="modal-card">
+            <section class="modal-card-body">
+                {{ release_info | markdownify }}
+            </section>
+        </div>
+        <button class="modal-close is-large" aria-label="close"></button>
+    </div>
+
+    {% capture release_info %}
     {% include_relative v1.11.6.md %}
     {% endcapture %}
     <div class="modal" id="modal_v1_11_6">
