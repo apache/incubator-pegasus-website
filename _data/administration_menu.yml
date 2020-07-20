@@ -49,3 +49,6 @@
       link: /administration/bad-disk
     - name: 白名单
       link: /administration/whitelist
+    - name: Backup Request
+      link: /administration/backup-request
+
