@@ -25,22 +25,12 @@ public PegasusTableInterface openTable(String tableName, int backupRequestDelayM
 
 # 性能测试
 
-set/get operation:
+下面表格里展示了是否打开backup request的性能对比，这里我们选取了未打开backup request时读请求的p999时间作为backup request的delay时间(138ms)。数据显示，打开backup request之后get请求的p999时延**基本没有变化**，而p9999时延却有了**数倍的降低**。
 
-|  test case   | enable backup request  |  read/write propotion  | qps |  read avg  |  read p95  |  read p99  |  read p999  |  read p9999  |  write avg  |  write p95  |  write p99  |  write p999  |  write p9999  |  
-| ---- | ---- | ---- | ---- | ---- | ---- | ---- | ---- | ---- | ---- | ---- | ---- | ---- | --- |
-| 3-clients 15-threads | no | 1:3 | 7076 | 880 | 428 | 727 | 138495 | 988671 | 2495 | 6319 | 9023 | 36319 | 531455|
-| 3-clients 15-threads | yes, delay 138ms | 1:3 | 6987 | 1010 | 403  | 7747 | 138751 | 153599 | 2476 | 6859 | 9119 | 13759 | 185855 |
-| 3-clients 100-threads | no | 1:0 | 140607 | 707 | 1474 | 2731 | 5511 | 167551 | | | | | |
-| 3-clients 100-threads | yes, delay 5ms | 1:0 | 77429 | 1288 | 2935 | 3487 | 6323 | 71743 | | | | | |
-| 3-clients 30-threads | no | 30:1 | 87198 | 306 | 513 | 805 | 4863 | 28271 | 1369 | 2661 | 5795 | 22319 | 51359 |
-| 3-clients 30-threads | yes, delay 5ms | 30:1 | 88541 | 298 | 493 | 711 | 4483 | 18479 | 1467 | 3263 | 6411 | 17439 | 50975 |
+另外，由于delay时间设置的是p999时间，大约1000个请求里只有1个请求会发送backup request，因此额外请求量（也就是开启backup request的额外开销）比例在0.1%左右。依此类推，若想要降低P999时延，则可以将 `backupRequestDelayMs` 设置为P99延迟，由此会增加1%的额外读流量。
 
-Multi-get/Batch-Set operation: 
+|  test case   | enable backup request  |  read p9999  |  
+| ---- | ---- | ---- |
+| 3-clients 15-threads | no | 988671 |
+| 3-clients 15-threads | yes| 153599 |
 
-|  test case  | enable backup request  | read/write porpotion  |  qps |  read avg  |  read p95  |  read p99  |  read p999  |  read p9999  |  write avg  |  write p95  |  write p99  |  write p999  |  write p9999  |  
-| ---- | ---- | ---- | ---- | ---- | ---- | ---- | ---- | ---- | ---- | ---- | ---- | ---- | --- |
-| 3-clients  7-threads | no | 20:1 | 24113 | 200 | 277 | 410 | 2317 | 21647 | 2034 | 4283 | 6427 | 18271 | 62687 |
-| 3-clients  7-threads | yes, deley 2ms | 20:1 | 23756 | 197 | 268 | 351 | 2173 | 5759 | 2187 | 4531 | 6551 | 21551 | 63999 |
-| 3-clients  15-threads | no | 20:1 | 30980 | 236 | 348 | 526 | 3535 | 25695 | 5361 | 14087 | 20223 | 40639 | 90815 |
-| 3-clients  15-threads | yes, delay 3ms | 20:1 | 30483 | 244 | 386 | 540 | 3105 | 13287 | 5377 | 14119 | 19535 | 31311 | 103103 |
