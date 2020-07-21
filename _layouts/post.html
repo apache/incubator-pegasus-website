@@ -1,0 +1,29 @@
+---
+layout: default
+---
+
+<div class="content">
+
+    <ul class="blog-post-meta">
+        <li class="blog-post-meta-item">
+            <span class="icon" style="margin-right: .25em">
+                <i class="far fa-calendar-check" aria-hidden="true"></i>
+            </span>
+            {{ page.date | date: "%B %-d, %Y" }}
+        </li>
+        <li class="blog-post-meta-item">
+            <span class="icon" style="margin-right: .25em">
+                <i class="fas fa-edit" aria-hidden="true"></i>
+            </span>
+            {{ page.author }}
+        </li>
+    </ul>
+
+    {{ content }}
+</div>
+
+<div class="tags">
+    {% for tag in page.tags %}
+    <span class="tag is-primary">{{ tag }}</span>
+    {% endfor %}
+</div>

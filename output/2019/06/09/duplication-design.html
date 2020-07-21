@@ -1,0 +1,581 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Pegasus | 跨机房同步设计文档</title>
+    <link rel="stylesheet" href="/assets/css/app.css">
+    <link rel="shortcut icon" href="/assets/images/favicon.ico">
+    <script src="https://cdn.bootcdn.net/ajax/libs/font-awesome/5.13.0/js/all.min.js"></script>
+    <!-- Begin Jekyll SEO tag v2.6.1 -->
+<title>跨机房同步设计文档 | Pegasus</title>
+<meta name="generator" content="Jekyll v4.1.1" />
+<meta property="og:title" content="跨机房同步设计文档" />
+<meta name="author" content="吴涛" />
+<meta property="og:locale" content="en_US" />
+<meta name="description" content="关于热备份的基本概念和使用可以参照 administration/duplication，这里将主要描述跨机房同步的设计方案和执行细节。" />
+<meta property="og:description" content="关于热备份的基本概念和使用可以参照 administration/duplication，这里将主要描述跨机房同步的设计方案和执行细节。" />
+<meta property="og:site_name" content="Pegasus" />
+<meta property="og:type" content="article" />
+<meta property="article:published_time" content="2019-06-09T00:00:00+00:00" />
+<script type="application/ld+json">
+{"url":"/2019/06/09/duplication-design.html","@type":"BlogPosting","headline":"跨机房同步设计文档","dateModified":"2019-06-09T00:00:00+00:00","datePublished":"2019-06-09T00:00:00+00:00","mainEntityOfPage":{"@type":"WebPage","@id":"/2019/06/09/duplication-design.html"},"author":{"@type":"Person","name":"吴涛"},"description":"关于热备份的基本概念和使用可以参照 administration/duplication，这里将主要描述跨机房同步的设计方案和执行细节。","@context":"https://schema.org"}</script>
+<!-- End Jekyll SEO tag -->
+</head>
+
+  <body>
+    <nav class="navbar  is-info ">
+    <div class="container">
+        <div class="navbar-brand">
+            <a href="/" class="navbar-item ">
+                <!-- Pegasus -->
+                <img src="/assets/images/pegasus-icon.png">
+            </a>
+            <a role="button" class="navbar-burger burger" aria-label="menu" aria-expanded="false" data-target="navMenu">
+                <span aria-hidden="true"></span>
+                <span aria-hidden="true"></span>
+                <span aria-hidden="true"></span>
+            </a>
+        </div>
+        <div class="navbar-menu" id="navMenu">
+            <div class="navbar-start">
+                
+                
+                
+                <div class="navbar-item has-dropdown is-hoverable">
+                    <a href="/overview"
+                        class="navbar-link ">
+                        
+                        <span class="icon" style="margin-right: .25em">
+                            <i class="fas fa-book"></i>
+                        </span>
+                        
+                        <span>Documentation</span>
+                    </a>
+                    <div class="navbar-dropdown">
+                        
+                        <a href="/overview"
+                            class="navbar-item ">概览</a>
+                        
+                        <a href="/clients"
+                            class="navbar-item ">客户端库</a>
+                        
+                        <a href="/api"
+                            class="navbar-item ">用户接口</a>
+                        
+                        <a href="/administration"
+                            class="navbar-item ">高效运维</a>
+                        
+                    </div>
+                </div>
+                
+                
+                
+                <a href="/blogs"
+                    class="navbar-item ">
+                    
+                    <span class="icon" style="margin-right: .25em">
+                        <i class="fas fa-rss"></i>
+                    </span>
+                    
+                    <span>Blog</span>
+                </a>
+                
+                
+                
+                <div class="navbar-item has-dropdown is-hoverable">
+                    <a href="/community"
+                        class="navbar-link ">
+                        
+                        <span class="icon" style="margin-right: .25em">
+                            <i class="fas fa-user-plus"></i>
+                        </span>
+                        
+                        <span>Community</span>
+                    </a>
+                    <div class="navbar-dropdown">
+                        
+                        <a href="/community/#联系我们"
+                            class="navbar-item ">联系我们</a>
+                        
+                        <a href="/community/#参与贡献"
+                            class="navbar-item ">参与贡献</a>
+                        
+                        <a href="/community/coding-guides"
+                            class="navbar-item ">Coding Guides</a>
+                        
+                        <a href="/community/roadmap"
+                            class="navbar-item ">Roadmap</a>
+                        
+                        <a href="https://github.com/XiaoMi/pegasus/labels/type%2Fbug"
+                            class="navbar-item ">Bug Tracking</a>
+                        
+                        <a href="/community/proposal"
+                            class="navbar-item ">Apache Proposal</a>
+                        
+                    </div>
+                </div>
+                
+                
+                
+                <a href="https://github.com/XiaoMi/pegasus"
+                    class="navbar-item ">
+                    
+                    <span class="icon" style="margin-right: .25em">
+                        <i class="fab fa-github-alt"></i>
+                    </span>
+                    
+                    <span>Github</span>
+                </a>
+                
+                
+                
+                <a href="/releases"
+                    class="navbar-item ">
+                    
+                    <span class="icon" style="margin-right: .25em">
+                        <i class="fas fa-fire"></i>
+                    </span>
+                    
+                    <span>Releases</span>
+                </a>
+                
+                
+                
+            </div>
+            <div class="navbar-end is-hidden-mobile">
+                <div class="navbar-item navbar-searchbox">
+                    <div class="field">
+                        <div class="control has-icons-right">
+                            <input class="input searchbox-input" type="text" placeholder="Search the docs">
+                            <span class="border"></span>
+                            <span class="icon is-right searchbox-icon">
+                                <i class="fas fa-search"></i>
+                            </span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</nav>
+
+<script src="https://cdn.bootcss.com/jquery/3.4.1/jquery.min.js"></script>
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/docsearch.js@2/dist/cdn/docsearch.min.css" />
+<script src="https://cdn.jsdelivr.net/npm/docsearch.js@2/dist/cdn/docsearch.min.js"></script>
+
+<script>
+    docsearch({
+        appId: '50E27EHNIK',
+        indexName: 'pegasus-kv',
+        apiKey: '384e9a24e20ffe7cd7ffa708ceb08253',
+        inputSelector: '.searchbox-input',
+        debug: false,
+    });
+
+    $('.searchbox-input').focus(function () {
+        $('.navbar-searchbox .border').animate({ left: '0', width: '100%' })
+        $('.searchbox-icon').css({ color: 'white' })
+    })
+    $('.searchbox-input').focusout(function () {
+        $('.navbar-searchbox .border').animate({ left: '0', width: '0' })
+        $('.searchbox-icon').css({ color: 'hsl(0, 0%, 86%)' })
+    })
+</script>
+    <section  class="hero is-info"  >
+    <div class="hero-body" style="padding-bottom: 6rem; padding-top: 6rem;">
+        <div class="container has-text-centered">
+            <p class="title is-2">跨机房同步设计文档</p>
+        </div>
+    </div>
+</section>
+    <section class="section">
+        <div class="container">
+            <div class="columns is-multiline">
+                <div class="column is-one-fourth">
+                    
+                </div>
+                <div class="column is-half">
+                    
+                    <div class="content">
+
+    <ul class="blog-post-meta">
+        <li class="blog-post-meta-item">
+            <span class="icon" style="margin-right: .25em">
+                <i class="far fa-calendar-check" aria-hidden="true"></i>
+            </span>
+            June 9, 2019
+        </li>
+        <li class="blog-post-meta-item">
+            <span class="icon" style="margin-right: .25em">
+                <i class="fas fa-edit" aria-hidden="true"></i>
+            </span>
+            吴涛
+        </li>
+    </ul>
+
+    <p>关于热备份的基本概念和使用可以参照 <a href="https://pegasus-kv.github.io/administration/duplication">administration/duplication</a>，这里将主要描述跨机房同步的设计方案和执行细节。</p>
+
+<hr />
+
+<h2 id="背景">背景</h2>
+
+<p>小米内部有些业务对服务可用性有较高要求，但又不堪每年数次机房故障的烦恼，于是向 pegasus 团队寻求帮助，希望在机房故障时，服务能够切换流量至备用机房而数据不致丢失。因为成本所限，在小米内部以双机房为主。</p>
+
+<p>通常解决该问题有几种思路：</p>
+
+<ol>
+  <li>
+    <p>由 client 将数据同步写至两机房。这种方法较为低效，容易受跨机房专线带宽影响，并且延时高，同机房 1ms 内的写延时在跨机房下通常会放大到几十毫秒，优点是一致性强，但需要 client 实现。服务端的复杂度小，客户端的复杂度大。</p>
+  </li>
+  <li>
+    <p>使用 raft/paxos 协议进行 quorum write 实现机房间同步。这种做法需要至少 3 副本分别在 3 机房部署，延时较高但提供强一致性，因为要考虑跨集群的元信息管理，这是实现难度最大的一种方案。</p>
+  </li>
+  <li>
+    <p>在两机房下分别部署两个 pegasus 集群，集群间进行异步复制。机房 A 的数据可能会在 1 分钟后复制到机房 B，但 client 对此无感知，只感知机房 A。在机房 A 故障时，用户可以选择写机房 B。这种方案适合 <strong>最终一致性/弱一致性</strong> 要求的场景。后面会讲解我们如何实现 “最终一致性”。</p>
+  </li>
+</ol>
+
+<p>基于实际业务需求考虑，我们选择方案3。</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>+-------+    +-------+
+| +---+ |    | +---+ |
+| | P +--------&gt; S | |
+| +-+-+ |    | +---+ |
+|   |   |    |       |
+| +-v-+ |    |       |
+| | S | |    |       |
+| +---+ |    |       |
++-------+    +-------+
+  dead         alive
+
+只用两机房，使用 raft 协议进行进行跨机房同步依然无法避免机房故障时的停服。（5节点同理）
+</code></pre></div></div>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>          +---+                     +---+
+          | A |                     | B |
+          +-+-+                     +-+-+
+            |                         |
++--------------------------------------------------+
+|    +------v-------+          +------v-------+    |
+|    |  pegasus A   &lt;----------&gt;  pegasus B   |    |
+|    +--------------+          +--------------+    |
++--------------------------------------------------+
+
+ 虽然是各写一个机房，但理想情况下 A B 都能读到所有的数据。
+
+</code></pre></div></div>
+
+<h2 id="架构选择">架构选择</h2>
+
+<p>即使同样是做方案 3 的集群间异步同步，业内的做法也有不同：</p>
+
+<ol>
+  <li>
+    <p><strong>各集群单副本</strong>：这种方案考虑到多集群已存在冗余的情况下，可以减少单集群内的副本数，同时既然一致性已没有保证，大可以索性脱离一致性协议，完全依赖于稳定的集群间网络，保证即使单机房宕机，损失的数据量也是仅仅几十毫秒内的请求量级。考虑机房数为 5 的时候，如果每个机房都是 3 副本，那么全量数据就是 3*5=15 副本，这时候简化为各集群单副本的方案就是几乎最自然的选择。</p>
+  </li>
+  <li>
+    <p><strong>同步工具作为外部依赖使用</strong>：跨机房同步自然是尽可能不影响服务是最好，所以同步工具可以作为外部依赖部署，单纯访问节点磁盘的日志（WAL）并转发日志。这个方案对日志 GC 有前提条件，即<strong>日志不可以在同步完成前被删除</strong>，否则就丢数据了，但存储服务日志的 GC 是外部工具难以控制的。所以可以把日志强行保留一周以上，但缺点是磁盘空间的成本较大。同步工具作为外部依赖的优点在于稳定性强，不影响服务，缺点在于对服务的控制能力差，很难处理一些琐碎的一致性问题（后面会讲到），<strong>难以实现最终一致性</strong>。</p>
+  </li>
+  <li>
+    <p><strong>同步工具嵌入到服务内部</strong>：这种做法在工具稳定前会有一段阵痛期，即工具的稳定性影响服务的稳定性。但实现的灵活性肯定是最强的。</p>
+  </li>
+</ol>
+
+<p>最初 Pegasus 的热备份方案借鉴于 HBase Replication，基本只考虑了第三种方案。而事实证明这种方案更容易保证 Pegasus 存储数据不丢的属性。</p>
+
+<h2 id="基本概念">基本概念</h2>
+
+<ul>
+  <li><strong>duplicate_rpc</strong></li>
+  <li><strong>cluster id</strong></li>
+  <li><strong>timetag</strong></li>
+  <li><strong>confirmed_decree</strong></li>
+</ul>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>+----------+     +----------+
+| +------+ |     | +------+ |
+| | app1 +---------&gt; app1 | |
+| +------+ |     | +------+ |
+|          |     |          |
+| cluster1 |     | cluster2 |
++----------+     +----------+
+</code></pre></div></div>
+
+<p>pegasus 的热备份以表为粒度。支持单向和双向的复制。为了运维方便，两集群表名必须一致。为了可扩展性和易用性，两集群 partition count 可不同。</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>                                    +------------+
+                                    | +--------+ |
+                               +------&gt;replica1| |
+                               |    | +--------+ |
++------------+                 |    |            |
+| +--------+ |                 |    | +--------+ |
+| |replica1| |                 +------&gt;replica2| |
+| +--------+ |                 |    | +--------+ |
+|            +-----------------&gt;    |            |
+| +--------+ |                 |    | +--------+ |
+| |replica2| |                 +------&gt;replica3| |
+| +--------+ |                 |    | +--------+ |
++------------+                 |    |            |
+                               |    | +--------+ |
+                               +------&gt;replica4| |
+  cluster A                         | +--------+ |
+                                    +------------+
+
+                                      cluster B
+</code></pre></div></div>
+
+<h3 id="duplicate_rpc">duplicate_rpc</h3>
+
+<p>如上图所示，每个 replica （这里特指每个分片的 primary，注意 secondary 不负责热备份复制）独自复制自己的 private log 到远端，replica 之间互不影响。复制直接通过 pegasus client 来完成。每一条写入 A 的记录（如 set / multiset）都会通过 pegasus client 复制到 B。为了将热备份的写与常规写区别开，我们这里定义 <strong><em>duplicate_rpc</em></strong> 表示热备写。</p>
+
+<p>A-&gt;B 的热备写，B 也同样会经由三副本的 PacificA 协议提交，并且写入 private log 中。</p>
+
+<h3 id="集群间写冲突">集群间写冲突</h3>
+
+<p>假设 A,B 两集群故障断连1小时，那么 B 可能在1小时后才收到来自 A 的热备写，这时候 A 的热备写可能比 B 的数据更老，我们就要引入<strong>“数据时间戳”(timestamp)</strong>的概念，避免老的写却覆盖了新的数据。</p>
+
+<p>实现的方式就是在每次写之前进行一次读操作，并校验数据时间戳是否小于写的时间戳，如果是则允许写入，不是的话就忽略这个写。这个机制通常被称为 <em>“last write wins”</em>, 这个问题也被称作 <em>“active-active writes collision”</em>, 是存储系统做异步多活的常见问题和解法。</p>
+
+<p>显然从“直接写”到“读后写”，多了一次读操作的开销，损害了我们的写性能。有什么做法可以优化? 事实上我们可以引入<strong>多版本机制</strong>: 多个时间戳的写可以共存, 读的时候选取最新的读。具体做法就是在每个 key 后带上时间戳, 如下:</p>
+
+<pre><code class="language-txt">hashkey sortkey 20190914 =&gt; value
+hashkey sortkey 20190913 =&gt; value
+hashkey sortkey 20190912 =&gt; value
+</code></pre>
+
+<p>每次读的时候可以只读时间戳最大的那一项。这种<strong>多版本读写</strong>性能更好, 但是需要改动数据编码, 我们会在后面讨论数据编码改动的问题。</p>
+
+<p>两集群的写仅用时间戳会出现极偶然的情况: 时间戳冲突, 换句话说就是两集群恰好在同一时间写某个 key。为了避免两集群数据不同的情况, 我们引入 <code class="language-plaintext highlighter-rouge">cluster_id</code> 的概念。运维在配置热备份时需要配置各个集群的 cluster_id, 例如 A 集群为 1, B 集群为 2, 如下:</p>
+
+<div class="language-ini highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nn">[duplication-group]</span>
+ <span class="py">A</span><span class="p">=</span><span class="s">1</span>
+ <span class="py">B</span><span class="p">=</span><span class="s">2</span>
+</code></pre></div></div>
+
+<p>这样当 timestamp 相同时我们比较 cluster_id, 如 B 集群的 id 更大, 则冲突写会以 B 集群的数据为准。我们将 timestamp 和 cluster_id 结合编码为一个 uint64 整型数, 引入了 <code class="language-plaintext highlighter-rouge">timetag</code> 的概念。这样比较大小时只需要比较一个整数, 并且存储更紧凑。</p>
+
+<div class="language-c highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">timetag</span> <span class="o">=</span> <span class="n">timestamp</span> <span class="o">&lt;&lt;</span> <span class="mi">8u</span> <span class="o">|</span> <span class="n">cluster_id</span> <span class="o">&lt;&lt;</span> <span class="mi">1u</span> <span class="o">|</span> <span class="n">delete_tag</span><span class="p">;</span>
+</code></pre></div></div>
+
+<h3 id="confirmed_decree">confirmed_decree</h3>
+
+<p>热备份同时也需要容忍在 replica 主备切换下复制的进度不会丢失，例如当前 replica1 复制到日志 decree=5001，此时发生主备切换，我们不想看到 replica1 从 0 开始，所以为了能够支持 <strong><em>断点续传</em></strong>，我们引入 <strong><em>confirmed_decree</em></strong>。replica 定期向 meta 汇报当前进度（如 confirmed_decree=5001），一旦 meta 将该进度持久化至 zookeeper，当 replica 故障恢复时即可安全地从 confirmed_decree=5001 重新开始热备份。</p>
+
+<h2 id="流程">流程</h2>
+
+<p>热备份相关的元信息首先会记录至 meta server 上，replica server 通过 <strong><em>duplication sync</em></strong> 定期同步元信息，包括各个分片的 confirmed_decree。</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>+----------+  add dup  +----------+
+|  client  +-----------&gt;   meta   |
++----------+           +----+-----+
+                            |
+                            | duplication sync
+                            |
+                      +-----v-----+
+                      |  replica  |
+                      +-----------+
+</code></pre></div></div>
+
+<p>每个 replica 首先读取 private log，为了限制流量，每次只会读入一个日志块而非一整个日志文件。每一批日志统一传递给 <code class="language-plaintext highlighter-rouge">mutation_duplicator</code> 进行发送。mutation_duplicator 是一个接口类，目前只实现用 pegasus client 将日志分发至目标集群，未来如有需求也可接入 HBase 等系统。</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>+----------------------+      2
+|  private_log_loader  +--------------+
++-----------^----------+              |
+            | 1            +----------v----------+
+ +----------+------+       | mutation_duplicator |
+ |                 |       +----=----------------+
+ |                 |            |
+ |   private log   |            |
+ |                 |     +------=----------------------+  pegasus client
+ |                 |     | pegasus_mutation_duplicator +-----------------&gt;
+ +-----------------+     +-----------------------------+        3
+</code></pre></div></div>
+
+<p>每个日志块的一批写中可能有多组 hashkey，不同的 hashkey 可以并行分发而不会影响正确性，从而可以提高热备份效率。而如果 hashkey 相同，例如 set&lt;hashkey=”h”, sortkey=”s1”, value=”v1”&gt; 与 set&lt;hashkey=”h”, sortkey=”s2”, value=”v2”&gt; 有先后关系，则它们必须串行依次发送。</p>
+
+<p>当前我们的策略是每一个日志块的所有写发完毕后，再重复读日志块，发日志的过程。往后可能再做优化。</p>
+
+<h2 id="日志完整性">日志完整性</h2>
+
+<p>在引入热备份之前，Pegasus 的日志会定期被清理，无用的日志文件会被删除（通常日志的保留时间为5分钟）。但在引入热备份之后，如果有被删除的日志还没有被复制到远端集群，两集群就会数据不一致。我们引入了几个机制来保证日志的完整性，从而实现两集群的最终一致性：</p>
+
+<h3 id="gc-delay">GC Delay</h3>
+
+<p>Pegasus 认为 <code class="language-plaintext highlighter-rouge">last_durable_decree</code> 之后的日志即可被删除回收（Garbage Collected），因为它们已经被持久化至 rocksdb 的 sst files 中，即使宕机重启数据也不会丢失。但考虑如果热备份的进度较慢，我们则需要延后 GC，保证数据只有在 <code class="language-plaintext highlighter-rouge">confirmed_decree</code> 之后的日志才可被 GC。</p>
+
+<p>当然我们也可以将日志 GC 的时间设置的相当长，例如一周，因为此时数据必然已复制到远端集群（什么环境下复制一条日志需要超过 1 周时间？）。最终我们没有选择这种方法。</p>
+
+<h3 id="broadcast-confirmed_decree">Broadcast confirmed_decree</h3>
+
+<p>虽然 primary 不会 GC 那些未被热备的日志，但 secondary 并未遵守这一约定，这些丢失日志的 secondary 有朝一日也会被提拔为 primary，从而影响日志完整性。所以 primary 需要将 confirmed_decree 通过组间心跳（group check）的方式通知 secondary，保证它们不会误删日志。</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>+---------+            +-----------+
+|         |            |           |
+| primary +-----------&gt;+ secondary |
+|         |            |           |
++---+-----+            +-----------+
+    |       confirmed=5001
+    |                  +-----------+
+    |                  |           |
+    +-----------------&gt;+ secondary |
+                       |           |
+      group check      +-----------+
+</code></pre></div></div>
+
+<p>这里有一个问题：由于 secondary 滞后于 primary 了解到热备份正在进行，所以在创建热备份后，secondary 有一定概率误删日志。这是一个已知的设计bug。我们会在后续引入新机制来修复该问题。</p>
+
+<h3 id="replica-learn-step-back">Replica Learn Step Back</h3>
+
+<p>当一个 replica 新加入3副本组中，由于它的数据滞后于 primary，它会通过 <strong><em>replica learn</em></strong> 来拷贝新日志以跟上组员的进度。此时从何处开始拷贝日志（称为 <code class="language-plaintext highlighter-rouge">learn_start_decree</code>）就是一个问题。</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>learnee confirmed_decree=300
+
++-----------------------------------+
+|   +---rocksdb+---+                |
+|   |              |                |
+|   |  checkpoint  |                |
+|   |              |                |
+|   +-------last_durable_decree=500 |
+|                                   |
+|   +--+--+--+--+--+--+             |
+|   |  |  |  |  |  |  | private log |
+|   +--+--+--+--+--+--+             |
+|  201                800           |
+|                                   |
++-----------------------------------+
+</code></pre></div></div>
+
+<p>如上图显示，primary(learnee) 的完整数据集包括 rocksdb + private log，且 private log 的范围为 [201, 800]。</p>
+
+<p>假设 learner 数据为空，普通情况下，此时显然日志拷贝应该从 decree=501 开始。因为小于 501 的数据全部都已经在 rocksdb checkpoint 里了，这些老旧的日志在 learn 的时候不需要再拷贝。</p>
+
+<p>但考虑到热备份情况，因为 [301, 800] 的日志都还没有热备份，所以我们需要相比普通情况多复制 [301, 500] 的日志。这意味着热备份一定程度上会降低 learn 的效率，也就是降低负载均衡，数据迁移的效率。</p>
+
+<p>原来从 decree=501 开始的 learn，在热备份时需要从 decree=301 开始，这个策略我们称为 <strong><em>“Learn Step Back”</em></strong>。注意虽然我们上述讨论的是 learner 数据为空的情况，但 learner 数据非空的情况同理：</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>learner
+
++-----------------------------------+
+|   +--+rocksdb+---+                |
+|   |              |                |
+|   |  checkpoint  |                |
+|   |              +                |
+|   +------+last_durable_decree=500 |
+|                                   |
+|   +--+--+--+                      |
+|   |  |  |  |  private log         |
+|   +--+--+--+                      |
+|  251      400                     |
+|                                   |
++-----------------------------------+
+</code></pre></div></div>
+
+<p>我们假设 learner 已经持有 [251, 400] 的日志，下一步 learnee 将会复制 [301, 800] 的日志，与 learner 数据为空的情况相同。新的日志集将会把旧的日志集覆盖。</p>
+
+<h3 id="sync-is_duplicating-to-every-replica">Sync is_duplicating to every replica</h3>
+
+<p>不管是考虑 GC，还是考虑 learn，我们都需要让每一个 replica 知道“自己正在进行热备份”，因为普通的表不应该考虑 GC Delay，也不应该考虑在 learn 的过程中补齐未热备份的日志，只有热备份的表需要额外考虑这些事情。所以我们需要向所有 replica 同步一个标识（<code class="language-plaintext highlighter-rouge">is_duplicating</code>）。</p>
+
+<p>这个同步不需要考虑强一致性：不需要在 <code class="language-plaintext highlighter-rouge">is_duplicating</code> 的值改变时强一致地通知所有 replica。但我们需要保证在 replica learn 的过程中，该标识能够立刻同步给 learner。因此，我们让这个标识通过 config sync 同步。</p>
+
+<h3 id="apply-learned-state">Apply Learned State</h3>
+
+<p>原先 learner 收到 [21-60] 之间的日志后首先会放入 learn/ 目录下，然后简单地重放每一条日志并写入 rocksdb，并不会写入日志中。为了保证日志完整性，我们会将 learn/ 目录 rename 至 plog 目录，替代之前所有的日志。</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>                     +----+
+                     | 60 |
+                     +----+
+                     | 59 |
+                     +----+
+                     +----+
+  +----+             |....|   +----+
+  | 51 |             +----+   | 62 |
+  +----+             +----+   +----+
+  | 50 |             | 21 |   | 61 |
+  +----+             +----+   +----+
+
++-----------+     +---------+--------+
+|   plog/   |     |  learn/ | cache  |
++-----------+     +---------+--------+
+</code></pre></div></div>
+
+<p>在 learn 的过程中，还可能有部分日志不是以文件的形式复制到 learner，而是以内存形式拷贝到 “cache” 中（我们也将此称为 “learn cache”），如上图的 [61,62]。原先这些日志只会在写入 rocksdb 后被丢弃，现在它们还需要被写至 private log 中。</p>
+
+<p>最终在这样一轮 learn 完成后，我们得到的日志集如下：</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>                  +----+
+                  | 62 |
+                  +----+
+                  | 61 |
+                  +----+
+                  | 60 |
++-----------+     +----+
+|   plog/   |     | 59 |
++-----------+     +----+
+                  +----+
+                  |....|
+                  +----+
+                  +----+
+                  | 21 |
+                  +----+
+</code></pre></div></div>
+
+</div>
+
+<div class="tags">
+    
+</div>
+
+                </div>
+                
+                <div class="column is-one-fourth is-hidden-mobile" style="padding-left: 3rem">
+                    
+                    <p class="menu-label">
+                        <span class="icon">
+                            <i class="fa fa-bars" aria-hidden="true"></i>
+                        </span>
+                        本页导航
+                    </p>
+                    <ul class="menu-list">
+  <li><a href="#背景">背景</a></li>
+  <li><a href="#架构选择">架构选择</a></li>
+  <li><a href="#基本概念">基本概念</a>
+    <ul>
+      <li><a href="#duplicate_rpc">duplicate_rpc</a></li>
+      <li><a href="#集群间写冲突">集群间写冲突</a></li>
+      <li><a href="#confirmed_decree">confirmed_decree</a></li>
+    </ul>
+  </li>
+  <li><a href="#流程">流程</a></li>
+  <li><a href="#日志完整性">日志完整性</a>
+    <ul>
+      <li><a href="#gc-delay">GC Delay</a></li>
+      <li><a href="#broadcast-confirmed_decree">Broadcast confirmed_decree</a></li>
+      <li><a href="#replica-learn-step-back">Replica Learn Step Back</a></li>
+      <li><a href="#sync-is_duplicating-to-every-replica">Sync is_duplicating to every replica</a></li>
+      <li><a href="#apply-learned-state">Apply Learned State</a></li>
+    </ul>
+  </li>
+</ul>
+
+                    
+                </div>
+            </div>
+        </div>
+    </section>
+    <footer class="footer">
+    <div class="container">
+        
+        <div class="content is-small has-text-centered">
+            <p>Copyright (c) 2020, Xiaomi, Inc.  All rights reserved.</p>
+            <p>
+                我们是小米公司云平台部门的存储团队，团队的职责是开发和维护分布式存储系统，为整个小米公司及生态链企业提供分布式存储解决方案。
+            </p>
+        </div>
+    </div>
+</footer>
+    <script src="/assets/js/app.js" type="text/javascript"></script>
+  </body>
+</html>

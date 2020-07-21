@@ -1,0 +1,223 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Pegasus | Pegasus</title>
+    <link rel="stylesheet" href="/assets/css/app.css">
+    <link rel="shortcut icon" href="/assets/images/favicon.ico">
+    <script src="https://cdn.bootcdn.net/ajax/libs/font-awesome/5.13.0/js/all.min.js"></script>
+    <!-- Begin Jekyll SEO tag v2.6.1 -->
+<title>Pegasus</title>
+<meta name="generator" content="Jekyll v4.1.1" />
+<meta property="og:title" content="Pegasus" />
+<meta property="og:locale" content="en_US" />
+<meta property="og:site_name" content="Pegasus" />
+<script type="application/ld+json">
+{"url":"/","@type":"WebSite","headline":"Pegasus","name":"Pegasus","@context":"https://schema.org"}</script>
+<!-- End Jekyll SEO tag -->
+</head>
+
+
+<body>
+    <nav class="navbar  is-primary ">
+    <div class="container">
+        <div class="navbar-brand">
+            <a href="/" class="navbar-item is-active">
+                <!-- Pegasus -->
+                <img src="/assets/images/pegasus-icon.png">
+            </a>
+            <a role="button" class="navbar-burger burger" aria-label="menu" aria-expanded="false" data-target="navMenu">
+                <span aria-hidden="true"></span>
+                <span aria-hidden="true"></span>
+                <span aria-hidden="true"></span>
+            </a>
+        </div>
+        <div class="navbar-menu" id="navMenu">
+            <div class="navbar-start">
+                
+                
+                
+                <div class="navbar-item has-dropdown is-hoverable">
+                    <a href="/overview"
+                        class="navbar-link ">
+                        
+                        <span class="icon" style="margin-right: .25em">
+                            <i class="fas fa-book"></i>
+                        </span>
+                        
+                        <span>Documentation</span>
+                    </a>
+                    <div class="navbar-dropdown">
+                        
+                        <a href="/overview"
+                            class="navbar-item ">概览</a>
+                        
+                        <a href="/clients"
+                            class="navbar-item ">客户端库</a>
+                        
+                        <a href="/api"
+                            class="navbar-item ">用户接口</a>
+                        
+                        <a href="/administration"
+                            class="navbar-item ">高效运维</a>
+                        
+                    </div>
+                </div>
+                
+                
+                
+                <a href="/blogs"
+                    class="navbar-item ">
+                    
+                    <span class="icon" style="margin-right: .25em">
+                        <i class="fas fa-rss"></i>
+                    </span>
+                    
+                    <span>Blog</span>
+                </a>
+                
+                
+                
+                <div class="navbar-item has-dropdown is-hoverable">
+                    <a href="/community"
+                        class="navbar-link ">
+                        
+                        <span class="icon" style="margin-right: .25em">
+                            <i class="fas fa-user-plus"></i>
+                        </span>
+                        
+                        <span>Community</span>
+                    </a>
+                    <div class="navbar-dropdown">
+                        
+                        <a href="/community/#联系我们"
+                            class="navbar-item ">联系我们</a>
+                        
+                        <a href="/community/#参与贡献"
+                            class="navbar-item ">参与贡献</a>
+                        
+                        <a href="/community/coding-guides"
+                            class="navbar-item ">Coding Guides</a>
+                        
+                        <a href="/community/roadmap"
+                            class="navbar-item ">Roadmap</a>
+                        
+                        <a href="https://github.com/XiaoMi/pegasus/labels/type%2Fbug"
+                            class="navbar-item ">Bug Tracking</a>
+                        
+                        <a href="/community/proposal"
+                            class="navbar-item ">Apache Proposal</a>
+                        
+                    </div>
+                </div>
+                
+                
+                
+                <a href="https://github.com/XiaoMi/pegasus"
+                    class="navbar-item ">
+                    
+                    <span class="icon" style="margin-right: .25em">
+                        <i class="fab fa-github-alt"></i>
+                    </span>
+                    
+                    <span>Github</span>
+                </a>
+                
+                
+                
+                <a href="/releases"
+                    class="navbar-item ">
+                    
+                    <span class="icon" style="margin-right: .25em">
+                        <i class="fas fa-fire"></i>
+                    </span>
+                    
+                    <span>Releases</span>
+                </a>
+                
+                
+                
+            </div>
+            <div class="navbar-end is-hidden-mobile">
+                <div class="navbar-item navbar-searchbox">
+                    <div class="field">
+                        <div class="control has-icons-right">
+                            <input class="input searchbox-input" type="text" placeholder="Search the docs">
+                            <span class="border"></span>
+                            <span class="icon is-right searchbox-icon">
+                                <i class="fas fa-search"></i>
+                            </span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</nav>
+
+<script src="https://cdn.bootcss.com/jquery/3.4.1/jquery.min.js"></script>
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/docsearch.js@2/dist/cdn/docsearch.min.css" />
+<script src="https://cdn.jsdelivr.net/npm/docsearch.js@2/dist/cdn/docsearch.min.js"></script>
+
+<script>
+    docsearch({
+        appId: '50E27EHNIK',
+        indexName: 'pegasus-kv',
+        apiKey: '384e9a24e20ffe7cd7ffa708ceb08253',
+        inputSelector: '.searchbox-input',
+        debug: false,
+    });
+
+    $('.searchbox-input').focus(function () {
+        $('.navbar-searchbox .border').animate({ left: '0', width: '100%' })
+        $('.searchbox-icon').css({ color: 'white' })
+    })
+    $('.searchbox-input').focusout(function () {
+        $('.navbar-searchbox .border').animate({ left: '0', width: '0' })
+        $('.searchbox-icon').css({ color: 'hsl(0, 0%, 86%)' })
+    })
+</script>
+    <section class="hero is-fullheight-with-navbar is-bold is-primary" >
+        <div class="hero-body">
+            <div class="container has-text-centered">
+                <p class="title is-1" style="padding-bottom: 2rem;">
+                    <img src="/assets/images/pegasus-logo.png">
+                </p>
+                <p class="subtitle is-3 has-text-white-bis has-text-weight-bold" style="padding-bottom: 1rem;">
+                    易伸缩，强一致，高效的，开源分布式Key-Value存储</p>
+                <a style="padding-right: 0.5rem" href="https://www.apache.org/licenses/LICENSE-2.0">
+                    <img alt="https://img.shields.io/github/license/xiaomi/pegasus.svg?style=flat-square&"
+                        src="https://img.shields.io/github/license/xiaomi/pegasus.svg?style=flat-square&">
+                </a>
+                <a style="padding-right: 0.5rem" href="https://github.com/XiaoMi/pegasus">
+                    <img alt="https://img.shields.io/github/stars/xiaomi/pegasus.svg?style=flat-square&"
+                        src="https://img.shields.io/github/stars/xiaomi/pegasus.svg?style=flat-square&">
+                </a>
+                <a style="padding-right: 0.5rem" href="https://github.com/XiaoMi/pegasus/issues?utf8=%E2%9C%93&q=label%3Arelease-note">
+                    <img alt="https://img.shields.io/github/release/xiaomi/pegasus.svg?style=flat-square&label=Pegasus"
+                        src="https://img.shields.io/github/release/xiaomi/pegasus.svg?style=flat-square&label=Pegasus">
+                </a>
+                <a style="padding-right: 0.5rem" href="https://github.com/XiaoMi/pegasus-java-client/releases">
+                    <img alt="https://img.shields.io/github/release/xiaomi/pegasus-java-client.svg?style=flat-square&label=Pegasus-Java-Client"
+                        src="https://img.shields.io/github/release/xiaomi/pegasus-java-client.svg?style=flat-square&label=Pegasus-Java-Client">
+                </a>    
+                <div style="padding-top: 2rem" class="buttons is-centered">
+                    <a class="button is-light is-outlined is-rounded is-large"
+                        style="transition:.5s; padding-right: 3rem; padding-left: 3rem;"
+                        href="/overview">
+                        <span class="icon"><i class="fas fa-chevron-right"></i></span>
+                        <span>
+                            <span style="font-weight:lighter">Get</span>
+                            <strong>Started</strong>
+                        </span>
+                    </a>
+                </div>
+            </div>
+        </div>
+    </section>
+    <script src="/assets/js/app.js" type="text/javascript"></script>
+</body>
+
+</html>

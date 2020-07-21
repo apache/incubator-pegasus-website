@@ -1,0 +1,54 @@
+- items:
+    - name: 高效运维
+      link: /administration
+    - name: 集群部署
+      link: /administration/deployment
+    - name: 配置说明
+      link: /administration/config
+    - name: 负载均衡
+      link: /administration/rebalance
+    - name: 可视化监控
+      link: /administration/monitoring
+    - name: 集群升级
+      link: /administration/rolling-update
+    - name: 集群扩容缩容
+      link: /administration/membership-change
+    - name: 资源管理
+      link: /administration/resource-management
+    - name: 冷备份
+      link: /administration/cold-backup
+    - name: 元数据恢复
+      link: /administration/meta-recovery
+    - name: Replica数据恢复
+      link: /administration/replica-recovery
+    - name: Zookeeper迁移
+      link: /administration/zk-migration
+    - name: Table迁移
+      link: /administration/table-migration
+    - name: Table软删除
+      link: /administration/table-soft-delete
+    - name: Table环境变量
+      link: /administration/table-env
+    - name: 远程命令
+      link: /administration/remote-commands
+    - name: Partition-Split
+      link: /administration/partition-split
+    - name: 跨机房同步
+      link: /administration/duplication
+    - name: 数据压缩
+      link: /administration/compression
+    - name: 流量控制
+      link: /administration/throttling
+    - name: 运维经验
+      link: /administration/experiences
+    - name: Manual Compact功能
+      link: /administration/manual-compact
+    - name: Usage Scenario功能
+      link: /administration/usage-scenario
+    - name: 坏盘检修
+      link: /administration/bad-disk
+    - name: 白名单
+      link: /administration/whitelist
+    - name: Backup Request
+      link: /administration/backup-request
+

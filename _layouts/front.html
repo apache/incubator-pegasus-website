@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html>
+{% include head.html %}
+
+<body>
+    {% include header.html %}
+    <section class="hero is-fullheight-with-navbar is-bold is-primary" {% if page.hero_image %}
+        style="background: url('{{ page.hero_image }}') no-repeat center center; background-size: cover;" {% endif %}>
+        <div class="hero-body">
+            <div class="container has-text-centered">
+                <p class="title is-1" style="padding-bottom: 2rem;">
+                    <img src="{{ site.baseurl }}/assets/images/pegasus-logo.png">
+                </p>
+                <p class="subtitle is-3 has-text-white-bis has-text-weight-bold" style="padding-bottom: 1rem;">
+                    {{ page.subtitle }}</p>
+                <a style="padding-right: 0.5rem" href="https://www.apache.org/licenses/LICENSE-2.0">
+                    <img alt="https://img.shields.io/github/license/xiaomi/pegasus.svg?style=flat-square&"
+                        src="https://img.shields.io/github/license/xiaomi/pegasus.svg?style=flat-square&">
+                </a>
+                <a style="padding-right: 0.5rem" href="https://github.com/XiaoMi/pegasus">
+                    <img alt="https://img.shields.io/github/stars/xiaomi/pegasus.svg?style=flat-square&"
+                        src="https://img.shields.io/github/stars/xiaomi/pegasus.svg?style=flat-square&">
+                </a>
+                <a style="padding-right: 0.5rem" href="https://github.com/XiaoMi/pegasus/issues?utf8=%E2%9C%93&q=label%3Arelease-note">
+                    <img alt="https://img.shields.io/github/release/xiaomi/pegasus.svg?style=flat-square&label=Pegasus"
+                        src="https://img.shields.io/github/release/xiaomi/pegasus.svg?style=flat-square&label=Pegasus">
+                </a>
+                <a style="padding-right: 0.5rem" href="https://github.com/XiaoMi/pegasus-java-client/releases">
+                    <img alt="https://img.shields.io/github/release/xiaomi/pegasus-java-client.svg?style=flat-square&label=Pegasus-Java-Client"
+                        src="https://img.shields.io/github/release/xiaomi/pegasus-java-client.svg?style=flat-square&label=Pegasus-Java-Client">
+                </a>    
+                <div style="padding-top: 2rem" class="buttons is-centered">
+                    <a class="button is-light is-outlined is-rounded is-large"
+                        style="transition:.5s; padding-right: 3rem; padding-left: 3rem;"
+                        href="{{ site.baseurl }}/overview">
+                        <span class="icon"><i class="fas fa-chevron-right"></i></span>
+                        <span>
+                            <span style="font-weight:lighter">Get</span>
+                            <strong>Started</strong>
+                        </span>
+                    </a>
+                </div>
+            </div>
+        </div>
+    </section>
+    <script src="{{ site.baseurl }}/assets/js/app.js" type="text/javascript"></script>
+</body>
+
+</html>

@@ -1,0 +1,23 @@
+<script src="https://cdn.bootcss.com/jquery/3.4.1/jquery.min.js"></script>
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/docsearch.js@2/dist/cdn/docsearch.min.css" />
+<script src="https://cdn.jsdelivr.net/npm/docsearch.js@2/dist/cdn/docsearch.min.js"></script>
+
+<script>
+    docsearch({
+        appId: '{{ site.algolia.application_id }}',
+        indexName: '{{ site.algolia.index_name }}',
+        apiKey: '{{ site.algolia.search_only_api_key }}',
+        inputSelector: '.searchbox-input',
+        debug: false,
+    });
+
+    $('.searchbox-input').focus(function () {
+        $('.navbar-searchbox .border').animate({ left: '0', width: '100%' })
+        $('.searchbox-icon').css({ color: 'white' })
+    })
+    $('.searchbox-input').focusout(function () {
+        $('.navbar-searchbox .border').animate({ left: '0', width: '0' })
+        $('.searchbox-icon').css({ color: 'hsl(0, 0%, 86%)' })
+    })
+</script>

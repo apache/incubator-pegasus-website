@@ -1,0 +1,457 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Pegasus | Replica数据恢复</title>
+    <link rel="stylesheet" href="/assets/css/app.css">
+    <link rel="shortcut icon" href="/assets/images/favicon.ico">
+    <script src="https://cdn.bootcdn.net/ajax/libs/font-awesome/5.13.0/js/all.min.js"></script>
+    <!-- Begin Jekyll SEO tag v2.6.1 -->
+<title>Replica数据恢复 | Pegasus</title>
+<meta name="generator" content="Jekyll v4.1.1" />
+<meta property="og:title" content="Replica数据恢复" />
+<meta property="og:locale" content="en_US" />
+<meta name="description" content="原理" />
+<meta property="og:description" content="原理" />
+<meta property="og:site_name" content="Pegasus" />
+<meta property="og:type" content="article" />
+<meta property="article:published_time" content="2020-07-21T10:42:09+00:00" />
+<script type="application/ld+json">
+{"url":"/administration/replica-recovery","@type":"BlogPosting","headline":"Replica数据恢复","dateModified":"2020-07-21T10:42:09+00:00","datePublished":"2020-07-21T10:42:09+00:00","mainEntityOfPage":{"@type":"WebPage","@id":"/administration/replica-recovery"},"description":"原理","@context":"https://schema.org"}</script>
+<!-- End Jekyll SEO tag -->
+</head>
+
+  <body>
+    <nav class="navbar  is-primary ">
+    <div class="container">
+        <div class="navbar-brand">
+            <a href="/" class="navbar-item ">
+                <!-- Pegasus -->
+                <img src="/assets/images/pegasus-icon.png">
+            </a>
+            <a role="button" class="navbar-burger burger" aria-label="menu" aria-expanded="false" data-target="navMenu">
+                <span aria-hidden="true"></span>
+                <span aria-hidden="true"></span>
+                <span aria-hidden="true"></span>
+            </a>
+        </div>
+        <div class="navbar-menu" id="navMenu">
+            <div class="navbar-start">
+                
+                
+                
+                <div class="navbar-item has-dropdown is-hoverable">
+                    <a href="/overview"
+                        class="navbar-link ">
+                        
+                        <span class="icon" style="margin-right: .25em">
+                            <i class="fas fa-book"></i>
+                        </span>
+                        
+                        <span>Documentation</span>
+                    </a>
+                    <div class="navbar-dropdown">
+                        
+                        <a href="/overview"
+                            class="navbar-item ">概览</a>
+                        
+                        <a href="/clients"
+                            class="navbar-item ">客户端库</a>
+                        
+                        <a href="/api"
+                            class="navbar-item ">用户接口</a>
+                        
+                        <a href="/administration"
+                            class="navbar-item ">高效运维</a>
+                        
+                    </div>
+                </div>
+                
+                
+                
+                <a href="/blogs"
+                    class="navbar-item ">
+                    
+                    <span class="icon" style="margin-right: .25em">
+                        <i class="fas fa-rss"></i>
+                    </span>
+                    
+                    <span>Blog</span>
+                </a>
+                
+                
+                
+                <div class="navbar-item has-dropdown is-hoverable">
+                    <a href="/community"
+                        class="navbar-link ">
+                        
+                        <span class="icon" style="margin-right: .25em">
+                            <i class="fas fa-user-plus"></i>
+                        </span>
+                        
+                        <span>Community</span>
+                    </a>
+                    <div class="navbar-dropdown">
+                        
+                        <a href="/community/#联系我们"
+                            class="navbar-item ">联系我们</a>
+                        
+                        <a href="/community/#参与贡献"
+                            class="navbar-item ">参与贡献</a>
+                        
+                        <a href="/community/coding-guides"
+                            class="navbar-item ">Coding Guides</a>
+                        
+                        <a href="/community/roadmap"
+                            class="navbar-item ">Roadmap</a>
+                        
+                        <a href="https://github.com/XiaoMi/pegasus/labels/type%2Fbug"
+                            class="navbar-item ">Bug Tracking</a>
+                        
+                        <a href="/community/proposal"
+                            class="navbar-item ">Apache Proposal</a>
+                        
+                    </div>
+                </div>
+                
+                
+                
+                <a href="https://github.com/XiaoMi/pegasus"
+                    class="navbar-item ">
+                    
+                    <span class="icon" style="margin-right: .25em">
+                        <i class="fab fa-github-alt"></i>
+                    </span>
+                    
+                    <span>Github</span>
+                </a>
+                
+                
+                
+                <a href="/releases"
+                    class="navbar-item ">
+                    
+                    <span class="icon" style="margin-right: .25em">
+                        <i class="fas fa-fire"></i>
+                    </span>
+                    
+                    <span>Releases</span>
+                </a>
+                
+                
+                
+            </div>
+            <div class="navbar-end is-hidden-mobile">
+                <div class="navbar-item navbar-searchbox">
+                    <div class="field">
+                        <div class="control has-icons-right">
+                            <input class="input searchbox-input" type="text" placeholder="Search the docs">
+                            <span class="border"></span>
+                            <span class="icon is-right searchbox-icon">
+                                <i class="fas fa-search"></i>
+                            </span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</nav>
+
+<script src="https://cdn.bootcss.com/jquery/3.4.1/jquery.min.js"></script>
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/docsearch.js@2/dist/cdn/docsearch.min.css" />
+<script src="https://cdn.jsdelivr.net/npm/docsearch.js@2/dist/cdn/docsearch.min.js"></script>
+
+<script>
+    docsearch({
+        appId: '50E27EHNIK',
+        indexName: 'pegasus-kv',
+        apiKey: '384e9a24e20ffe7cd7ffa708ceb08253',
+        inputSelector: '.searchbox-input',
+        debug: false,
+    });
+
+    $('.searchbox-input').focus(function () {
+        $('.navbar-searchbox .border').animate({ left: '0', width: '100%' })
+        $('.searchbox-icon').css({ color: 'white' })
+    })
+    $('.searchbox-input').focusout(function () {
+        $('.navbar-searchbox .border').animate({ left: '0', width: '0' })
+        $('.searchbox-icon').css({ color: 'hsl(0, 0%, 86%)' })
+    })
+</script>
+    <section  class="hero is-bold is-primary"
+     >
+    <div class="hero-body" style="padding-bottom: 6rem; padding-top: 6rem;">
+        <div class="container has-text-centered">
+            <p class="title is-2">Replica数据恢复</p>
+        </div>
+    </div>
+</section>
+    <section class="section">
+        <div class="container">
+            <div class="columns is-multiline">
+                <div class="column is-one-fourth">
+                    
+                    
+
+<aside class="menu">
+
+    <p class="menu-label"></p>
+    <ul class="menu-list">
+        
+        <li>
+            <a href="/administration" class="">高效运维</a>
+            
+        </li>
+        
+        <li>
+            <a href="/administration/deployment" class="">集群部署</a>
+            
+        </li>
+        
+        <li>
+            <a href="/administration/config" class="">配置说明</a>
+            
+        </li>
+        
+        <li>
+            <a href="/administration/rebalance" class="">负载均衡</a>
+            
+        </li>
+        
+        <li>
+            <a href="/administration/monitoring" class="">可视化监控</a>
+            
+        </li>
+        
+        <li>
+            <a href="/administration/rolling-update" class="">集群升级</a>
+            
+        </li>
+        
+        <li>
+            <a href="/administration/membership-change" class="">集群扩容缩容</a>
+            
+        </li>
+        
+        <li>
+            <a href="/administration/resource-management" class="">资源管理</a>
+            
+        </li>
+        
+        <li>
+            <a href="/administration/cold-backup" class="">冷备份</a>
+            
+        </li>
+        
+        <li>
+            <a href="/administration/meta-recovery" class="">元数据恢复</a>
+            
+        </li>
+        
+        <li>
+            <a href="/administration/replica-recovery" class="is-active">Replica数据恢复</a>
+            
+        </li>
+        
+        <li>
+            <a href="/administration/zk-migration" class="">Zookeeper迁移</a>
+            
+        </li>
+        
+        <li>
+            <a href="/administration/table-migration" class="">Table迁移</a>
+            
+        </li>
+        
+        <li>
+            <a href="/administration/table-soft-delete" class="">Table软删除</a>
+            
+        </li>
+        
+        <li>
+            <a href="/administration/table-env" class="">Table环境变量</a>
+            
+        </li>
+        
+        <li>
+            <a href="/administration/remote-commands" class="">远程命令</a>
+            
+        </li>
+        
+        <li>
+            <a href="/administration/partition-split" class="">Partition-Split</a>
+            
+        </li>
+        
+        <li>
+            <a href="/administration/duplication" class="">跨机房同步</a>
+            
+        </li>
+        
+        <li>
+            <a href="/administration/compression" class="">数据压缩</a>
+            
+        </li>
+        
+        <li>
+            <a href="/administration/throttling" class="">流量控制</a>
+            
+        </li>
+        
+        <li>
+            <a href="/administration/experiences" class="">运维经验</a>
+            
+        </li>
+        
+        <li>
+            <a href="/administration/manual-compact" class="">Manual Compact功能</a>
+            
+        </li>
+        
+        <li>
+            <a href="/administration/usage-scenario" class="">Usage Scenario功能</a>
+            
+        </li>
+        
+        <li>
+            <a href="/administration/bad-disk" class="">坏盘检修</a>
+            
+        </li>
+        
+        <li>
+            <a href="/administration/whitelist" class="">白名单</a>
+            
+        </li>
+        
+        <li>
+            <a href="/administration/backup-request" class="">Backup Request</a>
+            
+        </li>
+            
+    </ul>
+
+</aside>
+
+                    
+                </div>
+                <div class="column is-half">
+                    
+                    <div class="content">
+    <h1 id="原理">原理</h1>
+
+<p>通常来说，Pegasus的数据会存储3个副本。对于每个partition，正常情况下应当都有一主两备3个replica提供服务。</p>
+
+<p>但是，集群不可避免会发生节点宕机、网络异常、心跳失联等情况，造成副本丢失，对服务可用性产生影响。副本丢失的程度会影响读写的能力（在<a href="rebalance#概念篇">负载均衡</a>里也有介绍）：</p>
+<ul>
+  <li>一主两备都可用：partition完全健康，可以<strong>正常读和写</strong>。</li>
+  <li>一主一备可用：根据PacificA一致性协议，同样可以<strong>安全地读和写</strong>。</li>
+  <li>只有一主可用：此时<strong>不可写</strong>，但是<strong>可读</strong>。</li>
+  <li>全部不可用：此时<strong>不可读写</strong>。这种情况我们称之为<strong>DDD</strong>，即Dead-Dead-Dead的缩写，表示3个副本都不可用。</li>
+</ul>
+
+<p>以上情况中，除了<strong>全部不可用的DDD状态</strong>，其他情况下MetaServer都能自动补充副本，并最终恢复至完全健康状态。但是如果partition进入DDD状态，MetaServer就无法对其进行自动恢复，需要进行人工干预。</p>
+
+<p><a href="https://github.com/XiaoMi/rdsn/issues/80">这个讨论</a>中给出了进入DDD状态的例子。实际上，<strong>只要某个partition进入DDD状态，且LastDrop的最后两个节点中有一个节点无法正常启动，就会进入需要人工干预的DDD状态</strong>。而在线上集群多个节点的起起停停过程中，这种情况是很容易出现的。</p>
+
+<p>可以通过Shell工具的<code class="language-plaintext highlighter-rouge">ls -d</code>命令查看健康状况，如果<code class="language-plaintext highlighter-rouge">read_unhealthy</code>的个数大于0，就表示有partition进入了DDD状态。</p>
+
+<h1 id="ddd诊断工具">DDD诊断工具</h1>
+
+<p>从<a href="https://github.com/XiaoMi/pegasus/releases/tag/v1.11.0">v1.11.0版本</a>开始，Pegasus在Shell工具中提供了<code class="language-plaintext highlighter-rouge">ddd_diagnose</code>命令，以支持DDD自动诊断功能。</p>
+
+<p>命令用法：</p>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>ddd_diagnose [-g|--gpid appid|appid.pidx] [-d|--diagnose] [-a|--auto_diagnose]
+             [-s|--skip_prompt] [-o|--output file_name]
+</code></pre></div></div>
+
+<p>参数说明：</p>
+<ul>
+  <li><code class="language-plaintext highlighter-rouge">-g</code>：指定app_id或者partition_id，譬如<code class="language-plaintext highlighter-rouge">-g 1</code>或者<code class="language-plaintext highlighter-rouge">-g 1.3</code>；如果不指定，则对所有表执行操作。</li>
+  <li><code class="language-plaintext highlighter-rouge">-d</code>：进入诊断模式；如果不指定，则只显示DDD情况，但不进行诊断。</li>
+  <li><code class="language-plaintext highlighter-rouge">-a</code>：开启自动诊断，即在保证数据一致性前提下，如果诊断工具能寻找到合适的备份作为该partition的主备份，则自动将其设置为primary，完成数据恢复，无需人工干预。</li>
+  <li><code class="language-plaintext highlighter-rouge">-s</code>：避免交互模式；如果不指定，则在进行诊断的过程中可能会要求用户输入信息，以完成选择、确认、或者信息补充。</li>
+  <li><code class="language-plaintext highlighter-rouge">-o</code>：将结果输出到指定文件。</li>
+</ul>
+
+<p>使用示例（如果看不清楚，请在单独的页面中打开图片）：</p>
+
+<p><img src="/assets/images/ddd-diagnose.png" alt="ddd-diagnose.png" class="img-responsive" /></p>
+
+<p>上图是使用<code class="language-plaintext highlighter-rouge">ddd_diagnose</code>命令时的输出，我们通过红色的箭头标识依次进行说明：</p>
+<ul>
+  <li>1：当前正在诊断的partition id。</li>
+  <li>2：该partition在zookeeper上持久化的<code class="language-plaintext highlighter-rouge">ballot</code>和<code class="language-plaintext highlighter-rouge">last_committed_decree</code>信息，但是由于持久化不是实时的，该值可能小于实际值。</li>
+  <li>3：dropped列表，列举曾经服务过该partition的节点的状态信息，重点关注：
+    <ul>
+      <li>alive：该节点是否可用。</li>
+      <li>ballot：该partition在该节点上replica的实际<code class="language-plaintext highlighter-rouge">ballot</code>；如果为-1，表示该partition在该节点上不存在数据。</li>
+      <li>last_committed：该partition在该节点上replica的实际<code class="language-plaintext highlighter-rouge">last_committed_decree</code>。</li>
+      <li>last_prepared：该partition在该节点上replica的实际<code class="language-plaintext highlighter-rouge">last_prepared_decree</code>。</li>
+      <li>最后如果有<code class="language-plaintext highlighter-rouge">&lt;==</code>，表示该节点是 <strong>最后一个变得不可用</strong>（the latest） 还是 <strong>倒数第二个变得不可用</strong>（the secondary latest）。</li>
+    </ul>
+  </li>
+  <li>4：last_drops列表，记录节点变得不可用的时间顺序。</li>
+  <li>5：ddd_reason，表示该partition变成DDD状态的原因。</li>
+  <li>6：recommanded_primary，诊断工具在保证数据一致性的前提下推荐的新primary；如果无法给出，则为<code class="language-plaintext highlighter-rouge">none</code>。</li>
+  <li>7：如果第6步给出了推荐节点，则提示用户采取下一步操作（如果指定了<code class="language-plaintext highlighter-rouge">-a</code>或者<code class="language-plaintext highlighter-rouge">-s</code>选项，则不会进入这一步，相当于总是自动选择y）：
+    <ul>
+      <li>y：采用该推荐节点作为新的primary。</li>
+      <li>n：不采用该推荐节点，而是让用户选择其他的节点。</li>
+      <li>s：忽略对该partition的诊断。</li>
+    </ul>
+  </li>
+  <li>8：如果第6步没有给出推荐节点或者第7步选择了n，则提示用户输入新的节点作为primary。</li>
+  <li>9：生成propose命令，发送给MetaServer，将节点指定为新的primary，对该partition进行恢复。</li>
+  <li>10：收到propose命令的回复，<code class="language-plaintext highlighter-rouge">ERR_OK</code>表示执行成功。</li>
+  <li>11：显示当前已经完成的进度，分子为已经完成诊断的个数，分母为需要进行诊断的总个数。</li>
+</ul>
+
+<p><strong>推荐用法</strong>：</p>
+<ul>
+  <li><code class="language-plaintext highlighter-rouge">ddd_diagnose -d -a</code>，即开启自动诊断，对于无法自动完成诊断的partition，通过与用户交互来获得人工干预。这是最简单省心的用法，在大部分情况下都能自动完成恢复过程，无需人工干预。</li>
+</ul>
+
+<p>在无法完成自动诊断的情况下，会进入上图中的第8步，需要用户输入新的节点作为primary。那么，在dropped列表的众多节点中，如何选择最合适的节点作为primary呢？我们的建议是：</p>
+<ul>
+  <li><strong>在所有alive为true的节点中，选择<code class="language-plaintext highlighter-rouge">last_prepared</code>值最大的节点</strong>，因为这样能尽可能多地恢复数据，减少数据丢失的可能性。</li>
+</ul>
+
+</div>
+                </div>
+                
+                <div class="column is-one-fourth is-hidden-mobile" style="padding-left: 3rem">
+                    
+                    <p class="menu-label">
+                        <span class="icon">
+                            <i class="fa fa-bars" aria-hidden="true"></i>
+                        </span>
+                        本页导航
+                    </p>
+                    <ul class="menu-list">
+  <li><a href="#原理">原理</a></li>
+  <li><a href="#ddd诊断工具">DDD诊断工具</a></li>
+</ul>
+
+                    
+                </div>
+            </div>
+        </div>
+    </section>
+    <footer class="footer">
+    <div class="container">
+        
+        <div class="content is-small has-text-centered">
+            <p>Copyright (c) 2020, Xiaomi, Inc.  All rights reserved.</p>
+            <p>
+                我们是小米公司云平台部门的存储团队，团队的职责是开发和维护分布式存储系统，为整个小米公司及生态链企业提供分布式存储解决方案。
+            </p>
+        </div>
+    </div>
+</footer>
+    <script src="/assets/js/app.js" type="text/javascript"></script>
+  </body>
+</html>

@@ -1,0 +1,401 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Pegasus | Meta Server 的设计</title>
+    <link rel="stylesheet" href="/assets/css/app.css">
+    <link rel="shortcut icon" href="/assets/images/favicon.ico">
+    <script src="https://cdn.bootcdn.net/ajax/libs/font-awesome/5.13.0/js/all.min.js"></script>
+    <!-- Begin Jekyll SEO tag v2.6.1 -->
+<title>Meta Server 的设计 | Pegasus</title>
+<meta name="generator" content="Jekyll v4.1.1" />
+<meta property="og:title" content="Meta Server 的设计" />
+<meta name="author" content="Pegasus" />
+<meta property="og:locale" content="en_US" />
+<meta name="description" content="在 Pegasus 的架构中，Meta Server 是一个专门用于管理元数据的服务节点，我们在这篇文章中详细讨论它的内部机制。" />
+<meta property="og:description" content="在 Pegasus 的架构中，Meta Server 是一个专门用于管理元数据的服务节点，我们在这篇文章中详细讨论它的内部机制。" />
+<meta property="og:site_name" content="Pegasus" />
+<meta property="og:type" content="article" />
+<meta property="article:published_time" content="2017-11-21T00:00:00+00:00" />
+<script type="application/ld+json">
+{"url":"/2017/11/21/meta-server-design.html","@type":"BlogPosting","headline":"Meta Server 的设计","dateModified":"2017-11-21T00:00:00+00:00","datePublished":"2017-11-21T00:00:00+00:00","mainEntityOfPage":{"@type":"WebPage","@id":"/2017/11/21/meta-server-design.html"},"author":{"@type":"Person","name":"Pegasus"},"description":"在 Pegasus 的架构中，Meta Server 是一个专门用于管理元数据的服务节点，我们在这篇文章中详细讨论它的内部机制。","@context":"https://schema.org"}</script>
+<!-- End Jekyll SEO tag -->
+</head>
+
+  <body>
+    <nav class="navbar  is-info ">
+    <div class="container">
+        <div class="navbar-brand">
+            <a href="/" class="navbar-item ">
+                <!-- Pegasus -->
+                <img src="/assets/images/pegasus-icon.png">
+            </a>
+            <a role="button" class="navbar-burger burger" aria-label="menu" aria-expanded="false" data-target="navMenu">
+                <span aria-hidden="true"></span>
+                <span aria-hidden="true"></span>
+                <span aria-hidden="true"></span>
+            </a>
+        </div>
+        <div class="navbar-menu" id="navMenu">
+            <div class="navbar-start">
+                
+                
+                
+                <div class="navbar-item has-dropdown is-hoverable">
+                    <a href="/overview"
+                        class="navbar-link ">
+                        
+                        <span class="icon" style="margin-right: .25em">
+                            <i class="fas fa-book"></i>
+                        </span>
+                        
+                        <span>Documentation</span>
+                    </a>
+                    <div class="navbar-dropdown">
+                        
+                        <a href="/overview"
+                            class="navbar-item ">概览</a>
+                        
+                        <a href="/clients"
+                            class="navbar-item ">客户端库</a>
+                        
+                        <a href="/api"
+                            class="navbar-item ">用户接口</a>
+                        
+                        <a href="/administration"
+                            class="navbar-item ">高效运维</a>
+                        
+                    </div>
+                </div>
+                
+                
+                
+                <a href="/blogs"
+                    class="navbar-item ">
+                    
+                    <span class="icon" style="margin-right: .25em">
+                        <i class="fas fa-rss"></i>
+                    </span>
+                    
+                    <span>Blog</span>
+                </a>
+                
+                
+                
+                <div class="navbar-item has-dropdown is-hoverable">
+                    <a href="/community"
+                        class="navbar-link ">
+                        
+                        <span class="icon" style="margin-right: .25em">
+                            <i class="fas fa-user-plus"></i>
+                        </span>
+                        
+                        <span>Community</span>
+                    </a>
+                    <div class="navbar-dropdown">
+                        
+                        <a href="/community/#联系我们"
+                            class="navbar-item ">联系我们</a>
+                        
+                        <a href="/community/#参与贡献"
+                            class="navbar-item ">参与贡献</a>
+                        
+                        <a href="/community/coding-guides"
+                            class="navbar-item ">Coding Guides</a>
+                        
+                        <a href="/community/roadmap"
+                            class="navbar-item ">Roadmap</a>
+                        
+                        <a href="https://github.com/XiaoMi/pegasus/labels/type%2Fbug"
+                            class="navbar-item ">Bug Tracking</a>
+                        
+                        <a href="/community/proposal"
+                            class="navbar-item ">Apache Proposal</a>
+                        
+                    </div>
+                </div>
+                
+                
+                
+                <a href="https://github.com/XiaoMi/pegasus"
+                    class="navbar-item ">
+                    
+                    <span class="icon" style="margin-right: .25em">
+                        <i class="fab fa-github-alt"></i>
+                    </span>
+                    
+                    <span>Github</span>
+                </a>
+                
+                
+                
+                <a href="/releases"
+                    class="navbar-item ">
+                    
+                    <span class="icon" style="margin-right: .25em">
+                        <i class="fas fa-fire"></i>
+                    </span>
+                    
+                    <span>Releases</span>
+                </a>
+                
+                
+                
+            </div>
+            <div class="navbar-end is-hidden-mobile">
+                <div class="navbar-item navbar-searchbox">
+                    <div class="field">
+                        <div class="control has-icons-right">
+                            <input class="input searchbox-input" type="text" placeholder="Search the docs">
+                            <span class="border"></span>
+                            <span class="icon is-right searchbox-icon">
+                                <i class="fas fa-search"></i>
+                            </span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</nav>
+
+<script src="https://cdn.bootcss.com/jquery/3.4.1/jquery.min.js"></script>
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/docsearch.js@2/dist/cdn/docsearch.min.css" />
+<script src="https://cdn.jsdelivr.net/npm/docsearch.js@2/dist/cdn/docsearch.min.js"></script>
+
+<script>
+    docsearch({
+        appId: '50E27EHNIK',
+        indexName: 'pegasus-kv',
+        apiKey: '384e9a24e20ffe7cd7ffa708ceb08253',
+        inputSelector: '.searchbox-input',
+        debug: false,
+    });
+
+    $('.searchbox-input').focus(function () {
+        $('.navbar-searchbox .border').animate({ left: '0', width: '100%' })
+        $('.searchbox-icon').css({ color: 'white' })
+    })
+    $('.searchbox-input').focusout(function () {
+        $('.navbar-searchbox .border').animate({ left: '0', width: '0' })
+        $('.searchbox-icon').css({ color: 'hsl(0, 0%, 86%)' })
+    })
+</script>
+    <section  class="hero is-info"  >
+    <div class="hero-body" style="padding-bottom: 6rem; padding-top: 6rem;">
+        <div class="container has-text-centered">
+            <p class="title is-2">Meta Server 的设计</p>
+        </div>
+    </div>
+</section>
+    <section class="section">
+        <div class="container">
+            <div class="columns is-multiline">
+                <div class="column is-one-fourth">
+                    
+                </div>
+                <div class="column is-half">
+                    
+                    <div class="content">
+
+    <ul class="blog-post-meta">
+        <li class="blog-post-meta-item">
+            <span class="icon" style="margin-right: .25em">
+                <i class="far fa-calendar-check" aria-hidden="true"></i>
+            </span>
+            November 21, 2017
+        </li>
+        <li class="blog-post-meta-item">
+            <span class="icon" style="margin-right: .25em">
+                <i class="fas fa-edit" aria-hidden="true"></i>
+            </span>
+            Pegasus
+        </li>
+    </ul>
+
+    <p>在 Pegasus 的架构中，Meta Server 是一个专门用于管理元数据的服务节点，我们在这篇文章中详细讨论它的内部机制。</p>
+
+<hr />
+
+<p>MetaServer的主要功能如下：</p>
+
+<ol>
+  <li>Table的管理</li>
+  <li>ReplicaGroup的管理</li>
+  <li>ReplicaServer的管理</li>
+  <li>集群负载的均衡</li>
+</ol>
+
+<h3 id="table的管理">Table的管理</h3>
+
+<p>在Pegasus里，table相当于一个namespace，不同的table下可以有相同的(HashKey, SortKey)序对。在使用table前，需要在向MetaServer先发起建表的申请。</p>
+
+<p>MetaServer在建表的时候，首先对表名以及选项做一些合法性的检查。如果检查通过，会把表的元信息持久化存储到Zookeeper上。在持久化完成后，MetaServer会为表中的每个分片都创建一条记录，叫做<strong>PartitionConfiguration</strong>。该记录里最主要的内容就是当前分片的version以及分片的composition(即Primary和Secondary分别位于哪个ReplicaServer)。</p>
+
+<p>在表创建好后，一个分片的composition初始化为空。MetaServer会为空分片分配Primary和Secondary。等一个分片有一主两备后，就可以对外提供读写服务了。假如一张表所有的分片都满足一主两备份，那么这张表就是可以正常工作的。</p>
+
+<p>如果用户不再需要使用一张表，可以调用删除接口对Pegasus的表进行删除。删除的信息也是先做持久化，然后再异步的将删除信息通知到各个ReplicaServer上。等所有相关ReplicaServer都得知表已经删除后，该表就变得不可访问。注意，此时数据并未作物理删除。真正的物理删除，要在一定的时间周期后发生。在此期间，假如用户想撤回删除操作，也是可以调用相关接口将表召回。这个功能称为<strong>软删除</strong>。</p>
+
+<h3 id="replicagroup的管理">ReplicaGroup的管理</h3>
+
+<p>ReplicaGroup的管理就是上文说的对<strong>PartitionConfiguration</strong>的管理。MetaServer会对空的分片分配Primary和Secondary。随着系统中ReplicaServer的加入和移除，PartitionConfiguration中的composition也可能发生变化。其中这些变化，有可能是主动的，也可能是被动的，如：</p>
+
+<ul>
+  <li>Primary向Secondary发送prepare消息超时，而要求踢出某个Secondary</li>
+  <li>MetaServer通过心跳探测到某个ReplicaServer失联了，发起group变更</li>
+  <li>因为一些负载均衡的需求，Primary可能会主动发生降级，以进行迁移</li>
+</ul>
+
+<p>发生ReplicaGroup成员变更的原因不一而足，这里不再一一列举。但总的来说，成员的每一次变更，都会在MetaServer这里进行记录，每次变更所引发的PartitionConfiguration变化，也都会由MetaServer进行持久化。</p>
+
+<p>值得说明的是，和很多Raft系的存储系统(Kudu、<a href="https://github.com/pingcap/tikv">TiKV</a>)不同，Pegasus的MetaServer并非group成员变更的<strong>见证者</strong>，而是<strong>持有者</strong>。在前者的实现中，group的成员变更是由group本生发起，并先在group内部做持久化，之后再异步通知给MetaServer。</p>
+
+<p>而在Pegasus中，group的状态变化都是先在MetaServer上发生的，然后再在group的成员之间得以体现。哪怕是一个Primary想要踢出一个Secondary, 也要先向MetaServer发起申请；等MetaServer“登记在案”后，这个变更才会在Primary上生效。</p>
+
+<h3 id="replicaserver的管理">ReplicaServer的管理</h3>
+
+<p>当一台ReplicaServer上线时，它会首先向MetaServer进行注册。注册成功后，MetaServer会指定一些Replica让该Server进行服务。</p>
+
+<p>在ReplicaServer和MetaServer都正常运行时，ReplicaServer会定期向MetaServer发送心跳消息，来确保在MetaServer端自己“活着”。当MetaServer检测到ReplicaServer的心跳断掉后，会把这台机器标记为下线并尝试对受影响的ReplicaGroup做调整。这一过程，我们叫做<strong>FailureDetector</strong>。</p>
+
+<p>当前的FailureDetector是按照PacificA中描述的算法来实现的。主要的改动有两点：</p>
+
+<ul>
+  <li>PacificA中要求FailureDetector在ReplicaGroup中的Primary和Secondary之间实施，而Pegasus在MetaServer和ReplicaServer之间实施。</li>
+  <li>因为MetaServer的服务是采用主备模式保证高可用的，所以我们对论文中的算法做了些强化：即FailureDetector的双方是ReplicaServer和“主备MetaServer组成的group”。这样的做法，可以使得FD可以对抗单个MetaServer的不可用。</li>
+</ul>
+
+<p>算法的细节不再展开，这里简述下算法所蕴含的几个设计原则：</p>
+
+<ol>
+  <li>
+    <p>所有的ReplicaServer无条件服从MetaServer</p>
+
+    <p>当MetaServer认为ReplicaServer不可用时，并不会再借助其他外界信息来做进一步确认。为了更进一步说明问题，考虑以下情况：
+<img src="/assets/images/network-partition.png" alt="network-partition" class="docs-image" />
+上图给出了一种比较诡异的网络分区情况：即网络中所有其他的组件都可以正常连通，只有MetaServer和一台ReplicaServer发生了网络分区。在这种情况下，仅仅把ReplicaServer的生死交给MetaServer来仲裁可能略显武断。但考虑到这种情况其实极其罕见，并且就简化系统设计出发，我们认为这样处理并无不妥。而且假如我们不开上帝视角的话，判断一个“crash”是不是“真的crash”本身就是非常困难的事情。</p>
+
+    <p>与此相对应的是另外一种情况：假如ReplicaServer因为一些原因发生了写流程的阻塞(磁盘阻塞，写线程死锁)，而心跳则由于在另外的线程中得以向MetaServer正常发送。这种情况当前Pegasus是无法处理的。一般来说，应对这种问题的方法还是要在server的写线程里引入心跳，后续Pegasus可以在这方面跟进。</p>
+  </li>
+  <li>
+    <p>Pefect Failure Detector</p>
+
+    <p>当MetaServer声称一个ReplicaServer不可用时，该ReplicaServer一定要处于不可服务的状态。这一点是由算法本身来保障的。之所以要有这一要求，是为了防止系统中某个ReplicaGroup可能会出现双主的局面。</p>
+
+    <p>Pegasus使用基于租约的心跳机制来进行失败检测，其原理如下（以下的worker对应ReplicaServer, master对应MetaServer）：
+<img src="/assets/images/perfect-failure-detector.png" alt="perfect-failure-detector" class="docs-image" />
+说明：</p>
+    <ul>
+      <li>beacon总是从worker发送给master，发送间隔为beacon_interval</li>
+      <li>对于worker，超时时间为lease_period</li>
+      <li>对于master，超时时间为grace_period</li>
+      <li>通常来说：grace_period &gt; lease_period &gt; beacon_interval * 2</li>
+    </ul>
+
+    <p>以上租约机制还可以用租房子来进行比喻：</p>
+    <ul>
+      <li>在租房过程中涉及到两种角色：租户和房东。租户的目标就是成为房子的primary（获得对房子的使用权）；房东的原则是保证同一时刻只有一个租户拥有对房子的使用权（避免一房多租）。</li>
+      <li>租户定期向房东交租金，以获取对房子的使用权。如果要一直住下去，就要不停地续租。租户交租金有个习惯，就是每次总是交到距离交租金当天以后固定天数（lease period）为止。但是由于一些原因，并不是每次都能成功将租金交给房东（譬如找不到房东了或者转账失败了）。租户从最后一次成功交租金的那天（last send time with ack）开始算时间，当发现租金所覆盖的天数达到了（lease timeout），就知道房子到期了，会自觉搬出去。</li>
+      <li>房东从最后一次成功收到租户交来的租金那天开始算时间，当发现房子到期了却还没有收到续租的租金，就会考虑新找租户了。当然房东人比较好，会给租户几天宽限期（grace period）。如果从上次收到租金时间（last beacon receive time）到现在超过了宽限期，就会让新的租户搬进去。由于此时租户已经自觉搬出去了，就不会出现两个租户同时去住一个房子的尴尬情况。</li>
+      <li>所以上面两个时间：lease period和grace period，后者总是大于前者。</li>
+    </ul>
+  </li>
+</ol>
+
+<h3 id="集群的负载均衡">集群的负载均衡</h3>
+
+<p>在Pegasus里，集群的负载均衡主要由两方面组成：</p>
+
+<ol>
+  <li>
+    <p>cure: 如果某个ReplicaGroup不满足主备条件了，该如何处理</p>
+
+    <p>简单来说：</p>
+    <ul>
+      <li>如果一个ReplicaGroup中缺少Primary, MetaServer会选择一个Secondary提名为新的Primary;</li>
+      <li>如果ReplicaGroup中缺Secondary，MetaServer会根据负载选一个合适的Secondary;</li>
+      <li>如果备份太多，MetaServer会根据负载选一个删除。</li>
+    </ul>
+  </li>
+  <li>
+    <p>balancer: 分片如果在ReplicaServer上分布不均衡，该怎么调节</p>
+
+    <p>当前Pegasus在做ReplicaServer的均衡时，考虑的因素包括：</p>
+    <ul>
+      <li>每个ReplicaServer的各个磁盘上的Replica的个数</li>
+      <li>Primary和Secondary分开考虑</li>
+      <li>各个表分开考虑</li>
+      <li>如果可以通过做Primary切换来调匀，则优先做Primary切换。</li>
+    </ul>
+  </li>
+</ol>
+
+<p>具体的balancer算法，我们会用专门的章节来进行介绍。</p>
+
+<h3 id="metaserver的高可用">MetaServer的高可用</h3>
+
+<p>为了保证MetaServer本身不会成为系统的单点，MetaServer依赖Zookeeper做了高可用。在具体的实现上，我们主要使用了Zookeeper节点的ephemeral和sequence特性来封装了一个分布式锁。该锁可以保证同一时刻只有一个MetaServer作为leader而提供服务；如果leader不可用，某个follower会收到通知而成为新的leader。</p>
+
+<p>为了保证MetaServer的leader和follower能拥有一致的集群元数据，元数据的持久化我们也是通过Zookeeper来完成的。</p>
+
+<p>我们使用了Zookeeper官方的c语言库来访问Zookeeper集群。因为其没有提供CMakeLists的构建方式，所以目前这部分代码是单独抽取了出来的。后面重构我们的构建过程后，应该可以把这个依赖去掉而直接用原生代码。</p>
+
+<h3 id="metaserver的bootstrap">MetaServer的bootstrap</h3>
+
+<p>当一个MetaServer的进程启动时，它会首先根据配置好的zookeeper服务的路径，来检测自己是否能够成为leader。如果是leader, 它会向zookeeper拉去当前集群的所有元数据，包括：</p>
+
+<ol>
+  <li>有哪些表，以及这些表的各种参数</li>
+  <li>每个表的各个Partition的组成情况，将所有Partition中涉及到的机器求并集，会顺便解析到一个机器列表</li>
+</ol>
+
+<p>当MetaServer获取了所有的这些信息后，会构建自己的内存数据结构。特别的，ReplicaServer的集合初始化为2中得到的机器列表。</p>
+
+<p>随后，MetaServer开启FD的模块和负载均衡的模块，MetaServer就启动完成了。</p>
+
+</div>
+
+<div class="tags">
+    
+</div>
+
+                </div>
+                
+                <div class="column is-one-fourth is-hidden-mobile" style="padding-left: 3rem">
+                    
+                    <p class="menu-label">
+                        <span class="icon">
+                            <i class="fa fa-bars" aria-hidden="true"></i>
+                        </span>
+                        本页导航
+                    </p>
+                    <ul class="menu-list">
+  <li><a href="#table的管理">Table的管理</a></li>
+  <li><a href="#replicagroup的管理">ReplicaGroup的管理</a></li>
+  <li><a href="#replicaserver的管理">ReplicaServer的管理</a></li>
+  <li><a href="#集群的负载均衡">集群的负载均衡</a></li>
+  <li><a href="#metaserver的高可用">MetaServer的高可用</a></li>
+  <li><a href="#metaserver的bootstrap">MetaServer的bootstrap</a></li>
+</ul>
+
+                    
+                </div>
+            </div>
+        </div>
+    </section>
+    <footer class="footer">
+    <div class="container">
+        
+        <div class="content is-small has-text-centered">
+            <p>Copyright (c) 2020, Xiaomi, Inc.  All rights reserved.</p>
+            <p>
+                我们是小米公司云平台部门的存储团队，团队的职责是开发和维护分布式存储系统，为整个小米公司及生态链企业提供分布式存储解决方案。
+            </p>
+        </div>
+    </div>
+</footer>
+    <script src="/assets/js/app.js" type="text/javascript"></script>
+  </body>
+</html>

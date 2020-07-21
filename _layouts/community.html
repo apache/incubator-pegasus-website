@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html>
+{% include head.html %}
+
+<body>
+    {% include header.html %}
+    <section class="hero is-large is-dark"
+        style="background: url('{{ site.baseurl }}/assets/images/nasa-53884-unsplash.jpg') no-repeat center center; background-size: cover;">
+        <div class="hero-body">
+            <div class="container has-text-centered">
+                <p class="title is-1" style="padding-bottom: 2rem;">
+                    {{ page.title }}
+                </p>
+                <p class="subtitle is-4" style="padding-bottom: 1rem;">{{ page.subtitle }}</p>
+            </div>
+        </div>
+    </section>
+    <section class="section">
+        <div class="container">
+            <div class="columns is-multiline">
+                <div class="column is-one-fourth">
+                </div>
+                <div class="column is-half content">
+                    {{ content }}
+                </div>
+                <div class="column is-one-fourth is-hidden-mobile" style="padding-left: 3rem">
+                    {% if page.toc %}
+                    <p class="menu-label">本页导航</p>
+                    {% include toc.html html=content class="menu-list" %}
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </section>
+    {% include footer.html %}
+    <script src="{{ site.baseurl }}/assets/js/app.js" type="text/javascript"></script>
+</body>
+
+</html>

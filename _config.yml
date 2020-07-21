@@ -1,0 +1,71 @@
+title: Pegasus
+
+collections:
+  overview:
+    output: true
+    layout: page
+    permalink: /:collection/:path
+  clients:
+    output: true
+    layout: page
+    permalink: /:collection/:path
+  api:
+    output: true
+    layout: page
+    permalink: /:collection/:path
+  administration:
+    output: true
+    layout: page
+    permalink: /:collection/:path
+  blogs:
+    output: true
+    permalink: /:collection/:path
+  community:
+    output: true
+    permalink: /:collection/:path
+  releases:
+    output: true
+    permalink: /:collection/:path
+
+plugins:
+  - jekyll-sitemap
+  - jekyll-paginate
+  - jekyll-feed
+  - jekyll-seo-tag
+  - kramdown
+  - rouge
+
+defaults:
+  - # docs
+    scope:
+      path: ""
+    values:
+      show_sidebar: false
+      toc: true
+      front: false
+  - scope:
+      path: ""
+      type: posts
+    values:
+      show_sidebar: false
+      toc: true
+      front: false
+      layout: post
+      header_style: is-info
+      hero_style: is-info
+  - scope:
+      path: ""
+      type: community
+    values:
+      show_sidebar: false
+      toc: true
+      front: false
+      layout: post
+      hero_style: is-white is-centered
+      header_style: is-black
+
+algolia:
+  application_id: 50E27EHNIK
+  index_name: pegasus-kv
+  search_only_api_key: 384e9a24e20ffe7cd7ffa708ceb08253
+  powered_by: true

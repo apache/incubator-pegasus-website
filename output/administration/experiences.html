@@ -1,0 +1,504 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Pegasus | 运维经验</title>
+    <link rel="stylesheet" href="/assets/css/app.css">
+    <link rel="shortcut icon" href="/assets/images/favicon.ico">
+    <script src="https://cdn.bootcdn.net/ajax/libs/font-awesome/5.13.0/js/all.min.js"></script>
+    <!-- Begin Jekyll SEO tag v2.6.1 -->
+<title>运维经验 | Pegasus</title>
+<meta name="generator" content="Jekyll v4.1.1" />
+<meta property="og:title" content="运维经验" />
+<meta property="og:locale" content="en_US" />
+<meta name="description" content="任何一个分布式系统的运维工作都少不了周期巡检，问题排查，故障报警，人工审核。它们是保证服务稳定运行的关键。 这里整理Pegasus的监控指标，你可以根据需要接入到你的运维工具中。" />
+<meta property="og:description" content="任何一个分布式系统的运维工作都少不了周期巡检，问题排查，故障报警，人工审核。它们是保证服务稳定运行的关键。 这里整理Pegasus的监控指标，你可以根据需要接入到你的运维工具中。" />
+<meta property="og:site_name" content="Pegasus" />
+<meta property="og:type" content="article" />
+<meta property="article:published_time" content="2020-07-21T10:42:09+00:00" />
+<script type="application/ld+json">
+{"url":"/administration/experiences","@type":"BlogPosting","headline":"运维经验","dateModified":"2020-07-21T10:42:09+00:00","datePublished":"2020-07-21T10:42:09+00:00","mainEntityOfPage":{"@type":"WebPage","@id":"/administration/experiences"},"description":"任何一个分布式系统的运维工作都少不了周期巡检，问题排查，故障报警，人工审核。它们是保证服务稳定运行的关键。 这里整理Pegasus的监控指标，你可以根据需要接入到你的运维工具中。","@context":"https://schema.org"}</script>
+<!-- End Jekyll SEO tag -->
+</head>
+
+  <body>
+    <nav class="navbar  is-primary ">
+    <div class="container">
+        <div class="navbar-brand">
+            <a href="/" class="navbar-item ">
+                <!-- Pegasus -->
+                <img src="/assets/images/pegasus-icon.png">
+            </a>
+            <a role="button" class="navbar-burger burger" aria-label="menu" aria-expanded="false" data-target="navMenu">
+                <span aria-hidden="true"></span>
+                <span aria-hidden="true"></span>
+                <span aria-hidden="true"></span>
+            </a>
+        </div>
+        <div class="navbar-menu" id="navMenu">
+            <div class="navbar-start">
+                
+                
+                
+                <div class="navbar-item has-dropdown is-hoverable">
+                    <a href="/overview"
+                        class="navbar-link ">
+                        
+                        <span class="icon" style="margin-right: .25em">
+                            <i class="fas fa-book"></i>
+                        </span>
+                        
+                        <span>Documentation</span>
+                    </a>
+                    <div class="navbar-dropdown">
+                        
+                        <a href="/overview"
+                            class="navbar-item ">概览</a>
+                        
+                        <a href="/clients"
+                            class="navbar-item ">客户端库</a>
+                        
+                        <a href="/api"
+                            class="navbar-item ">用户接口</a>
+                        
+                        <a href="/administration"
+                            class="navbar-item ">高效运维</a>
+                        
+                    </div>
+                </div>
+                
+                
+                
+                <a href="/blogs"
+                    class="navbar-item ">
+                    
+                    <span class="icon" style="margin-right: .25em">
+                        <i class="fas fa-rss"></i>
+                    </span>
+                    
+                    <span>Blog</span>
+                </a>
+                
+                
+                
+                <div class="navbar-item has-dropdown is-hoverable">
+                    <a href="/community"
+                        class="navbar-link ">
+                        
+                        <span class="icon" style="margin-right: .25em">
+                            <i class="fas fa-user-plus"></i>
+                        </span>
+                        
+                        <span>Community</span>
+                    </a>
+                    <div class="navbar-dropdown">
+                        
+                        <a href="/community/#联系我们"
+                            class="navbar-item ">联系我们</a>
+                        
+                        <a href="/community/#参与贡献"
+                            class="navbar-item ">参与贡献</a>
+                        
+                        <a href="/community/coding-guides"
+                            class="navbar-item ">Coding Guides</a>
+                        
+                        <a href="/community/roadmap"
+                            class="navbar-item ">Roadmap</a>
+                        
+                        <a href="https://github.com/XiaoMi/pegasus/labels/type%2Fbug"
+                            class="navbar-item ">Bug Tracking</a>
+                        
+                        <a href="/community/proposal"
+                            class="navbar-item ">Apache Proposal</a>
+                        
+                    </div>
+                </div>
+                
+                
+                
+                <a href="https://github.com/XiaoMi/pegasus"
+                    class="navbar-item ">
+                    
+                    <span class="icon" style="margin-right: .25em">
+                        <i class="fab fa-github-alt"></i>
+                    </span>
+                    
+                    <span>Github</span>
+                </a>
+                
+                
+                
+                <a href="/releases"
+                    class="navbar-item ">
+                    
+                    <span class="icon" style="margin-right: .25em">
+                        <i class="fas fa-fire"></i>
+                    </span>
+                    
+                    <span>Releases</span>
+                </a>
+                
+                
+                
+            </div>
+            <div class="navbar-end is-hidden-mobile">
+                <div class="navbar-item navbar-searchbox">
+                    <div class="field">
+                        <div class="control has-icons-right">
+                            <input class="input searchbox-input" type="text" placeholder="Search the docs">
+                            <span class="border"></span>
+                            <span class="icon is-right searchbox-icon">
+                                <i class="fas fa-search"></i>
+                            </span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</nav>
+
+<script src="https://cdn.bootcss.com/jquery/3.4.1/jquery.min.js"></script>
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/docsearch.js@2/dist/cdn/docsearch.min.css" />
+<script src="https://cdn.jsdelivr.net/npm/docsearch.js@2/dist/cdn/docsearch.min.js"></script>
+
+<script>
+    docsearch({
+        appId: '50E27EHNIK',
+        indexName: 'pegasus-kv',
+        apiKey: '384e9a24e20ffe7cd7ffa708ceb08253',
+        inputSelector: '.searchbox-input',
+        debug: false,
+    });
+
+    $('.searchbox-input').focus(function () {
+        $('.navbar-searchbox .border').animate({ left: '0', width: '100%' })
+        $('.searchbox-icon').css({ color: 'white' })
+    })
+    $('.searchbox-input').focusout(function () {
+        $('.navbar-searchbox .border').animate({ left: '0', width: '0' })
+        $('.searchbox-icon').css({ color: 'hsl(0, 0%, 86%)' })
+    })
+</script>
+    <section  class="hero is-bold is-primary"
+     >
+    <div class="hero-body" style="padding-bottom: 6rem; padding-top: 6rem;">
+        <div class="container has-text-centered">
+            <p class="title is-2">运维经验</p>
+        </div>
+    </div>
+</section>
+    <section class="section">
+        <div class="container">
+            <div class="columns is-multiline">
+                <div class="column is-one-fourth">
+                    
+                    
+
+<aside class="menu">
+
+    <p class="menu-label"></p>
+    <ul class="menu-list">
+        
+        <li>
+            <a href="/administration" class="">高效运维</a>
+            
+        </li>
+        
+        <li>
+            <a href="/administration/deployment" class="">集群部署</a>
+            
+        </li>
+        
+        <li>
+            <a href="/administration/config" class="">配置说明</a>
+            
+        </li>
+        
+        <li>
+            <a href="/administration/rebalance" class="">负载均衡</a>
+            
+        </li>
+        
+        <li>
+            <a href="/administration/monitoring" class="">可视化监控</a>
+            
+        </li>
+        
+        <li>
+            <a href="/administration/rolling-update" class="">集群升级</a>
+            
+        </li>
+        
+        <li>
+            <a href="/administration/membership-change" class="">集群扩容缩容</a>
+            
+        </li>
+        
+        <li>
+            <a href="/administration/resource-management" class="">资源管理</a>
+            
+        </li>
+        
+        <li>
+            <a href="/administration/cold-backup" class="">冷备份</a>
+            
+        </li>
+        
+        <li>
+            <a href="/administration/meta-recovery" class="">元数据恢复</a>
+            
+        </li>
+        
+        <li>
+            <a href="/administration/replica-recovery" class="">Replica数据恢复</a>
+            
+        </li>
+        
+        <li>
+            <a href="/administration/zk-migration" class="">Zookeeper迁移</a>
+            
+        </li>
+        
+        <li>
+            <a href="/administration/table-migration" class="">Table迁移</a>
+            
+        </li>
+        
+        <li>
+            <a href="/administration/table-soft-delete" class="">Table软删除</a>
+            
+        </li>
+        
+        <li>
+            <a href="/administration/table-env" class="">Table环境变量</a>
+            
+        </li>
+        
+        <li>
+            <a href="/administration/remote-commands" class="">远程命令</a>
+            
+        </li>
+        
+        <li>
+            <a href="/administration/partition-split" class="">Partition-Split</a>
+            
+        </li>
+        
+        <li>
+            <a href="/administration/duplication" class="">跨机房同步</a>
+            
+        </li>
+        
+        <li>
+            <a href="/administration/compression" class="">数据压缩</a>
+            
+        </li>
+        
+        <li>
+            <a href="/administration/throttling" class="">流量控制</a>
+            
+        </li>
+        
+        <li>
+            <a href="/administration/experiences" class="is-active">运维经验</a>
+            
+        </li>
+        
+        <li>
+            <a href="/administration/manual-compact" class="">Manual Compact功能</a>
+            
+        </li>
+        
+        <li>
+            <a href="/administration/usage-scenario" class="">Usage Scenario功能</a>
+            
+        </li>
+        
+        <li>
+            <a href="/administration/bad-disk" class="">坏盘检修</a>
+            
+        </li>
+        
+        <li>
+            <a href="/administration/whitelist" class="">白名单</a>
+            
+        </li>
+        
+        <li>
+            <a href="/administration/backup-request" class="">Backup Request</a>
+            
+        </li>
+            
+    </ul>
+
+</aside>
+
+                    
+                </div>
+                <div class="column is-half">
+                    
+                    <div class="content">
+    <p>任何一个分布式系统的运维工作都少不了周期巡检，问题排查，故障报警，人工审核。它们是保证服务稳定运行的关键。
+这里整理Pegasus的监控指标，你可以根据需要接入到你的运维工具中。</p>
+
+<h2 id="周期巡检">周期巡检</h2>
+
+<ul>
+  <li>
+    <p><strong>可用度</strong>：正常时可用度会保持在100%，发生节点故障等异常偶尔会有可用度低于100%的情况</p>
+  </li>
+  <li>
+    <p><strong>总QPS</strong>：异常流量的突增或者突降有时会导致服务抖动</p>
+  </li>
+  <li>
+    <p><strong>读写延迟</strong>：P99读延迟和P99写延迟可能有异常毛刺的情况，对用户会造成影响</p>
+  </li>
+  <li>
+    <p><strong>内存使用</strong>：关注内存使用是否正常，譬如memory是否出现暴涨、是否达到了警戒线</p>
+  </li>
+  <li>
+    <p><strong>存储使用</strong>：关注磁盘存储使用是否正常，预估存储是否够用</p>
+  </li>
+</ul>
+
+<h2 id="问题排查">问题排查</h2>
+
+<ul>
+  <li>集群基础信息是否正常：<code class="language-plaintext highlighter-rouge">cluster_info</code>
+    <ul>
+      <li>meta_servers列表是否正确</li>
+      <li>primary_meta_server是否为第一个（因为推荐使用第一个，第二个节点上可能部署有数据节点）</li>
+      <li>meta_function_level是否是steady状态</li>
+    </ul>
+  </li>
+  <li>各Table、各Partition是否健康：<code class="language-plaintext highlighter-rouge">ls -d</code>
+    <ul>
+      <li>Table数量是否正常</li>
+      <li>所有Table的unhealthy_num（没有达到一主一备的partition数量）和partly_healthy_num（没有达到一主两备的partition数量）是否都为0</li>
+    </ul>
+  </li>
+  <li>各节点是否健康：<code class="language-plaintext highlighter-rouge">nodes -d</code>
+    <ul>
+      <li>所有节点是否都是ALIVE状态</li>
+      <li>数据分布是否倾斜严重，如果倾斜严重，可以选择集群流量比较小的时间段将meta_function_level设置为lively进行负载均衡调整，并在调整完成后设置回steady状态</li>
+      <li>注意：负载均衡只有在必要的时候才进行，前提是不要影响服务稳定性，因此不要频繁操作；在调整过程中要全程监控集群状态</li>
+    </ul>
+  </li>
+  <li>各节点的基本信息是否正常：<code class="language-plaintext highlighter-rouge">server_info</code>
+    <ul>
+      <li>Server版本是否正确</li>
+      <li>通过Start Time判断是否发生过重启</li>
+    </ul>
+  </li>
+  <li>各节点的实时统计信息是否正常：<code class="language-plaintext highlighter-rouge">server_stat</code>
+    <ul>
+      <li>读写QPS、读写延迟</li>
+      <li>SharedLog大小</li>
+      <li>内存使用量</li>
+    </ul>
+  </li>
+  <li>各Table的实时统计信息是否正常：<code class="language-plaintext highlighter-rouge">app_stat</code>
+    <ul>
+      <li>各操作的QPS情况是否正常</li>
+      <li>各Table的存储用量是否正常</li>
+    </ul>
+  </li>
+  <li>检查机器的socket连接数：
+    <ul>
+      <li>到MetaServer所在机器上使用netstat命令检查连接数：</li>
+    </ul>
+
+    <div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>netstat <span class="nt">-na</span> | <span class="nb">grep</span> <span class="s1">'601\&gt;'</span> | <span class="nb">grep </span>ESTABLISHED | <span class="nb">wc</span> <span class="nt">-l</span>
+</code></pre></div>    </div>
+
+    <ul>
+      <li>检查与该机器建立连接的远程节点，按照连接数排序：</li>
+    </ul>
+
+    <div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>netstat <span class="nt">-na</span> | <span class="nb">grep</span> <span class="s1">'601\&gt;'</span> | <span class="nb">grep </span>ESTABLISHE | <span class="nb">awk</span> <span class="s1">'{print $5}'</span> | <span class="nb">sed</span> <span class="s1">'s/:.*//'</span> | <span class="nb">sort</span> | <span class="nb">uniq</span> <span class="nt">-c</span> | <span class="nb">sort</span> <span class="nt">-k1</span> <span class="nt">-n</span> <span class="nt">-r</span> | <span class="nb">head</span>
+</code></pre></div>    </div>
+
+    <ul>
+      <li>如果连接数太多（譬如单节点连接数超过100），就需要进一步分析原因。</li>
+    </ul>
+  </li>
+</ul>
+
+<p>常见故障处理办法：</p>
+
+<ul>
+  <li>如果节点挂掉重启，需要登录到对应机器上，检查原因：
+    <ul>
+      <li>通过server的日志</li>
+      <li>通过core文件；如果没有core文件，需要检查ulimit配置是否正确，或者通过dmesg或者/var/log/messages查看是否因为OutOfMemory原因被系统杀死</li>
+    </ul>
+  </li>
+  <li>如果出故障机器较多，可以考虑将meta置为freezed状态，避免雪崩</li>
+  <li>进程不停重启，可以考虑停止进程</li>
+  <li>机器无法从relay连接，有可能是宕机了，快速联系系统运维人员</li>
+  <li>注意系统的参数：CPU情况、diskIO负载和latency、network负载和latency、socket个数</li>
+  <li>通过dmesg查看内核报错</li>
+</ul>
+
+<h2 id="需求审核">需求审核</h2>
+
+<p>Pegasus和多数数据库一样，以表的方式管理资源。
+每个表需要的资源量需要提前告知，这样我们才能为需求分配合适的计算存储资源。
+除此外，与业务深度交流，定制最合适的存储方案也有助于后期服务的稳定运行。</p>
+
+<p>有哪些重要的需求需要提前审核：</p>
+
+<ul>
+  <li>表名</li>
+  <li>读峰值（QPS）</li>
+  <li>读总量（条/天）</li>
+  <li>写峰值（QPS）</li>
+  <li>写总量（条/天）</li>
+  <li>单条数据平均大小（KB/条）</li>
+  <li>数据总量预估 （GB）</li>
+  <li>增长预估（6个月/1年/3年与目前相比倍数）</li>
+  <li>读延迟需求（毫秒/P99）</li>
+  <li>写延迟需求（毫秒/P99）</li>
+  <li>访问特征（如定时批量写入）</li>
+  <li>是否存在既有数据需导入/数据规模</li>
+</ul>
+
+</div>
+                </div>
+                
+                <div class="column is-one-fourth is-hidden-mobile" style="padding-left: 3rem">
+                    
+                    <p class="menu-label">
+                        <span class="icon">
+                            <i class="fa fa-bars" aria-hidden="true"></i>
+                        </span>
+                        本页导航
+                    </p>
+                    <ul class="menu-list">
+  <li><a href="#周期巡检">周期巡检</a></li>
+  <li><a href="#问题排查">问题排查</a></li>
+  <li><a href="#需求审核">需求审核</a></li>
+</ul>
+
+                    
+                </div>
+            </div>
+        </div>
+    </section>
+    <footer class="footer">
+    <div class="container">
+        
+        <div class="content is-small has-text-centered">
+            <p>Copyright (c) 2020, Xiaomi, Inc.  All rights reserved.</p>
+            <p>
+                我们是小米公司云平台部门的存储团队，团队的职责是开发和维护分布式存储系统，为整个小米公司及生态链企业提供分布式存储解决方案。
+            </p>
+        </div>
+    </div>
+</footer>
+    <script src="/assets/js/app.js" type="text/javascript"></script>
+  </body>
+</html>

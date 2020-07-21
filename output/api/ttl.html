@@ -1,0 +1,365 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Pegasus | TTL</title>
+    <link rel="stylesheet" href="/assets/css/app.css">
+    <link rel="shortcut icon" href="/assets/images/favicon.ico">
+    <script src="https://cdn.bootcdn.net/ajax/libs/font-awesome/5.13.0/js/all.min.js"></script>
+    <!-- Begin Jekyll SEO tag v2.6.1 -->
+<title>TTL | Pegasus</title>
+<meta name="generator" content="Jekyll v4.1.1" />
+<meta property="og:title" content="TTL" />
+<meta property="og:locale" content="en_US" />
+<meta name="description" content="原理 Pegasus支持TTL（Time-To-Live）功能，即在写入数据的时候，可以指定数据的过期时间。一旦过期，数据对用户就是不可见的，通过get/multiGet等查询接口获取不到数据，就跟数据没有写入一样。" />
+<meta property="og:description" content="原理 Pegasus支持TTL（Time-To-Live）功能，即在写入数据的时候，可以指定数据的过期时间。一旦过期，数据对用户就是不可见的，通过get/multiGet等查询接口获取不到数据，就跟数据没有写入一样。" />
+<meta property="og:site_name" content="Pegasus" />
+<meta property="og:type" content="article" />
+<meta property="article:published_time" content="2020-07-21T10:42:09+00:00" />
+<script type="application/ld+json">
+{"url":"/api/ttl","@type":"BlogPosting","headline":"TTL","dateModified":"2020-07-21T10:42:09+00:00","datePublished":"2020-07-21T10:42:09+00:00","mainEntityOfPage":{"@type":"WebPage","@id":"/api/ttl"},"description":"原理 Pegasus支持TTL（Time-To-Live）功能，即在写入数据的时候，可以指定数据的过期时间。一旦过期，数据对用户就是不可见的，通过get/multiGet等查询接口获取不到数据，就跟数据没有写入一样。","@context":"https://schema.org"}</script>
+<!-- End Jekyll SEO tag -->
+</head>
+
+  <body>
+    <nav class="navbar  is-primary ">
+    <div class="container">
+        <div class="navbar-brand">
+            <a href="/" class="navbar-item ">
+                <!-- Pegasus -->
+                <img src="/assets/images/pegasus-icon.png">
+            </a>
+            <a role="button" class="navbar-burger burger" aria-label="menu" aria-expanded="false" data-target="navMenu">
+                <span aria-hidden="true"></span>
+                <span aria-hidden="true"></span>
+                <span aria-hidden="true"></span>
+            </a>
+        </div>
+        <div class="navbar-menu" id="navMenu">
+            <div class="navbar-start">
+                
+                
+                
+                <div class="navbar-item has-dropdown is-hoverable">
+                    <a href="/overview"
+                        class="navbar-link ">
+                        
+                        <span class="icon" style="margin-right: .25em">
+                            <i class="fas fa-book"></i>
+                        </span>
+                        
+                        <span>Documentation</span>
+                    </a>
+                    <div class="navbar-dropdown">
+                        
+                        <a href="/overview"
+                            class="navbar-item ">概览</a>
+                        
+                        <a href="/clients"
+                            class="navbar-item ">客户端库</a>
+                        
+                        <a href="/api"
+                            class="navbar-item ">用户接口</a>
+                        
+                        <a href="/administration"
+                            class="navbar-item ">高效运维</a>
+                        
+                    </div>
+                </div>
+                
+                
+                
+                <a href="/blogs"
+                    class="navbar-item ">
+                    
+                    <span class="icon" style="margin-right: .25em">
+                        <i class="fas fa-rss"></i>
+                    </span>
+                    
+                    <span>Blog</span>
+                </a>
+                
+                
+                
+                <div class="navbar-item has-dropdown is-hoverable">
+                    <a href="/community"
+                        class="navbar-link ">
+                        
+                        <span class="icon" style="margin-right: .25em">
+                            <i class="fas fa-user-plus"></i>
+                        </span>
+                        
+                        <span>Community</span>
+                    </a>
+                    <div class="navbar-dropdown">
+                        
+                        <a href="/community/#联系我们"
+                            class="navbar-item ">联系我们</a>
+                        
+                        <a href="/community/#参与贡献"
+                            class="navbar-item ">参与贡献</a>
+                        
+                        <a href="/community/coding-guides"
+                            class="navbar-item ">Coding Guides</a>
+                        
+                        <a href="/community/roadmap"
+                            class="navbar-item ">Roadmap</a>
+                        
+                        <a href="https://github.com/XiaoMi/pegasus/labels/type%2Fbug"
+                            class="navbar-item ">Bug Tracking</a>
+                        
+                        <a href="/community/proposal"
+                            class="navbar-item ">Apache Proposal</a>
+                        
+                    </div>
+                </div>
+                
+                
+                
+                <a href="https://github.com/XiaoMi/pegasus"
+                    class="navbar-item ">
+                    
+                    <span class="icon" style="margin-right: .25em">
+                        <i class="fab fa-github-alt"></i>
+                    </span>
+                    
+                    <span>Github</span>
+                </a>
+                
+                
+                
+                <a href="/releases"
+                    class="navbar-item ">
+                    
+                    <span class="icon" style="margin-right: .25em">
+                        <i class="fas fa-fire"></i>
+                    </span>
+                    
+                    <span>Releases</span>
+                </a>
+                
+                
+                
+            </div>
+            <div class="navbar-end is-hidden-mobile">
+                <div class="navbar-item navbar-searchbox">
+                    <div class="field">
+                        <div class="control has-icons-right">
+                            <input class="input searchbox-input" type="text" placeholder="Search the docs">
+                            <span class="border"></span>
+                            <span class="icon is-right searchbox-icon">
+                                <i class="fas fa-search"></i>
+                            </span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</nav>
+
+<script src="https://cdn.bootcss.com/jquery/3.4.1/jquery.min.js"></script>
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/docsearch.js@2/dist/cdn/docsearch.min.css" />
+<script src="https://cdn.jsdelivr.net/npm/docsearch.js@2/dist/cdn/docsearch.min.js"></script>
+
+<script>
+    docsearch({
+        appId: '50E27EHNIK',
+        indexName: 'pegasus-kv',
+        apiKey: '384e9a24e20ffe7cd7ffa708ceb08253',
+        inputSelector: '.searchbox-input',
+        debug: false,
+    });
+
+    $('.searchbox-input').focus(function () {
+        $('.navbar-searchbox .border').animate({ left: '0', width: '100%' })
+        $('.searchbox-icon').css({ color: 'white' })
+    })
+    $('.searchbox-input').focusout(function () {
+        $('.navbar-searchbox .border').animate({ left: '0', width: '0' })
+        $('.searchbox-icon').css({ color: 'hsl(0, 0%, 86%)' })
+    })
+</script>
+    <section  class="hero is-bold is-primary"
+     >
+    <div class="hero-body" style="padding-bottom: 6rem; padding-top: 6rem;">
+        <div class="container has-text-centered">
+            <p class="title is-2">TTL</p>
+        </div>
+    </div>
+</section>
+    <section class="section">
+        <div class="container">
+            <div class="columns is-multiline">
+                <div class="column is-one-fourth">
+                    
+                    
+
+<aside class="menu">
+
+    <p class="menu-label"></p>
+    <ul class="menu-list">
+        
+        <li>
+            <a href="/api" class="">API文档</a>
+            
+        </li>
+        
+        <li>
+            <a href="/api/ttl" class="is-active">TTL</a>
+            
+        </li>
+        
+        <li>
+            <a href="/api/single-atomic" class="">单行原子操作</a>
+            
+        </li>
+        
+        <li>
+            <a href="/api/redis" class="">Redis适配</a>
+            
+        </li>
+        
+        <li>
+            <a href="/api/geo" class="">GEO支持</a>
+            
+        </li>
+        
+        <li>
+            <a href="/api/http" class="">HTTP接口</a>
+            
+        </li>
+            
+    </ul>
+
+</aside>
+
+                    
+                </div>
+                <div class="column is-half">
+                    
+                    <div class="content">
+    <h1 id="原理">原理</h1>
+<p>Pegasus支持TTL（Time-To-Live）功能，即在写入数据的时候，可以指定数据的过期时间。一旦过期，数据对用户就是不可见的，通过get/multiGet等查询接口获取不到数据，就跟数据没有写入一样。</p>
+
+<p>设置的时候，用户通常都是提供<code class="language-plaintext highlighter-rouge">ttl_seconds</code>参数，表示从当前时间开始计算，多少秒之后为过期时间。如果为0，表示不设置TTL，即数据用不过期。</p>
+
+<p>用户通常有疑问，数据过期后对用户不可见是怎么做到的呢？数据会被立即删除吗？实际上不是这样的，这要从TTL的实现原理说起。</p>
+
+<p>Pegasus的TTL是通过在RocksDB中存储数据时记录数据的过期时间，然后在查询时对过期时间进行检查和过滤来实现的。如下图：</p>
+
+<p><img src="/assets/images/pegasus-ttl.png" alt="pegasus-ttl.png" class="img-responsive" /></p>
+
+<p><strong>写入过程：</strong></p>
+<ul>
+  <li>在写入数据时，用户在客户端通过<code class="language-plaintext highlighter-rouge">ttl_seconds</code>参数设置TTL时间，客户端先计算数据的过期时间<code class="language-plaintext highlighter-rouge">ExpireTime = CurrentTime + ttl_seconds</code>，然后通过RPC将数据和ExpireTime一起传给ReplicaServer端执行。</li>
+  <li>ReplicaServer收到写请求后，经过各种处理（包括写日志、replication复制等），最后将数据存储到RocksDB中。在存储value的时候，会将ExpireTime放在value头部固定的4个字节中。</li>
+</ul>
+
+<p><strong>读取过程：</strong></p>
+<ul>
+  <li>用户通过客户端查询指定key对应的value数据。</li>
+  <li>ReplicaServer收到读请求后，先从RocksDB获取到key对应的value，然后从value头部提取出ExpireTime：
+    <ul>
+      <li>如果ExpireTime == 0，表示数据没有设置TTL，是有效的。</li>
+      <li>如果ExpireTime &gt; 0，表示数据设置了TTL，则将ExpireTime与当前时间进行对比：如果没有过期，则数据是有效的；如果已经过期，则数据是无效的，返回NotFound。</li>
+    </ul>
+  </li>
+</ul>
+
+<p><strong>数据删除：</strong></p>
+<ul>
+  <li>数据过期后，并不能立即从RocksDB中消失，而是通过compaction来进行删除的。我们定制了RocksDB的CompactionFilter，使其在compaction过程中检查数据value头部的ExpireTime，如果已经过期，则数据会被扔掉，不会出现在新生成的文件中。</li>
+  <li>因为删除过程是异步的，与compaction的执行时机和频率有关，所以数据过期与数据删除通常不是同时发生的，唯一能保证的是数据删除肯定发生在数据过期之后。未删除的过期数据会占据磁盘空间，这点是需要考虑到的。</li>
+</ul>
+
+<h1 id="接口">接口</h1>
+<p>我们在客户端和Shell工具都提供了设置和查询TTL的接口。</p>
+
+<p>Pegasus Java Client中以下接口可以查询和设置TTL：</p>
+<ul>
+  <li><a href="/clients/java-client#ttl">ttl</a>：获取指定数据的TTL信息。</li>
+  <li><a href="/clients/java-client#set">set</a>和<a href="/clients/java-client#batchset">batchSet</a>：都提供了设置TTL的参数，其中batchSet是在SetItem中设置的。</li>
+  <li><a href="/clients/java-client#multiset">multiSet</a>和<a href="/clients/java-client#batchmultiset">batchMultiSet</a>：都提供了设置TTL的参数。</li>
+  <li><a href="/clients/java-client#batchmultiset">incr</a>：从<a href="https://github.com/XiaoMi/pegasus/releases/tag/v1.11.1">v1.11.1版本</a>开始，incr接口也提供了修改TTL的功能。</li>
+  <li><a href="/clients/java-client#checkandset">checkAndSet</a>：在CheckAndSetOptions中提供了设置TTL的参数。</li>
+</ul>
+
+<p>Shell工具中以下命令可以查询和设置TTL：</p>
+<ul>
+  <li><a href="/overview/shell#ttl">ttl</a>命令：获取指定数据的TTL信息。</li>
+  <li><a href="/overview/shell#set">set</a>和<a href="/overview/shell#multi_set">multi_set</a>命令：都提供了设置TTL的参数。</li>
+</ul>
+
+<h1 id="表级ttl">表级TTL</h1>
+<p>从<a href="https://github.com/XiaoMi/pegasus/releases/tag/v1.11.2">v1.11.2版本</a>开始，Pegasus支持表级TTL功能。</p>
+
+<p>实现原理：</p>
+<ul>
+  <li>用户在<a href="/administration/table-env">Table环境变量</a>中设置<code class="language-plaintext highlighter-rouge">default_ttl</code>环境变量。</li>
+  <li>MetaServer将环境变量异步地通知到各个ReplicaServer，使该表的每个replica都获取到该环境变量，这个过程大约有几秒到几十秒不等的延迟，但是不会超过一分钟。</li>
+  <li>replica获得环境变量后，解析获得default_ttl配置，并立即开始生效。生效之后：
+    <ul>
+      <li>用户新写入的数据，如果TTL=0（使用默认TTL=0或者显式设置TTL=0），则将数据的实际TTL设置为default_ttl。</li>
+      <li>RocksDB在进行compaction的时候，如果compact输入文件的原数据没有TTL，则将compact输出文件的新数据的TTL设置为default_ttl。这个过程依赖于compaction的触发时机，所以时间点是不确定的。</li>
+      <li>如果执行<a href="/administration/manual-compact">Manual Compact</a>，那么所有文件都会经过compaction处理，原来没有TTL的数据都会设置TTL为default_ttl。</li>
+    </ul>
+  </li>
+</ul>
+
+<p>考虑这样的场景：业务方在初期写入数据时没有设置TTL，后来改变需求，希望所有数据都加TTL，并且以前没有设置TTL的数据从现在开始计算TTL，那么就可以通过<code class="language-plaintext highlighter-rouge">表级TTL</code>加上<code class="language-plaintext highlighter-rouge">Manual Compact</code>的功能实现这个目的。</p>
+
+<h1 id="通过ttl计算数据写入时间">通过TTL计算数据写入时间</h1>
+<p>如果数据写入时设置了TTL，就可以通过TTL计算出数据写入时间。依据的公式是：</p>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>TTLExpireTime = InsertTime + TTLSeconds = now + TTLRemainingSeconds
+
+  ==&gt;
+
+InsertTime = now + TTLRemainingSeconds - TTLSeconds
+</code></pre></div></div>
+<p>其中：</p>
+<ul>
+  <li>TTLRemainingSeconds：通过<a href="/overview/shell#ttl">Shell的ttl命令</a>获取。</li>
+  <li>now：执行Shell ttl命令的时间。</li>
+  <li>TTLSeconds：用户知道数据写入时设置的TTL。</li>
+</ul>
+
+</div>
+                </div>
+                
+                <div class="column is-one-fourth is-hidden-mobile" style="padding-left: 3rem">
+                    
+                    <p class="menu-label">
+                        <span class="icon">
+                            <i class="fa fa-bars" aria-hidden="true"></i>
+                        </span>
+                        本页导航
+                    </p>
+                    <ul class="menu-list">
+  <li><a href="#原理">原理</a></li>
+  <li><a href="#接口">接口</a></li>
+  <li><a href="#表级ttl">表级TTL</a></li>
+  <li><a href="#通过ttl计算数据写入时间">通过TTL计算数据写入时间</a></li>
+</ul>
+
+                    
+                </div>
+            </div>
+        </div>
+    </section>
+    <footer class="footer">
+    <div class="container">
+        
+        <div class="content is-small has-text-centered">
+            <p>Copyright (c) 2020, Xiaomi, Inc.  All rights reserved.</p>
+            <p>
+                我们是小米公司云平台部门的存储团队，团队的职责是开发和维护分布式存储系统，为整个小米公司及生态链企业提供分布式存储解决方案。
+            </p>
+        </div>
+    </div>
+</footer>
+    <script src="/assets/js/app.js" type="text/javascript"></script>
+  </body>
+</html>
