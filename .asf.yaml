@@ -18,7 +18,6 @@
 github:
   description: "Apache Pegasus Website"
   homepage: https://pegasus.apache.org/
-  ghp_branch:  gh-pages
   features:
     issues: false
     projects: false
@@ -33,4 +32,8 @@ github:
     rebase:  false
 
 publish:
-  whoami: gh-pages
+  whoami: asf-site
+
+jekyll:
+  whoami: master
+  target: asf-site
