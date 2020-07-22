@@ -23,9 +23,7 @@ github:
     projects: false
     wiki: false
   labels:
-    - distributed-database
-    - key-value-store
-    - c-plus-plus
+    - pegasus
   enabled_merge_buttons:
     squash:  true
     merge:   false
