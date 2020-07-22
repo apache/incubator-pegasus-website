@@ -16,9 +16,9 @@
 <meta property="og:description" content="安装NodeJs客户端 项目地址：Pegasus NodeJS Client 下载并将客户端依赖添加到package.json中： npm install pegasus-nodejs-client --save 创建/关闭客户端 create let pegasusClient = require(&#39;pegasus-nodejs-client&#39;); /** * Create a client instance * @param {Object} configs * {Array} configs.metaServers required * {String} configs.metaServers[i] required * {Number} configs.operationTimeout(ms) optional * {Object} configs.log optional * @return {Client} client instance * @throws {InvalidParamException} */ client = pegasusClient.create({ metaServers: [&#39;127.0.0.1:34601&#39;, &#39;127.0.0.1:34602&#39;, &#39;127.0.0.1:34603&#39;], operationTimeout : 5000, log : log, }); metaServers为meta server地址列表，为必填项 operationTimeout为本次操作的超时时间，单位是毫秒，默认是1000ms log为日志库实例 我们使用日志库 log4js 默认使用的日志配置在log_config.js文件中，配置如下： let filename = &quot;./logs/&quot;+process.pid+&quot;/pegasus-nodejs-client.log&quot;; let logConfig = { appenders: { pegasus: { type: &quot;file&quot;, filename: filename, maxLogSize: 104857600, backups: 10 } }, categories: { default: { appenders: [&quot;pegasus&quot;], level: &quot;INFO&quot; } } }; 上述配置表示，会将错误级别等于及高于INFO级别的日志存储在文件中，每个日志文件最大100M，最多保留10个日志文件 若不想使用默认配置，则需要重新定义如上的logConfig对象，作为创建客户端时的log对象 当参数有误时，会抛出异常，停止后续操作" />
 <meta property="og:site_name" content="Pegasus" />
 <meta property="og:type" content="article" />
-<meta property="article:published_time" content="2020-07-21T10:42:09+00:00" />
+<meta property="article:published_time" content="2020-07-22T10:22:38+00:00" />
 <script type="application/ld+json">
-{"url":"/clients/node-client","@type":"BlogPosting","headline":"NodeJs客户端文档","dateModified":"2020-07-21T10:42:09+00:00","datePublished":"2020-07-21T10:42:09+00:00","mainEntityOfPage":{"@type":"WebPage","@id":"/clients/node-client"},"description":"安装NodeJs客户端 项目地址：Pegasus NodeJS Client 下载并将客户端依赖添加到package.json中： npm install pegasus-nodejs-client --save 创建/关闭客户端 create let pegasusClient = require(&#39;pegasus-nodejs-client&#39;); /** * Create a client instance * @param {Object} configs * {Array} configs.metaServers required * {String} configs.metaServers[i] required * {Number} configs.operationTimeout(ms) optional * {Object} configs.log optional * @return {Client} client instance * @throws {InvalidParamException} */ client = pegasusClient.create({ metaServers: [&#39;127.0.0.1:34601&#39;, &#39;127.0.0.1:34602&#39;, &#39;127.0.0.1:34603&#39;], operationTimeout : 5000, log : log, }); metaServers为meta server地址列表，为必填项 operationTimeout为本次操作的超时时间，单位是毫秒，默认是1000ms log为日志库实例 我们使用日志库 log4js 默认使用的日志配置在log_config.js文件中，配置如下： let filename = &quot;./logs/&quot;+process.pid+&quot;/pegasus-nodejs-client.log&quot;; let logConfig = { appenders: { pegasus: { type: &quot;file&quot;, filename: filename, maxLogSize: 104857600, backups: 10 } }, categories: { default: { appenders: [&quot;pegasus&quot;], level: &quot;INFO&quot; } } }; 上述配置表示，会将错误级别等于及高于INFO级别的日志存储在文件中，每个日志文件最大100M，最多保留10个日志文件 若不想使用默认配置，则需要重新定义如上的logConfig对象，作为创建客户端时的log对象 当参数有误时，会抛出异常，停止后续操作","@context":"https://schema.org"}</script>
+{"url":"/clients/node-client","@type":"BlogPosting","headline":"NodeJs客户端文档","dateModified":"2020-07-22T10:22:38+00:00","datePublished":"2020-07-22T10:22:38+00:00","mainEntityOfPage":{"@type":"WebPage","@id":"/clients/node-client"},"description":"安装NodeJs客户端 项目地址：Pegasus NodeJS Client 下载并将客户端依赖添加到package.json中： npm install pegasus-nodejs-client --save 创建/关闭客户端 create let pegasusClient = require(&#39;pegasus-nodejs-client&#39;); /** * Create a client instance * @param {Object} configs * {Array} configs.metaServers required * {String} configs.metaServers[i] required * {Number} configs.operationTimeout(ms) optional * {Object} configs.log optional * @return {Client} client instance * @throws {InvalidParamException} */ client = pegasusClient.create({ metaServers: [&#39;127.0.0.1:34601&#39;, &#39;127.0.0.1:34602&#39;, &#39;127.0.0.1:34603&#39;], operationTimeout : 5000, log : log, }); metaServers为meta server地址列表，为必填项 operationTimeout为本次操作的超时时间，单位是毫秒，默认是1000ms log为日志库实例 我们使用日志库 log4js 默认使用的日志配置在log_config.js文件中，配置如下： let filename = &quot;./logs/&quot;+process.pid+&quot;/pegasus-nodejs-client.log&quot;; let logConfig = { appenders: { pegasus: { type: &quot;file&quot;, filename: filename, maxLogSize: 104857600, backups: 10 } }, categories: { default: { appenders: [&quot;pegasus&quot;], level: &quot;INFO&quot; } } }; 上述配置表示，会将错误级别等于及高于INFO级别的日志存储在文件中，每个日志文件最大100M，最多保留10个日志文件 若不想使用默认配置，则需要重新定义如上的logConfig对象，作为创建客户端时的log对象 当参数有误时，会抛出异常，停止后续操作","@context":"https://schema.org"}</script>
 <!-- End Jekyll SEO tag -->
 </head>
 
@@ -544,12 +544,23 @@ client.close();
     </section>
     <footer class="footer">
     <div class="container">
-        
         <div class="content is-small has-text-centered">
-            <p>Copyright (c) 2020, Xiaomi, Inc.  All rights reserved.</p>
-            <p>
-                我们是小米公司云平台部门的存储团队，团队的职责是开发和维护分布式存储系统，为整个小米公司及生态链企业提供分布式存储解决方案。
-            </p>
+            <div style="margin-bottom: 20px;">
+                <a href="http://incubator.apache.org"><img src="/assets/images/egg-logo.png"
+                                                           alt="Apache Incubator"/></a>
+            </div>
+            Copyright &copy; 2020 <a href="http://www.apache.org">The Apache Software Foundation</a>.
+            Licensed under the <a href="http://www.apache.org/licenses/LICENSE-2.0">Apache License, Version
+            2.0</a>.
+            <br><br>
+            
+            Apache Pegasus is an effort undergoing incubation at The Apache Software Foundation (ASF),
+            sponsored by the Apache Incubator. Incubation is required of all newly accepted projects
+            until a further review indicates that the infrastructure, communications, and decision making process
+            have stabilized in a manner consistent with other successful ASF projects. While incubation status is
+            not necessarily a reflection of the completeness or stability of the code, it does indicate that the
+            project has yet to be fully endorsed by the ASF.
+            
         </div>
     </div>
 </footer>
