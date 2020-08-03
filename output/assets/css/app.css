@@ -3332,6 +3332,8 @@ a.panel-block:hover, label.panel-block:hover { background-color: whitesmoke; }
 
 .project-title { font-family: 'Patua One', cursive; }
 
+.contributor-item-icon { margin-bottom: 1.5rem; }
+
 .highlighter-rouge div { margin-bottom: 1rem; border: 1px solid #188eac; }
 
 .highlight table td { padding: 5px; }
