@@ -15,20 +15,82 @@
             </div>
         </div>
     </section>
+    <section class="hero is-medium is-light" id="联系我们">
+        <div class="hero-body">
+            <div class="container has-text-centered">
+                <p class="title is-2 has-text-black">
+                    联系我们
+                </p>
+                <hr class="has-background-black" style="margin-bottom: 5rem;">
+                <div class="columns is-multiline is-centered">
+                    {% for item in page.contact_items %}
+                    <div class="column is-4 has-text-centered">
+                        {% if item.icon %}
+                        <div class="contributor-item-icon icon is-large">
+                            <i class="{{ item.icon }} fa-4x"></i>
+                        </div>
+                        {% endif %}
+                        <p class="title is-5 has-text-weight-light">{{ item.title }}</p>
+                        <div class="content">
+                            <p>{{ item.description | newline_to_br }}</p>
+                        </div>
+                    </div>
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+    </section>
+    <section class="hero is-medium" id="参与贡献">
+        <div class="hero-body">
+            <div class="container">
+                <p class="title is-2 has-text-black has-text-centered">
+                    参与贡献
+                </p>
+                <hr class="has-background-black" style="margin-bottom: 5rem;">
+                <div class="columns is-variable is-8">
+                    {% for item in page.contributor_items %}
+                    <div class="column is-4">
+                        <p class="title is-3 has-text-centered has-text-weight-light">{{ item.title }}</p>
+                        <hr>
+                        <div class="content">
+                            <p>{{ item.description | newline_to_br }}</p>
+                        </div>
+                    </div>
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+    </section>
     <section class="section">
-        <div class="container">
-            <div class="columns is-multiline">
-                <div class="column is-one-fourth">
-                </div>
-                <div class="column is-half content">
-                    {{ content }}
-                </div>
-                <div class="column is-one-fourth is-hidden-mobile" style="padding-left: 3rem">
-                    {% if page.toc %}
-                    <p class="menu-label">本页导航</p>
-                    {% include toc.html html=content class="menu-list" %}
-                    {% endif %}
-                </div>
+        <div class="container" style="padding-bottom: 3rem;">
+            <hr>
+            <div class="tabs is-toggle is-fullwidth is-large">
+                <ul>
+                    <li>
+                        <a href="/community/mail-subscribe">
+                            <span class="icon"><i class="fas fa-envelope-open" aria-hidden="true"></i></span>
+                            <span>邮件订阅</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="/community/coding-guides">
+                            <span class="icon"><i class="fas fa-location-arrow" aria-hidden="true"></i></span>
+                            <span>Coding Guides</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="/community/roadmap">
+                            <span class="icon"><i class="fas fa-map-marked-alt" aria-hidden="true"></i></span>
+                            <span>RoadMap</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="/overview">
+                            <span class="icon"><i class="far fa-file-alt" aria-hidden="true"></i></span>
+                            <span>文档</span>
+                        </a>
+                    </li>
+                </ul>
             </div>
         </div>
     </section>
