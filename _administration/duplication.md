@@ -211,9 +211,9 @@ set_dup_fail_mode <app_name> <dupid> <slow|skip>
     dup_lagging_write_threshold_ms = 10000
   ```
 
-- `replica*eon.replica_stub*dup.pending_mutations_count`：当前有多少写堆积在源集群，且尚未复制。如果一切正常，该监控项会稳定维持在某个的值上下。当某个环节出现故障时，往往会有大量的写堆积，该值会持续上涨。
+- `replica*eon.replica_stub*dup.pending_mutations_count`：当前有多少写堆积在源集群，且尚未复制。如果一切正常，该监控项会稳定维持在某个值上下。当热备份的某个环节出现故障时，往往会有大量的写堆积，该值会持续上涨。
 
-- `replica*eon.replica_stub*dup.load_file_failed_count`：源集群读取日志文件的失败次数。日志文件的读取是热备份的关键环节，如果该环节因某种原因出现故障，则会导致日志长时间无法被复制。
+- `replica*eon.replica_stub*dup.load_file_failed_count`：源集群读取日志文件的失败次数。日志文件的读取是热备份的关键环节，如果该环节因某种原因出现故障，则会导致热备份被阻塞。
 
 ## 热备份的元信息
 
