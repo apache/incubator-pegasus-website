@@ -1,4 +1,5 @@
 @import url(//fonts.googleapis.com/css?family=Patua+One);
+@import url(//fonts.googleapis.com/css?family=Ubuntu+Mono);
 /*! bulma.io v0.7.5 | MIT License | github.com/jgthms/bulma */
 @keyframes spinAround { from { transform: rotate(0deg); }
   to { transform: rotate(359deg); } }
@@ -3334,13 +3335,15 @@ a.panel-block:hover, label.panel-block:hover { background-color: whitesmoke; }
 
 .contributor-item-icon { margin-bottom: 1.5rem; }
 
-.highlighter-rouge div { margin-bottom: 1rem; border: 1px solid #188eac; }
+.highlighter-rouge div { margin-bottom: 1rem; border: 1px solid #188eac; line-height: 100%; }
 
 .highlight table td { padding: 5px; }
 
 .highlight table pre { margin: 0; }
 
 .highlighter-rouge pre { background-color: white; }
+
+code { font-family: 'Ubuntu Mono'; }
 
 code.highlighter-rouge { color: #363636; }
 
