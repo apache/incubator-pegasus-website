@@ -1,11 +1,15 @@
 .highlighter-rouge div {
   margin-bottom: 1rem;
   border: 1px solid $primary;
+  line-height: 100%;
 }
 .highlight table td { padding: 5px; }
 .highlight table pre { margin: 0; }
 .highlighter-rouge pre {
   background-color: white;
+}
+code {
+  font-family: 'Ubuntu Mono';
 }
 code.highlighter-rouge {
   color: $grey-darker;
