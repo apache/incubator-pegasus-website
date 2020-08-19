@@ -16,9 +16,9 @@
 <meta property="og:description" content="功能介绍" />
 <meta property="og:site_name" content="Pegasus" />
 <meta property="og:type" content="article" />
-<meta property="article:published_time" content="2020-08-18T11:42:17+00:00" />
+<meta property="article:published_time" content="2020-08-19T13:39:02+00:00" />
 <script type="application/ld+json">
-{"url":"/api/http","@type":"BlogPosting","headline":"HTTP接口","datePublished":"2020-08-18T11:42:17+00:00","dateModified":"2020-08-18T11:42:17+00:00","description":"功能介绍","mainEntityOfPage":{"@type":"WebPage","@id":"/api/http"},"@context":"https://schema.org"}</script>
+{"url":"/api/http","@type":"BlogPosting","headline":"HTTP接口","datePublished":"2020-08-19T13:39:02+00:00","dateModified":"2020-08-19T13:39:02+00:00","description":"功能介绍","mainEntityOfPage":{"@type":"WebPage","@id":"/api/http"},"@context":"https://schema.org"}</script>
 <!-- End Jekyll SEO tag -->
 </head>
 
@@ -607,6 +607,51 @@
 </span><span class="p">}</span><span class="w">
 </span></code></pre></div></div>
 
+<h3 id="metaappduplicationnameapp_name"><code class="language-plaintext highlighter-rouge">/meta/app/duplication?name=&lt;app_name&gt;</code></h3>
+
+<p><strong>功能：</strong> 查询某个表的热备份情况</p>
+
+<p><strong>添加自</strong>：版本 2.0.0</p>
+
+<p><strong>参数：</strong></p>
+
+<ul>
+  <li>name： 待查的表名</li>
+</ul>
+
+<p><strong>示例：</strong><code class="language-plaintext highlighter-rouge">http://0.0.0.0:34602/meta/app/duplication?name=temp</code></p>
+
+<p><strong>返回：</strong></p>
+
+<ul>
+  <li><code class="language-plaintext highlighter-rouge">create_ts</code>：热备份的创建时间</li>
+  <li><code class="language-plaintext highlighter-rouge">dupid</code>：热备份的ID</li>
+  <li><code class="language-plaintext highlighter-rouge">not_confirmed_mutations_num</code>：各个分片当前有多少数据写尚未复制到目的集群，并且进度被同步至MetaServer</li>
+  <li><code class="language-plaintext highlighter-rouge">remote</code>：热备份远端集群的名字</li>
+  <li><code class="language-plaintext highlighter-rouge">status</code>：当前热备份的状态</li>
+</ul>
+
+<div class="language-json highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="p">{</span><span class="w">
+    </span><span class="nl">"1"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+        </span><span class="nl">"create_ts"</span><span class="p">:</span><span class="w"> </span><span class="s2">"2020-03-09 18:13:50"</span><span class="p">,</span><span class="w">
+        </span><span class="nl">"dupid"</span><span class="p">:</span><span class="w"> </span><span class="mi">1583748830</span><span class="p">,</span><span class="w">
+        </span><span class="nl">"not_confirmed_mutations_num"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+            </span><span class="nl">"0"</span><span class="p">:</span><span class="w"> </span><span class="mi">4964</span><span class="p">,</span><span class="w">
+            </span><span class="nl">"1"</span><span class="p">:</span><span class="w"> </span><span class="mi">5144</span><span class="p">,</span><span class="w">
+            </span><span class="nl">"2"</span><span class="p">:</span><span class="w"> </span><span class="mi">5123</span><span class="p">,</span><span class="w">
+            </span><span class="nl">"3"</span><span class="p">:</span><span class="w"> </span><span class="mi">5148</span><span class="p">,</span><span class="w">
+            </span><span class="nl">"4"</span><span class="p">:</span><span class="w"> </span><span class="mi">5208</span><span class="p">,</span><span class="w">
+            </span><span class="nl">"5"</span><span class="p">:</span><span class="w"> </span><span class="mi">5289</span><span class="p">,</span><span class="w">
+            </span><span class="nl">"6"</span><span class="p">:</span><span class="w"> </span><span class="mi">5253</span><span class="p">,</span><span class="w">
+            </span><span class="nl">"7"</span><span class="p">:</span><span class="w"> </span><span class="mi">5148</span><span class="w">
+        </span><span class="p">},</span><span class="w">
+        </span><span class="nl">"remote"</span><span class="p">:</span><span class="w"> </span><span class="s2">"onebox2"</span><span class="p">,</span><span class="w">
+        </span><span class="nl">"status"</span><span class="p">:</span><span class="w"> </span><span class="s2">"DS_PAUSE"</span><span class="w">
+    </span><span class="p">},</span><span class="w">
+    </span><span class="nl">"appid"</span><span class="p">:</span><span class="w"> </span><span class="mi">2</span><span class="w">
+</span><span class="p">}</span><span class="w">
+</span></code></pre></div></div>
+
 <h3 id="perfcounternameperf_counter_name"><code class="language-plaintext highlighter-rouge">/perfCounter?name=&lt;perf_counter_name&gt;</code></h3>
 
 <p><strong>功能：</strong> 获取某个perf counter的详细信息。如果perf counter名字中含有特殊字符时，需要先对其进行uri编码。</p>
@@ -630,6 +675,56 @@
 </span></code></pre></div></div>
 
 <p><strong>NOTE:</strong> http中的字符<code class="language-plaintext highlighter-rouge">#</code>代表锚，是一种特殊字符，所以对于perf counter名字中包含’#’字符的需要转换成<code class="language-plaintext highlighter-rouge">%23</code></p>
+
+<h3 id="replicaduplicationappidappid"><code class="language-plaintext highlighter-rouge">/replica/duplication?appid=&lt;appid&gt;</code></h3>
+
+<p><strong>功能：</strong> 查询ReplicaServer上某个表各个分片的热备份情况。</p>
+
+<p><strong>添加自</strong>：版本 2.0.0</p>
+
+<p><strong>参数：</strong></p>
+
+<ul>
+  <li>appid： 待查的表的ID</li>
+</ul>
+
+<p><strong>示例：</strong><code class="language-plaintext highlighter-rouge">http://127.0.0.1:34801/replica/duplication?appid=2</code></p>
+
+<p><strong>返回：</strong></p>
+
+<ul>
+  <li><code class="language-plaintext highlighter-rouge">duplicating</code>：表示该分片是否正在运行热备份</li>
+  <li><code class="language-plaintext highlighter-rouge">not_confirmed_mutations_num</code>：当前有多少数据写尚未复制到目的集群，并且进度被同步至MetaServer</li>
+  <li><code class="language-plaintext highlighter-rouge">not_duplicated_mutations_num</code>：当前有多少数据写尚未复制到目的集群</li>
+</ul>
+
+<p><strong>NOTE:</strong>：<code class="language-plaintext highlighter-rouge">not_duplicated_mutations_num &gt;= not_confirmed_mutations_num</code></p>
+
+<div class="language-json highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="p">{</span><span class="w">
+    </span><span class="nl">"1583820008"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+        </span><span class="nl">"2.1"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+            </span><span class="nl">"duplicating"</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span><span class="w">
+            </span><span class="nl">"not_confirmed_mutations_num"</span><span class="p">:</span><span class="w"> </span><span class="mi">3</span><span class="p">,</span><span class="w">
+            </span><span class="nl">"not_duplicated_mutations_num"</span><span class="p">:</span><span class="w"> </span><span class="mi">3</span><span class="w">
+        </span><span class="p">},</span><span class="w">
+        </span><span class="nl">"2.3"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+            </span><span class="nl">"duplicating"</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span><span class="w">
+            </span><span class="nl">"not_confirmed_mutations_num"</span><span class="p">:</span><span class="w"> </span><span class="mi">2</span><span class="p">,</span><span class="w">
+            </span><span class="nl">"not_duplicated_mutations_num"</span><span class="p">:</span><span class="w"> </span><span class="mi">1</span><span class="w">
+        </span><span class="p">},</span><span class="w">
+        </span><span class="nl">"2.4"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+            </span><span class="nl">"duplicating"</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span><span class="w">
+            </span><span class="nl">"not_confirmed_mutations_num"</span><span class="p">:</span><span class="w"> </span><span class="mi">2</span><span class="p">,</span><span class="w">
+            </span><span class="nl">"not_duplicated_mutations_num"</span><span class="p">:</span><span class="w"> </span><span class="mi">2</span><span class="w">
+        </span><span class="p">},</span><span class="w">
+        </span><span class="nl">"2.7"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+            </span><span class="nl">"duplicating"</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span><span class="w">
+            </span><span class="nl">"not_confirmed_mutations_num"</span><span class="p">:</span><span class="w"> </span><span class="mi">3</span><span class="p">,</span><span class="w">
+            </span><span class="nl">"not_duplicated_mutations_num"</span><span class="p">:</span><span class="w"> </span><span class="mi">2</span><span class="w">
+        </span><span class="p">}</span><span class="w">
+    </span><span class="p">}</span><span class="w">
+</span><span class="p">}</span><span class="w">
+</span></code></pre></div></div>
 
 </div>
                 </div>
@@ -659,7 +754,9 @@
       <li><a href="#metacluster">/meta/cluster</a></li>
       <li><a href="#metanodes">/meta/nodes</a></li>
       <li><a href="#metaapp_envsnameapp_name">/meta/app_envs?name=&lt;app_name&gt;</a></li>
+      <li><a href="#metaappduplicationnameapp_name">/meta/app/duplication?name=&lt;app_name&gt;</a></li>
       <li><a href="#perfcounternameperf_counter_name">/perfCounter?name=&lt;perf_counter_name&gt;</a></li>
+      <li><a href="#replicaduplicationappidappid">/replica/duplication?appid=&lt;appid&gt;</a></li>
     </ul>
   </li>
 </ul>
