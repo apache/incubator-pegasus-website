@@ -372,6 +372,48 @@ replica
 }
 ```
 
+### `/meta/app/duplication?name=<app_name>`
+
+**功能：** 查询某个表的热备份情况
+
+**添加自**：版本 2.0.0
+
+**参数：**
+
+- name： 待查的表名
+  
+**示例：**`http://0.0.0.0:34602/meta/app/duplication?name=temp`
+
+**返回：**
+
+- `create_ts`：热备份的创建时间
+- `dupid`：热备份的ID
+- `not_confirmed_mutations_num`：各个分片当前有多少数据写尚未复制到目的集群，并且进度被同步至MetaServer
+- `remote`：热备份远端集群的名字
+- `status`：当前热备份的状态
+
+```json
+{
+    "1": {
+        "create_ts": "2020-03-09 18:13:50",
+        "dupid": 1583748830,
+        "not_confirmed_mutations_num": {
+            "0": 4964,
+            "1": 5144,
+            "2": 5123,
+            "3": 5148,
+            "4": 5208,
+            "5": 5289,
+            "6": 5253,
+            "7": 5148
+        },
+        "remote": "onebox2",
+        "status": "DS_PAUSE"
+    },
+    "appid": 2
+}
+```
+
 ### `/perfCounter?name=<perf_counter_name>`
 
 **功能：** 获取某个perf counter的详细信息。如果perf counter名字中含有特殊字符时，需要先对其进行uri编码。
@@ -394,3 +436,50 @@ replica
 ```
 
 **NOTE:** http中的字符`#`代表锚，是一种特殊字符，所以对于perf counter名字中包含'#'字符的需要转换成`%23`
+
+### `/replica/duplication?appid=<appid>`
+
+**功能：** 查询ReplicaServer上某个表各个分片的热备份情况。
+
+**添加自**：版本 2.0.0
+
+**参数：**
+
+- appid： 待查的表的ID
+  
+**示例：**`http://127.0.0.1:34801/replica/duplication?appid=2`
+
+**返回：**
+
+- `duplicating`：表示该分片是否正在运行热备份
+- `not_confirmed_mutations_num`：当前有多少数据写尚未复制到目的集群，并且进度被同步至MetaServer
+- `not_duplicated_mutations_num`：当前有多少数据写尚未复制到目的集群
+
+**NOTE:**：`not_duplicated_mutations_num >= not_confirmed_mutations_num`
+
+```json
+{
+    "1583820008": {
+        "2.1": {
+            "duplicating": true,
+            "not_confirmed_mutations_num": 3,
+            "not_duplicated_mutations_num": 3
+        },
+        "2.3": {
+            "duplicating": true,
+            "not_confirmed_mutations_num": 2,
+            "not_duplicated_mutations_num": 1
+        },
+        "2.4": {
+            "duplicating": true,
+            "not_confirmed_mutations_num": 2,
+            "not_duplicated_mutations_num": 2
+        },
+        "2.7": {
+            "duplicating": true,
+            "not_confirmed_mutations_num": 3,
+            "not_duplicated_mutations_num": 2
+        }
+    }
+}
+```
