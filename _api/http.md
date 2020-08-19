@@ -455,7 +455,7 @@ replica
 - `not_confirmed_mutations_num`：当前有多少数据写尚未复制到目的集群，并且进度被同步至MetaServer
 - `not_duplicated_mutations_num`：当前有多少数据写尚未复制到目的集群
 
-**NOTE:**：`not_duplicated_mutations_num >= not_confirmed_mutations_num`
+**NOTE：**`not_duplicated_mutations_num <= not_confirmed_mutations_num`
 
 ```json
 {
