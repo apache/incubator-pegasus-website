@@ -66,6 +66,6 @@ defaults:
 
 algolia:
   application_id: 50E27EHNIK
-  index_name: pegasus-kv
-  search_only_api_key: 384e9a24e20ffe7cd7ffa708ceb08253
+  index_name: apache_pegasus
+  search_only_api_key: 676624c2d6dc00808d3b7cf6724fc3c8
   powered_by: true

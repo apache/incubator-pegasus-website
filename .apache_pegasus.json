@@ -1,7 +1,7 @@
 {
-  "index_name": "pegasus-kv",
+  "index_name": "apache_pegasus",
   "start_urls": [
-    "https://pegasus-kv.github.io/"
+    "https://pegasus.apache.org/"
   ],
   "selectors": {
     "lvl0": {
