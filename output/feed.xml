@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="4.1.1">Jekyll</generator><link href="/feed.xml" rel="self" type="application/atom+xml" /><link href="/" rel="alternate" type="text/html" /><updated>2020-09-03T10:23:46+00:00</updated><id>/feed.xml</id><title type="html">Pegasus</title><entry><title type="html">Pegasus Server 2.0.0 来了</title><link href="/2020/06/19/pegasus-2.0.0-is-out.html" rel="alternate" type="text/html" title="Pegasus Server 2.0.0 来了" /><published>2020-06-19T00:00:00+00:00</published><updated>2020-06-19T00:00:00+00:00</updated><id>/2020/06/19/pegasus-2.0.0-is-out</id><content type="html" xml:base="/2020/06/19/pegasus-2.0.0-is-out.html">&lt;p&gt;Pegasus Server 又发布新版本了！在去年的几个版本演进中，我们把工作的重点放在了Pegasus的服务稳定性上。在今年的 2.0.0 版本中，我们更进一步，提供了如下几个能够显著减少延迟和抖动的机制。&lt;/p&gt;
+<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="4.1.1">Jekyll</generator><link href="/feed.xml" rel="self" type="application/atom+xml" /><link href="/" rel="alternate" type="text/html" /><updated>2020-09-03T10:39:25+00:00</updated><id>/feed.xml</id><title type="html">Pegasus</title><entry><title type="html">Pegasus Server 2.0.0 来了</title><link href="/2020/06/19/pegasus-2.0.0-is-out.html" rel="alternate" type="text/html" title="Pegasus Server 2.0.0 来了" /><published>2020-06-19T00:00:00+00:00</published><updated>2020-06-19T00:00:00+00:00</updated><id>/2020/06/19/pegasus-2.0.0-is-out</id><content type="html" xml:base="/2020/06/19/pegasus-2.0.0-is-out.html">&lt;p&gt;Pegasus Server 又发布新版本了！在去年的几个版本演进中，我们把工作的重点放在了Pegasus的服务稳定性上。在今年的 2.0.0 版本中，我们更进一步，提供了如下几个能够显著减少延迟和抖动的机制。&lt;/p&gt;
 
 &lt;blockquote&gt;
   &lt;p&gt;Github Release: &lt;a href=&quot;https://github.com/XiaoMi/pegasus/releases/tag/v2.0.0&quot;&gt;https://github.com/XiaoMi/pegasus/releases/tag/v2.0.0&lt;/a&gt;&lt;/p&gt;
@@ -332,7 +332,7 @@ write(a=1) ingest(a=2) del(a)     -&amp;gt; a not existed
 &lt;ol&gt;
   &lt;li&gt;允许配置RocksDB ingest的更多参数&lt;/li&gt;
   &lt;li&gt;考虑bulk load如何计算CU&lt;/li&gt;
-&lt;/ol&gt;</content><author><name>何昱晨</name></author><summary type="html">功能简介</summary></entry><entry><title type="html">Partition Split设计文档</title><link href="/2020/02/06/partition-split-design.html" rel="alternate" type="text/html" title="Partition Split设计文档" /><published>2020-02-06T00:00:00+00:00</published><updated>2020-02-06T00:00:00+00:00</updated><id>/2020/02/06/partition-split-design</id><content type="html" xml:base="/2020/02/06/partition-split-design.html">&lt;p&gt;关于partition split的基本概念和操作示例可以参照 &lt;a href=&quot;https://pegasus-kv.github.io/administration/partition-split&quot;&gt;administration/partition-split&lt;/a&gt;，这里将主要描述partition split的设计和实现细节。&lt;/p&gt;
+&lt;/ol&gt;</content><author><name>何昱晨</name></author><summary type="html">功能简介</summary></entry><entry><title type="html">Partition Split设计文档</title><link href="/2020/02/06/partition-split-design.html" rel="alternate" type="text/html" title="Partition Split设计文档" /><published>2020-02-06T00:00:00+00:00</published><updated>2020-02-06T00:00:00+00:00</updated><id>/2020/02/06/partition-split-design</id><content type="html" xml:base="/2020/02/06/partition-split-design.html">&lt;p&gt;关于partition split的基本概念和操作示例可以参照 &lt;a href=&quot;https://pegasus.apache.org/administration/partition-split&quot;&gt;administration/partition-split&lt;/a&gt;，这里将主要描述partition split的设计和实现细节。&lt;/p&gt;
 
 &lt;hr /&gt;
 
@@ -920,8 +920,8 @@ Github，那么它和一个非商业的闭源软件没有本质上的区别。Pe
 
 &lt;h2 id=&quot;这个网站部署在哪里&quot;&gt;这个网站部署在哪里？&lt;/h2&gt;
 
-&lt;p&gt;这个网站使用 Github Pages 部署。项目地址在：&lt;a href=&quot;https://github.com/pegasus-kv/pegasus-kv.github.io&quot;&gt;pegasus-kv/pegasus-kv.github.io&lt;/a&gt;。
-master 分支的代码就对应这个网站的全部内容。提交至 master 后，Github Page 会自动将网站部署至 &lt;a href=&quot;https://pegasus-kv.github.io/&quot;&gt;https://pegasus-kv.github.io/&lt;/a&gt; 上。&lt;/p&gt;
+&lt;p&gt;这个网站使用 Github Pages 部署。项目地址在：&lt;a href=&quot;https://github.com/apache/incubator-pegasus-website&quot;&gt;apache/incubator-pegasus-website&lt;/a&gt;。
+master 分支的代码就对应这个网站的全部内容。提交至 master 后，Github Page 会自动将网站部署至 &lt;a href=&quot;https://pegasus.apache.org/&quot;&gt;https://pegasus.apache.org/&lt;/a&gt; 上。&lt;/p&gt;
 
 &lt;h2 id=&quot;开发环境&quot;&gt;开发环境&lt;/h2&gt;
 
@@ -933,7 +933,7 @@ master 分支的代码就对应这个网站的全部内容。提交至 master �
 
 &lt;p&gt;最后你只需要在本地安装 jekyll 和 bundler：&lt;/p&gt;
 
-&lt;div class=&quot;language-bash highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;nb&quot;&gt;cd &lt;/span&gt;pegasus-kv.github.io
+&lt;div class=&quot;language-bash highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;nb&quot;&gt;cd &lt;/span&gt;pegasus.apache.org
 gem &lt;span class=&quot;nb&quot;&gt;install &lt;/span&gt;bundler jekyll
 bundle
 jekyll serve
