@@ -113,7 +113,7 @@ hashkey直接由一维编码的前缀构成。比如在我们的LBS业务场景�
 
 ### value
 
-GEO API的value必须能够解析出经纬度，具体的解析方式参考[自定义extrator](https://pegasus-kv.github.io/api/geo#%E8%87%AA%E5%AE%9A%E4%B9%89extrator)。
+GEO API的value必须能够解析出经纬度，具体的解析方式参考[自定义extrator](https://pegasus.apache.org/api/geo#%E8%87%AA%E5%AE%9A%E4%B9%89extrator)。
 
 GEO索引数据的value跟原始数据的value完全相同。这里会存在一份冗余，但通常在相对廉价的磁盘存储介质上，这是可以接受的。
 
@@ -127,7 +127,7 @@ GEO索引数据的value跟原始数据的value完全相同。这里会存在一�
 
 > `set`操作的hashkey, sortkey是业务自己的格式，使用GEO API时并不做约束， 只是在geo client转存GEO索引数据时，会自动做如上所述的编码转换。
 
-> 使用Redis API时， 参考 [GEO API](https://pegasus-kv.github.io/api/redis#geo-api)。
+> 使用Redis API时， 参考 [GEO API](https://pegasus.apache.org/api/redis#geo-api)。
 
 > 实现上，`set`会首先尝试`get`出已有的数据，并将已有数据的GEO索引数据清理掉后，再写入新数据。因为新老数据的索引数据hashkey+sortkey可能不一样（即新老value根据extractor解析得到的经纬度不一样），若不清理，在进行地理搜索时将会搜索到脏数据。
 

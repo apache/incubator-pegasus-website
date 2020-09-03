@@ -27,8 +27,8 @@ Github，那么它和一个非商业的闭源软件没有本质上的区别。Pe
 
 ## 这个网站部署在哪里？
 
-这个网站使用 Github Pages 部署。项目地址在：[pegasus-kv/pegasus-kv.github.io](https://github.com/pegasus-kv/pegasus-kv.github.io)。
-master 分支的代码就对应这个网站的全部内容。提交至 master 后，Github Page 会自动将网站部署至 <https://pegasus-kv.github.io/> 上。
+这个网站使用 Github Pages 部署。项目地址在：[apache/incubator-pegasus-website](https://github.com/apache/incubator-pegasus-website)。
+master 分支的代码就对应这个网站的全部内容。提交至 master 后，Github Page 会自动将网站部署至 <https://pegasus.apache.org/> 上。
 
 ## 开发环境
 
@@ -41,7 +41,7 @@ jekyll 是用 Ruby 开发的，所以你首先需要安装 Ruby，首选的方�
 最后你只需要在本地安装 jekyll 和 bundler：
 
 ```bash
-cd pegasus-kv.github.io
+cd pegasus.apache.org
 gem install bundler jekyll
 bundle
 jekyll serve

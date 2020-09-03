@@ -9,7 +9,7 @@ Pegasus is a distributed key-value storage system which is designed to
 be horizontally scalable, strongly consistent and high-performance.
 
 - Pegasus codebase: <https://github.com/XiaoMi/pegasus>
-- Website: <https://pegasus-kv.github.io>
+- Website: <https://pegasus.apache.org>
 
 ## Proposal
 
@@ -168,11 +168,11 @@ a marketing tool.
 Information about Pegasus can be found at <https://github.com/XiaoMi/pegasus>.
 The following links provide more information about Pegasus in open source:
 
-- Pegasus Website: <https://pegasus-kv.github.io>
+- Pegasus Website: <https://pegasus.apache.org>
 - Codebase at Github: <https://github.com/XiaoMi/pegasus>
 - Issue Tracking: <https://github.com/XiaoMi/pegasus/issues>
-- Releases: <https://pegasus-kv.github.io/releases>
-- Community Guide: <https://pegasus-kv.github.io/community> 
+- Releases: <https://pegasus.apache.org/releases>
+- Community Guide: <https://pegasus.apache.org/community>
 
 ## Initial Source
 

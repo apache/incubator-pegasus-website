@@ -18,7 +18,7 @@ The following are the highlights in this release:
 ## Duplication
 
 Duplication is the solution of Pegasus for intra-cluster data copying in real-time. We currently limit our master-master duplication for 'PUT' and 'MULTI_PUT' only. See this document for more details:
-<https://pegasus-kv.github.io/administration/duplication>
+<https://pegasus.apache.org/administration/duplication>
 
 ## Backup Request
 

@@ -4,7 +4,7 @@ layout: post
 author: 何昱晨
 ---
 
-关于partition split的基本概念和操作示例可以参照 [administration/partition-split](https://pegasus-kv.github.io/administration/partition-split)，这里将主要描述partition split的设计和实现细节。
+关于partition split的基本概念和操作示例可以参照 [administration/partition-split](https://pegasus.apache.org/administration/partition-split)，这里将主要描述partition split的设计和实现细节。
 
 -----
 
