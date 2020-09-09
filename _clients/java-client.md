@@ -736,7 +736,7 @@ public int batchMultiDel2(String tableName, List<Pair<byte[], List<byte[]>>> key
  * 注意：该方法不是原子的，有可能出现部分成功部分失败的情况，用户可以选择只使用成功的结果。
 
 ### delRange
-删除同一HashKey下，SortKey值在startSortKey和stopSortKey范围内的数据。该函数首先从server获取当前在该范围内存在SortKey集合, 再分批次删除(100个SortKey作为一次, 最后不足100的作为一次)。删除过程中若发生错误，不影响已经删除的数据，同时会标记该范围内未删除的第一个SortKey。
+删除同一HashKey下，SortKey值在startSortKey和stopSortKey范围内的数据。删除过程中若发生错误，不影响已经删除的数据，同时会标记该范围内未删除的第一个SortKey。
 ```java
 /**
    * Delete key-values within range of startSortKey and stopSortKey under hashKey. Will terminate
