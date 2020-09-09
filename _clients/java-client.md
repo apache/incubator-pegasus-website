@@ -750,14 +750,30 @@ public int batchMultiDel2(String tableName, List<Pair<byte[], List<byte[]>>> key
    * @throws PException throws exception if any error occurs.
    */
   public void delRange(String tableName, byte[] hashKey, byte[] startSortKey, byte[] stopSortKey,DelRangeOptions options) throws PException;
+
+
+  public class DelRangeOptions {
+    public byte[] nextSortKey = null;
+    public boolean startInclusive = true; // whether the startSortKey is included
+    public boolean stopInclusive = false; // whether the stopSortKey is included
+    public FilterType sortKeyFilterType = FilterType.FT_NO_FILTER; // filter type for sort key
+    public byte[] sortKeyFilterPattern = null; // filter pattern for sort key
+  }
 ```
 注：
 * 参数：
-  * 传入参数：startSortKey和stopSortKey是sortkey的起止key值，你可以通过`options`配置更多的选项，如是否包含起止的sortkey值。
+  * 传入参数：
+    * startSortKey和stopSortKey是sortkey的起止key值。
+    * DelRangeOptions：
+      * nextSortKey：将要删除的第一个sortKey值，默认为null, 在删除开始后会动态记录下一个要删除的值。特别的，当删除过程中出现错误时，该参数可以记录接下来需要继续删除的sortKey
+      * startInclusive：是否包含StartSortKey，默认为true
+      * stopInclusive：是否包含StopSortKey，默认为false
+      * sortKeyFilterType：SortKey的过滤类型，包括无过滤、任意位置匹配、前缀匹配和后缀匹配，默认无过滤。
+      * sortKeyFilterPattern：SortKey的过滤模式串，空串相当于无过滤。
   * 传出参数：无。
 * 返回值：无。
 * 异常：如果出现异常，譬如参数错误、表名不存在、超时等，会抛出 PException。
-* 注意：该方法不是原子的，有可能出现部分成功部分失败的情况。其中`DelRangeOptions`中包含参数`nextSortkey`，用于标记该范围内未删除的第一个SortKey值，当删除过程出现错误时，用户可以使用该参数继续接下来的操作。
+* 注意：该方法不是原子的，有可能出现部分成功部分失败的情况。
 
 ### incr
 单行原子增(减)操作。详细说明参见[单行原子操作](/api/single-atomic#原子增减)。
