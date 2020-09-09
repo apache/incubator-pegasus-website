@@ -16,9 +16,9 @@
 <meta property="og:description" content="获取Java客户端" />
 <meta property="og:site_name" content="Pegasus" />
 <meta property="og:type" content="article" />
-<meta property="article:published_time" content="2020-09-03T10:39:25+00:00" />
+<meta property="article:published_time" content="2020-09-09T07:41:00+00:00" />
 <script type="application/ld+json">
-{"url":"/clients/java-client","@type":"BlogPosting","headline":"Java客户端文档","datePublished":"2020-09-03T10:39:25+00:00","dateModified":"2020-09-03T10:39:25+00:00","description":"获取Java客户端","mainEntityOfPage":{"@type":"WebPage","@id":"/clients/java-client"},"@context":"https://schema.org"}</script>
+{"url":"/clients/java-client","@type":"BlogPosting","mainEntityOfPage":{"@type":"WebPage","@id":"/clients/java-client"},"headline":"Java客户端文档","description":"获取Java客户端","dateModified":"2020-09-09T07:41:00+00:00","datePublished":"2020-09-09T07:41:00+00:00","@context":"https://schema.org"}</script>
 <!-- End Jekyll SEO tag -->
 </head>
 
@@ -1060,7 +1060,7 @@ mvn clean package <span class="nt">-DskipTests</span>
 </ul>
 
 <h3 id="delrange">delRange</h3>
-<p>删除同一HashKey下，SortKey值在startSortKey和stopSortKey范围内的数据。该函数首先从server获取当前在该范围内存在SortKey集合, 再分批次删除(100个SortKey作为一次, 最后不足100的作为一次)。删除过程中若发生错误，不影响已经删除的数据，同时会标记该范围内未删除的第一个SortKey。</p>
+<p>删除同一HashKey下，SortKey值在startSortKey和stopSortKey范围内的数据。删除过程中若发生错误，不影响已经删除的数据，同时会标记该范围内未删除的第一个SortKey。</p>
 <div class="language-java highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="cm">/**
    * Delete key-values within range of startSortKey and stopSortKey under hashKey. Will terminate
    * immediately if any error occurs.
