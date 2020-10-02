@@ -1,8 +1,5 @@
 ---
-title: 系统架构
-layout: page
-show_sidebar: false
-menubar: overview_menu
+permalink: /overview/architecture
 ---
 
 ## 整体架构

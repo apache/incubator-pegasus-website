@@ -1,21 +1,17 @@
 {% assign menus = site.data.[page.menubar] %}
 
 <aside class="menu">
-{% for menu in menus %}
-    <p class="menu-label">{{ menu.label }}</p>
+    {% for menu in menus %}
+    <p class="menu-label">{{ site.data.translate[menu.name] }}</p>
     <ul class="menu-list">
         {% for item in menu.items %}
         <li>
-            <a href="{{ item.link | prepend: site.baseurl }}" class="{% if item.link == page.url %}is-active{% endif %}">{{ item.name }}</a>
-            {% if item.items %}
-            <ul>
-                {% for subitem in item.items %}
-                <li><a href="{{ subitem.link | prepend: site.baseurl }}" class="{% if subitem.link == page.url %}is-active{% endif %}">{{ subitem.name }}</a></li>
-                {% endfor %}
-            </ul>
-            {% endif %}
+            <a href="{{ item.link | prepend: site.baseurl }}"
+                class="{% if item.link == page.url %}is-active{% endif %}">
+                {{ site.data.translate[item.name] }}
+            </a>
         </li>
-        {% endfor %}    
+        {% endfor %}
     </ul>
-{% endfor %}
+    {% endfor %}
 </aside>

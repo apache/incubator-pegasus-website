@@ -1,17 +1,17 @@
 - items:
-    - name: 概览
+    - name: title_overview
       link: /overview
-    - name: 项目背景
+    - name: title_background
       link: /overview/background
-    - name: 系统架构
+    - name: title_architecture
       link: /overview/architecture
-    - name: 数据模型
+    - name: title_data-model
       link: /overview/data-model
-    - name: Benchmark
+    - name: title_benchmark
       link: /overview/benchmark
-    - name: 编译构建
-      link: /overview/compilation
-    - name: 体验onebox集群
+    - name: title_installation
+      link: /overview/installation
+    - name: title_onebox
       link: /overview/onebox
-    - name: Shell工具
+    - name: title_shell
       link: /overview/shell

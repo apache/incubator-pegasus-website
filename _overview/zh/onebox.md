@@ -1,8 +1,5 @@
 ---
-title: 体验onebox集群
-layout: page
-show_sidebar: false
-menubar: overview_menu
+permalink: /overview/onebox/
 ---
 
 # 什么是onebox集群

@@ -1,37 +1,22 @@
-- name: Documentation
-  link: /overview
-  icon: fas fa-book
-  dropdown:
-  - name: 概览
-    link: /overview
-  - name: 客户端库
-    link: /clients
-  - name: 用户接口
-    link: /api
-  - name: 高效运维
-    link: /administration
-- name: Blog
-  link: /blogs
-  icon: fas fa-rss
-- name: Community
+- name: title_community
   link: /community
   icon: fas fa-user-plus
-  dropdown:
-  - name: 联系我们
+  items:
+  - name: title_contact
     link: /community/#联系我们
-  - name: 参与贡献
+  - name: title_contribution
     link: /community/#参与贡献
-  - name: Coding Guides
+  - name: title_coding-guides
     link: /community/coding-guides
-  - name: Roadmap
+  - name: title_roadmap
     link: /community/roadmap
-  - name: Bug Tracking
+  - name: title_bug-tracking
     link: https://github.com/XiaoMi/pegasus/labels/type%2Fbug
-  - name: Apache Proposal
+  - name: title_apache-proposal
     link: /community/proposal
-- name: Github
-  link: https://github.com/XiaoMi/pegasus
-  icon: fab fa-github-alt
-- name: Releases
+- name: title_blog
+  link: /blogs
+  icon: fas fa-rss
+- name: title_releases
   icon: fas fa-fire
   link: /releases

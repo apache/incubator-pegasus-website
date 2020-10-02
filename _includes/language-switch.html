@@ -1,0 +1,15 @@
+{% if page.collection == "docs" %}
+{% assign lang_switch_button = "is-light is-outlined is-inverted" %}
+{% else %}
+{% assign lang_switch_button = "is-primary is-outlined is-inverted" %}
+{% endif %}
+
+<!--A simple language switch button that only supports zh and en.-->
+<!--IF its language is zh, then switches to en.-->
+{% if site.active_lang == "zh" %}
+<a class="button {{ lang_switch_button }}" href="{{ page.url | prepend: '/en' }}"><strong>En</strong></a>
+{% elsif site.active_lang == "en" %}
+<!--If you don't want a url to be relativized, you can add a space explicitly into the href to 
+    prevents a url from being relativized by polyglot.-->
+<a class="button {{ lang_switch_button }}" href=" {{ page.url }}"><strong>中</strong></a>
+{% endif %}

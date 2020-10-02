@@ -1,8 +1,5 @@
 ---
-title: Benchmark
-layout: page
-show_sidebar: false
-menubar: overview_menu
+permalink: /overview/benchmark/
 ---
 
 ## 测试环境

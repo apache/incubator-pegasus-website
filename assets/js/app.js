@@ -34,3 +34,8 @@ $('.modal-background, .modal-close').click(function () {
   $('html').removeClass('is-clipped');
   $(this).parent().removeClass('is-active');
 });
+
+// Wrap every table and make them scrollable
+document.addEventListener('DOMContentLoaded', () => {
+  $("table").wrap("<div class=\"table-container\"></div>")
+})

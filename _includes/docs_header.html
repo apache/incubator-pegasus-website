@@ -1,0 +1,53 @@
+<nav class="navbar">
+    <div class="navbar-brand">
+        <a href="{{ site.baseurl }}/" class="navbar-item is-hidden-desktop">
+            <!-- Pegasus Icon -->
+            <img src="{{ site.baseurl }}/assets/images/pegasus-square.png">
+        </a>
+        <div class="navbar-item is-hidden-desktop">
+            {% include language-switch.html %}
+        </div>
+        <div class="navbar-item is-hidden-desktop">
+            {% include searchbox.html %}
+        </div>
+        <a role="button" class="navbar-burger burger" aria-label="menu" aria-expanded="false" data-target="navMenu">
+            <!-- Appears in mobile mode only -->
+            <span aria-hidden="true"></span>
+            <span aria-hidden="true"></span>
+            <span aria-hidden="true"></span>
+        </a>
+    </div>
+    <div class="navbar-menu" id="navMenu">
+        <div class="navbar-start is-hidden-mobile w-full">
+            <div class="navbar-item pl-0 w-full">
+                {% include searchbox.html %}
+            </div>
+        </div>
+        <div class="navbar-end is-hidden-desktop">
+            {% for item in site.data.docs_menu %}
+            <!--dropdown-->
+            <div class="navbar-item has-dropdown is-hoverable ">
+                <a href="{{ item.link | prepend: site.baseurl }}"
+                    class="navbar-link {% if item.link == page.url %}is-active{% endif %}">
+                    <span>
+                        {{ site.data.translate[item.name] }}
+                    </span>
+                </a>
+                <div class="navbar-dropdown">
+                    {% for subitem in item.items %}
+                    <a href="{{ subitem.link | prepend: site.baseurl }}"
+                        class="navbar-item {% if subitem.link == page.url %}is-active{% endif %}">
+                        {{ site.data.translate[subitem.name] }}
+                    </a>
+                    {% endfor %}
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+        <div class="navbar-end">
+            <div class="navbar-item is-hidden-mobile">
+                {% include language-switch.html %}
+            </div>
+        </div>
+    </div>
+</nav>

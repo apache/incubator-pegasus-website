@@ -1,8 +1,5 @@
 ---
-title: 数据模型
-layout: page
-show_sidebar: false
-menubar: overview_menu
+permalink: /overview/data-model/
 ---
 
 ## 模型介绍

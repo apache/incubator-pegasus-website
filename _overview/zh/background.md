@@ -1,7 +1,5 @@
 ---
-title: 项目背景
-layout: page
-menubar: overview_menu
+permalink: /overview/background/
 ---
 
 小米云平台长期以来一直使用开源的[Apache HBase](https://hbase.apache.org/)来存储结构化/半结构化数据，并逐渐成为国内使用HBase最多的公司之一，同时也培养了一个比较有实力的HBase开发团队，前后共产生了6位[HBase Committer](https://hbase.apache.org/team-list.html)，包括一位PMC成员。可以说，HBase在小米云存储中起到了举足轻重的作用，而小米也为HBase社区贡献出一份重要的力量。

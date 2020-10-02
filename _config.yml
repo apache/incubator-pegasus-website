@@ -3,41 +3,28 @@ title: Pegasus
 collections:
   overview:
     output: true
-    layout: page
-    permalink: /:collection/:path
-  clients:
-    output: true
-    layout: page
-    permalink: /:collection/:path
-  api:
-    output: true
-    layout: page
-    permalink: /:collection/:path
-  administration:
-    output: true
-    layout: page
-    permalink: /:collection/:path
   blogs:
     output: true
-    permalink: /:collection/:path
   community:
     output: true
-    permalink: /:collection/:path
   releases:
     output: true
-    permalink: /:collection/:path
+  docs:
+    output: true
 
 plugins:
   - jekyll-sitemap
   - jekyll-paginate
   - jekyll-feed
   - jekyll-seo-tag
+  - jekyll-polyglot
   - kramdown
   - rouge
 
 defaults:
-  - # docs
+  - # default
     scope:
+      # While `type` is optional, you must specify a value for `path` when creating a scope/values pair.
       path: ""
     values:
       show_sidebar: false
@@ -63,8 +50,36 @@ defaults:
       layout: post
       hero_style: is-white is-centered
       header_style: is-black
+  - scope:
+      path: ""
+      type: docs
+    values:
+      layout: docs
+      menubar: docs_menu
+      show_sidebar: false
+  - scope:
+      path: "_overview"
+    values:
+      layout: page
+      menubar: overview_menu
+      show_sidebar: false
 
 algolia:
   index_name: apache_pegasus
   search_only_api_key: 676624c2d6dc00808d3b7cf6724fc3c8
   powered_by: true
+
+# multi-languages support
+languages: ["zh", "en"]
+# All sites missing their languages' counterparts will fallback to your `default_lang`.
+default_lang: "zh"
+exclude_from_localizations: ["js", "images", "css"]
+parallel_localization: true
+lang_from_path: true
+sass:
+  # In Jekyll 4.0 , SCSS source maps will generate improperly due to how Polyglot operates.
+  # The workaround is to disable the CSS sourcemaps.
+  # Adding the following to your config.yml will disable sourcemap generation:
+  sourcemap: never
+
+pegasus_github_url: "https://github.com/apache/incubator-pegasus"

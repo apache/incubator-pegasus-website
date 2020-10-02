@@ -1,6 +1,8 @@
 @charset "utf-8";
+// for apache pegasus title
 @import url(//fonts.googleapis.com/css?family=Patua+One);
 @import url(//fonts.googleapis.com/css?family=Ubuntu+Mono);
+@import url(//fonts.googleapis.com/css?family=Titillium+Web);
 
 $primary: #188eac !default;
 $info: #419eda;
@@ -8,9 +10,11 @@ $black: hsl(0, 0%, 0%);
 $tabs-link-active-color: $primary;
 $tabs-link-active-border-bottom-color: $primary;
 $navbar-height: 4.0rem;
+$family-sans-serif: "Titillium Web";
 
-$input-placeholder-color: hsl(0, 0%, 86%);
+$input-placeholder-color: hsl(0, 0%, 50%);
 
 @import "../node_modules/bulma/bulma.sass";
+@import "../node_modules/bulma-dashboard/src/bulma-dashboard.sass";
 @import "layout";
 @import "syntax"

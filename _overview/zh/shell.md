@@ -1,8 +1,5 @@
 ---
-title: Shell工具
-layout: page
-show_sidebar: false
-menubar: overview_menu
+permalink: /overview/shell/
 ---
 
 Pegasus提供了Shell工具，用于查看集群相关信息，创建/删除表，操作数据等。

@@ -1,7 +1,5 @@
 ---
-title: 概览
-layout: page
-menubar: overview_menu
+permalink: overview/index.html
 ---
 
 ## 项目概览

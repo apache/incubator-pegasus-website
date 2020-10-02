@@ -1,22 +1,42 @@
-<nav class="navbar {% if page.header_style %} {{ page.header_style }} {% else %} is-primary {% endif %}">
+{% if page.header_style %}
+{% assign navbar_style = page.header_style %}
+{% else %}
+{% assign navbar_style = "is-primary" %}
+{% endif %}
+
+{% if page.url == "/" %}
+{% assign navbar_brand_is_active = "is-active" %}
+{% endif %}
+
+<nav class="navbar {{ navbar_style }}">
     <div class="container">
+        <!--container will be unwrapped when it's in docs-->
         <div class="navbar-brand">
-            <a href="{{ site.baseurl }}/" class="navbar-item {% if page.url == "/" %}is-active{% endif %}">
-                <!-- {{ site.title }} -->
+            <a href="{{ site.baseurl }}/" class="navbar-item {{ navbar_brand_is_active }}">
+                <!-- Pegasus Icon -->
                 <img src="{{ site.baseurl }}/assets/images/pegasus-icon.png">
             </a>
+            <div class="navbar-item">
+                <a href="/docs" class="button is-primary is-outlined is-inverted">
+                    <span class="icon"><i class="fas fa-book"></i></span>
+                    <span>Docs</span>
+                </a>
+            </div>
+            <div class="navbar-item is-hidden-desktop">
+                  {% include language-switch.html %}
+            </div>
             <a role="button" class="navbar-burger burger" aria-label="menu" aria-expanded="false" data-target="navMenu">
+                <!-- Appears in mobile mode only -->
                 <span aria-hidden="true"></span>
                 <span aria-hidden="true"></span>
                 <span aria-hidden="true"></span>
             </a>
         </div>
         <div class="navbar-menu" id="navMenu">
-            <div class="navbar-start">
-                {% if site.data.navigation %}
+            <div class="navbar-end">
                 {% for item in site.data.navigation %}
-                {% if item.dropdown %}
-                <div class="navbar-item has-dropdown is-hoverable">
+                {% if item.items %} <!--dropdown-->
+                <div class="navbar-item has-dropdown is-hoverable ">
                     <a href="{{ item.link | prepend: site.baseurl }}"
                         class="navbar-link {% if item.link == page.url %}is-active{% endif %}">
                         {% if item.icon %}
@@ -24,12 +44,16 @@
                             <i class="{{ item.icon }}"></i>
                         </span>
                         {% endif %}
-                        <span>{{ item.name }}</span>
+                        <span>
+                            {{ site.data.translate[item.name] }}
+                        </span>
                     </a>
                     <div class="navbar-dropdown">
-                        {% for subitem in item.dropdown %}
+                        {% for subitem in item.items %}
                         <a href="{{ subitem.link | prepend: site.baseurl }}"
-                            class="navbar-item {% if subitem.link == page.url %}is-active{% endif %}">{{ subitem.name }}</a>
+                            class="navbar-item {% if subitem.link == page.url %}is-active{% endif %}">
+                            {{ site.data.translate[subitem.name] }}
+                        </a>
                         {% endfor %}
                     </div>
                 </div>
@@ -41,27 +65,14 @@
                         <i class="{{ item.icon }}"></i>
                     </span>
                     {% endif %}
-                    <span>{{ item.name }}</span>
+                    <span>{{ site.data.translate[item.name] }}</span>
                 </a>
                 {% endif %}
                 {% endfor %}
-                {% endif %}
             </div>
-            <div class="navbar-end is-hidden-mobile">
-                <div class="navbar-item navbar-searchbox">
-                    <div class="field">
-                        <div class="control has-icons-right">
-                            <input class="input searchbox-input" type="text" placeholder="Search the docs">
-                            <span class="border"></span>
-                            <span class="icon is-right searchbox-icon">
-                                <i class="fas fa-search"></i>
-                            </span>
-                        </div>
-                    </div>
-                </div>
+            <div class="navbar-item is-hidden-mobile">
+                {% include language-switch.html %}
             </div>
         </div>
     </div>
 </nav>
-
-{% include algolia.html %}

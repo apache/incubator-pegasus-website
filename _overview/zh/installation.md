@@ -1,8 +1,5 @@
 ---
-title: 编译构建
-layout: page
-show_sidebar: false
-menubar: overview_menu
+permalink: /overview/installation/
 ---
 
 Pegasus目前只支持Linux平台。目前在CentOS、Ubuntu上都测试运行过。
