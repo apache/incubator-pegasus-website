@@ -83,3 +83,4 @@ sass:
   sourcemap: never
 
 pegasus_github_url: "https://github.com/apache/incubator-pegasus"
+pegasus_website_github_url: "https://github.com/apache/incubator-pegasus-website"

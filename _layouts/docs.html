@@ -22,13 +22,13 @@
         <div class="dashboard-main is-scrollable">
             {% include docs_header.html %}
 
-            <section class="hero is-info">
+            <section class="hero is-info lg:mr-3">
                 <div class="hero-body">
                     {% assign page_title = page.slug | prepend: 'title_' %}
                     <p class="title is-size-2 is-centered">{{ site.data.translate[page_title] }}</p>
                 </div>
             </section>
-            <section class="section">
+            <section class="section" style="padding-top: 2rem;">
                 <div class="content">
                     {{ content }}
                 </div>
