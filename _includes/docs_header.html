@@ -1,14 +1,11 @@
-<nav class="navbar">
+<nav class="navbar is-hidden-desktop">
     <div class="navbar-brand">
-        <a href="{{ site.baseurl }}/" class="navbar-item is-hidden-desktop">
+        <a href="{{ site.baseurl }}/" class="navbar-item">
             <!-- Pegasus Icon -->
             <img src="{{ site.baseurl }}/assets/images/pegasus-square.png">
         </a>
-        <div class="navbar-item is-hidden-desktop">
+        <div class="navbar-item">
             {% include language-switch.html %}
-        </div>
-        <div class="navbar-item is-hidden-desktop">
-            {% include searchbox.html %}
         </div>
         <a role="button" class="navbar-burger burger" aria-label="menu" aria-expanded="false" data-target="navMenu">
             <!-- Appears in mobile mode only -->
@@ -18,15 +15,10 @@
         </a>
     </div>
     <div class="navbar-menu" id="navMenu">
-        <div class="navbar-start is-hidden-mobile w-full">
-            <div class="navbar-item pl-0 w-full">
-                {% include searchbox.html %}
-            </div>
-        </div>
-        <div class="navbar-end is-hidden-desktop">
+        <div class="navbar-end">
             {% for item in site.data.docs_menu %}
             <!--dropdown-->
-            <div class="navbar-item has-dropdown is-hoverable ">
+            <div class="navbar-item has-dropdown is-hoverable">
                 <a href="{{ item.link | prepend: site.baseurl }}"
                     class="navbar-link {% if item.link == page.url %}is-active{% endif %}">
                     <span>
@@ -44,10 +36,21 @@
             </div>
             {% endfor %}
         </div>
-        <div class="navbar-end">
-            <div class="navbar-item is-hidden-mobile">
-                {% include language-switch.html %}
-            </div>
+    </div>
+</nav>
+
+<nav class="navbar is-hidden-mobile">
+    <div class="navbar-start w-full">
+        <div class="navbar-item pl-0 w-full">
+            <!--TODO(wutao): Given the limitation of docsearch that couldn't handle multiple input,
+                I make searchbox only shown in desktop. Fix this issue when docsearch.js v3 released.
+                Related issue: https://github.com/algolia/docsearch/issues/230-->
+            {% include searchbox.html %}
+        </div>
+    </div>
+    <div class="navbar-end">
+        <div class="navbar-item">
+            {% include language-switch.html %}
         </div>
     </div>
 </nav>
