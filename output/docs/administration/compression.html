@@ -1,0 +1,766 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Pegasus | Compression</title>
+    <link rel="stylesheet" href="/assets/css/app.css">
+    <link rel="shortcut icon" href="/assets/images/favicon.ico">
+    <link href="https://cdn.bootcdn.net/ajax/libs/tailwindcss/1.8.10/utilities.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/docsearch.js@2/dist/cdn/docsearch.min.css" />
+    <script src="https://cdn.bootcss.com/jquery/3.4.1/jquery.min.js"></script>
+    <script src="https://cdn.bootcdn.net/ajax/libs/font-awesome/5.13.0/js/all.min.js"></script>
+    <!-- Begin Jekyll SEO tag v2.6.1 -->
+<title>Compression | Pegasus</title>
+<meta name="generator" content="Jekyll v4.1.1" />
+<meta property="og:title" content="Compression" />
+<meta property="og:locale" content="en_US" />
+<meta name="description" content="客户端压缩" />
+<meta property="og:description" content="客户端压缩" />
+<meta property="og:site_name" content="Pegasus" />
+<meta property="og:type" content="article" />
+<meta property="article:published_time" content="2020-10-03T13:29:09+00:00" />
+<script type="application/ld+json">
+{"url":"/docs/administration/compression","@type":"BlogPosting","headline":"Compression","dateModified":"2020-10-03T13:29:09+00:00","datePublished":"2020-10-03T13:29:09+00:00","mainEntityOfPage":{"@type":"WebPage","@id":"/docs/administration/compression"},"description":"客户端压缩","@context":"https://schema.org"}</script>
+<!-- End Jekyll SEO tag -->
+</head>
+
+
+<body>
+    <div class="dashboard is-full-height">
+        <!-- left panel -->
+        <div class="dashboard-panel is-medium is-hidden-mobile">
+            <div class="dashboard-panel-header has-text-left">
+                <a href="/">
+                    <img src="/assets/images/pegasus-logo-inv.png" style="width: 80%;">
+                </a>
+                <a class="dropdown">
+                </a>
+            </div>
+            <div class="dashboard-panel-main is-scrollable">
+                
+
+<aside class="menu">
+    
+    <p class="menu-label">客户端库</p>
+    <ul class="menu-list">
+        
+        <li>
+            <a href="/docs/clients/java-client"
+                class="">
+                Java客户端
+            </a>
+        </li>
+        
+        <li>
+            <a href="/docs/clients/cpp-client"
+                class="">
+                C++客户端
+            </a>
+        </li>
+        
+        <li>
+            <a href="/docs/clients/go-client"
+                class="">
+                Golang客户端
+            </a>
+        </li>
+        
+        <li>
+            <a href="/docs/clients/python-client"
+                class="">
+                Python客户端
+            </a>
+        </li>
+        
+        <li>
+            <a href="/docs/clients/node-client"
+                class="">
+                NodeJS客户端
+            </a>
+        </li>
+        
+        <li>
+            <a href="/docs/clients/scala-client"
+                class="">
+                Scala客户端
+            </a>
+        </li>
+        
+    </ul>
+    
+    <p class="menu-label">用户接口</p>
+    <ul class="menu-list">
+        
+        <li>
+            <a href="/docs/api/ttl"
+                class="">
+                TTL
+            </a>
+        </li>
+        
+        <li>
+            <a href="/docs/api/single-atomic"
+                class="">
+                单行原子操作
+            </a>
+        </li>
+        
+        <li>
+            <a href="/docs/api/redis"
+                class="">
+                Redis适配
+            </a>
+        </li>
+        
+        <li>
+            <a href="/docs/api/geo"
+                class="">
+                GEO支持
+            </a>
+        </li>
+        
+        <li>
+            <a href="/docs/api/http"
+                class="">
+                HTTP接口
+            </a>
+        </li>
+        
+    </ul>
+    
+    <p class="menu-label">高效运维</p>
+    <ul class="menu-list">
+        
+        <li>
+            <a href="/docs/administration/deployment"
+                class="">
+                集群部署
+            </a>
+        </li>
+        
+        <li>
+            <a href="/docs/administration/config"
+                class="">
+                配置说明
+            </a>
+        </li>
+        
+        <li>
+            <a href="/docs/administration/rebalance"
+                class="">
+                负载均衡
+            </a>
+        </li>
+        
+        <li>
+            <a href="/docs/administration/monitoring"
+                class="">
+                可视化监控
+            </a>
+        </li>
+        
+        <li>
+            <a href="/docs/administration/rolling-update"
+                class="">
+                集群升级
+            </a>
+        </li>
+        
+        <li>
+            <a href="/docs/administration/scale-in-out"
+                class="">
+                集群扩容缩容
+            </a>
+        </li>
+        
+        <li>
+            <a href="/docs/administration/resource-management"
+                class="">
+                资源管理
+            </a>
+        </li>
+        
+        <li>
+            <a href="/docs/administration/cold-backup"
+                class="">
+                冷备份
+            </a>
+        </li>
+        
+        <li>
+            <a href="/docs/administration/meta-recovery"
+                class="">
+                元数据恢复
+            </a>
+        </li>
+        
+        <li>
+            <a href="/docs/administration/replica-recovery"
+                class="">
+                Replica数据恢复
+            </a>
+        </li>
+        
+        <li>
+            <a href="/docs/administration/zk-migration"
+                class="">
+                Zookeeper迁移
+            </a>
+        </li>
+        
+        <li>
+            <a href="/docs/administration/table-migration"
+                class="">
+                Table迁移
+            </a>
+        </li>
+        
+        <li>
+            <a href="/docs/administration/table-soft-delete"
+                class="">
+                Table软删除
+            </a>
+        </li>
+        
+        <li>
+            <a href="/docs/administration/table-env"
+                class="">
+                Table环境变量
+            </a>
+        </li>
+        
+        <li>
+            <a href="/docs/administration/remote-commands"
+                class="">
+                远程命令
+            </a>
+        </li>
+        
+        <li>
+            <a href="/docs/administration/partition-split"
+                class="">
+                Partition-Split
+            </a>
+        </li>
+        
+        <li>
+            <a href="/docs/administration/duplication"
+                class="">
+                跨机房同步
+            </a>
+        </li>
+        
+        <li>
+            <a href="/docs/administration/compression"
+                class="is-active">
+                数据压缩
+            </a>
+        </li>
+        
+        <li>
+            <a href="/docs/administration/throttling"
+                class="">
+                流量控制
+            </a>
+        </li>
+        
+        <li>
+            <a href="/docs/administration/experiences"
+                class="">
+                运维经验
+            </a>
+        </li>
+        
+        <li>
+            <a href="/docs/administration/manual-compact"
+                class="">
+                Manual Compact功能
+            </a>
+        </li>
+        
+        <li>
+            <a href="/docs/administration/usage-scenario"
+                class="">
+                Usage Scenario功能
+            </a>
+        </li>
+        
+        <li>
+            <a href="/docs/administration/bad-disk"
+                class="">
+                坏盘检修
+            </a>
+        </li>
+        
+        <li>
+            <a href="/docs/administration/whitelist"
+                class="">
+                白名单
+            </a>
+        </li>
+        
+        <li>
+            <a href="/docs/administration/backup-request"
+                class="">
+                Backup Request
+            </a>
+        </li>
+        
+    </ul>
+    
+</aside>
+            </div>
+        </div>
+
+        <!-- main section -->
+        <div class="dashboard-main is-scrollable">
+            <nav class="navbar is-hidden-desktop">
+    <div class="navbar-brand">
+        <a href="/" class="navbar-item">
+            <!-- Pegasus Icon -->
+            <img src="/assets/images/pegasus-square.png">
+        </a>
+        <div class="navbar-item">
+            
+
+<!--A simple language switch button that only supports zh and en.-->
+<!--IF its language is zh, then switches to en.-->
+
+<a class="button is-light is-outlined is-inverted" href="/en/docs/administration/compression"><strong>En</strong></a>
+
+        </div>
+        <a role="button" class="navbar-burger burger" aria-label="menu" aria-expanded="false" data-target="navMenu">
+            <!-- Appears in mobile mode only -->
+            <span aria-hidden="true"></span>
+            <span aria-hidden="true"></span>
+            <span aria-hidden="true"></span>
+        </a>
+    </div>
+    <div class="navbar-menu" id="navMenu">
+        <div class="navbar-end">
+            
+            <!--dropdown-->
+            <div class="navbar-item has-dropdown is-hoverable">
+                <a href=""
+                    class="navbar-link ">
+                    <span>
+                        客户端库
+                    </span>
+                </a>
+                <div class="navbar-dropdown">
+                    
+                    <a href="/docs/clients/java-client"
+                        class="navbar-item ">
+                        Java客户端
+                    </a>
+                    
+                    <a href="/docs/clients/cpp-client"
+                        class="navbar-item ">
+                        C++客户端
+                    </a>
+                    
+                    <a href="/docs/clients/go-client"
+                        class="navbar-item ">
+                        Golang客户端
+                    </a>
+                    
+                    <a href="/docs/clients/python-client"
+                        class="navbar-item ">
+                        Python客户端
+                    </a>
+                    
+                    <a href="/docs/clients/node-client"
+                        class="navbar-item ">
+                        NodeJS客户端
+                    </a>
+                    
+                    <a href="/docs/clients/scala-client"
+                        class="navbar-item ">
+                        Scala客户端
+                    </a>
+                    
+                </div>
+            </div>
+            
+            <!--dropdown-->
+            <div class="navbar-item has-dropdown is-hoverable">
+                <a href=""
+                    class="navbar-link ">
+                    <span>
+                        用户接口
+                    </span>
+                </a>
+                <div class="navbar-dropdown">
+                    
+                    <a href="/docs/api/ttl"
+                        class="navbar-item ">
+                        TTL
+                    </a>
+                    
+                    <a href="/docs/api/single-atomic"
+                        class="navbar-item ">
+                        单行原子操作
+                    </a>
+                    
+                    <a href="/docs/api/redis"
+                        class="navbar-item ">
+                        Redis适配
+                    </a>
+                    
+                    <a href="/docs/api/geo"
+                        class="navbar-item ">
+                        GEO支持
+                    </a>
+                    
+                    <a href="/docs/api/http"
+                        class="navbar-item ">
+                        HTTP接口
+                    </a>
+                    
+                </div>
+            </div>
+            
+            <!--dropdown-->
+            <div class="navbar-item has-dropdown is-hoverable">
+                <a href=""
+                    class="navbar-link ">
+                    <span>
+                        高效运维
+                    </span>
+                </a>
+                <div class="navbar-dropdown">
+                    
+                    <a href="/docs/administration/deployment"
+                        class="navbar-item ">
+                        集群部署
+                    </a>
+                    
+                    <a href="/docs/administration/config"
+                        class="navbar-item ">
+                        配置说明
+                    </a>
+                    
+                    <a href="/docs/administration/rebalance"
+                        class="navbar-item ">
+                        负载均衡
+                    </a>
+                    
+                    <a href="/docs/administration/monitoring"
+                        class="navbar-item ">
+                        可视化监控
+                    </a>
+                    
+                    <a href="/docs/administration/rolling-update"
+                        class="navbar-item ">
+                        集群升级
+                    </a>
+                    
+                    <a href="/docs/administration/scale-in-out"
+                        class="navbar-item ">
+                        集群扩容缩容
+                    </a>
+                    
+                    <a href="/docs/administration/resource-management"
+                        class="navbar-item ">
+                        资源管理
+                    </a>
+                    
+                    <a href="/docs/administration/cold-backup"
+                        class="navbar-item ">
+                        冷备份
+                    </a>
+                    
+                    <a href="/docs/administration/meta-recovery"
+                        class="navbar-item ">
+                        元数据恢复
+                    </a>
+                    
+                    <a href="/docs/administration/replica-recovery"
+                        class="navbar-item ">
+                        Replica数据恢复
+                    </a>
+                    
+                    <a href="/docs/administration/zk-migration"
+                        class="navbar-item ">
+                        Zookeeper迁移
+                    </a>
+                    
+                    <a href="/docs/administration/table-migration"
+                        class="navbar-item ">
+                        Table迁移
+                    </a>
+                    
+                    <a href="/docs/administration/table-soft-delete"
+                        class="navbar-item ">
+                        Table软删除
+                    </a>
+                    
+                    <a href="/docs/administration/table-env"
+                        class="navbar-item ">
+                        Table环境变量
+                    </a>
+                    
+                    <a href="/docs/administration/remote-commands"
+                        class="navbar-item ">
+                        远程命令
+                    </a>
+                    
+                    <a href="/docs/administration/partition-split"
+                        class="navbar-item ">
+                        Partition-Split
+                    </a>
+                    
+                    <a href="/docs/administration/duplication"
+                        class="navbar-item ">
+                        跨机房同步
+                    </a>
+                    
+                    <a href="/docs/administration/compression"
+                        class="navbar-item is-active">
+                        数据压缩
+                    </a>
+                    
+                    <a href="/docs/administration/throttling"
+                        class="navbar-item ">
+                        流量控制
+                    </a>
+                    
+                    <a href="/docs/administration/experiences"
+                        class="navbar-item ">
+                        运维经验
+                    </a>
+                    
+                    <a href="/docs/administration/manual-compact"
+                        class="navbar-item ">
+                        Manual Compact功能
+                    </a>
+                    
+                    <a href="/docs/administration/usage-scenario"
+                        class="navbar-item ">
+                        Usage Scenario功能
+                    </a>
+                    
+                    <a href="/docs/administration/bad-disk"
+                        class="navbar-item ">
+                        坏盘检修
+                    </a>
+                    
+                    <a href="/docs/administration/whitelist"
+                        class="navbar-item ">
+                        白名单
+                    </a>
+                    
+                    <a href="/docs/administration/backup-request"
+                        class="navbar-item ">
+                        Backup Request
+                    </a>
+                    
+                </div>
+            </div>
+            
+        </div>
+    </div>
+</nav>
+
+<nav class="navbar is-hidden-mobile">
+    <div class="navbar-start w-full">
+        <div class="navbar-item pl-0 w-full">
+            <!--TODO(wutao): Given the limitation of docsearch that couldn't handle multiple input,
+                I make searchbox only shown in desktop. Fix this issue when docsearch.js v3 released.
+                Related issue: https://github.com/algolia/docsearch/issues/230-->
+            <div class="navbar-searchbox w-full bg-gray-200">
+    <div class="field">
+        <div class="control has-icons-right">
+            <input class="input searchbox-input focus:placeholder-transparent"
+                type="text" placeholder="Search the docs">
+            <span class="icon is-right">
+                <i class="fas fa-search searchbox-icon"></i>
+            </span>
+        </div>
+    </div>
+</div>
+        </div>
+    </div>
+    <div class="navbar-end">
+        <div class="navbar-item">
+            
+
+<!--A simple language switch button that only supports zh and en.-->
+<!--IF its language is zh, then switches to en.-->
+
+<a class="button is-light is-outlined is-inverted" href="/en/docs/administration/compression"><strong>En</strong></a>
+
+        </div>
+    </div>
+</nav>
+
+            <section class="hero is-info lg:mr-3">
+                <div class="hero-body">
+                    
+                    <p class="title is-size-2 is-centered">数据压缩</p>
+                </div>
+            </section>
+            <section class="section" style="padding-top: 2rem;">
+                <div class="content">
+                    <h1 id="客户端压缩">客户端压缩</h1>
+
+<p>请参考 <a href="/clients/java-client#数据序列化">Java客户端文档#数据序列化</a> 和 <a href="/clients/java-client#数据压缩">Java客户端文档#数据压缩</a> 。</p>
+
+<h1 id="服务端压缩">服务端压缩</h1>
+
+<p><strong>把总结放在最前面：</strong></p>
+<ul>
+  <li>对于CPU比较空闲的场景，建议采用压缩率高的<code class="language-plaintext highlighter-rouge">zstd</code>算法。</li>
+  <li>对于CPU比较繁忙的场景，建议采用综合性能比较优异的<code class="language-plaintext highlighter-rouge">lz4</code>算法。</li>
+</ul>
+
+<p>Pegasus服务端支持的压缩算法：</p>
+<ul>
+  <li>snappy</li>
+  <li>lz4 (从<a href="https://github.com/XiaoMi/pegasus/releases/tag/v1.11.2">v1.11.2版本</a>开始支持)</li>
+  <li>zstd (从<a href="https://github.com/XiaoMi/pegasus/releases/tag/v1.11.2">v1.11.2版本</a>开始支持)</li>
+</ul>
+
+<p>通过<a href="config">配置文件</a>来配置压缩算法，譬如：</p>
+<div class="language-ini highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nn">[pegasus.server]</span>
+    <span class="py">rocksdb_compression_type</span> <span class="p">=</span> <span class="s">lz4</span>
+</code></pre></div></div>
+
+<p>不同压缩算法的比较（数据来自<a href="https://facebook.github.io/zstd/">zstd官方的benchmark</a>）：</p>
+
+<table>
+  <thead>
+    <tr>
+      <th>Compressor name</th>
+      <th>Ratio</th>
+      <th>Compression(MB/s)</th>
+      <th>Decompress(MB/s)</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>zstd 1.3.4 -1</td>
+      <td>2.877</td>
+      <td>470</td>
+      <td>1380</td>
+    </tr>
+    <tr>
+      <td>zlib 1.2.11 -1</td>
+      <td>2.743</td>
+      <td>110</td>
+      <td>400</td>
+    </tr>
+    <tr>
+      <td>brotli 1.0.2 -0</td>
+      <td>2.701</td>
+      <td>410</td>
+      <td>430</td>
+    </tr>
+    <tr>
+      <td>quicklz 1.5.0 -1</td>
+      <td>2.238</td>
+      <td>550</td>
+      <td>710</td>
+    </tr>
+    <tr>
+      <td>lzo1x 2.09 -1</td>
+      <td>2.108</td>
+      <td>650</td>
+      <td>830</td>
+    </tr>
+    <tr>
+      <td>lz4 1.8.1</td>
+      <td>2.101</td>
+      <td>750</td>
+      <td>3700</td>
+    </tr>
+    <tr>
+      <td>snappy 1.1.4</td>
+      <td>2.091</td>
+      <td>530</td>
+      <td>1800</td>
+    </tr>
+    <tr>
+      <td>lzf 3.6 -1</td>
+      <td>2.077</td>
+      <td>400</td>
+      <td>860</td>
+    </tr>
+  </tbody>
+</table>
+
+<p><img src="/assets/images/compression-comparation.png" alt="compression-comparation.png" class="img-responsive" /></p>
+
+<p>这个结果与<a href="https://github.com/lz4/lz4#benchmarks">lz4官方的benchmark</a>也是一致的。</p>
+
+<p>附上<a href="https://github.com/facebook/rocksdb/wiki/Compression">RocksDB的压缩建议</a>：</p>
+<blockquote>
+  <p>Use options.compression to specify the compression to use. By default it is Snappy. We believe LZ4 is almost always better than Snappy. We leave Snappy as default to avoid unexpected compatibility problems to previous users. LZ4/Snappy is lightweight compression so it usually strikes a good balance between space and CPU usage.</p>
+</blockquote>
+
+<blockquote>
+  <p>If you want to further reduce the in-memory and have some free CPU to use, you can try to set a heavy-weight compression in the latter by setting options.bottommost_compression. The bottommost level will be compressed using this compression style. Usually the bottommost level contains majority of the data, so users get almost optimal space setting, without paying CPU for compress all the data ever flowing to any level. We recommend ZSTD. If it is not available, Zlib is the second choice.</p>
+</blockquote>
+
+<blockquote>
+  <p>If you want have a lot of free CPU and want to reduce not just space but write amplification too, try to set options.compression to heavy weight compression type. We recommend ZSTD. Use Zlib if it is not available.</p>
+</blockquote>
+
+
+                </div>
+            </section>
+            <footer class="footer">
+    <div class="container">
+        <div class="content is-small has-text-centered">
+            <div style="margin-bottom: 20px;">
+                <a href="http://incubator.apache.org"><img src="/assets/images/egg-logo.png"
+                                                           alt="Apache Incubator"/></a>
+            </div>
+            Copyright &copy; 2020 <a href="http://www.apache.org">The Apache Software Foundation</a>.
+            Licensed under the <a href="http://www.apache.org/licenses/LICENSE-2.0">Apache License, Version
+            2.0</a>.
+            <br><br>
+            
+            Apache Pegasus is an effort undergoing incubation at The Apache Software Foundation (ASF),
+            sponsored by the Apache Incubator. Incubation is required of all newly accepted projects
+            until a further review indicates that the infrastructure, communications, and decision making process
+            have stabilized in a manner consistent with other successful ASF projects. While incubation status is
+            not necessarily a reflection of the completeness or stability of the code, it does indicate that the
+            project has yet to be fully endorsed by the ASF.
+            
+        </div>
+    </div>
+</footer>
+        </div>
+
+        <!-- right panel -->
+        <div class="dashboard-panel is-small is-scrollable is-hidden-mobile">
+            <p class="menu-label">
+    <span class="icon">
+        <i class="fa fa-bars" aria-hidden="true"></i>
+    </span>
+    本页导航
+</p>
+<ul class="menu-list">
+  <li><a href="#客户端压缩">客户端压缩</a></li>
+  <li><a href="#服务端压缩">服务端压缩</a></li>
+</ul>
+
+        </div>
+    </div>
+
+    <script src="/assets/js/app.js" type="text/javascript"></script>
+    <script src="https://cdn.jsdelivr.net/npm/docsearch.js@2/dist/cdn/docsearch.min.js"></script>
+
+<script>
+    docsearch({
+        indexName: 'apache_pegasus',
+        apiKey: '676624c2d6dc00808d3b7cf6724fc3c8',
+        inputSelector: '.searchbox-input',
+        debug: true,
+    });
+</script>
+</body>
+
+</html>

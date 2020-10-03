@@ -6,6 +6,9 @@
     <title>Pegasus | Pegasus 社区</title>
     <link rel="stylesheet" href="/assets/css/app.css">
     <link rel="shortcut icon" href="/assets/images/favicon.ico">
+    <link href="https://cdn.bootcdn.net/ajax/libs/tailwindcss/1.8.10/utilities.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/docsearch.js@2/dist/cdn/docsearch.min.css" />
+    <script src="https://cdn.bootcss.com/jquery/3.4.1/jquery.min.js"></script>
     <script src="https://cdn.bootcdn.net/ajax/libs/font-awesome/5.13.0/js/all.min.js"></script>
     <!-- Begin Jekyll SEO tag v2.6.1 -->
 <title>Pegasus 社区 | Pegasus</title>
@@ -16,55 +19,95 @@
 <meta property="og:description" content="邮件订阅" />
 <meta property="og:site_name" content="Pegasus" />
 <meta property="og:type" content="article" />
-<meta property="article:published_time" content="2020-09-09T09:17:25+00:00" />
+<meta property="article:published_time" content="2020-10-03T13:29:09+00:00" />
 <script type="application/ld+json">
-{"url":"/community/index","@type":"BlogPosting","mainEntityOfPage":{"@type":"WebPage","@id":"/community/index"},"headline":"Pegasus 社区","description":"邮件订阅","dateModified":"2020-09-09T09:17:25+00:00","datePublished":"2020-09-09T09:17:25+00:00","@context":"https://schema.org"}</script>
+{"url":"/community/","@type":"BlogPosting","headline":"Pegasus 社区","dateModified":"2020-10-03T13:29:09+00:00","datePublished":"2020-10-03T13:29:09+00:00","mainEntityOfPage":{"@type":"WebPage","@id":"/community/"},"description":"邮件订阅","@context":"https://schema.org"}</script>
 <!-- End Jekyll SEO tag -->
 </head>
 
 
 <body>
-    <nav class="navbar  is-black ">
+    
+
+
+
+<nav class="navbar is-black">
     <div class="container">
+        <!--container will be unwrapped when it's in docs-->
         <div class="navbar-brand">
             <a href="/" class="navbar-item ">
-                <!-- Pegasus -->
+                <!-- Pegasus Icon -->
                 <img src="/assets/images/pegasus-icon.png">
             </a>
+            <div class="navbar-item">
+                <a href="/docs" class="button is-primary is-outlined is-inverted">
+                    <span class="icon"><i class="fas fa-book"></i></span>
+                    <span>Docs</span>
+                </a>
+            </div>
+            <div class="navbar-item is-hidden-desktop">
+                  
+
+<!--A simple language switch button that only supports zh and en.-->
+<!--IF its language is zh, then switches to en.-->
+
+<a class="button is-primary is-outlined is-inverted" href="/en/community/index.html"><strong>En</strong></a>
+
+            </div>
             <a role="button" class="navbar-burger burger" aria-label="menu" aria-expanded="false" data-target="navMenu">
+                <!-- Appears in mobile mode only -->
                 <span aria-hidden="true"></span>
                 <span aria-hidden="true"></span>
                 <span aria-hidden="true"></span>
             </a>
         </div>
         <div class="navbar-menu" id="navMenu">
-            <div class="navbar-start">
+            <div class="navbar-end">
                 
-                
-                
-                <div class="navbar-item has-dropdown is-hoverable">
-                    <a href="/overview"
+                 <!--dropdown-->
+                <div class="navbar-item has-dropdown is-hoverable ">
+                    <a href="/community"
                         class="navbar-link ">
                         
                         <span class="icon" style="margin-right: .25em">
-                            <i class="fas fa-book"></i>
+                            <i class="fas fa-user-plus"></i>
                         </span>
                         
-                        <span>Documentation</span>
+                        <span>
+                            开源社区
+                        </span>
                     </a>
                     <div class="navbar-dropdown">
                         
-                        <a href="/overview"
-                            class="navbar-item ">概览</a>
+                        <a href="/community/#联系我们"
+                            class="navbar-item ">
+                            联系我们
+                        </a>
                         
-                        <a href="/clients"
-                            class="navbar-item ">客户端库</a>
+                        <a href="/community/#参与贡献"
+                            class="navbar-item ">
+                            参与贡献
+                        </a>
                         
-                        <a href="/api"
-                            class="navbar-item ">用户接口</a>
+                        <a href="/community/coding-guides"
+                            class="navbar-item ">
+                            编码指引
+                        </a>
                         
-                        <a href="/administration"
-                            class="navbar-item ">高效运维</a>
+                        <a href="/community/roadmap"
+                            class="navbar-item ">
+                            路线图
+                        </a>
+                        
+                        <a href="https://github.com/XiaoMi/pegasus/labels/type%2Fbug"
+                            class="navbar-item ">
+                            Bug追踪
+                        </a>
+                        
+                        <a href="/community/proposal"
+                            class="navbar-item ">
+                            Apache提案
+                        </a>
                         
                     </div>
                 </div>
@@ -83,53 +126,6 @@
                 
                 
                 
-                <div class="navbar-item has-dropdown is-hoverable">
-                    <a href="/community"
-                        class="navbar-link ">
-                        
-                        <span class="icon" style="margin-right: .25em">
-                            <i class="fas fa-user-plus"></i>
-                        </span>
-                        
-                        <span>Community</span>
-                    </a>
-                    <div class="navbar-dropdown">
-                        
-                        <a href="/community/#联系我们"
-                            class="navbar-item ">联系我们</a>
-                        
-                        <a href="/community/#参与贡献"
-                            class="navbar-item ">参与贡献</a>
-                        
-                        <a href="/community/coding-guides"
-                            class="navbar-item ">Coding Guides</a>
-                        
-                        <a href="/community/roadmap"
-                            class="navbar-item ">Roadmap</a>
-                        
-                        <a href="https://github.com/XiaoMi/pegasus/labels/type%2Fbug"
-                            class="navbar-item ">Bug Tracking</a>
-                        
-                        <a href="/community/proposal"
-                            class="navbar-item ">Apache Proposal</a>
-                        
-                    </div>
-                </div>
-                
-                
-                
-                <a href="https://github.com/XiaoMi/pegasus"
-                    class="navbar-item ">
-                    
-                    <span class="icon" style="margin-right: .25em">
-                        <i class="fab fa-github-alt"></i>
-                    </span>
-                    
-                    <span>Github</span>
-                </a>
-                
-                
-                
                 <a href="/releases"
                     class="navbar-item ">
                     
@@ -137,51 +133,23 @@
                         <i class="fas fa-fire"></i>
                     </span>
                     
-                    <span>Releases</span>
+                    <span>版本发布</span>
                 </a>
                 
                 
-                
             </div>
-            <div class="navbar-end is-hidden-mobile">
-                <div class="navbar-item navbar-searchbox">
-                    <div class="field">
-                        <div class="control has-icons-right">
-                            <input class="input searchbox-input" type="text" placeholder="Search the docs">
-                            <span class="border"></span>
-                            <span class="icon is-right searchbox-icon">
-                                <i class="fas fa-search"></i>
-                            </span>
-                        </div>
-                    </div>
-                </div>
+            <div class="navbar-item is-hidden-mobile">
+                
+
+<!--A simple language switch button that only supports zh and en.-->
+<!--IF its language is zh, then switches to en.-->
+
+<a class="button is-primary is-outlined is-inverted" href="/en/community/index.html"><strong>En</strong></a>
+
             </div>
         </div>
     </div>
 </nav>
-
-<script src="https://cdn.bootcss.com/jquery/3.4.1/jquery.min.js"></script>
-
-<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/docsearch.js@2/dist/cdn/docsearch.min.css" />
-<script src="https://cdn.jsdelivr.net/npm/docsearch.js@2/dist/cdn/docsearch.min.js"></script>
-
-<script>
-    docsearch({
-        indexName: 'apache_pegasus',
-        apiKey: '676624c2d6dc00808d3b7cf6724fc3c8',
-        inputSelector: '.searchbox-input',
-        debug: false,
-    });
-
-    $('.searchbox-input').focus(function () {
-        $('.navbar-searchbox .border').animate({ left: '0', width: '100%' })
-        $('.searchbox-icon').css({ color: 'white' })
-    })
-    $('.searchbox-input').focusout(function () {
-        $('.navbar-searchbox .border').animate({ left: '0', width: '0' })
-        $('.searchbox-icon').css({ color: 'hsl(0, 0%, 86%)' })
-    })
-</script>
 
     <section class="hero is-large is-dark"
         style="background: url('/assets/images/nasa-53884-unsplash.jpg') no-repeat center center; background-size: cover;">

@@ -6,6 +6,9 @@
     <title>Pegasus | </title>
     <link rel="stylesheet" href="/assets/css/app.css">
     <link rel="shortcut icon" href="/assets/images/favicon.ico">
+    <link href="https://cdn.bootcdn.net/ajax/libs/tailwindcss/1.8.10/utilities.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/docsearch.js@2/dist/cdn/docsearch.min.css" />
+    <script src="https://cdn.bootcss.com/jquery/3.4.1/jquery.min.js"></script>
     <script src="https://cdn.bootcdn.net/ajax/libs/font-awesome/5.13.0/js/all.min.js"></script>
     <!-- Begin Jekyll SEO tag v2.6.1 -->
 <title>Pegasus</title>
@@ -20,47 +23,87 @@
 
 
 <body>
-    <nav class="navbar  is-primary ">
+    
+
+
+
+<nav class="navbar is-primary">
     <div class="container">
+        <!--container will be unwrapped when it's in docs-->
         <div class="navbar-brand">
             <a href="/" class="navbar-item is-active">
-                <!-- Pegasus -->
+                <!-- Pegasus Icon -->
                 <img src="/assets/images/pegasus-icon.png">
             </a>
+            <div class="navbar-item">
+                <a href="/docs" class="button is-primary is-outlined is-inverted">
+                    <span class="icon"><i class="fas fa-book"></i></span>
+                    <span>Docs</span>
+                </a>
+            </div>
+            <div class="navbar-item is-hidden-desktop">
+                  
+
+<!--A simple language switch button that only supports zh and en.-->
+<!--IF its language is zh, then switches to en.-->
+
+<a class="button is-primary is-outlined is-inverted" href="/en/"><strong>En</strong></a>
+
+            </div>
             <a role="button" class="navbar-burger burger" aria-label="menu" aria-expanded="false" data-target="navMenu">
+                <!-- Appears in mobile mode only -->
                 <span aria-hidden="true"></span>
                 <span aria-hidden="true"></span>
                 <span aria-hidden="true"></span>
             </a>
         </div>
         <div class="navbar-menu" id="navMenu">
-            <div class="navbar-start">
+            <div class="navbar-end">
                 
-                
-                
-                <div class="navbar-item has-dropdown is-hoverable">
-                    <a href="/overview"
+                 <!--dropdown-->
+                <div class="navbar-item has-dropdown is-hoverable ">
+                    <a href="/community"
                         class="navbar-link ">
                         
                         <span class="icon" style="margin-right: .25em">
-                            <i class="fas fa-book"></i>
+                            <i class="fas fa-user-plus"></i>
                         </span>
                         
-                        <span>Documentation</span>
+                        <span>
+                            开源社区
+                        </span>
                     </a>
                     <div class="navbar-dropdown">
                         
-                        <a href="/overview"
-                            class="navbar-item ">概览</a>
+                        <a href="/community/#联系我们"
+                            class="navbar-item ">
+                            联系我们
+                        </a>
                         
-                        <a href="/clients"
-                            class="navbar-item ">客户端库</a>
+                        <a href="/community/#参与贡献"
+                            class="navbar-item ">
+                            参与贡献
+                        </a>
                         
-                        <a href="/api"
-                            class="navbar-item ">用户接口</a>
+                        <a href="/community/coding-guides"
+                            class="navbar-item ">
+                            编码指引
+                        </a>
                         
-                        <a href="/administration"
-                            class="navbar-item ">高效运维</a>
+                        <a href="/community/roadmap"
+                            class="navbar-item ">
+                            路线图
+                        </a>
+                        
+                        <a href="https://github.com/XiaoMi/pegasus/labels/type%2Fbug"
+                            class="navbar-item ">
+                            Bug追踪
+                        </a>
+                        
+                        <a href="/community/proposal"
+                            class="navbar-item ">
+                            Apache提案
+                        </a>
                         
                     </div>
                 </div>
@@ -79,53 +122,6 @@
                 
                 
                 
-                <div class="navbar-item has-dropdown is-hoverable">
-                    <a href="/community"
-                        class="navbar-link ">
-                        
-                        <span class="icon" style="margin-right: .25em">
-                            <i class="fas fa-user-plus"></i>
-                        </span>
-                        
-                        <span>Community</span>
-                    </a>
-                    <div class="navbar-dropdown">
-                        
-                        <a href="/community/#联系我们"
-                            class="navbar-item ">联系我们</a>
-                        
-                        <a href="/community/#参与贡献"
-                            class="navbar-item ">参与贡献</a>
-                        
-                        <a href="/community/coding-guides"
-                            class="navbar-item ">Coding Guides</a>
-                        
-                        <a href="/community/roadmap"
-                            class="navbar-item ">Roadmap</a>
-                        
-                        <a href="https://github.com/XiaoMi/pegasus/labels/type%2Fbug"
-                            class="navbar-item ">Bug Tracking</a>
-                        
-                        <a href="/community/proposal"
-                            class="navbar-item ">Apache Proposal</a>
-                        
-                    </div>
-                </div>
-                
-                
-                
-                <a href="https://github.com/XiaoMi/pegasus"
-                    class="navbar-item ">
-                    
-                    <span class="icon" style="margin-right: .25em">
-                        <i class="fab fa-github-alt"></i>
-                    </span>
-                    
-                    <span>Github</span>
-                </a>
-                
-                
-                
                 <a href="/releases"
                     class="navbar-item ">
                     
@@ -133,60 +129,35 @@
                         <i class="fas fa-fire"></i>
                     </span>
                     
-                    <span>Releases</span>
+                    <span>版本发布</span>
                 </a>
                 
                 
-                
             </div>
-            <div class="navbar-end is-hidden-mobile">
-                <div class="navbar-item navbar-searchbox">
-                    <div class="field">
-                        <div class="control has-icons-right">
-                            <input class="input searchbox-input" type="text" placeholder="Search the docs">
-                            <span class="border"></span>
-                            <span class="icon is-right searchbox-icon">
-                                <i class="fas fa-search"></i>
-                            </span>
-                        </div>
-                    </div>
-                </div>
+            <div class="navbar-item is-hidden-mobile">
+                
+
+<!--A simple language switch button that only supports zh and en.-->
+<!--IF its language is zh, then switches to en.-->
+
+<a class="button is-primary is-outlined is-inverted" href="/en/"><strong>En</strong></a>
+
             </div>
         </div>
     </div>
 </nav>
 
-<script src="https://cdn.bootcss.com/jquery/3.4.1/jquery.min.js"></script>
-
-<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/docsearch.js@2/dist/cdn/docsearch.min.css" />
-<script src="https://cdn.jsdelivr.net/npm/docsearch.js@2/dist/cdn/docsearch.min.js"></script>
-
-<script>
-    docsearch({
-        indexName: 'apache_pegasus',
-        apiKey: '676624c2d6dc00808d3b7cf6724fc3c8',
-        inputSelector: '.searchbox-input',
-        debug: false,
-    });
-
-    $('.searchbox-input').focus(function () {
-        $('.navbar-searchbox .border').animate({ left: '0', width: '100%' })
-        $('.searchbox-icon').css({ color: 'white' })
-    })
-    $('.searchbox-input').focusout(function () {
-        $('.navbar-searchbox .border').animate({ left: '0', width: '0' })
-        $('.searchbox-icon').css({ color: 'hsl(0, 0%, 86%)' })
-    })
-</script>
-
     <section class="hero is-large is-bold is-primary" >
         <div class="hero-body">
             <div class="container has-text-centered">
-                <p class="project-title title is-1 has-text-weight-medium" style="padding-bottom: 2rem; font-size: 70px;">
+                <p class="project-title title is-1 has-text-weight-medium"
+                    style="padding-bottom: 2rem; font-size: 70px;">
                     Apache Pegasus
                 </p>
-                <p class="subtitle is-4 has-text-white-bis has-text-weight-light" style="padding-bottom: 1rem;">
-                    A horizontally scalable, strongly consistent and high-performance key-value store
+                <p class="project-subtitle subtitle is-4 has-text-white-bis has-text-weight-light">
+                    
+                    可水平扩展、高性能、强一致的分布式Key-Value数据库
+                    
                 </p>
                 <a style="padding-right: 0.5rem" href="https://www.apache.org/licenses/LICENSE-2.0">
                     <img alt="https://img.shields.io/github/license/xiaomi/pegasus.svg?style=flat-square&"
@@ -197,23 +168,26 @@
                         src="https://img.shields.io/github/stars/xiaomi/pegasus.svg?style=flat-square&">
                 </a>
                 <br>
-                <a style="padding-right: 0.5rem" href="https://github.com/XiaoMi/pegasus/issues?utf8=%E2%9C%93&q=label%3Arelease-note">
+                <a style="padding-right: 0.5rem"
+                    href="https://github.com/XiaoMi/pegasus/issues?utf8=%E2%9C%93&q=label%3Arelease-note">
                     <img alt="https://img.shields.io/github/release/xiaomi/pegasus.svg?style=flat-square&label=Pegasus"
                         src="https://img.shields.io/github/release/xiaomi/pegasus.svg?style=flat-square&label=Pegasus">
                 </a>
                 <a style="padding-right: 0.5rem" href="https://github.com/XiaoMi/pegasus-java-client/releases">
                     <img alt="https://img.shields.io/github/release/xiaomi/pegasus-java-client.svg?style=flat-square&label=Pegasus-Java-Client"
                         src="https://img.shields.io/github/release/xiaomi/pegasus-java-client.svg?style=flat-square&label=Pegasus-Java-Client">
-                </a>    
+                </a>
                 <div style="padding-top: 2rem" class="buttons is-centered">
-                    <a class="button is-light is-outlined is-rounded is-large"
-                        style="transition:.5s; padding-right: 3rem; padding-left: 3rem;"
+                    <a class="button is-light is-large front-start-button"
                         href="/overview">
                         <span class="icon"><i class="fas fa-chevron-right"></i></span>
                         <span>
                             <span style="font-weight:lighter">Get</span>
                             <strong>Started</strong>
                         </span>
+                    </a>
+                    <a class="button is-dark is-large front-github-button" href="https://github.com/apache/incubator-pegasus">
+                        <span class="icon"><i class="fab fa-github-alt"></i></span>
                     </a>
                 </div>
             </div>

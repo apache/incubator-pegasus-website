@@ -1,0 +1,340 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Pegasus | Pegasus 线程梳理</title>
+    <link rel="stylesheet" href="/en/assets/css/app.css">
+    <link rel="shortcut icon" href="/en/assets/images/favicon.ico">
+    <link href="https://cdn.bootcdn.net/ajax/libs/tailwindcss/1.8.10/utilities.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/docsearch.js@2/dist/cdn/docsearch.min.css" />
+    <script src="https://cdn.bootcss.com/jquery/3.4.1/jquery.min.js"></script>
+    <script src="https://cdn.bootcdn.net/ajax/libs/font-awesome/5.13.0/js/all.min.js"></script>
+    <!-- Begin Jekyll SEO tag v2.6.1 -->
+<title>Pegasus 线程梳理 | Pegasus</title>
+<meta name="generator" content="Jekyll v4.1.1" />
+<meta property="og:title" content="Pegasus 线程梳理" />
+<meta name="author" content="吴涛" />
+<meta property="og:locale" content="en_US" />
+<meta name="description" content="当前在我们的推荐配置下，Pegasus Replica Server 一共会有 174 线程在工作，所有的线程都是长线程。 这些线程到底是用来做什么的，我们在这篇文章进行梳理。" />
+<meta property="og:description" content="当前在我们的推荐配置下，Pegasus Replica Server 一共会有 174 线程在工作，所有的线程都是长线程。 这些线程到底是用来做什么的，我们在这篇文章进行梳理。" />
+<meta property="og:site_name" content="Pegasus" />
+<meta property="og:type" content="article" />
+<meta property="article:published_time" content="2019-04-29T00:00:00+00:00" />
+<script type="application/ld+json">
+{"url":"/2019/04/29/threads-in-pegasus.html","@type":"BlogPosting","headline":"Pegasus 线程梳理","dateModified":"2019-04-29T00:00:00+00:00","datePublished":"2019-04-29T00:00:00+00:00","mainEntityOfPage":{"@type":"WebPage","@id":"/2019/04/29/threads-in-pegasus.html"},"author":{"@type":"Person","name":"吴涛"},"description":"当前在我们的推荐配置下，Pegasus Replica Server 一共会有 174 线程在工作，所有的线程都是长线程。 这些线程到底是用来做什么的，我们在这篇文章进行梳理。","@context":"https://schema.org"}</script>
+<!-- End Jekyll SEO tag -->
+</head>
+
+  <body>
+    
+
+
+
+<nav class="navbar is-info">
+    <div class="container">
+        <!--container will be unwrapped when it's in docs-->
+        <div class="navbar-brand">
+            <a href="/en/" class="navbar-item ">
+                <!-- Pegasus Icon -->
+                <img src="/assets/images/pegasus-icon.png">
+            </a>
+            <div class="navbar-item">
+                <a href="/en/docs" class="button is-primary is-outlined is-inverted">
+                    <span class="icon"><i class="fas fa-book"></i></span>
+                    <span>Docs</span>
+                </a>
+            </div>
+            <div class="navbar-item is-hidden-desktop">
+                  
+
+<!--A simple language switch button that only supports zh and en.-->
+<!--IF its language is zh, then switches to en.-->
+
+<!--If you don't want a url to be relativized, you can add a space explicitly into the href to 
+    prevents a url from being relativized by polyglot.-->
+<a class="button is-primary is-outlined is-inverted" href=" /2019/04/29/threads-in-pegasus.html"><strong>中</strong></a>
+
+            </div>
+            <a role="button" class="navbar-burger burger" aria-label="menu" aria-expanded="false" data-target="navMenu">
+                <!-- Appears in mobile mode only -->
+                <span aria-hidden="true"></span>
+                <span aria-hidden="true"></span>
+                <span aria-hidden="true"></span>
+            </a>
+        </div>
+        <div class="navbar-menu" id="navMenu">
+            <div class="navbar-end">
+                
+                 <!--dropdown-->
+                <div class="navbar-item has-dropdown is-hoverable ">
+                    <a href="/en/community"
+                        class="navbar-link ">
+                        
+                        <span class="icon" style="margin-right: .25em">
+                            <i class="fas fa-user-plus"></i>
+                        </span>
+                        
+                        <span>
+                            Community
+                        </span>
+                    </a>
+                    <div class="navbar-dropdown">
+                        
+                        <a href="/en/community/#联系我们"
+                            class="navbar-item ">
+                            Contact
+                        </a>
+                        
+                        <a href="/en/community/#参与贡献"
+                            class="navbar-item ">
+                            Contribution
+                        </a>
+                        
+                        <a href="/en/community/coding-guides"
+                            class="navbar-item ">
+                            Coding Guides
+                        </a>
+                        
+                        <a href="/en/community/roadmap"
+                            class="navbar-item ">
+                            RoadMap
+                        </a>
+                        
+                        <a href="https://github.com/XiaoMi/pegasus/labels/type%2Fbug"
+                            class="navbar-item ">
+                            Bug Tracking
+                        </a>
+                        
+                        <a href="/en/community/proposal"
+                            class="navbar-item ">
+                            Apache Proposal
+                        </a>
+                        
+                    </div>
+                </div>
+                
+                
+                
+                <a href="/en/blogs"
+                    class="navbar-item ">
+                    
+                    <span class="icon" style="margin-right: .25em">
+                        <i class="fas fa-rss"></i>
+                    </span>
+                    
+                    <span>Blog</span>
+                </a>
+                
+                
+                
+                <a href="/en/releases"
+                    class="navbar-item ">
+                    
+                    <span class="icon" style="margin-right: .25em">
+                        <i class="fas fa-fire"></i>
+                    </span>
+                    
+                    <span>Releases</span>
+                </a>
+                
+                
+            </div>
+            <div class="navbar-item is-hidden-mobile">
+                
+
+<!--A simple language switch button that only supports zh and en.-->
+<!--IF its language is zh, then switches to en.-->
+
+<!--If you don't want a url to be relativized, you can add a space explicitly into the href to 
+    prevents a url from being relativized by polyglot.-->
+<a class="button is-primary is-outlined is-inverted" href=" /2019/04/29/threads-in-pegasus.html"><strong>中</strong></a>
+
+            </div>
+        </div>
+    </div>
+</nav>
+
+    <section class="section">
+        <div class="container">
+            <div class="columns is-multiline">
+                <div class="column is-one-fourth">
+                    
+                </div>
+                <div class="column is-half">
+                    
+                    <div class="content">
+
+    <ul class="blog-post-meta">
+        <li class="blog-post-meta-item">
+            <span class="icon" style="margin-right: .25em">
+                <i class="far fa-calendar-check" aria-hidden="true"></i>
+            </span>
+            April 29, 2019
+        </li>
+        <li class="blog-post-meta-item">
+            <span class="icon" style="margin-right: .25em">
+                <i class="fas fa-edit" aria-hidden="true"></i>
+            </span>
+            吴涛
+        </li>
+    </ul>
+
+    <p>当前在我们的推荐配置下，Pegasus Replica Server 一共会有 174 线程在工作，所有的线程都是长线程。
+这些线程到底是用来做什么的，我们在这篇文章进行梳理。</p>
+
+<hr />
+
+<h3 id="线程总览">线程总览</h3>
+
+<p>多数线程会通过 wait 的方式沉睡，实际对 CPU 的竞争影响较小，典型的 pstack 情况是</p>
+
+<ul>
+  <li>pthread_cond_wait: 49</li>
+  <li>epoll_wait: 36</li>
+  <li>sem_wait: 81</li>
+</ul>
+
+<p>这样算下来会发现实际运转的线程数是 174-49-36-81=8，而我们的机器通常配置的核心数是 24 核，平时的计算资源存在一定冗余。</p>
+
+<pre><code class="language-txt">THREAD_POOL_COMPACT
+worker_count = 8
+
+THREAD_POOL_FDS_SERVICE
+worker_count = 8
+
+THREAD_POOL_REPLICATION_LONG
+worker_count = 8
+
+THREAD_POOL_LOCAL_APP
+worker_count = 24
+
+THREAD_POOL_FD
+worker_count = 2
+
+THREAD_POOL_DLOCK
+worker_count = 1
+
+THREAD_POOL_META_STATE
+worker_count = 1
+
+THREAD_POOL_REPLICATION
+worker_count = 24
+
+THREAD_POOL_DEFAULT
+worker_count = 8
+</code></pre>
+
+<p>抛开 meta_server 的线程池（<code class="language-plaintext highlighter-rouge">THREAD_POOL_DLOCK</code>，<code class="language-plaintext highlighter-rouge">THREAD_POOL_META_STATE</code>），由 rDSN 托管的线程数算下来应该是 82 个，多出来的 92 线程如何分配？</p>
+
+<h3 id="30-个线程负责定时任务的处理">30 个线程负责定时任务的处理</h3>
+
+<p>30 个线程负责 timer_service，即定时任务的处理。</p>
+
+<p>rDSN 默认为每个线程池分配一个 timer 线程，理论上有 7 个线程池，就是 7 线程。但是因为 <code class="language-plaintext highlighter-rouge">THREAD_POOL_REPLICATION</code> 是各个线程 share nothing 的，所以它的每个 worker 线程会单独配一个 timer 线程。因此总 timer 线程数是 24 + 6 = 30。</p>
+
+<h3 id="40-个线程负责网络报文处理">40 个线程负责网络报文处理</h3>
+
+<p>20 个线程负责 tcp 的处理（asio_net_provider），20 个线程执行 udp 的处理（asio_udp_provider）</p>
+
+<p>目前每个 rpc_channel (udp/tcp) 对每个 <code class="language-plaintext highlighter-rouge">network_header_format</code> 都会配置 4 个 worker 线程。</p>
+
+<p>我们目前有四种 format：RAW，THRIFT，HTTP，DSN，（目前不清楚第 5 种的类型）</p>
+
+<p>相关配置：</p>
+
+<div class="language-ini highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nn">[network]</span>
+<span class="py">io_service_worker_count</span> <span class="p">=</span> <span class="s">4</span>
+</code></pre></div></div>
+
+<h3 id="2-个线程负责上报监控到-falcon">2 个线程负责上报监控到 falcon</h3>
+
+<p>2 个线程负责上报监控到 falcon，这里的线程数是写死的。</p>
+
+<p>参考：
+<code class="language-plaintext highlighter-rouge">pegasus_counter_reporter</code></p>
+
+<h2 id="1-个线程负责-aio-读写磁盘">1 个线程负责 aio 读写磁盘</h2>
+
+<p>1 个线程执行 aio 读写磁盘的任务，即 libaio 的 get_event 操作。</p>
+
+<h3 id="16-个线程执行-rocksdb-后台操作">16 个线程执行 rocksdb 后台操作</h3>
+
+<p>其中 12 个线程执行 rocskdb background compaction。</p>
+
+<p>4 个线程执行 rocksdb background flush。</p>
+
+<p>参考：
+<code class="language-plaintext highlighter-rouge">pegasus_server_impl</code></p>
+
+<p>相关配置：</p>
+
+<div class="language-ini highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nn">[pegasus.server]</span>
+<span class="py">rocksdb_max_background_flushes</span><span class="p">=</span><span class="s">4</span>
+<span class="py">rocksdb_max_background_compactions</span><span class="p">=</span><span class="s">12</span>
+</code></pre></div></div>
+
+<h3 id="2-个线程执行-shared_io_service">2 个线程执行 shared_io_service</h3>
+
+<p>2 个线程执行 shared_io_service，给 percentile 类型的 perf-counter 用</p>
+
+<p>相关配置：</p>
+
+<div class="language-ini highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nn">[core]</span>
+<span class="py">timer_service_worker_count</span><span class="p">=</span><span class="s">2</span>
+</code></pre></div></div>
+
+</div>
+
+<div class="tags">
+    
+</div>
+
+                </div>
+                <div class="column is-one-fourth is-hidden-mobile" style="padding-left: 3rem">
+                    
+                    <p class="menu-label">
+    <span class="icon">
+        <i class="fa fa-bars" aria-hidden="true"></i>
+    </span>
+    Table of contents
+</p>
+<ul class="menu-list">
+  <li><a href="#线程总览">线程总览</a></li>
+  <li><a href="#30-个线程负责定时任务的处理">30 个线程负责定时任务的处理</a></li>
+  <li><a href="#40-个线程负责网络报文处理">40 个线程负责网络报文处理</a></li>
+  <li><a href="#2-个线程负责上报监控到-falcon">2 个线程负责上报监控到 falcon</a></li>
+  <li><a href="#16-个线程执行-rocksdb-后台操作">16 个线程执行 rocksdb 后台操作</a></li>
+  <li><a href="#2-个线程执行-shared_io_service">2 个线程执行 shared_io_service</a></li>
+</ul>
+
+                    
+                </div>
+            </div>
+        </div>
+    </section>
+    <footer class="footer">
+    <div class="container">
+        <div class="content is-small has-text-centered">
+            <div style="margin-bottom: 20px;">
+                <a href="http://incubator.apache.org"><img src="/assets/images/egg-logo.png"
+                                                           alt="Apache Incubator"/></a>
+            </div>
+            Copyright &copy; 2020 <a href="http://www.apache.org">The Apache Software Foundation</a>.
+            Licensed under the <a href="http://www.apache.org/licenses/LICENSE-2.0">Apache License, Version
+            2.0</a>.
+            <br><br>
+            
+            Apache Pegasus is an effort undergoing incubation at The Apache Software Foundation (ASF),
+            sponsored by the Apache Incubator. Incubation is required of all newly accepted projects
+            until a further review indicates that the infrastructure, communications, and decision making process
+            have stabilized in a manner consistent with other successful ASF projects. While incubation status is
+            not necessarily a reflection of the completeness or stability of the code, it does indicate that the
+            project has yet to be fully endorsed by the ASF.
+            
+        </div>
+    </div>
+</footer>
+    <script src="/assets/js/app.js" type="text/javascript"></script>
+  </body>
+</html>
