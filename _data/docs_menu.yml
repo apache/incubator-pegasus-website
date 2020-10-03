@@ -1,28 +1,28 @@
 - name: title_clients
   items:
-    - name: title_java_client
+    - name: title_java-client
       link: /docs/clients/java-client
-    - name: title_cpp_client
+    - name: title_cpp-client
       link: /docs/clients/cpp-client
-    - name: title_go_client
+    - name: title_go-client
       link: /docs/clients/go-client
-    - name: title_python_client
+    - name: title_python-client
       link: /docs/clients/python-client
-    - name: title_nodejs_client
+    - name: title_node-client
       link: /docs/clients/node-client
-    - name: title_scala_client
+    - name: title_scala-client
       link: /docs/clients/scala-client
 - name: title_api
   items:
     - name: title_ttl
       link: /docs/api/ttl
-    - name: title_single_atomic
+    - name: title_single-atomic
       link: /docs/api/single-atomic
-    - name: title_redis_api
+    - name: title_redis
       link: /docs/api/redis
-    - name: title_geo_support
+    - name: title_geo
       link: /docs/api/geo
-    - name: title_http_api
+    - name: title_http
       link: /docs/api/http
 - name: title_administration
   items:
@@ -37,7 +37,7 @@
     - name: title_rolling-update
       link: /docs/administration/rolling-update
     - name: title_scale-in-out
-      link: /docs/administration/membership-change
+      link: /docs/administration/scale-in-out
     - name: title_resource-management
       link: /docs/administration/resource-management
     - name: title_cold-backup

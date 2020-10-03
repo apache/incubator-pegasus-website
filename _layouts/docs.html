@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html>
+{% include head.html %}
+
+<body>
+    <div class="dashboard is-full-height">
+        <!-- left panel -->
+        <div class="dashboard-panel is-medium is-hidden-mobile">
+            <div class="dashboard-panel-header has-text-left">
+                <a href="{{ site.baseurl }}/">
+                    <img src="{{ site.baseurl }}/assets/images/pegasus-logo-inv.png" style="width: 80%;">
+                </a>
+                <a class="dropdown">
+                </a>
+            </div>
+            <div class="dashboard-panel-main is-scrollable">
+                {% include menubar.html %}
+            </div>
+        </div>
+
+        <!-- main section -->
+        <div class="dashboard-main is-scrollable">
+            {% include docs_header.html %}
+
+            <section class="hero is-info">
+                <div class="hero-body">
+                    {% assign page_title = page.slug | prepend: 'title_' %}
+                    <p class="title is-size-2 is-centered">{{ site.data.translate[page_title] }}</p>
+                </div>
+            </section>
+            <section class="section">
+                <div class="content">
+                    {{ content }}
+                </div>
+            </section>
+            {% include footer.html %}
+        </div>
+
+        <!-- right panel -->
+        <div class="dashboard-panel is-small is-scrollable is-hidden-mobile">
+            {% include toc.html html=content class="menu-list" sanitize=true %}
+        </div>
+    </div>
+
+    <script src="{{ site.baseurl }}/assets/js/app.js" type="text/javascript"></script>
+</body>
+
+{% include algolia.html %}
+
+</html>
