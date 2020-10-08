@@ -1,5 +1,5 @@
 ---
-permalink: docs/administration/meta-recovery
+permalink: administration/meta-recovery
 ---
 
 TRANSLATING

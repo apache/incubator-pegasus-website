@@ -1,5 +1,5 @@
 ---
-permalink: docs/api/geo
+permalink: api/geo
 ---
 
 # Pegasus GEO支持

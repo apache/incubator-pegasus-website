@@ -1,5 +1,5 @@
 ---
-permalink: docs/administration/monitoring
+permalink: administration/monitoring
 ---
 
 ## 组件

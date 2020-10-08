@@ -1,5 +1,5 @@
 ---
-permalink: docs/api/single-atomic
+permalink: api/single-atomic
 ---
 
 TRANSLATING

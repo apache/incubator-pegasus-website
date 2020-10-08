@@ -1,5 +1,5 @@
 ---
-permalink: docs/administration/replica-recovery
+permalink: administration/replica-recovery
 ---
 
 TRANSLATING

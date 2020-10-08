@@ -1,5 +1,5 @@
 ---
-permalink: docs/administration/compression
+permalink: administration/compression
 ---
 
 TRANSLATING

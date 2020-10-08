@@ -1,5 +1,5 @@
 ---
-permalink: docs/administration/usage-scenario
+permalink: administration/usage-scenario
 ---
 
 TRANSLATING

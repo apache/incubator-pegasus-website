@@ -1,5 +1,5 @@
 ---
-permalink: docs/api/single-atomic
+permalink: api/single-atomic
 ---
 
 从[v1.10.0版本](https://github.com/XiaoMi/pegasus/releases/tag/v1.10.0)开始，Pegasus支持单行原子操作。这里的**单行**是指同一HashKey下的所有数据。

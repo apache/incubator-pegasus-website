@@ -1,5 +1,5 @@
 ---
-permalink: docs/clients/node-client
+permalink: clients/node-client
 ---
 
 TRANSLATING

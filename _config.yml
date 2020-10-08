@@ -81,6 +81,7 @@ sass:
   # The workaround is to disable the CSS sourcemaps.
   # Adding the following to your config.yml will disable sourcemap generation:
   sourcemap: never
+  style: compressed
 
 pegasus_github_url: "https://github.com/apache/incubator-pegasus"
 pegasus_website_github_url: "https://github.com/apache/incubator-pegasus-website"

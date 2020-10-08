@@ -1,5 +1,5 @@
 ---
-permalink: docs/administration/partition-split
+permalink: administration/partition-split
 ---
 
 TRANSLATING

@@ -1,5 +1,5 @@
 ---
-permalink: docs/administration/table-env
+permalink: administration/table-env
 ---
 
 TRANSLATING

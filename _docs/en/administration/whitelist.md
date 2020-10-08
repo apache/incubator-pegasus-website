@@ -1,5 +1,5 @@
 ---
-permalink: docs/administration/whitelist
+permalink: administration/whitelist
 ---
 
 TRANSLATING

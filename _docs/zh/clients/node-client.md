@@ -1,5 +1,5 @@
 ---
-permalink: docs/clients/node-client
+permalink: clients/node-client
 ---
 
 # 安装NodeJs客户端

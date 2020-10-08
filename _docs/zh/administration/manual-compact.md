@@ -1,5 +1,5 @@
 ---
-permalink: docs/administration/manual-compact
+permalink: administration/manual-compact
 ---
 
 注：manual compact功能从[v1.8.1版本](https://github.com/XiaoMi/pegasus/releases/tag/v1.8.1)开始支持。

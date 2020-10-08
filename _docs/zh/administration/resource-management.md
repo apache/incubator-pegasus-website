@@ -1,5 +1,5 @@
 ---
-permalink: docs/administration/resource-management
+permalink: administration/resource-management
 ---
 
 # 背景介绍

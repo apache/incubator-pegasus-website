@@ -1,5 +1,5 @@
 ---
-permalink: docs/administration/rolling-update
+permalink: administration/rolling-update
 ---
 
 # 功能目标

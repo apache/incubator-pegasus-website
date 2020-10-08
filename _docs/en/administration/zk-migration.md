@@ -1,5 +1,5 @@
 ---
-permalink: docs/administration/zk-migration
+permalink: administration/zk-migration
 ---
 
 TRANSLATING

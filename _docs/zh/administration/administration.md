@@ -1,5 +1,5 @@
 ---
-permalink: docs/administration/index.html
+permalink: administration/index.html
 ---
 
 Pegasus 不仅仅只提供简单的 key value 存储接口，我们还基于稳定性考虑，增加了许多有助于高效运维的特性。

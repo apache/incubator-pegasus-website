@@ -1,5 +1,5 @@
 ---
-permalink: docs/administration/remote-commands
+permalink: administration/remote-commands
 ---
 
 # 功能目标

@@ -1,5 +1,5 @@
 ---
-permalink: docs/administration/duplication
+permalink: administration/duplication
 ---
 
 在 pegasus 中，跨机房同步又被称为 **_热备份_**，或 **_duplication_**，简称 **_dup_**。这一功能的主要目的是保证 **数据中心级别的可用性**。当业务需要保证服务与数据能够容忍机房故障时，可以考虑使用此功能。

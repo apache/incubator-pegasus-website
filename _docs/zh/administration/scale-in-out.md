@@ -1,5 +1,5 @@
 ---
-permalink: docs/administration/scale-in-out
+permalink: administration/scale-in-out
 ---
 
 # 功能目标

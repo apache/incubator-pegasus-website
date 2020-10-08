@@ -1,5 +1,5 @@
 ---
-permalink: docs/clients/go-client
+permalink: clients/go-client
 ---
 
 TRANSLATING

@@ -1,5 +1,5 @@
 ---
-permalink: docs/administration/usage-scenario
+permalink: administration/usage-scenario
 ---
 
 注：Usage Scenario功能从[v1.8.1版本](https://github.com/XiaoMi/pegasus/releases/tag/v1.8.1)开始支持。

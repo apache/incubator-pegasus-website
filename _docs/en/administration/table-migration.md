@@ -1,5 +1,5 @@
 ---
-permalink: docs/administration/table-migration
+permalink: administration/table-migration
 ---
 
 TRANSLATING

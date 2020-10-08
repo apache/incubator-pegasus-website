@@ -1,5 +1,5 @@
 ---
-permalink: docs/administration/manual-compact
+permalink: administration/manual-compact
 ---
 
 TRANSLATING

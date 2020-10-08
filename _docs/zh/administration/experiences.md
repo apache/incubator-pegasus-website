@@ -1,5 +1,5 @@
 ---
-permalink: docs/administration/experiences
+permalink: administration/experiences
 ---
 
 任何一个分布式系统的运维工作都少不了周期巡检，问题排查，故障报警，人工审核。它们是保证服务稳定运行的关键。

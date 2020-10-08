@@ -1,5 +1,5 @@
 ---
-permalink: docs/administration/rebalance
+permalink: administration/rebalance
 ---
 
 本文档主要介绍Pegasus负载均衡的概念、使用和设计。

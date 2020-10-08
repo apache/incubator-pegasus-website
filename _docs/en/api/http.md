@@ -1,5 +1,5 @@
 ---
-permalink: docs/api/http
+permalink: api/http
 ---
 
 TRANSLATING

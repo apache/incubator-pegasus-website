@@ -1,5 +1,5 @@
 ---
-permalink: docs/administration/cold-backup
+permalink: administration/cold-backup
 ---
 
 ## 介绍

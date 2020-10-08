@@ -1,5 +1,5 @@
 ---
-permalink: docs/clients/index.html
+permalink: clients/index.html
 ---
 
 Pegasus目前提供以下多种客户端支持：

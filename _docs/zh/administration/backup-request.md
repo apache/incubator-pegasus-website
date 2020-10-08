@@ -1,5 +1,5 @@
 ---
-permalink: docs/administration/backup-request
+permalink: administration/backup-request
 ---
 
 # 背景

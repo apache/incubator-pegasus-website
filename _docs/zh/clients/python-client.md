@@ -1,5 +1,5 @@
 ---
-permalink: docs/clients/python-client
+permalink: clients/python-client
 ---
 
 # pegasus python client

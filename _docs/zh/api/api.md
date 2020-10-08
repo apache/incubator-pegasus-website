@@ -1,5 +1,5 @@
 ---
-permalink: docs/api/index.html
+permalink: api/index.html
 ---
 
 这里介绍Pegasus服务所提供的用户接口。客户端可以在我们的服务接口上做二次封装。

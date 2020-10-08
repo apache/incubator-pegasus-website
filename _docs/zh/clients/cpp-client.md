@@ -1,5 +1,5 @@
 ---
-permalink: docs/clients/cpp-client
+permalink: clients/cpp-client
 ---
 
 # 获取Cpp客户端

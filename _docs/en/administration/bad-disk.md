@@ -1,5 +1,5 @@
 ---
-permalink: docs/administration/bad-disk
+permalink: administration/bad-disk
 ---
 
 TRANSLATING

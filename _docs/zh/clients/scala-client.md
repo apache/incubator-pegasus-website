@@ -1,5 +1,5 @@
 ---
-permalink: docs/clients/scala-client
+permalink: clients/scala-client
 ---
 
 

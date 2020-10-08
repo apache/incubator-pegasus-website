@@ -1,5 +1,5 @@
 ---
-permalink: docs/administration/zk-migration
+permalink: administration/zk-migration
 ---
 
 由于Pegasus的meta server依赖Zookeeper存储元数据和抢主，所以Zookeeper服务的不稳定会造成Pegasus服务不稳定，有时就需要迁移到其他更稳定或者空闲的Zookeeper上。

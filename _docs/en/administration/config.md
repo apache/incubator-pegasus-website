@@ -1,5 +1,5 @@
 ---
-permalink: docs/administration/config
+permalink: administration/config
 ---
 
 TRANSLATING

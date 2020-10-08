@@ -1,5 +1,5 @@
 ---
-permalink: docs/administration/experiences
+permalink: administration/experiences
 ---
 
 TRANSLATING

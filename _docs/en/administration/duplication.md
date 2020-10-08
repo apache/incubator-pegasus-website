@@ -1,5 +1,5 @@
 ---
-permalink: docs/administration/duplication
+permalink: administration/duplication
 ---
 
 TRANSLATING

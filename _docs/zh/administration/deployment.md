@@ -1,5 +1,5 @@
 ---
-permalink: docs/administration/deployment
+permalink: administration/deployment
 ---
 
 ## 准备机器

@@ -1,5 +1,5 @@
 ---
-permalink: docs/clients/java-client
+permalink: clients/java-client
 ---
 
 TRANSLATING

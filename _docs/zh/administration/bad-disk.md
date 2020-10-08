@@ -1,5 +1,5 @@
 ---
-permalink: docs/administration/bad-disk
+permalink: administration/bad-disk
 ---
 
 磁盘故障时有发生，通常有下列检查方式：

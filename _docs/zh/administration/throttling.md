@@ -1,5 +1,5 @@
 ---
-permalink: docs/administration/throttling
+permalink: administration/throttling
 ---
 
 # 关于流控

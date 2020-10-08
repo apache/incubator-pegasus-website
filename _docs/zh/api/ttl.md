@@ -1,5 +1,5 @@
 ---
-permalink: docs/api/ttl
+permalink: api/ttl
 ---
 
 # 原理

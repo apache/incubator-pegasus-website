@@ -1,5 +1,5 @@
 ---
-permalink: docs/administration/rebalance
+permalink: administration/rebalance
 ---
 
 TRANSLATING

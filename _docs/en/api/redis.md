@@ -1,5 +1,5 @@
 ---
-permalink: docs/api/redis
+permalink: api/redis
 ---
 
 TRANSLATING

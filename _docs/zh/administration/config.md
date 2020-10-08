@@ -1,5 +1,5 @@
 ---
-permalink: docs/administration/config
+permalink: administration/config
 ---
 
 ## 配置组成部分

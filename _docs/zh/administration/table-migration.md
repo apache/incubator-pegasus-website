@@ -1,5 +1,5 @@
 ---
-permalink: docs/administration/table-migration
+permalink: administration/table-migration
 ---
 
 这里说的Table迁移是指将某个Pegasus集群的一个表的数据迁移到另一个Pegasus集群中。

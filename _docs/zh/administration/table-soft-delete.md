@@ -1,5 +1,5 @@
 ---
-permalink: docs/administration/table-soft-delete
+permalink: administration/table-soft-delete
 ---
 
 # 功能目标
