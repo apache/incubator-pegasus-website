@@ -1,0 +1,1052 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Pegasus | Rebalance</title>
+    <link rel="stylesheet" href="/assets/css/app.css">
+    <link rel="shortcut icon" href="/assets/images/favicon.ico">
+    <link href="https://cdn.bootcdn.net/ajax/libs/tailwindcss/1.8.10/utilities.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/docsearch.js@2/dist/cdn/docsearch.min.css" />
+    <script src="https://cdn.bootcss.com/jquery/3.4.1/jquery.min.js"></script>
+    <script src="https://cdn.bootcdn.net/ajax/libs/font-awesome/5.13.0/js/all.min.js"></script>
+    <!-- Begin Jekyll SEO tag v2.6.1 -->
+<title>Rebalance | Pegasus</title>
+<meta name="generator" content="Jekyll v4.1.1" />
+<meta property="og:title" content="Rebalance" />
+<meta property="og:locale" content="en_US" />
+<meta name="description" content="本文档主要介绍Pegasus负载均衡的概念、使用和设计。" />
+<meta property="og:description" content="本文档主要介绍Pegasus负载均衡的概念、使用和设计。" />
+<meta property="og:site_name" content="Pegasus" />
+<meta property="og:type" content="article" />
+<meta property="article:published_time" content="2020-10-08T13:03:46+00:00" />
+<script type="application/ld+json">
+{"url":"/administration/rebalance","@type":"BlogPosting","headline":"Rebalance","dateModified":"2020-10-08T13:03:46+00:00","datePublished":"2020-10-08T13:03:46+00:00","mainEntityOfPage":{"@type":"WebPage","@id":"/administration/rebalance"},"description":"本文档主要介绍Pegasus负载均衡的概念、使用和设计。","@context":"https://schema.org"}</script>
+<!-- End Jekyll SEO tag -->
+</head>
+
+
+<body>
+    <div class="dashboard is-full-height">
+        <!-- left panel -->
+        <div class="dashboard-panel is-medium is-hidden-mobile">
+            <div class="dashboard-panel-header has-text-left">
+                <a href="/">
+                    <img src="/assets/images/pegasus-logo-inv.png" style="width: 80%;">
+                </a>
+                <a class="dropdown">
+                </a>
+            </div>
+            <div class="dashboard-panel-main is-scrollable">
+                
+
+<aside class="menu">
+    
+    <p class="menu-label">客户端库</p>
+    <ul class="menu-list">
+        
+        <li>
+            <a href="/clients/java-client"
+                class="">
+                Java客户端
+            </a>
+        </li>
+        
+        <li>
+            <a href="/clients/cpp-client"
+                class="">
+                C++客户端
+            </a>
+        </li>
+        
+        <li>
+            <a href="/clients/go-client"
+                class="">
+                Golang客户端
+            </a>
+        </li>
+        
+        <li>
+            <a href="/clients/python-client"
+                class="">
+                Python客户端
+            </a>
+        </li>
+        
+        <li>
+            <a href="/clients/node-client"
+                class="">
+                NodeJS客户端
+            </a>
+        </li>
+        
+        <li>
+            <a href="/clients/scala-client"
+                class="">
+                Scala客户端
+            </a>
+        </li>
+        
+    </ul>
+    
+    <p class="menu-label">用户接口</p>
+    <ul class="menu-list">
+        
+        <li>
+            <a href="/api/ttl"
+                class="">
+                TTL
+            </a>
+        </li>
+        
+        <li>
+            <a href="/api/single-atomic"
+                class="">
+                单行原子操作
+            </a>
+        </li>
+        
+        <li>
+            <a href="/api/redis"
+                class="">
+                Redis适配
+            </a>
+        </li>
+        
+        <li>
+            <a href="/api/geo"
+                class="">
+                GEO支持
+            </a>
+        </li>
+        
+        <li>
+            <a href="/api/http"
+                class="">
+                HTTP接口
+            </a>
+        </li>
+        
+    </ul>
+    
+    <p class="menu-label">高效运维</p>
+    <ul class="menu-list">
+        
+        <li>
+            <a href="/administration/deployment"
+                class="">
+                集群部署
+            </a>
+        </li>
+        
+        <li>
+            <a href="/administration/config"
+                class="">
+                配置说明
+            </a>
+        </li>
+        
+        <li>
+            <a href="/administration/rebalance"
+                class="is-active">
+                负载均衡
+            </a>
+        </li>
+        
+        <li>
+            <a href="/administration/monitoring"
+                class="">
+                可视化监控
+            </a>
+        </li>
+        
+        <li>
+            <a href="/administration/rolling-update"
+                class="">
+                集群升级
+            </a>
+        </li>
+        
+        <li>
+            <a href="/administration/scale-in-out"
+                class="">
+                集群扩容缩容
+            </a>
+        </li>
+        
+        <li>
+            <a href="/administration/resource-management"
+                class="">
+                资源管理
+            </a>
+        </li>
+        
+        <li>
+            <a href="/administration/cold-backup"
+                class="">
+                冷备份
+            </a>
+        </li>
+        
+        <li>
+            <a href="/administration/meta-recovery"
+                class="">
+                元数据恢复
+            </a>
+        </li>
+        
+        <li>
+            <a href="/administration/replica-recovery"
+                class="">
+                Replica数据恢复
+            </a>
+        </li>
+        
+        <li>
+            <a href="/administration/zk-migration"
+                class="">
+                Zookeeper迁移
+            </a>
+        </li>
+        
+        <li>
+            <a href="/administration/table-migration"
+                class="">
+                Table迁移
+            </a>
+        </li>
+        
+        <li>
+            <a href="/administration/table-soft-delete"
+                class="">
+                Table软删除
+            </a>
+        </li>
+        
+        <li>
+            <a href="/administration/table-env"
+                class="">
+                Table环境变量
+            </a>
+        </li>
+        
+        <li>
+            <a href="/administration/remote-commands"
+                class="">
+                远程命令
+            </a>
+        </li>
+        
+        <li>
+            <a href="/administration/partition-split"
+                class="">
+                Partition-Split
+            </a>
+        </li>
+        
+        <li>
+            <a href="/administration/duplication"
+                class="">
+                跨机房同步
+            </a>
+        </li>
+        
+        <li>
+            <a href="/administration/compression"
+                class="">
+                数据压缩
+            </a>
+        </li>
+        
+        <li>
+            <a href="/administration/throttling"
+                class="">
+                流量控制
+            </a>
+        </li>
+        
+        <li>
+            <a href="/administration/experiences"
+                class="">
+                运维经验
+            </a>
+        </li>
+        
+        <li>
+            <a href="/administration/manual-compact"
+                class="">
+                Manual Compact功能
+            </a>
+        </li>
+        
+        <li>
+            <a href="/administration/usage-scenario"
+                class="">
+                Usage Scenario功能
+            </a>
+        </li>
+        
+        <li>
+            <a href="/administration/bad-disk"
+                class="">
+                坏盘检修
+            </a>
+        </li>
+        
+        <li>
+            <a href="/administration/whitelist"
+                class="">
+                白名单
+            </a>
+        </li>
+        
+        <li>
+            <a href="/administration/backup-request"
+                class="">
+                Backup Request
+            </a>
+        </li>
+        
+    </ul>
+    
+</aside>
+            </div>
+        </div>
+
+        <!-- main section -->
+        <div class="dashboard-main is-scrollable">
+            <nav class="navbar is-hidden-desktop">
+    <div class="navbar-brand">
+        <a href="/" class="navbar-item">
+            <!-- Pegasus Icon -->
+            <img src="/assets/images/pegasus-square.png">
+        </a>
+        <div class="navbar-item">
+            
+
+<!--A simple language switch button that only supports zh and en.-->
+<!--IF its language is zh, then switches to en.-->
+
+<a class="button is-light is-outlined is-inverted" href="/en/administration/rebalance"><strong>En</strong></a>
+
+        </div>
+        <a role="button" class="navbar-burger burger" aria-label="menu" aria-expanded="false" data-target="navMenu">
+            <!-- Appears in mobile mode only -->
+            <span aria-hidden="true"></span>
+            <span aria-hidden="true"></span>
+            <span aria-hidden="true"></span>
+        </a>
+    </div>
+    <div class="navbar-menu" id="navMenu">
+        <div class="navbar-end">
+            
+            <!--dropdown-->
+            <div class="navbar-item has-dropdown is-hoverable">
+                <a href=""
+                    class="navbar-link ">
+                    <span>
+                        客户端库
+                    </span>
+                </a>
+                <div class="navbar-dropdown">
+                    
+                    <a href="/clients/java-client"
+                        class="navbar-item ">
+                        Java客户端
+                    </a>
+                    
+                    <a href="/clients/cpp-client"
+                        class="navbar-item ">
+                        C++客户端
+                    </a>
+                    
+                    <a href="/clients/go-client"
+                        class="navbar-item ">
+                        Golang客户端
+                    </a>
+                    
+                    <a href="/clients/python-client"
+                        class="navbar-item ">
+                        Python客户端
+                    </a>
+                    
+                    <a href="/clients/node-client"
+                        class="navbar-item ">
+                        NodeJS客户端
+                    </a>
+                    
+                    <a href="/clients/scala-client"
+                        class="navbar-item ">
+                        Scala客户端
+                    </a>
+                    
+                </div>
+            </div>
+            
+            <!--dropdown-->
+            <div class="navbar-item has-dropdown is-hoverable">
+                <a href=""
+                    class="navbar-link ">
+                    <span>
+                        用户接口
+                    </span>
+                </a>
+                <div class="navbar-dropdown">
+                    
+                    <a href="/api/ttl"
+                        class="navbar-item ">
+                        TTL
+                    </a>
+                    
+                    <a href="/api/single-atomic"
+                        class="navbar-item ">
+                        单行原子操作
+                    </a>
+                    
+                    <a href="/api/redis"
+                        class="navbar-item ">
+                        Redis适配
+                    </a>
+                    
+                    <a href="/api/geo"
+                        class="navbar-item ">
+                        GEO支持
+                    </a>
+                    
+                    <a href="/api/http"
+                        class="navbar-item ">
+                        HTTP接口
+                    </a>
+                    
+                </div>
+            </div>
+            
+            <!--dropdown-->
+            <div class="navbar-item has-dropdown is-hoverable">
+                <a href=""
+                    class="navbar-link ">
+                    <span>
+                        高效运维
+                    </span>
+                </a>
+                <div class="navbar-dropdown">
+                    
+                    <a href="/administration/deployment"
+                        class="navbar-item ">
+                        集群部署
+                    </a>
+                    
+                    <a href="/administration/config"
+                        class="navbar-item ">
+                        配置说明
+                    </a>
+                    
+                    <a href="/administration/rebalance"
+                        class="navbar-item is-active">
+                        负载均衡
+                    </a>
+                    
+                    <a href="/administration/monitoring"
+                        class="navbar-item ">
+                        可视化监控
+                    </a>
+                    
+                    <a href="/administration/rolling-update"
+                        class="navbar-item ">
+                        集群升级
+                    </a>
+                    
+                    <a href="/administration/scale-in-out"
+                        class="navbar-item ">
+                        集群扩容缩容
+                    </a>
+                    
+                    <a href="/administration/resource-management"
+                        class="navbar-item ">
+                        资源管理
+                    </a>
+                    
+                    <a href="/administration/cold-backup"
+                        class="navbar-item ">
+                        冷备份
+                    </a>
+                    
+                    <a href="/administration/meta-recovery"
+                        class="navbar-item ">
+                        元数据恢复
+                    </a>
+                    
+                    <a href="/administration/replica-recovery"
+                        class="navbar-item ">
+                        Replica数据恢复
+                    </a>
+                    
+                    <a href="/administration/zk-migration"
+                        class="navbar-item ">
+                        Zookeeper迁移
+                    </a>
+                    
+                    <a href="/administration/table-migration"
+                        class="navbar-item ">
+                        Table迁移
+                    </a>
+                    
+                    <a href="/administration/table-soft-delete"
+                        class="navbar-item ">
+                        Table软删除
+                    </a>
+                    
+                    <a href="/administration/table-env"
+                        class="navbar-item ">
+                        Table环境变量
+                    </a>
+                    
+                    <a href="/administration/remote-commands"
+                        class="navbar-item ">
+                        远程命令
+                    </a>
+                    
+                    <a href="/administration/partition-split"
+                        class="navbar-item ">
+                        Partition-Split
+                    </a>
+                    
+                    <a href="/administration/duplication"
+                        class="navbar-item ">
+                        跨机房同步
+                    </a>
+                    
+                    <a href="/administration/compression"
+                        class="navbar-item ">
+                        数据压缩
+                    </a>
+                    
+                    <a href="/administration/throttling"
+                        class="navbar-item ">
+                        流量控制
+                    </a>
+                    
+                    <a href="/administration/experiences"
+                        class="navbar-item ">
+                        运维经验
+                    </a>
+                    
+                    <a href="/administration/manual-compact"
+                        class="navbar-item ">
+                        Manual Compact功能
+                    </a>
+                    
+                    <a href="/administration/usage-scenario"
+                        class="navbar-item ">
+                        Usage Scenario功能
+                    </a>
+                    
+                    <a href="/administration/bad-disk"
+                        class="navbar-item ">
+                        坏盘检修
+                    </a>
+                    
+                    <a href="/administration/whitelist"
+                        class="navbar-item ">
+                        白名单
+                    </a>
+                    
+                    <a href="/administration/backup-request"
+                        class="navbar-item ">
+                        Backup Request
+                    </a>
+                    
+                </div>
+            </div>
+            
+        </div>
+    </div>
+</nav>
+
+<nav class="navbar is-hidden-mobile">
+    <div class="navbar-start w-full">
+        <div class="navbar-item pl-0 w-full">
+            <!--TODO(wutao): Given the limitation of docsearch that couldn't handle multiple input,
+                I make searchbox only shown in desktop. Fix this issue when docsearch.js v3 released.
+                Related issue: https://github.com/algolia/docsearch/issues/230-->
+            <div class="navbar-searchbox w-full bg-gray-200">
+    <div class="field">
+        <div class="control has-icons-right">
+            <input class="input searchbox-input focus:placeholder-transparent"
+                type="text" placeholder="Search the docs">
+            <span class="icon is-right">
+                <i class="fas fa-search searchbox-icon"></i>
+            </span>
+        </div>
+    </div>
+</div>
+        </div>
+    </div>
+    <div class="navbar-end">
+        <div class="navbar-item">
+            
+
+<!--A simple language switch button that only supports zh and en.-->
+<!--IF its language is zh, then switches to en.-->
+
+<a class="button is-light is-outlined is-inverted" href="/en/administration/rebalance"><strong>En</strong></a>
+
+        </div>
+    </div>
+</nav>
+
+            <section class="hero is-info lg:mr-3">
+                <div class="hero-body">
+                    
+                    <p class="title is-size-2 is-centered">负载均衡</p>
+                </div>
+            </section>
+            <section class="section" style="padding-top: 2rem;">
+                <div class="content">
+                    <p>本文档主要介绍Pegasus负载均衡的概念、使用和设计。</p>
+
+<h2 id="概念篇">概念篇</h2>
+
+<p>在Pegasus中，负载均衡主要包括以下几个方面的内容：</p>
+
+<ol>
+  <li>如果某个partition分片不满足一主两备，要选择一个机器将缺失的分片补全。这个过程在Pegasus中叫做<code class="language-plaintext highlighter-rouge">cure</code>。</li>
+  <li>当所有的分片都满足一主两备份后，对集群各个replica server上分片的个数做调整，尽量让每个机器上服务的分片数都维持在一个相近的水平上。这个过程在Pegasus中叫做<code class="language-plaintext highlighter-rouge">balance</code>。</li>
+  <li>如果一个replica server上挂载了多个磁盘，并且通过配置文件<code class="language-plaintext highlighter-rouge">data_dirs</code>提供给Pegasus使用。replica server要尽量让每个磁盘上分片的数量都维持在一个相近的水平上。</li>
+</ol>
+
+<p>围绕这几点内容，Pegasus引入了一些概念方便描述这些情况：</p>
+
+<ol>
+  <li>
+    <p>Partition的健康状况</p>
+
+    <p>Pegasus为Partition定义了几种健康状况：</p>
+    <ul>
+      <li>【fully healthy】: 健康的，完全满足一主两备</li>
+      <li>【unreadable】: 分片不可读了。指的是分片缺少primary, 但有一个或两个secondary。</li>
+      <li>【readable but unwritable】: 分片可读但是不可写。指的是只剩下了一个primary，两个secondary副本全部丢失</li>
+      <li>【readable and writable but unhealthy】: 分片可读可写，但仍旧不健康。指的是三副本里面少了一个secondary</li>
+      <li>【dead】: partition的所有副本全不可用了，又称之为DDD状态。</li>
+    </ul>
+  </li>
+</ol>
+
+<p><img src="/assets/images/pegasus-healthy-status.png" alt="pegasus-healthy-status" class="img-responsive" /></p>
+
+<p>当通过pegasus shell来查看集群、表以及分片的状态时，会经常看到对分片健康情况的整体统计或单个描述。譬如通过<code class="language-plaintext highlighter-rouge">ls -d</code>命令，可以看到各个表处于不同健康状况的partition的个数，包括这些：</p>
+<ul>
+  <li>fully_healthy：完全健康。</li>
+  <li>unhealthy：不完全健康。</li>
+  <li>write_unhealthy：不可写，包括上面的readable but unwritable和dead。</li>
+  <li>read_unhealthy：不可读，包括上面的unreadable和dead。</li>
+</ul>
+
+<ol>
+  <li>
+    <p>Meta server的运行level</p>
+
+    <p>meta server的运行level决定了meta server会对整个分布式系统做到何种程度的管理。最常用的运行level包括：</p>
+    <ul>
+      <li>blind：在这种运行level之下，meta_server拒绝任何可能会修改元数据状态的操作。一般在做zookeeper迁移的时候会用到这个level。</li>
+      <li>steady：在这种运行level下，meta server只做<code class="language-plaintext highlighter-rouge">cure</code>，即只处理unhealthy的partition。</li>
+      <li>lively：在这种运行level下，一旦所有partion都进入了healthy, meta server就会尝试进行<code class="language-plaintext highlighter-rouge">balance</code>，来调整各个机器的分片数。</li>
+    </ul>
+  </li>
+</ol>
+
+<h2 id="操作篇">操作篇</h2>
+
+<h3 id="观察系统情况">观察系统情况</h3>
+
+<p>可以通过pegasus的shell客户端来观察系统的Partition情况：</p>
+
+<ol>
+  <li>
+    <p>nodes -d</p>
+
+    <p>可以用来观察系统中每个节点的partition个数:</p>
+
+    <div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>&gt;&gt;&gt; nodes -d
+address              status              replica_count       primary_count       secondary_count
+10.132.5.1:32801     ALIVE               54                  18                  36
+10.132.5.2:32801     ALIVE               54                  18                  36
+10.132.5.3:32801     ALIVE               54                  18                  36
+10.132.5.5:32801     ALIVE               54                  18                  36
+</code></pre></div>    </div>
+
+    <p>如果节点间的partition个数分布差异太大，可以采用”set_meta_level lively”的命令来进行调整。</p>
+  </li>
+  <li>
+    <p>app <table_name> -d</table_name></p>
+
+    <p>可以用来某张表的所有partition的分布情况：可以观察到某个具体partition的组成，也可以汇总每个节点服务该表的partition个数。</p>
+
+    <div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>&gt;&gt;&gt; app temp -d
+[Parameters]
+app_name: temp
+detailed: true
+   
+[Result]
+app_name          : temp
+app_id            : 14
+partition_count   : 8
+max_replica_count : 3
+details           :
+pidx      ballot    replica_count       primary                                 secondaries
+0         22344     3/3                 10.132.5.2:32801                        [10.132.5.3:32801,10.132.5.5:32801]
+1         20525     3/3                 10.132.5.3:32801                        [10.132.5.2:32801,10.132.5.5:32801]
+2         19539     3/3                 10.132.5.1:32801                        [10.132.5.3:32801,10.132.5.5:32801]
+3         18819     3/3                 10.132.5.5:32801                        [10.132.5.3:32801,10.132.5.1:32801]
+4         18275     3/3                 10.132.5.5:32801                        [10.132.5.2:32801,10.132.5.1:32801]
+5         18079     3/3                 10.132.5.3:32801                        [10.132.5.2:32801,10.132.5.1:32801]
+6         17913     3/3                 10.132.5.2:32801                        [10.132.5.1:32801,10.132.5.5:32801]
+7         17692     3/3                 10.132.5.1:32801                        [10.132.5.3:32801,10.132.5.2:32801]
+   
+node                                    primary   secondary total
+10.132.5.1:32801                        2         4         6
+10.132.5.2:32801                        2         4         6
+10.132.5.3:32801                        2         4         6
+10.132.5.5:32801                        2         4         6
+                                        8         16        24
+   
+fully_healthy_partition_count   : 8
+unhealthy_partition_count       : 0
+write_unhealthy_partition_count : 0
+read_unhealthy_partition_count  : 0
+   
+list app temp succeed
+</code></pre></div>    </div>
+  </li>
+  <li>
+    <p>server_stat</p>
+
+    <p>可以用来观察各个replica server当前的一些监控数据。如果想分析流量的均衡程度，要重点观察各个操作的qps和latency。对于数据值明显异常的节点(和其他节点差异太大)，需要排查下partition个数是不是分布不均，或者是不是出现了某个分片的读写热点。</p>
+
+    <div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>&gt;&gt;&gt; server_stat -t replica-server
+COMMAND: server-stat
+   
+CALL [replica-server] [10.132.5.1:32801] succeed: manual_compact_enqueue_count=0, manual_compact_running_count=0, closing_replica_count=0, disk_available_max_ratio=88, disk_available_min_ratio=78, disk_available_total_ratio=85, disk_capacity_total(MB)=8378920, opening_replica_count=0, serving_replica_count=54, commit_throughput=0, learning_count=0, shared_log_size(MB)=4, memused_res(MB)=2499, memused_virt(MB)=4724, get_p99(ns)=0, get_qps=0, multi_get_p99(ns)=0, multi_get_qps=0, multi_put_p99(ns)=0, multi_put_qps=0, put_p99(ns)=0, put_qps=0
+CALL [replica-server] [10.132.5.2:32801] succeed: manual_compact_enqueue_count=0, manual_compact_running_count=0, closing_replica_count=0, disk_available_max_ratio=88, disk_available_min_ratio=79, disk_available_total_ratio=86, disk_capacity_total(MB)=8378920, opening_replica_count=0, serving_replica_count=54, commit_throughput=0, learning_count=0, shared_log_size(MB)=4, memused_res(MB)=2521, memused_virt(MB)=4733, get_p99(ns)=0, get_qps=0, multi_get_p99(ns)=0, multi_get_qps=0, multi_put_p99(ns)=0, multi_put_qps=0, put_p99(ns)=0, put_qps=0
+CALL [replica-server] [10.132.5.3:32801] succeed: manual_compact_enqueue_count=0, manual_compact_running_count=0, closing_replica_count=0, disk_available_max_ratio=90, disk_available_min_ratio=78, disk_available_total_ratio=85, disk_capacity_total(MB)=8378920, opening_replica_count=0, serving_replica_count=54, commit_throughput=0, learning_count=0, shared_log_size(MB)=4, memused_res(MB)=2489, memused_virt(MB)=4723, get_p99(ns)=0, get_qps=0, multi_get_p99(ns)=0, multi_get_qps=0, multi_put_p99(ns)=0, multi_put_qps=0, put_p99(ns)=0, put_qps=0
+CALL [replica-server] [10.132.5.5:32801] succeed: manual_compact_enqueue_count=0, manual_compact_running_count=0, closing_replica_count=0, disk_available_max_ratio=88, disk_available_min_ratio=82, disk_available_total_ratio=85, disk_capacity_total(MB)=8378920, opening_replica_count=0, serving_replica_count=54, commit_throughput=0, learning_count=0, shared_log_size(MB)=4, memused_res(MB)=2494, memused_virt(MB)=4678, get_p99(ns)=0, get_qps=0, multi_get_p99(ns)=0, multi_get_qps=0, multi_put_p99(ns)=0, multi_put_qps=0, put_p99(ns)=0, put_qps=0
+   
+Succeed count: 4
+Failed count: 0
+</code></pre></div>    </div>
+  </li>
+  <li>
+    <p>app_stat -a <app_name></app_name></p>
+
+    <p>可以用来观察某个表中，各个partition的统计信息。对于数据值明显异常的分片，要关注是不是出现了分片热点。</p>
+
+    <div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>&gt;&gt;&gt; app_stat -a temp
+pidx                 GET   MULTI_GET         PUT   MULTI_PUT         DEL   MULTI_DEL        INCR         CAS        SCAN     expired    filtered    abnormal  storage_mb  file_count
+0                      0           0           0           0           0           0           0           0           0           0           0           0           0           3
+1                      0           0           0           0           0           0           0           0           0           0           0           0           0           1
+2                      0           0           0           0           0           0           0           0           0           0           0           0           0           4
+3                      0           0           0           0           0           0           0           0           0           0           0           0           0           2
+4                      0           0           0           0           0           0           0           0           0           0           0           0           0           3
+5                      0           0           0           0           0           0           0           0           0           0           0           0           0           2
+6                      0           0           0           0           0           0           0           0           0           0           0           0           0           1
+7                      0           0           0           0           0           0           0           0           0           0           0           0           0           3
+                       0           0           0           0           0           0           0           0           0           0           0           0           0          19
+</code></pre></div>    </div>
+  </li>
+</ol>
+
+<h3 id="控制集群的负载均衡">控制集群的负载均衡</h3>
+
+<p>Peagsus提供以下几种命令来控制集群的负载均衡：</p>
+
+<ol>
+  <li>
+    <p>set_meta_level</p>
+
+    <p>这个命令用来控制meta的运行level，支持以下几种level：</p>
+    <ul>
+      <li>freezed：meta server会停止unhealthy partition的cure工作，一般在集群出现较多节点宕机或极其不稳定的情况下使用，另外如果集群的节点数掉到一个数量或者比例以下（通过配置文件<code class="language-plaintext highlighter-rouge">min_live_node_count_for_unfreeze</code>和<code class="language-plaintext highlighter-rouge">node_live_percentage_threshold_for_update</code>控制）就会自动变为freezed，等待人工介入。</li>
+      <li>steady：meta server的默认level, 只做cure，不做balance。</li>
+      <li>lively：meta server会调整分片数，力求均衡。</li>
+    </ul>
+
+    <p>可以使用<code class="language-plaintext highlighter-rouge">cluster_info</code>或者<code class="language-plaintext highlighter-rouge">get_meta_level</code>查看当前集群的运行level。</p>
+
+    <p>关于调整的一些建议：</p>
+    <ul>
+      <li>先用shell的<code class="language-plaintext highlighter-rouge">nodes -d</code>命令查看集群是否均衡，当不均衡时再进行调整。通常在以下几种情况发生后，需要开启lively进行调整：
+        <ul>
+          <li>新创建了表，这个时候分片数目可能不均匀。</li>
+          <li>集群上线、下线、升级了节点，这时候分片数目也可能不均匀。</li>
+          <li>有节点宕机，一些replica迁移到了别的节点上。</li>
+        </ul>
+      </li>
+      <li>调整过程会触发replica迁移，影响集群可用度，虽然影响不大，但是如果对可用度要求很高，并且调整需求不紧急，建议在<strong>低峰时段</strong>进行调整。</li>
+      <li>调整完成后通过<code class="language-plaintext highlighter-rouge">set_meta_level steady</code>将level重置为steady状态，避免在平时进行不必要的replica迁移，减少集群抖动。</li>
+      <li>Pegasus还提供了一些精细控制balance的命令，参见<a href="#负载均衡的高级选项">负载均衡的高级选项</a>。</li>
+    </ul>
+  </li>
+  <li>
+    <p>balance</p>
+
+    <p>balance命令用来手动发送分片迁移的命令。支持的迁移类型：</p>
+    <ul>
+      <li>move_pri：把某个partition下的primary和secondary做调换（本质上为两步：1.将from降级;2.将to升级。如果meta server在第1步完成后挂掉，新的meta server不会继续进行第2步，可以视为move_pri命令被中断了）</li>
+      <li>copy_pri：把某个partition下的primary迁移到一个新节点下</li>
+      <li>copy_sec：把某个partition下的secondary迁移到一个新节点下</li>
+    </ul>
+
+    <p><strong>注意在使用时，请保证meta server处在steady状态，不然命令无法生效。</strong></p>
+
+    <p>参见以下样例（不相关的输出已经被删去）：</p>
+    <div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>&gt;&gt;&gt; get_meta_level
+current meta level is fl_steady
+   
+&gt;&gt;&gt; app temp -d
+pidx      ballot    replica_count       primary                                 secondaries
+0         3         3/3                 10.231.58.233:34803                     [10.231.58.233:34802,10.231.58.233:34801]
+   
+list app temp succeed
+   
+&gt;&gt;&gt; balance -g 1.0 -p move_pri -f 10.231.58.233:34803 -t 10.231.58.233:34802
+send balance proposal result: ERR_OK
+   
+&gt;&gt;&gt; app temp -d
+pidx      ballot    replica_count       primary                                 secondaries
+0         5         3/3                 10.231.58.233:34802                     [10.231.58.233:34801,10.231.58.233:34803]
+list app temp succeed
+</code></pre></div>    </div>
+  </li>
+  <li>
+    <p>propose</p>
+
+    <p>propose命令用来发送更低原语的分片调整命令，主要有以下几种：</p>
+    <ul>
+      <li>assign_primary：把某个partition的primary分配到某台机器上</li>
+      <li>upgrade_to_primary：把某个partition的secondary升级为primary</li>
+      <li>add_secondary: 为某个partition添加secondary</li>
+      <li>upgrade_to_secondary: 把某个partition下的某个learner升级为secondary</li>
+      <li>downgrade_to_secondary：把某个partition下的primary降级为secondary</li>
+      <li>downgrade_to_inactive：把某个partition下的primary/secondary降级为inactive状态</li>
+      <li>remove：移除掉某个partition下的某个副本</li>
+    </ul>
+
+    <div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>&gt;&gt;&gt; app temp -d
+pidx      ballot    replica_count       primary                                 secondaries                             
+0         5         3/3                 10.231.58.233:34802                     [10.231.58.233:34801,10.231.58.233:34803]
+list app temp succeed
+&gt;&gt;&gt; propose -g 1.0 -p downgrade_to_inactive -t 10.231.58.233:34802 -n 10.231.58.233:34801
+send proposal response: ERR_OK
+&gt;&gt;&gt; app temp -d
+pidx      ballot    replica_count       primary                                 secondaries                             
+0         7         3/3                 10.231.58.233:34802                     [10.231.58.233:34803,10.231.58.233:34801]
+list app temp succeed
+</code></pre></div>    </div>
+
+    <p>在上面的例子中，propose命令希望把10.231.38.233:34801降级。所以需要把这个命令发给partition的primary(10.231.58.233:34802)，由它来执行具体某个副本降级的事宜。注意这里体现了pegasus系统的设计理念：<strong>meta server负责管理primary , pimary负责管理partition下的其他副本</strong>。</p>
+
+    <p>上面的例子也许看不出10.231.38.233:34801被降级的痕迹。这是因为系统cure功能的存在，对于unhealthy的partition会迅速修复。你可以通过观察ballot的变化来确认这个命令已经生效了。</p>
+
+    <p>正常情况下，你应该不会需要使用到propose命令。</p>
+  </li>
+</ol>
+
+<h3 id="负载均衡的高级选项">负载均衡的高级选项</h3>
+
+<p>meta server提供了一些更细粒度的参数用来做负载均衡的控制。这些参数是通过<strong>remote_command</strong>命令来调整的：</p>
+
+<h4 id="通过help查看所有的remote_command">通过help查看所有的remote_command</h4>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>&gt;&gt;&gt; remote_command -l 127.0.0.1:34601 help
+COMMAND: help
+
+CALL [user-specified] [127.0.0.1:34601] succeed: help|Help|h|H [command] - display help information
+repeat|Repeat|r|R interval_seconds max_count command - execute command periodically
+...
+meta.lb.assign_delay_ms [num | DEFAULT]
+meta.lb.assign_secondary_black_list [&lt;ip:port,ip:port,ip:port&gt;|clear]
+meta.lb.balancer_in_turn &lt;true|false&gt;
+meta.lb.only_primary_balancer &lt;true|false&gt;
+meta.lb.only_move_primary &lt;true|false&gt;
+meta.lb.add_secondary_enable_flow_control &lt;true|false&gt;
+meta.lb.add_secondary_max_count_for_one_node [num | DEFAULT]
+...
+
+Succeed count: 1
+Failed count: 0
+</code></pre></div></div>
+
+<p><a href="https://github.com/XiaoMi/rdsn/blob/a8c2d46568889902df820ac65e045a1e78aa84d4/include/dsn/tool-api/command_manager.h">remote_command</a>是pegasus的一个特性, 允许一个server注册一些命令，然后命令行可以通过rpc调用这些命令。这里我们使用<strong>help</strong>来访问meta server leader，获取meta server端支持的所有命令。例子中已经略掉了所有不相关的行，只留下以”meta.lb”开头的所有和负载均衡相关的命令。</p>
+
+<p>由于文档和代码的不一致问题，文档里不一定覆盖了当前meta所有的lb控制命令。如果想获取最新的命令列表，请用最新的代码手动执行一下help。</p>
+
+<h4 id="assign_delay_ms">assign_delay_ms</h4>
+
+<p>assign_delay_ms用来控制<strong>当partition缺少一个secondary时，我们要延时多久才选择一个新的</strong>。之所以这么做，是因为一个副本的掉线可能是临时性的，如果不给予一定的缓冲就选择新的secondary, 可能会导致巨量的数据拷贝。</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>&gt;&gt;&gt; remote_command -t meta-server meta.lb.assign_delay_ms
+COMMAND: meta.lb.assign_delay_ms
+CALL [meta-server] [127.0.0.1:34601] succeed: 300000
+CALL [meta-server] [127.0.0.1:34602] succeed: unknown command 'meta.lb.assign_delay_ms'
+CALL [meta-server] [127.0.0.1:34603] succeed: unknown command 'meta.lb.assign_delay_ms'
+Succeed count: 3
+Failed count: 0
+&gt;&gt;&gt; remote_command -t meta-server meta.lb.assign_delay_ms 10
+COMMAND: meta.lb.assign_delay_ms 10
+CALL [meta-server] [127.0.0.1:34601] succeed: OK
+CALL [meta-server] [127.0.0.1:34602] succeed: unknown command 'meta.lb.assign_delay_ms'
+CALL [meta-server] [127.0.0.1:34603] succeed: unknown command 'meta.lb.assign_delay_ms'
+Succeed count: 3
+Failed count: 0
+&gt;&gt;&gt; remote_command -t meta-server meta.lb.assign_delay_ms
+COMMAND: meta.lb.assign_delay_ms
+CALL [meta-server] [127.0.0.1:34601] succeed: 10
+CALL [meta-server] [127.0.0.1:34602] succeed: unknown command 'meta.lb.assign_delay_ms'
+CALL [meta-server] [127.0.0.1:34603] succeed: unknown command 'meta.lb.assign_delay_ms'
+Succeed count: 3
+Failed count: 0
+</code></pre></div></div>
+
+<p>如例所示，命令不加参数表示返回当前设定的值。加参数表示期望的新值。</p>
+
+<h4 id="assign_secondary_black_list">assign_secondary_black_list</h4>
+
+<p>该命令用来设定<strong>添加secondary的黑名单</strong>。这个命令在批量下线集群节点的时候非常有用, 例如:</p>
+
+<h4 id="add-secondary时候的流控">add secondary时候的流控</h4>
+
+<p>在某些时候, 负载均衡的决策算法可能会要求一个机器上要新增不少secondary副本, 如</p>
+<ul>
+  <li>一个或多个节点的宕机,会导致正常的节点瞬时接受很多的芬片</li>
+  <li>新节点的加入,可能会有大量的涌入。</li>
+</ul>
+
+<p>但在执行这些增加分片的决策动作时,我们应该避免同一时刻有大量的secondary分片同时添加, 因为</p>
+<ul>
+  <li>添加secondary副本基本会涉及数据拷贝, 如果量太大可能会对正常读写造成影响</li>
+  <li>带宽总量是有限的, 如果由分给多个添加分片的任务去分享这些带宽, 那么每个任务执行的时常都会拉长, 从而让系统长期处在一个<strong>大量分片都不健康的状态下</strong>, 增加了稳定性的风险。</li>
+</ul>
+
+<p>所以, pegasus用两个命令来对流控做支持：</p>
+<ol>
+  <li>meta.lb.add_secondary_enable_flow_control: 表示是否开启流控的feature。</li>
+  <li>meta.lb.add_secondary_max_count_for_one_node: 表示对于每个节点，同时执行多少个add_secondary的动作。</li>
+</ol>
+
+<h4 id="精细控制balancer">精细控制balancer</h4>
+
+<p>balancer表示把各节点个数调匀的过程。在目前的pegasus实现中，balancer过程大概可以用四点来概括：</p>
+<ol>
+  <li>尽量通过角色互换来做到primary均衡</li>
+  <li>如果1做不到让primary变均匀，通过拷数据来做到primary均衡</li>
+  <li>在2做完后，通过拷数据做到secondary的均衡</li>
+  <li>分别针对每个表做1-2-3的动作</li>
+</ol>
+
+<p>Pegasus提供了一些控制参数给些过程可以提供更精细的控制：</p>
+<ul>
+  <li>meta.lb.only_primary_balancer: 对于每个表，只进行1和2(减少copy secondary带来的数据拷贝)</li>
+  <li>meta.lb.only_move_primary: 对于每个表，primary调节的时候只考虑方法1(减少copy primary带来的数据拷贝)</li>
+  <li>meta.lb.balancer_in_turn：各个表的balancer用串行的方式做，而不是并行进行(用于调试，观察系统行为)</li>
+</ul>
+
+<h3 id="一些命令的使用案例">一些命令的使用案例</h3>
+
+<p>通过把上面的这些负载均衡原语结合起来，pegasus提供了一些一些脚本来执行滚动升级、节点下线等一些操作，如：</p>
+
+<ol>
+  <li>
+    <p><a href="https://github.com/XiaoMi/pegasus/blob/master/scripts/migrate_node.sh">scripts/migrate_node.sh</a></p>
+
+    <p>这个脚本用来把某个节点上服务的所有primary都赶走</p>
+  </li>
+  <li>
+    <p><a href="https://github.com/XiaoMi/pegasus/blob/master/scripts/pegasus_rolling_update.sh">scripts/pegasus_rolling_update.sh</a></p>
+
+    <p>用来对集群中的节点做在线滚动升级</p>
+  </li>
+  <li>
+    <p><a href="https://github.com/XiaoMi/pegasus/blob/master/scripts/pegasus_offline_node_list.sh">scripts/pegasus_offline_node_list.sh</a></p>
+
+    <p>用来做一批节点的下线</p>
+  </li>
+</ol>
+
+<p>不过有部分脚本的逻辑依赖小米的<a href="https://github.com/XiaoMi/minos">minos部署系统</a>。这里希望大家可以帮助pegasus, 可以支持更多的部署系统。</p>
+
+<h2 id="设计篇">设计篇</h2>
+
+<p>待补充。</p>
+
+                </div>
+            </section>
+            <footer class="footer">
+    <div class="container">
+        <div class="content is-small has-text-centered">
+            <div style="margin-bottom: 20px;">
+                <a href="http://incubator.apache.org"><img src="/assets/images/egg-logo.png"
+                                                           alt="Apache Incubator"/></a>
+            </div>
+            Copyright &copy; 2020 <a href="http://www.apache.org">The Apache Software Foundation</a>.
+            Licensed under the <a href="http://www.apache.org/licenses/LICENSE-2.0">Apache License, Version
+            2.0</a>.
+            <br><br>
+            
+            Apache Pegasus is an effort undergoing incubation at The Apache Software Foundation (ASF),
+            sponsored by the Apache Incubator. Incubation is required of all newly accepted projects
+            until a further review indicates that the infrastructure, communications, and decision making process
+            have stabilized in a manner consistent with other successful ASF projects. While incubation status is
+            not necessarily a reflection of the completeness or stability of the code, it does indicate that the
+            project has yet to be fully endorsed by the ASF.
+            
+        </div>
+    </div>
+</footer>
+        </div>
+
+        <!-- right panel -->
+        <div class="dashboard-panel is-small is-scrollable is-hidden-mobile">
+            <p class="menu-label">
+    <span class="icon">
+        <i class="fa fa-bars" aria-hidden="true"></i>
+    </span>
+    本页导航
+</p>
+<ul class="menu-list">
+  <li><a href="#概念篇">概念篇</a></li>
+  <li><a href="#操作篇">操作篇</a>
+    <ul>
+      <li><a href="#观察系统情况">观察系统情况</a></li>
+      <li><a href="#控制集群的负载均衡">控制集群的负载均衡</a></li>
+      <li><a href="#负载均衡的高级选项">负载均衡的高级选项</a>
+        <ul>
+          <li><a href="#通过help查看所有的remote_command">通过help查看所有的remote_command</a></li>
+          <li><a href="#assign_delay_ms">assign_delay_ms</a></li>
+          <li><a href="#assign_secondary_black_list">assign_secondary_black_list</a></li>
+          <li><a href="#add-secondary时候的流控">add secondary时候的流控</a></li>
+          <li><a href="#精细控制balancer">精细控制balancer</a></li>
+        </ul>
+      </li>
+      <li><a href="#一些命令的使用案例">一些命令的使用案例</a></li>
+    </ul>
+  </li>
+  <li><a href="#设计篇">设计篇</a></li>
+</ul>
+
+        </div>
+    </div>
+
+    <script src="/assets/js/app.js" type="text/javascript"></script>
+    <script src="https://cdn.jsdelivr.net/npm/docsearch.js@2/dist/cdn/docsearch.min.js"></script>
+
+<script>
+    docsearch({
+        indexName: 'apache_pegasus',
+        apiKey: '676624c2d6dc00808d3b7cf6724fc3c8',
+        inputSelector: '.searchbox-input',
+        debug: true,
+    });
+</script>
+</body>
+
+</html>
