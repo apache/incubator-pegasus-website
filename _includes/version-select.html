@@ -1,0 +1,34 @@
+{% if page.version %}
+<div class="dropdown pt-3 has-text-left">
+    <div class="dropdown-trigger">
+        <button class="button" aria-haspopup="true" aria-controls="dropdown-menu3">
+            <span>{{ page.version }}</span>
+            <span class="icon is-small">
+                <i class="fas fa-angle-down" aria-hidden="true"></i>
+            </span>
+        </button>
+    </div>
+    <div class="dropdown-menu">
+        <div class="dropdown-content">
+            {% for ver in site.pegasus_versions %}
+
+            <!--URL of our latest verion always starts without version prefixed.-->
+            {% assign version_prefix = '/' | append: page.version %}
+            {% assign no_version_link = page.permalink | remove_first: version_prefix %}
+            {% if ver == site.latest_pegasus_version %}
+            {% assign version_url = no_version_link %}
+            {% else %}
+            {% assign version_url = '/' | append: ver | append: no_version_link %}
+            {% endif %}
+
+            <a href="{{ version_url }}" class="dropdown-item {% if ver == page.version %}is-active{% endif %}">
+                {{ ver }}
+                {% if ver == site.latest_pegasus_version %}
+                <b> (latest)</b>
+                {% endif %}
+            </a>
+            {% endfor %}
+        </div>
+    </div>
+</div>
+{% endif %}

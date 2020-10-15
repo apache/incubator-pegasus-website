@@ -1,17 +1,14 @@
 ---
-permalink: /overview/installation/
+permalink: docs/installation/
+redirect_from:
+  - overview/installation/
+  - 2.1.0/docs/installation/
+version: 2.1.0
 ---
 
 Pegasus目前只支持Linux平台。目前在CentOS、Ubuntu上都测试运行过。
 
-编译过程中遇到问题，请先参考下面的**常见问题**，如果还不能解决，可以通过[Github Issues](https://github.com/XiaoMi/pegasus/issues)向我们咨询。
-
-## 用docker编译
-
-如果你的机器支持运行docker,推荐使用我们提供的dockerfile进行编译:
-
-* centos: [请点击此处](https://github.com/XiaoMi/pegasus/blob/master/docker/dev/centos7/Dockerfile)
-* Ubuntu: 敬请期待
+编译过程中遇到问题，请先参考下面的**常见问题**，如果还不能解决，可以通过[Github Issues]({{ site.pegasus_github_url }}/issues)向我们咨询。
 
 ## 安装依赖
 
@@ -19,21 +16,19 @@ Pegasus编译依赖以下软件：
 
 * 编译器：GCC-5以上版本，要求支持C++14
 * CMake：3.5.2及以上版本
-* Boost：1.58及以上版本
-* openssl: 1.10以下版本（pegasus 1.10及以下版本有该限制，以上版本无限制）
-* 其他库：libaio、snappy、zstd、lz4、gflags、zlib
+* 其他库：libaio、snappy、zstd、lz4、zlib
 
 如果是Ubuntu，可以使用apt-get安装依赖库：
 
 ```bash
-sudo apt-get install build-essential cmake libboost-all-dev libaio-dev libsnappy-dev libzstd-dev liblz4-dev libgflags-dev zlib1g zlib1g.dev patch git curl zip automake libtool libssl-dev bison flex
+sudo apt-get install build-essential cmake libaio-dev libsnappy-dev libzstd-dev liblz4-dev zlib1g zlib1g.dev patch git curl zip automake libtool libssl-dev bison flex
 ```
 
-如果是CentOS，可以使用yum安装依赖库（不含gflags）：
+如果是CentOS，可以使用yum安装依赖库：
 
 ```bash
 yum -y groupinstall "Development Tools"
-yum -y install cmake boost-devel libaio-devel snappy-devel zstd-devel lz4-devel gflags-devel zlib zlib-devel patch openssl-devel bison flex
+yum -y install cmake libaio-devel snappy-devel zstd-devel lz4-devel zlib zlib-devel patch openssl-devel bison flex
 ```
 
 如果你的系统没有提供zstd的软件源，你可以尝试手动安装，这里提供一个安装脚本：
@@ -48,23 +43,24 @@ cmake -DCMAKE_INSTALL_PREFIX=/usr -DCMAKE_INSTALL_LIBDIR=lib -DZSTD_BUILD_PROGRA
 sudo make install -j8
 ```
 
-## 源码编译
+## 源码获取
 
-从github获取Pegasus源代码，并递归获取其依赖的[rDSN](https://github.com/xiaomi/rdsn)和[Rocksdb](https://github.com/XiaoMi/pegasus-rocksdb)：
+我们推荐下载遵循[ASF Release Policy](http://www.apache.org/legal/release-policy.html)发布的源码包。
+下载地址：
+
+<https://dist.apache.org/repos/dist/release/incubator/pegasus/{{ page.version }}/apache-pegasus-{{ page.version }}-source-release.zip>
+
+
+你也可以通过git clone的方式获取Pegasus源码：
 
 ```bash
-git clone https://github.com/xiaomi/pegasus.git --recursive
+git clone {{ site.pegasus_github_url }}.git --recursive
 cd pegasus
-```
-
-如果要编译发布的稳定版本，请checkout至相应的tag（建议用[最新的release版本](https://github.com/xiaomi/pegasus/releases)），譬如：
-
-```bash
-git checkout -b v1.11.4 v1.11.4
+git checkout -b v{{ page.version }} v{{ page.version }}
 git submodule update
 ```
 
-运行build命令进行编译：
+## 源码编译
 
 ```bash
 ./run.sh build -c
@@ -72,19 +68,21 @@ git submodule update
 
 编译后输出会放在当前目录的`DSN_ROOT/`文件夹下，里面包含bin、include、lib目录。
 
-可以用pack_server命令打包server端程序包，用于服务部署：
+## 编译打包
+
+打包server端程序包，用于服务部署：
 
 ```bash
 ./run.sh pack_server
 ```
 
-可以用pack_client命令打包client端库，用于C/C++端客户端开发：
+打包client端库，用于C/C++端客户端开发：
 
 ```bash
 ./run.sh pack_client
 ```
 
-可以用pack_tools命令打包tools包，里面包含了各种工具（shell、bench）：
+打包tools工具集，里面包含了各种工具（shell、bench）：
 
 ```bash
 ./run.sh pack_tools
@@ -116,20 +114,6 @@ git submodule update
 ```
 
 如果还不能解决，可以咨询我们。
-
-### 使用非系统自带的boost库
-
-编译默认使用系统自带的boost库，但是如果系统自带的库版本太低且无法升级，可以自己下载和编译高版本的boost库，然后通过```-b```参数传进来：
-
-```bash
-./run.sh build -b /your/boost/installation/path
-```
-
-譬如：
-
-```bash
-./run.sh build -b /home/work/software/boost_1_58_0/output
-```
 
 ### 使用toolchain编译
 
@@ -163,16 +147,4 @@ export PATH="$TOOLCHAIN_DIR/bin:$PATH"
 
 ```
 ./run.sh pack_server -g
-```
-
-如果你用了自己的boost，就在pack的时候加上`-b`选项，譬如：
-
-```
-./run.sh pack_server -b
-```
-
-如果都用了，就同时加上`-b`和`-g`选项，譬如：
-
-```
-./run.sh pack_server -b -g
 ```

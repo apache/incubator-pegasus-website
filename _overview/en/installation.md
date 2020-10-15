@@ -1,5 +1,0 @@
----
-permalink: /overview/installation/
----
-
-TRANSLATING

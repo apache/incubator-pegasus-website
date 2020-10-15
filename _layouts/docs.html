@@ -5,15 +5,14 @@
 <body>
     <div class="dashboard is-full-height">
         <!-- left panel -->
-        <div class="dashboard-panel is-medium is-hidden-mobile">
-            <div class="dashboard-panel-header has-text-left">
+        <div class="dashboard-panel is-medium is-hidden-mobile pl-0">
+            <div class="dashboard-panel-header has-text-centered">
                 <a href="{{ site.baseurl }}/">
                     <img src="{{ site.baseurl }}/assets/images/pegasus-logo-inv.png" style="width: 80%;">
                 </a>
-                <a class="dropdown">
-                </a>
+                {% include version-select.html %}
             </div>
-            <div class="dashboard-panel-main is-scrollable">
+            <div class="dashboard-panel-main is-scrollable pl-6">
                 {% include menubar.html %}
             </div>
         </div>

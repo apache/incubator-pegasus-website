@@ -10,7 +10,7 @@
     - name: title_benchmark
       link: /overview/benchmark
     - name: title_installation
-      link: /overview/installation
+      link: /docs/installation
     - name: title_onebox
       link: /overview/onebox
     - name: title_shell

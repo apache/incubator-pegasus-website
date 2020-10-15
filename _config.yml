@@ -18,6 +18,7 @@ plugins:
   - jekyll-feed
   - jekyll-seo-tag
   - jekyll-polyglot
+  - jekyll-redirect-from
   - kramdown
   - rouge
 
@@ -82,6 +83,11 @@ sass:
   # Adding the following to your config.yml will disable sourcemap generation:
   sourcemap: never
   style: compressed
+
+latest_pegasus_version: 2.1.0
+pegasus_versions:
+- 2.1.0
+- 1.x
 
 pegasus_github_url: "https://github.com/apache/incubator-pegasus"
 pegasus_website_github_url: "https://github.com/apache/incubator-pegasus-website"

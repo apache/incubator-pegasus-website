@@ -1,3 +1,7 @@
+- name: title_docs
+  items:
+    - name: title_installation
+      link: /docs/installation
 - name: title_clients
   items:
     - name: title_java-client

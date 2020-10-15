@@ -39,3 +39,7 @@ $('.modal-background, .modal-close').click(function () {
 document.addEventListener('DOMContentLoaded', () => {
   $("table").wrap("<div class=\"table-container\"></div>")
 })
+
+$('.dropdown').click(function () {
+  $('.dropdown').toggleClass("is-active")
+});
