@@ -55,7 +55,7 @@ sudo make install -j8
 
 ```bash
 git clone {{ site.pegasus_github_url }}.git --recursive
-cd pegasus
+cd incubator-pegasus
 git checkout -b v{{ page.version }} v{{ page.version }}
 git submodule update
 ```

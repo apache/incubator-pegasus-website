@@ -121,7 +121,7 @@ cd rdsn
 或者
 
 ```sh
-cd pegasus
+cd incubator-pegasus
 ./src/idl/recompile_thrift.sh
 ```
 
