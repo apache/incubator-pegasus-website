@@ -1,7 +1,13 @@
 - name: title_docs
   items:
-    - name: title_installation
-      link: /docs/installation
+    - name: title_downloads
+      link: /docs/downloads
+- name: title_build_pegasus
+  items:
+    - name: title_compile-by-docker
+      link: /docs/build/compile-by-docker
+    - name: title_compile-from-source
+      link: /docs/build/compile-from-source
 - name: title_clients
   items:
     - name: title_java-client

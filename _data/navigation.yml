@@ -3,20 +3,18 @@
   icon: fas fa-user-plus
   items:
   - name: title_contact
-    link: /community/#联系我们
+    link: /community/#contact-us
   - name: title_contribution
-    link: /community/#参与贡献
+    link: /community/#contribution
   - name: title_coding-guides
     link: /community/coding-guides
-  - name: title_roadmap
-    link: /community/roadmap
   - name: title_bug-tracking
-    link: https://github.com/XiaoMi/pegasus/labels/type%2Fbug
+    link: "{{ pegasus_github_url }}/labels/type%2Fbug"
   - name: title_apache-proposal
-    link: /community/proposal
+    link: https://cwiki.apache.org/confluence/display/INCUBATOR/PegasusProposal
 - name: title_blog
   link: /blogs
   icon: fas fa-rss
 - name: title_releases
   icon: fas fa-fire
-  link: /releases
+  link: "{{ pegasus_github_url }}/releases"

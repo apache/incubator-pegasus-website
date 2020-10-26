@@ -15,11 +15,11 @@
             </div>
         </div>
     </section>
-    <section class="hero is-medium is-light" id="联系我们">
+    <section class="hero is-medium is-light" id="contact-us">
         <div class="hero-body">
             <div class="container has-text-centered">
                 <p class="title is-2 has-text-black">
-                    联系我们
+                    {{ site.data.translate['title_contact'] }}
                 </p>
                 <hr class="has-background-black" style="margin-bottom: 5rem;">
                 <div class="columns is-multiline is-centered">
@@ -40,17 +40,17 @@
             </div>
         </div>
     </section>
-    <section class="hero is-medium" id="参与贡献">
+    <section class="hero is-medium" id="contribution">
         <div class="hero-body">
-            <div class="container">
-                <p class="title is-2 has-text-black has-text-centered">
-                    参与贡献
+            <div class="container has-text-centered">
+                <p class="title is-2 has-text-black">
+                    {{ site.data.translate['title_contribution'] }}
                 </p>
                 <hr class="has-background-black" style="margin-bottom: 5rem;">
-                <div class="columns is-variable is-8">
+                <div class="columns is-variable is-8 is-centered">
                     {% for item in page.contributor_items %}
                     <div class="column is-4">
-                        <p class="title is-3 has-text-centered has-text-weight-light">{{ item.title }}</p>
+                        <p class="title is-3 has-text-weight-light">{{ item.title }}</p>
                         <hr>
                         <div class="content">
                             <p>{{ item.description | newline_to_br }}</p>
@@ -58,39 +58,6 @@
                     </div>
                     {% endfor %}
                 </div>
-            </div>
-        </div>
-    </section>
-    <section class="section">
-        <div class="container" style="padding-bottom: 3rem;">
-            <hr>
-            <div class="tabs is-toggle is-fullwidth is-large">
-                <ul>
-                    <li>
-                        <a href="/community/mail-subscribe">
-                            <span class="icon"><i class="fas fa-envelope-open" aria-hidden="true"></i></span>
-                            <span>邮件订阅</span>
-                        </a>
-                    </li>
-                    <li>
-                        <a href="/community/coding-guides">
-                            <span class="icon"><i class="fas fa-location-arrow" aria-hidden="true"></i></span>
-                            <span>Coding Guides</span>
-                        </a>
-                    </li>
-                    <li>
-                        <a href="/community/roadmap">
-                            <span class="icon"><i class="fas fa-map-marked-alt" aria-hidden="true"></i></span>
-                            <span>RoadMap</span>
-                        </a>
-                    </li>
-                    <li>
-                        <a href="/overview">
-                            <span class="icon"><i class="far fa-file-alt" aria-hidden="true"></i></span>
-                            <span>文档</span>
-                        </a>
-                    </li>
-                </ul>
             </div>
         </div>
     </section>
