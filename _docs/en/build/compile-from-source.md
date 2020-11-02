@@ -2,20 +2,19 @@
 permalink: docs/build/compile-from-source/
 redirect_from:
   - 2.1.0/docs/build/compile-from-source/
-  - docs/installation
 version: 2.1.0
 ---
 
-Pegasus目前只支持Linux平台进行源码编译。编译过程中遇到问题，可以通过[Github Issues]({{ site.pegasus_github_url }}/issues)向我们咨询。
+Pegasus supports Linux only. Please don't hesitate to contact us via [Github Issues]({{ site.pegasus_github_url }}/issues) when you encountered any problem.
 
-## 环境要求
+## Requirements
 
 - GCC 4.9.4+
 - CMake 3.11+
 
-## Ubuntu环境配置
+## Ubuntu environment
 
-你可以参考 [pegasus-build-dev/ubuntu16.04](https://github.com/pegasus-kv/pegasus-docker/blob/master/pegasus-build-env/ubuntu16.04/Dockerfile) 的Docker镜像安装全部依赖。
+You can refer to the docker image [pegasus-build-dev/ubuntu16.04](https://github.com/pegasus-kv/pegasus-docker/blob/master/pegasus-build-env/ubuntu16.04/Dockerfile) to install all dependencies.
 
 ```bash
 apt-get -y install build-essential \
@@ -40,9 +39,9 @@ apt-get -y install build-essential \
 pip3 install --no-cache-dir cmake
 ```
 
-## CentOS环境配置
+## CentOS environment
 
-你可以参考 [pegasus-build-dev/centos7](https://github.com/pegasus-kv/pegasus-docker/blob/master/pegasus-build-env/centos7/Dockerfile) 的Docker镜像安装全部依赖。
+You can refer to the docker image [pegasus-build-dev/centos7](https://github.com/pegasus-kv/pegasus-docker/blob/master/pegasus-build-env/centos7/Dockerfile) to install all dependencies.
 
 ```bash
 yum -y install centos-release-scl \
@@ -76,34 +75,34 @@ yum -y install devtoolset-7-gcc \
 pip3 install --no-cache-dir cmake
 ```
 
-## 源码编译
+## Compilation
 
-请先参考[下载文档](/docs/downloads)获取源码。
+Please refer to [Downloads](/docs/downloads) to fetch the sources。
 
 ```bash
 ./run.sh build -c
 ```
 
-编译后输出会放在当前目录的`DSN_ROOT/`文件夹下，里面包含bin、include、lib目录。
+The output of compilation will be placed under `DSN_ROOT` of the source directory. It includes `bin`, `include` and `lib`.
 
-## 编译打包
+## Packaging
 
-打包server端程序包，用于服务部署：
+Package server binaries for deployment:
 
 ```bash
 ./run.sh pack_server
 ```
 
-打包client端库，用于C/C++端客户端开发：
+Package client libraries for C/C++ development:
 
 ```bash
 ./run.sh pack_client
 ```
 
-打包tools工具集，里面包含了各种工具（shell、bench）：
+Package toolset which includes various tools (shell, bench):
 
 ```bash
 ./run.sh pack_tools
 ```
 
-编译成功后，推荐先[体验onebox集群](/overview/onebox)。
+If this is your first time compiling Pegasus, it's recommended to try [onebox](/overview/onebox).
