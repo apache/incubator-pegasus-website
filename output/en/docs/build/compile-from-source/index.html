@@ -15,15 +15,15 @@
 <meta name="generator" content="Jekyll v4.1.1" />
 <meta property="og:title" content="Compile From Source" />
 <meta property="og:locale" content="en_US" />
-<meta name="description" content="Pegasus目前只支持Linux平台进行源码编译。编译过程中遇到问题，可以通过Github Issues向我们咨询。" />
-<meta property="og:description" content="Pegasus目前只支持Linux平台进行源码编译。编译过程中遇到问题，可以通过Github Issues向我们咨询。" />
+<meta name="description" content="Pegasus supports Linux only. Please don’t hesitate to contact us via Github Issues when you encountered any problem." />
+<meta property="og:description" content="Pegasus supports Linux only. Please don’t hesitate to contact us via Github Issues when you encountered any problem." />
 <meta property="og:site_name" content="Pegasus" />
 <meta property="og:type" content="article" />
-<meta property="article:published_time" content="2020-10-27T02:39:33+00:00" />
+<meta property="article:published_time" content="2020-11-02T03:44:31+00:00" />
 <meta name="twitter:card" content="summary" />
 <meta property="twitter:title" content="Compile From Source" />
 <script type="application/ld+json">
-{"@type":"BlogPosting","headline":"Compile From Source","dateModified":"2020-10-27T02:39:33+00:00","datePublished":"2020-10-27T02:39:33+00:00","mainEntityOfPage":{"@type":"WebPage","@id":"/docs/build/compile-from-source/"},"description":"Pegasus目前只支持Linux平台进行源码编译。编译过程中遇到问题，可以通过Github Issues向我们咨询。","url":"/docs/build/compile-from-source/","@context":"https://schema.org"}</script>
+{"@type":"BlogPosting","headline":"Compile From Source","dateModified":"2020-11-02T03:44:31+00:00","datePublished":"2020-11-02T03:44:31+00:00","mainEntityOfPage":{"@type":"WebPage","@id":"/docs/build/compile-from-source/"},"description":"Pegasus supports Linux only. Please don’t hesitate to contact us via Github Issues when you encountered any problem.","url":"/docs/build/compile-from-source/","@context":"https://schema.org"}</script>
 <!-- End Jekyll SEO tag -->
 </head>
 
@@ -720,11 +720,18 @@
             </section>
             <section class="section" style="padding-top: 2rem;">
                 <div class="content">
-                    <p>Pegasus目前只支持Linux平台进行源码编译。编译过程中遇到问题，可以通过<a href="https://github.com/apache/incubator-pegasus/issues">Github Issues</a>向我们咨询。</p>
+                    <p>Pegasus supports Linux only. Please don’t hesitate to contact us via <a href="https://github.com/apache/incubator-pegasus/issues">Github Issues</a> when you encountered any problem.</p>
 
-<h2 id="ubuntu环境配置">Ubuntu环境配置</h2>
+<h2 id="requirements">Requirements</h2>
 
-<p>你可以参考 <a href="https://github.com/pegasus-kv/pegasus-docker/blob/master/pegasus-build-env/ubuntu16.04/Dockerfile">pegasus-build-dev/ubuntu16.04</a> 的Docker镜像安装全部依赖。</p>
+<ul>
+  <li>GCC 4.9.4+</li>
+  <li>CMake 3.11+</li>
+</ul>
+
+<h2 id="ubuntu-environment">Ubuntu environment</h2>
+
+<p>You can refer to the docker image <a href="https://github.com/pegasus-kv/pegasus-docker/blob/master/pegasus-build-env/ubuntu16.04/Dockerfile">pegasus-build-dev/ubuntu16.04</a> to install all dependencies.</p>
 
 <div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>apt-get <span class="nt">-y</span> <span class="nb">install </span>build-essential <span class="se">\</span>
                    python3-pip <span class="se">\</span>
@@ -748,9 +755,9 @@
 pip3 <span class="nb">install</span> <span class="nt">--no-cache-dir</span> cmake
 </code></pre></div></div>
 
-<h2 id="centos环境配置">CentOS环境配置</h2>
+<h2 id="centos-environment">CentOS environment</h2>
 
-<p>你可以参考 <a href="https://github.com/pegasus-kv/pegasus-docker/blob/master/pegasus-build-env/centos7/Dockerfile">pegasus-build-dev/centos7</a> 的Docker镜像安装全部依赖。</p>
+<p>You can refer to the docker image <a href="https://github.com/pegasus-kv/pegasus-docker/blob/master/pegasus-build-env/centos7/Dockerfile">pegasus-build-dev/centos7</a> to install all dependencies.</p>
 
 <div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>yum <span class="nt">-y</span> <span class="nb">install </span>centos-release-scl <span class="se">\</span>
                scl-utils <span class="se">\</span>
@@ -783,33 +790,33 @@ yum <span class="nt">-y</span> <span class="nb">install </span>devtoolset-7-gcc 
 pip3 <span class="nb">install</span> <span class="nt">--no-cache-dir</span> cmake
 </code></pre></div></div>
 
-<h2 id="源码编译">源码编译</h2>
+<h2 id="compilation">Compilation</h2>
 
-<p>请先参考<a href="/en/docs/downloads">下载文档</a>获取源码。</p>
+<p>Please refer to <a href="/en/docs/downloads">Downloads</a> to fetch the sources。</p>
 
 <div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>./run.sh build <span class="nt">-c</span>
 </code></pre></div></div>
 
-<p>编译后输出会放在当前目录的<code class="language-plaintext highlighter-rouge">DSN_ROOT/</code>文件夹下，里面包含bin、include、lib目录。</p>
+<p>The output of compilation will be placed under <code class="language-plaintext highlighter-rouge">DSN_ROOT</code> of the source directory. It includes <code class="language-plaintext highlighter-rouge">bin</code>, <code class="language-plaintext highlighter-rouge">include</code> and <code class="language-plaintext highlighter-rouge">lib</code>.</p>
 
-<h2 id="编译打包">编译打包</h2>
+<h2 id="packaging">Packaging</h2>
 
-<p>打包server端程序包，用于服务部署：</p>
+<p>Package server binaries for deployment:</p>
 
 <div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>./run.sh pack_server
 </code></pre></div></div>
 
-<p>打包client端库，用于C/C++端客户端开发：</p>
+<p>Package client libraries for C/C++ development:</p>
 
 <div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>./run.sh pack_client
 </code></pre></div></div>
 
-<p>打包tools工具集，里面包含了各种工具（shell、bench）：</p>
+<p>Package toolset which includes various tools (shell, bench):</p>
 
 <div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>./run.sh pack_tools
 </code></pre></div></div>
 
-<p>编译成功后，推荐先<a href="/en/overview/onebox">体验onebox集群</a>。</p>
+<p>If this is your first time compiling Pegasus, it’s recommended to try <a href="/en/overview/onebox">onebox</a>.</p>
 
                 </div>
             </section>
@@ -846,10 +853,11 @@ pip3 <span class="nb">install</span> <span class="nt">--no-cache-dir</span> cmak
     Table of contents
 </p>
 <ul class="menu-list">
-  <li><a href="#ubuntu环境配置">Ubuntu环境配置</a></li>
-  <li><a href="#centos环境配置">CentOS环境配置</a></li>
-  <li><a href="#源码编译">源码编译</a></li>
-  <li><a href="#编译打包">编译打包</a></li>
+  <li><a href="#requirements">Requirements</a></li>
+  <li><a href="#ubuntu-environment">Ubuntu environment</a></li>
+  <li><a href="#centos-environment">CentOS environment</a></li>
+  <li><a href="#compilation">Compilation</a></li>
+  <li><a href="#packaging">Packaging</a></li>
 </ul>
 
         </div>
