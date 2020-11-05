@@ -15,15 +15,15 @@
 <meta name="generator" content="Jekyll v4.1.1" />
 <meta property="og:title" content="Overview" />
 <meta property="og:locale" content="en_US" />
-<meta name="description" content="项目概览" />
-<meta property="og:description" content="项目概览" />
+<meta name="description" content="Apache Pegasus是一个分布式Key-Value存储系统，它的设计目标是具备：" />
+<meta property="og:description" content="Apache Pegasus是一个分布式Key-Value存储系统，它的设计目标是具备：" />
 <meta property="og:site_name" content="Pegasus" />
 <meta property="og:type" content="article" />
-<meta property="article:published_time" content="2020-11-02T10:37:08+00:00" />
+<meta property="article:published_time" content="2020-11-05T14:41:05+00:00" />
 <meta name="twitter:card" content="summary" />
 <meta property="twitter:title" content="Overview" />
 <script type="application/ld+json">
-{"@type":"BlogPosting","headline":"Overview","dateModified":"2020-11-02T10:37:08+00:00","datePublished":"2020-11-02T10:37:08+00:00","mainEntityOfPage":{"@type":"WebPage","@id":"/overview/"},"description":"项目概览","url":"/overview/","@context":"https://schema.org"}</script>
+{"@type":"BlogPosting","headline":"Overview","dateModified":"2020-11-05T14:41:05+00:00","datePublished":"2020-11-05T14:41:05+00:00","mainEntityOfPage":{"@type":"WebPage","@id":"/overview/"},"description":"Apache Pegasus是一个分布式Key-Value存储系统，它的设计目标是具备：","url":"/overview/","@context":"https://schema.org"}</script>
 <!-- End Jekyll SEO tag -->
 </head>
 
@@ -90,7 +90,7 @@
                             参与贡献
                         </a>
                         
-                        <a href="/community/coding-guides"
+                        <a href="https://cwiki.apache.org/confluence/display/PEGASUS/Coding+guides"
                             class="navbar-item ">
                             编码指引
                         </a>
@@ -195,9 +195,9 @@
         </li>
         
         <li>
-            <a href="/docs/installation"
+            <a href="/docs/build/compile-by-docker"
                 class="">
-                
+                安装构建
             </a>
         </li>
         
@@ -226,45 +226,37 @@
 
 <div class="content">
     <h1 id="概览">概览</h1>
-    <h2 id="项目概览">项目概览</h2>
-
-<p>Pegasus是小米云存储团队开发的一个分布式Key-Value存储系统，最初的动机是弥补HBase在可用性和性能上的不足。Pegasus系统的Server端完全采用C++语言开发，使用PacificA协议支持强一致性，使用RocksDB作为单机存储引擎。</p>
-
-<p>因为使用C++编写，Pegasus避免了使用Java所带来的GC影响和虚拟机开销。而由于不依赖外部文件系统，Pegasus的IO路径更短，延迟通常更加稳定可控。</p>
-
-<p>模型设计上，Pegasus使用哈希分片进行数据的拆分，分片（Partition）是系统内部数据迁移的最小单元，每一分片内的数据有序存储，各个分片之间数据隔离，每个分片对应一个单独的 RocksDB 实例。</p>
-
-<p>Pegasus提供了一系列丰富的功能支持，如快照冷备份，表的软删除，表级写限流等等，在小米的生产环境中均经过应用和验证。</p>
-
-<h2 id="安装构建">安装构建</h2>
-
-<p>Pegasus目前只支持在Linux平台运行。当前我们提供如下几种安装方式：</p>
+    <p>Apache Pegasus是一个分布式Key-Value存储系统，它的设计目标是具备：</p>
 
 <ul>
-  <li><strong>下载 Release 包</strong></li>
+  <li><strong>高扩展性</strong>：通过哈希分片实现分布式横向扩展。</li>
+  <li><strong>强一致性</strong>：通过<a href="https://www.microsoft.com/en-us/research/publication/pacifica-replication-in-log-based-distributed-storage-systems/">PacificA</a>一致性协议保证。</li>
+  <li><strong>高性能</strong>：底层使用<a href="https://github.com/xiaomi/pegasus-rocksdb">RocksDB</a>作为存储引擎。</li>
+  <li><strong>简单易用</strong>：基于Key-Value的良好接口。</li>
 </ul>
 
-<p>在 <a href="https://github.com/XiaoMi/pegasus/releases">https://github.com/XiaoMi/pegasus/releases</a> 下载二进制包。</p>
+<h2 id="背景">背景</h2>
 
-<p>如对于1.11.3版本而言，你可以下载：<a href="https://github.com/XiaoMi/pegasus/releases/download/v1.11.3/pegasus-1.11.3-b45cb06-linux-x86_64-release.zip">pegasus-1.11.3-b45cb06-linux-x86_64-release.zip</a>，这其中包含我们用于搭建系统所需要的全部组件。</p>
+<p>Pegasus项目的目标是弥补Redis与<a href="https://hbase.apache.org/">HBase</a>之间的空白。Redis作为一个纯内存存储，它提供了低延迟读写能力，但它不具备强一致性。而与HBase不同，我们需要Pegasus以C++进行编写，同时其写路径应当只依赖于本地文件系统，不依赖于其他分布式文件系统（如HDFS），由此才能保证延迟稳定。</p>
 
-<p>现在Pegasus依然处于快速迭代状态，建议你使用时选择最新版本。</p>
+<p>除了性能需求外，我们还需要一个存储系统，它应能够支持多级别数据安全保障，快速跨数据中心迁移，自动负载均衡，以及快速分片分裂等功能。这就是我们发起Pegasus项目的原因。</p>
+
+<h2 id="特性">特性</h2>
 
 <ul>
-  <li><strong>手动编译</strong></li>
+  <li>
+    <p><strong>数据的持久性</strong>：每一份数据写入都将分别复制到3个不同ReplicaServer上，待全部完成后才响应客户端。通过PacificA协议，Pegasus具备强一致数复制的能力，同时也能够实现强一致的成员变更。</p>
+  </li>
+  <li>
+    <p><strong>ReplicaServer之间的自动负载均衡</strong>：自动负载均衡是MetaServer的内置功能，它能够让Replica在节点之间均匀分布。当集群处于不均衡状态时，管理员可以通过简单的命令让Replica在节点之间自动迁移，从而实现负载均衡。</p>
+  </li>
+  <li>
+    <p><strong>冷备份</strong>：Pegasus支持可扩展的备份和恢复策略，由此可实现数据安全性。数据的存储位置可以是在HDFS或本地存储上。在文件系统上存储的快照数据可以通过<a href="https://github.com/pegasus-kv/pegasus-spark">pegasus-spark</a>实现离线数据分析。</p>
+  </li>
+  <li>
+    <p><strong>满足最终一致性的跨数据中心复制</strong>：这一功能我们又称之为<em>duplication</em>，它能够让本地集群的数据写在短时间内到达远端集群。它可以帮助你实现业务的更高的可用性，同时也可以让你避免跨机房访问，从而降低访问延迟。</p>
+  </li>
 </ul>
-
-<p>请参照在<a href="/overview/compilation">编译构建</a>页面中的指示进行编译。</p>
-
-<ul>
-  <li><strong>下载 Docker 镜像</strong></li>
-</ul>
-
-<p>尚未支持，敬请期待。</p>
-
-<h2 id="立即开始">立即开始</h2>
-
-<p>你可以参照文档目录检索你想要了解的内容。如果你对Pegasus完全陌生，可以首先阅读<a href="/overview/background">项目背景</a>，并通过<a href="/overview/onebox">体验onebox集群</a>来熟悉Pegasus的各项功能。配合阅览下方的slides口味更佳。</p>
 
 <h2 id="社区分享">社区分享</h2>
 
@@ -302,9 +294,8 @@
 <ul class="menu-list">
   <li><a href="#概览">概览</a>
     <ul>
-      <li><a href="#项目概览">项目概览</a></li>
-      <li><a href="#安装构建">安装构建</a></li>
-      <li><a href="#立即开始">立即开始</a></li>
+      <li><a href="#背景">背景</a></li>
+      <li><a href="#特性">特性</a></li>
       <li><a href="#社区分享">社区分享</a></li>
     </ul>
   </li>
