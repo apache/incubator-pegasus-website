@@ -2,39 +2,28 @@
 permalink: overview/index.html
 ---
 
-## 项目概览
+Apache Pegasus是一个分布式Key-Value存储系统，它的设计目标是具备：
 
-Pegasus是小米云存储团队开发的一个分布式Key-Value存储系统，最初的动机是弥补HBase在可用性和性能上的不足。Pegasus系统的Server端完全采用C++语言开发，使用PacificA协议支持强一致性，使用RocksDB作为单机存储引擎。
+- **高扩展性**：通过哈希分片实现分布式横向扩展。
+- **强一致性**：通过[PacificA](https://www.microsoft.com/en-us/research/publication/pacifica-replication-in-log-based-distributed-storage-systems/)一致性协议保证。
+- **高性能**：底层使用[RocksDB](https://github.com/xiaomi/pegasus-rocksdb)作为存储引擎。
+- **简单易用**：基于Key-Value的良好接口。
 
-因为使用C++编写，Pegasus避免了使用Java所带来的GC影响和虚拟机开销。而由于不依赖外部文件系统，Pegasus的IO路径更短，延迟通常更加稳定可控。
+## 背景
 
-模型设计上，Pegasus使用哈希分片进行数据的拆分，分片（Partition）是系统内部数据迁移的最小单元，每一分片内的数据有序存储，各个分片之间数据隔离，每个分片对应一个单独的 RocksDB 实例。
+Pegasus项目的目标是弥补Redis与[HBase](https://hbase.apache.org/)之间的空白。Redis作为一个纯内存存储，它提供了低延迟读写能力，但它不具备强一致性。而与HBase不同，我们需要Pegasus以C++进行编写，同时其写路径应当只依赖于本地文件系统，不依赖于其他分布式文件系统（如HDFS），由此才能保证延迟稳定。
 
-Pegasus提供了一系列丰富的功能支持，如快照冷备份，表的软删除，表级写限流等等，在小米的生产环境中均经过应用和验证。
+除了性能需求外，我们还需要一个存储系统，它应能够支持多级别数据安全保障，快速跨数据中心迁移，自动负载均衡，以及快速分片分裂等功能。这就是我们发起Pegasus项目的原因。
 
-## 安装构建
+## 特性
 
-Pegasus目前只支持在Linux平台运行。当前我们提供如下几种安装方式：
+- **数据的持久性**：每一份数据写入都将分别复制到3个不同ReplicaServer上，待全部完成后才响应客户端。通过PacificA协议，Pegasus具备强一致数复制的能力，同时也能够实现强一致的成员变更。
 
-- **下载 Release 包**
+- **ReplicaServer之间的自动负载均衡**：自动负载均衡是MetaServer的内置功能，它能够让Replica在节点之间均匀分布。当集群处于不均衡状态时，管理员可以通过简单的命令让Replica在节点之间自动迁移，从而实现负载均衡。
 
-在 <https://github.com/XiaoMi/pegasus/releases> 下载二进制包。
+- **冷备份**：Pegasus支持可扩展的备份和恢复策略，由此可实现数据安全性。数据的存储位置可以是在HDFS或本地存储上。在文件系统上存储的快照数据可以通过[pegasus-spark](https://github.com/pegasus-kv/pegasus-spark)实现离线数据分析。
 
-如对于1.11.3版本而言，你可以下载：[pegasus-1.11.3-b45cb06-linux-x86_64-release.zip](https://github.com/XiaoMi/pegasus/releases/download/v1.11.3/pegasus-1.11.3-b45cb06-linux-x86_64-release.zip)，这其中包含我们用于搭建系统所需要的全部组件。
-
-现在Pegasus依然处于快速迭代状态，建议你使用时选择最新版本。
-
-- **手动编译**
-
-请参照在[编译构建](/overview/compilation)页面中的指示进行编译。
-
-- **下载 Docker 镜像**
-
-尚未支持，敬请期待。
-
-## 立即开始
-
-你可以参照文档目录检索你想要了解的内容。如果你对Pegasus完全陌生，可以首先阅读[项目背景](/overview/background)，并通过[体验onebox集群](/overview/onebox)来熟悉Pegasus的各项功能。配合阅览下方的slides口味更佳。
+- **满足最终一致性的跨数据中心复制**：这一功能我们又称之为*duplication*，它能够让本地集群的数据写在短时间内到达远端集群。它可以帮助你实现业务的更高的可用性，同时也可以让你避免跨机房访问，从而降低访问延迟。
 
 ## 社区分享
 

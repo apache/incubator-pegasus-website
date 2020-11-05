@@ -7,7 +7,7 @@
   - name: title_contribution
     link: /community/#contribution
   - name: title_coding-guides
-    link: /community/coding-guides
+    link: https://cwiki.apache.org/confluence/display/PEGASUS/Coding+guides
   - name: title_bug-tracking
     link: "{{ pegasus_github_url }}/labels/type%2Fbug"
   - name: title_apache-proposal
