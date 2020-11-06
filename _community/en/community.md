@@ -33,6 +33,6 @@ contributor_items:
   - title: Bug Fixes
     description: >
       The known bugs were collected here: <a href="https://github.com/apache/incubator-pegasus/labels/type%2Fbug">Issues: type/bug</a>. If you encounter problems that couldn't be found in the list, please report to us via issues. 
-      Bug finding is also a meaningful contribution to us. Furthermore, since we deeply value the readability and quality of our document, minor fixes like correcting spelling errors are also welcomed.
+      Bug finding is a meaningful contribution to us. Furthermore, since we strongly value the readability and quality of our document, minor fixes like correcting spelling errors are also welcomed.
 ---
   
