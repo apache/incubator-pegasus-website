@@ -28,7 +28,7 @@ contributor_items:
   - title: Pull Requests
     description: >
       We use <a href="">Github Pull Request</a> for development. Every pull request needs 2 approvals from the Pegasus committers before merged. You can make your review and comments on the PR even if you are not yet a Pegasus committer.
-      Please read the <a href="/community/coding-guides">Coding Guides</a> before submitting a new code.
+      Please read the <a href="https://cwiki.apache.org/confluence/display/PEGASUS/Coding+guides">Coding Guides</a> before submitting a new code.
 
   - title: Bug Fixes
     description: >

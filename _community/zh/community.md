@@ -26,11 +26,11 @@ contact_items:
 contributor_items:
   - title: Pull Requests
     description: >
-      我们的开发流程使用<a href="https://github.com/apache/incubator-pegasus/pulls">Github Pull Request</a>机制。你的提交至少需要两个Pegasus Committer的Code Review都通过才可合入主干分支。即使你并不是Pegasus Committer，你也可以对代码提出review，你的建议可能会有助于我们发现问题。你可以参照<a href="/community/coding-guides">Coding Guides</a>的规范来提交代码。
+      我们的开发流程使用<a href="https://github.com/apache/incubator-pegasus/pulls">Github Pull Request</a>机制。你的提交至少需要两个Pegasus Committer的Code Review都通过才可合入主干分支。即使你并不是Pegasus Committer，你也可以对代码提出review，你的建议可能会有助于我们发现问题。你可以参照<a href="https://cwiki.apache.org/confluence/display/PEGASUS/Coding+guides">Coding Guides</a>的规范来提交代码。
 
   - title: RoadMap
     description: >
-      你可以在<a href="/community/roadmap">这里</a>找到我们近期的产品规划，对那些你最感兴趣的需求，你可以与我们进行合作开发。此外，我们也会在每次<a href="/releases">版本发布</a>时向大家同步Pegasus当前已完成开发的功能以及目标。
+      你可以在<a href="https://cwiki.apache.org/confluence/display/PEGASUS/RoadMap">这里</a>找到我们近期的产品规划，对那些你最感兴趣的需求，你可以与我们进行合作开发。此外，我们也会在每次<a href="/releases">版本发布</a>时向大家同步Pegasus当前已完成开发的功能以及目标。
 
   - title: Fixes
     description: >
