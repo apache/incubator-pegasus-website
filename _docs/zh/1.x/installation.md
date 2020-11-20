@@ -1,5 +1,5 @@
 ---
-permalink: 1.x/docs/installation/
+permalink: 1.x/docs/build/compile-from-source/
 version: 1.x
 ---
 
