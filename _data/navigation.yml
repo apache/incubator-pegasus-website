@@ -9,7 +9,7 @@
   - name: title_coding-guides
     link: https://cwiki.apache.org/confluence/display/PEGASUS/Coding+guides
   - name: title_bug-tracking
-    link: "{{ pegasus_github_url }}/labels/type%2Fbug"
+    link: https://github.com/apache/incubator-pegasus/issues?q=is%3Aissue+is%3Aopen+label%3Atype%2Fbug
   - name: title_apache-proposal
     link: https://cwiki.apache.org/confluence/display/INCUBATOR/PegasusProposal
 - name: title_blog
@@ -17,4 +17,4 @@
   icon: fas fa-rss
 - name: title_releases
   icon: fas fa-fire
-  link: "{{ pegasus_github_url }}/releases"
+  link: /docs/downloads
