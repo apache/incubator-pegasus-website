@@ -32,6 +32,15 @@ mvn clean install -DskipTests
 <dependency>
   <groupId>com.xiaomi.infra</groupId>
   <artifactId>pegasus-client</artifactId>
+  <version>2.0.0</version>
+</dependency>
+```
+
+**注：V2.0.0版本仅适用于服务端Pegasus Server >= 2.0, 如果服务端版本较低，请使用下面的版本，文档以2.0.0为准**
+```xml
+<dependency>
+  <groupId>com.xiaomi.infra</groupId>
+  <artifactId>pegasus-client</artifactId>
   <version>1.11.10-thrift-0.11.0-inlined</version>
 </dependency>
 ```
@@ -47,12 +56,21 @@ Java客户端需要准备配置文件，用以确定Pegasus集群的位置，以
 ```ini
 meta_servers = 127.0.0.1:34601,127.0.0.1:34602,127.0.0.1:34603
 operation_timeout = 1000
+# 以下参数可以根据需要添加，否则以默认值即可
+async_workers = 4
+enable_perf_counter = true
+perf_counter_tags = cluster=onebox,app=unit_test
+push_counter_interval_secs = 10
+meta_query_timeout = 5000
 ```
-
 其中：  
-
 * meta_servers是必选项，表示Pegasus集群的MetaServer地址列表，用于定位集群的位置。  
-* operation_timeout是可选项，表示各操作的默认超时时间，单位毫秒，默认值为1000。其实接口中每个操作一般都可以指定单独的超时时间，当指定为0时，就会使用该默认超时时间。
+* operation_timeout是可选项，表示各操作的默认超时时间，单位毫秒，默认值为1000。接口中每个操作一般都可以指定单独的超时时间，当指定为0时，使用该默认超时时间。
+* async_workers：后台工作线程数，内部实际是Netty NIO处理客户端和replica_server之间RPC的线程，默认：4
+* enable_perf_counter：是否开启性能指标监控数据，如果开启则则客户端会周期性的上报监控数据，目前仅支持[Falcon](http://open-falcon.org/)，默认：true(2.0.0以前默认为false)
+* perf_counter_tags：falcon监控数据标签，默认：空
+* push_counter_interval_secs：falcon监控数据上报间隔，默认：10s
+* meta_query_timeout： 首次与MetaServer建立连接的超时时间。一般首次建立连接将需要更多的时间，默认值：5000ms(2.0.0以前没有该参数，默认等于operation_timeout)
 
 配置文件在创建Client实例的时候使用，需传入configPath参数：  
 
@@ -76,7 +94,7 @@ PegasusClientInterface client = PegasusClientFactory.getSingletonClient(configPa
   * 样例2：zk://127.0.0.1:2181,127.0.0.1:2182/databases/pegasus/pegasus.properties
 
 ## 参数传递
-用户可以选择构造ClientOptions实例作为创建客户端实例的参数，ClientOptions包含下列参数：  
+用户可以选择构造ClientOptions实例作为创建客户端实例的参数，ClientOptions包含下列参数：
 * metaServers：meta_servers地址，默认：127.0.0.1:34601,127.0.0.1:34602,127.0.0.1:34603
 * operationTimeout：客户端请求的超时阈值，默认：1000ms
 * asyncWorkers：后台工作线程数，内部实际是Netty NIO处理客户端和replica_server之间RPC的线程，默认：4
