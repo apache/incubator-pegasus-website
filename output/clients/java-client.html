@@ -19,11 +19,11 @@
 <meta property="og:description" content="获取Java客户端" />
 <meta property="og:site_name" content="Pegasus" />
 <meta property="og:type" content="article" />
-<meta property="article:published_time" content="2020-11-30T09:37:54+00:00" />
+<meta property="article:published_time" content="2020-12-07T03:17:57+00:00" />
 <meta name="twitter:card" content="summary" />
 <meta property="twitter:title" content="Java Client" />
 <script type="application/ld+json">
-{"url":"/clients/java-client","@type":"BlogPosting","headline":"Java Client","dateModified":"2020-11-30T09:37:54+00:00","datePublished":"2020-11-30T09:37:54+00:00","mainEntityOfPage":{"@type":"WebPage","@id":"/clients/java-client"},"description":"获取Java客户端","@context":"https://schema.org"}</script>
+{"url":"/clients/java-client","@type":"BlogPosting","headline":"Java Client","dateModified":"2020-12-07T03:17:57+00:00","datePublished":"2020-12-07T03:17:57+00:00","mainEntityOfPage":{"@type":"WebPage","@id":"/clients/java-client"},"description":"获取Java客户端","@context":"https://schema.org"}</script>
 <!-- End Jekyll SEO tag -->
 </head>
 
@@ -702,6 +702,14 @@ mvn clean package <span class="nt">-DskipTests</span>
 <div class="language-xml highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nt">&lt;dependency&gt;</span>
   <span class="nt">&lt;groupId&gt;</span>com.xiaomi.infra<span class="nt">&lt;/groupId&gt;</span>
   <span class="nt">&lt;artifactId&gt;</span>pegasus-client<span class="nt">&lt;/artifactId&gt;</span>
+  <span class="nt">&lt;version&gt;</span>2.0.0<span class="nt">&lt;/version&gt;</span>
+<span class="nt">&lt;/dependency&gt;</span>
+</code></pre></div></div>
+
+<p><strong>注：V2.0.0版本仅适用于服务端Pegasus Server &gt;= 2.0, 如果服务端版本较低，请使用下面的版本，文档以2.0.0为准</strong></p>
+<div class="language-xml highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nt">&lt;dependency&gt;</span>
+  <span class="nt">&lt;groupId&gt;</span>com.xiaomi.infra<span class="nt">&lt;/groupId&gt;</span>
+  <span class="nt">&lt;artifactId&gt;</span>pegasus-client<span class="nt">&lt;/artifactId&gt;</span>
   <span class="nt">&lt;version&gt;</span>1.11.10-thrift-0.11.0-inlined<span class="nt">&lt;/version&gt;</span>
 <span class="nt">&lt;/dependency&gt;</span>
 </code></pre></div></div>
@@ -716,13 +724,22 @@ mvn clean package <span class="nt">-DskipTests</span>
 
 <div class="language-ini highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="py">meta_servers</span> <span class="p">=</span> <span class="s">127.0.0.1:34601,127.0.0.1:34602,127.0.0.1:34603</span>
 <span class="py">operation_timeout</span> <span class="p">=</span> <span class="s">1000</span>
+<span class="c"># 以下参数可以根据需要添加，否则以默认值即可
+</span><span class="py">async_workers</span> <span class="p">=</span> <span class="s">4</span>
+<span class="py">enable_perf_counter</span> <span class="p">=</span> <span class="s">true</span>
+<span class="py">perf_counter_tags</span> <span class="p">=</span> <span class="s">cluster=onebox,app=unit_test</span>
+<span class="py">push_counter_interval_secs</span> <span class="p">=</span> <span class="s">10</span>
+<span class="py">meta_query_timeout</span> <span class="p">=</span> <span class="s">5000</span>
 </code></pre></div></div>
-
 <p>其中：</p>
-
 <ul>
-  <li>meta_servers是必选项，表示Pegasus集群的MetaServer地址列表，用于定位集群的位置。</li>
-  <li>operation_timeout是可选项，表示各操作的默认超时时间，单位毫秒，默认值为1000。其实接口中每个操作一般都可以指定单独的超时时间，当指定为0时，就会使用该默认超时时间。</li>
+  <li>meta_servers: 必选项，表示Pegasus集群的MetaServer地址列表，用于定位集群的位置。</li>
+  <li>operation_timeout: 可选项，表示各操作的默认超时时间，单位毫秒，默认值为1000。接口中每个操作一般都可以指定单独的超时时间，当指定为0时，使用该默认超时时间。</li>
+  <li>async_workers：可选项，后台工作线程数，内部实际是Netty NIO处理客户端和replica_server之间RPC的线程，默认：4</li>
+  <li>enable_perf_counter：可选项，是否开启性能指标监控数据，如果开启则客户端会周期性的上报监控数据，目前仅支持<a href="http://open-falcon.org/">Falcon</a>，默认：true(2.0.0以前默认为false)</li>
+  <li>perf_counter_tags：可选项，falcon监控数据标签，如果开启监控，建议设置易于区分不同业务的标签名字。默认：空</li>
+  <li>push_counter_interval_secs：可选值，falcon监控数据上报间隔，默认：10s</li>
+  <li>meta_query_timeout： 可选项，与MetaServer建立连接的超时时间，一般首次建立连接将需要更多的时间，用户可以根据实际场景配置该参数，以降低服务首次启动后的请求超时问题。连接默认值：5000ms(2.0.0以前没有该参数，默认等于operation_timeout)</li>
 </ul>
 
 <p>配置文件在创建Client实例的时候使用，需传入configPath参数：</p>
@@ -759,12 +776,13 @@ mvn clean package <span class="nt">-DskipTests</span>
 <h2 id="参数传递">参数传递</h2>
 <p>用户可以选择构造ClientOptions实例作为创建客户端实例的参数，ClientOptions包含下列参数：</p>
 <ul>
-  <li>metaServers：meta_servers地址，默认：127.0.0.1:34601,127.0.0.1:34602,127.0.0.1:34603</li>
-  <li>operationTimeout：客户端请求的超时阈值，默认：1000ms</li>
-  <li>asyncWorkers：后台工作线程数，内部实际是Netty NIO处理客户端和replica_server之间RPC的线程，默认：4</li>
-  <li>enablePerfCounter：是否开启性能指标监控数据，如果开启则则客户端会周期性的上报监控数据，目前仅支持<a href="http://open-falcon.org/">Falcon</a>，默认：false</li>
-  <li>falconPerfCounterTags：falcon监控数据标签，默认：空</li>
-  <li>falconPushInterval：falcon监控数据上报间隔，默认：10s</li>
+  <li>metaServers：必选项，meta_servers地址，默认：127.0.0.1:34601,127.0.0.1:34602,127.0.0.1:34603</li>
+  <li>operationTimeout：可选项，客户端请求的超时阈值，默认：1000ms</li>
+  <li>asyncWorkers：可选项，后台工作线程数，内部实际是Netty NIO处理客户端和replica_server之间RPC的线程，默认：4</li>
+  <li>enablePerfCounter：可选项，是否开启性能指标监控数据，如果开启则客户端会周期性的上报监控数据，目前仅支持<a href="http://open-falcon.org/">Falcon</a>，默认：false</li>
+  <li>falconPerfCounterTags：可选项，falcon监控数据标签，如果开启监控，建议设置易于区分不同业务的标签名字。默认：空</li>
+  <li>falconPushInterval：可选项，falcon监控数据上报间隔，默认：10s</li>
+  <li>metaQueryTimeout: 可选项，与MetaServer建立连接的超时时间，一般首次建立连接将需要更多的时间，用户可以根据实际场景配置该参数，以降低服务首次启动后的请求超时问题。连接默认值：5000ms(2.0.0以前没有该参数，默认等于operation_timeout)</li>
 </ul>
 
 <p>其中ClientOptions实例提供两种创建方式，你可以使用：</p>
@@ -814,6 +832,7 @@ mvn clean package <span class="nt">-DskipTests</span>
   <li>Client接口直接在参数中指定表名，省去了打开表的动作，使用更便捷。</li>
   <li>Table接口同时支持<strong>同步和异步API</strong>，而Client接口只支持<strong>同步API</strong>。</li>
   <li>Table接口可以为每个操作设置单独的超时，而Client接口无法单独指定超时，只能使用配置文件中的默认超时。</li>
+  <li>Table接口在2.0.0中增加了backupRequestDelayMs参数，可以开启backup-request功能，以提高读性能，详情参见：<a href="/_docs/zh/administration/backup-request.md">Backup-Request</a></li>
   <li>Table接口的超时更准确，而Client接口在首次读写请求时可能需要在内部初始化Table对象，所以首次读写的超时可能不太准确。</li>
   <li>推荐用户首选Table接口。</li>
 </ul>
@@ -1086,7 +1105,7 @@ mvn clean package <span class="nt">-DskipTests</span>
       <li>传入参数：需传入TableName、HashKey、StartSortKey、StopSortKey、MultiGetOptions；选择性传入maxFetchCount、maxFetchSize。</li>
       <li>传出参数：数据通过values传出，values由用户在调用前new出来。</li>
       <li>StopSortKeys如果为空，不论stopInclusive为何值，都会读到该HashKey的SortKey结束。</li>
-      <li>maxFetchCount和maxFetchSize用于限制读取的数据量，maxFetchCount表示最多读取的数据条数，maxFetchSize表示最多读取的数据字节数，两者任一达到限制就停止读取。</li>
+      <li>maxFetchCount和maxFetchSize用于限制读取的数据量，maxFetchCount表示最多读取的数据条数，maxFetchSize表示最多读取的数据字节数，两者任一达到限制就停止读取。需要注意的是，PegasusServer从1.12.3开始限制一次性读取的数据（包括过期和条件过滤的数据）为3000条，该接口读取的有效数据可能会小于期望的数值</li>
       <li>MultiGetOptions说明：
         <ul>
           <li>startInclusive：是否包含StartSortKey，默认为true。</li>
