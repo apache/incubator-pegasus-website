@@ -134,7 +134,7 @@ Java客户端的类都在```com.xiaomi.infra.pegasus.client```包下面，主要
 * Client接口直接在参数中指定表名，省去了打开表的动作，使用更便捷。
 * Table接口同时支持**同步和异步API**，而Client接口只支持**同步API**。
 * Table接口可以为每个操作设置单独的超时，而Client接口无法单独指定超时，只能使用配置文件中的默认超时。
-* Table接口在2.0.0中增加了backupRequestDelayMs参数，可以开启backup-request功能，以提高读性能，详情参见：[Backup-Request](/administration/backup-request.md)
+* Table接口在2.0.0中增加了backupRequestDelayMs参数，可以开启backup-request功能，以提高读性能，详情参见：[Backup-Request](/administration/backup-request)
 * Table接口的超时更准确，而Client接口在首次读写请求时可能需要在内部初始化Table对象，所以首次读写的超时可能不太准确。
 * 推荐用户首选Table接口。
 
