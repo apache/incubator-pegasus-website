@@ -28,11 +28,11 @@ contributor_items:
   - title: Pull Requests
     description: >
       We use <a href="">Github Pull Request</a> for development. Every pull request needs 2 approvals from the Pegasus committers before merged. You can make your review and comments on the PR even if you are not yet a Pegasus committer.
-      Please read the <a href="/community/coding-guides">Coding Guides</a> before submitting a new code.
+      Please read the <a href="https://cwiki.apache.org/confluence/display/PEGASUS/Coding+guides">Coding Guides</a> before submitting a new code.
 
   - title: Bug Fixes
     description: >
       The known bugs were collected here: <a href="https://github.com/apache/incubator-pegasus/labels/type%2Fbug">Issues: type/bug</a>. If you encounter problems that couldn't be found in the list, please report to us via issues. 
-      Bug finding is also a meaningful contribution to us. Furthermore, since we deeply value the readability and quality of our document, minor fixes like correcting spelling errors are also welcomed.
+      Bug finding is a meaningful contribution to us. Furthermore, since we strongly value the readability and quality of our document, minor fixes like correcting spelling errors are also welcomed.
 ---
   

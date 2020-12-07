@@ -22,7 +22,7 @@ docker pull apachepegasus/build-env:{{ site.latest_pegasus_version }}-centos6
 
 ```sh
 docker run -v /your/local/apache-pegasus-source:/root/pegasus \
-           apachepegasus/build-env:centos6 \
+           apachepegasus/build-env:{{ site.latest_pegasus_version }}-centos6 \
            /bin/bash -c "./run.sh build -c"
 ```
 
@@ -34,7 +34,7 @@ docker run -v /your/local/apache-pegasus-source:/root/pegasus \
 
 ```bash
 docker run -v /your/local/apache-pegasus-source:/root/pegasus \
-           apachepegasus/build-env:centos6 \
+           apachepegasus/build-env:{{ site.latest_pegasus_version }}-centos6 \
            /bin/bash -c "./run.sh pack_server"
 ```
 
@@ -42,7 +42,7 @@ docker run -v /your/local/apache-pegasus-source:/root/pegasus \
 
 ```bash
 docker run -v /your/local/apache-pegasus-source:/root/pegasus \
-           apachepegasus/build-env:centos6 \
+           apachepegasus/build-env:{{ site.latest_pegasus_version }}-centos6 \
            /bin/bash -c "./run.sh pack_client"
 ```
 
@@ -50,7 +50,7 @@ docker run -v /your/local/apache-pegasus-source:/root/pegasus \
 
 ```bash
 docker run -v /your/local/apache-pegasus-source:/root/pegasus \
-           apachepegasus/build-env:centos6 \
+           apachepegasus/build-env:{{ site.latest_pegasus_version }}-centos6 \
            /bin/bash -c "./run.sh pack_tools"
 ```
 
