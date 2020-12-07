@@ -16,7 +16,7 @@ cd pegasus-java-client
 选择所使用的版本并构建，建议使用[最新的release版本](https://github.com/xiaomi/pegasus-java-client/releases)：
 
 ```bash
-git checkout 1.11.10-thrift-0.11.0-inlined-release
+git checkout v2.0.0
 mvn clean package -DskipTests
 ```
 
@@ -36,7 +36,7 @@ mvn clean install -DskipTests
 </dependency>
 ```
 
-**注：V2.0.0版本仅适用于服务端Pegasus Server >= 2.0, 如果服务端版本较低，请使用下面的版本，文档以2.0.0为准**
+**注：2.0.0版本仅适用于服务端PegasusServer >= 2.0, 如果服务端版本较低，请使用下面的版本**
 ```xml
 <dependency>
   <groupId>com.xiaomi.infra</groupId>
