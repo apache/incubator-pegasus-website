@@ -64,13 +64,13 @@ push_counter_interval_secs = 10
 meta_query_timeout = 5000
 ```
 其中：  
-* meta_servers是必选项，表示Pegasus集群的MetaServer地址列表，用于定位集群的位置。  
-* operation_timeout是可选项，表示各操作的默认超时时间，单位毫秒，默认值为1000。接口中每个操作一般都可以指定单独的超时时间，当指定为0时，使用该默认超时时间。
-* async_workers：后台工作线程数，内部实际是Netty NIO处理客户端和replica_server之间RPC的线程，默认：4
-* enable_perf_counter：是否开启性能指标监控数据，如果开启则则客户端会周期性的上报监控数据，目前仅支持[Falcon](http://open-falcon.org/)，默认：true(2.0.0以前默认为false)
-* perf_counter_tags：falcon监控数据标签，默认：空
-* push_counter_interval_secs：falcon监控数据上报间隔，默认：10s
-* meta_query_timeout： 首次与MetaServer建立连接的超时时间。一般首次建立连接将需要更多的时间，默认值：5000ms(2.0.0以前没有该参数，默认等于operation_timeout)
+* meta_servers: 必选项，表示Pegasus集群的MetaServer地址列表，用于定位集群的位置。  
+* operation_timeout: 可选项，表示各操作的默认超时时间，单位毫秒，默认值为1000。接口中每个操作一般都可以指定单独的超时时间，当指定为0时，使用该默认超时时间。
+* async_workers：可选项，后台工作线程数，内部实际是Netty NIO处理客户端和replica_server之间RPC的线程，默认：4
+* enable_perf_counter：可选项，是否开启性能指标监控数据，如果开启则客户端会周期性的上报监控数据，目前仅支持[Falcon](http://open-falcon.org/)，默认：true(2.0.0以前默认为false)
+* perf_counter_tags：可选项，falcon监控数据标签，如果开启监控，建议设置易于区分不同业务的标签名字。默认：空
+* push_counter_interval_secs：可选值，falcon监控数据上报间隔，默认：10s
+* meta_query_timeout： 可选项，与MetaServer建立连接的超时时间，一般首次建立连接将需要更多的时间，用户可以根据实际场景配置该参数，以降低服务首次启动后的请求超时问题。连接默认值：5000ms(2.0.0以前没有该参数，默认等于operation_timeout)
 
 配置文件在创建Client实例的时候使用，需传入configPath参数：  
 
@@ -95,12 +95,13 @@ PegasusClientInterface client = PegasusClientFactory.getSingletonClient(configPa
 
 ## 参数传递
 用户可以选择构造ClientOptions实例作为创建客户端实例的参数，ClientOptions包含下列参数：
-* metaServers：meta_servers地址，默认：127.0.0.1:34601,127.0.0.1:34602,127.0.0.1:34603
-* operationTimeout：客户端请求的超时阈值，默认：1000ms
-* asyncWorkers：后台工作线程数，内部实际是Netty NIO处理客户端和replica_server之间RPC的线程，默认：4
-* enablePerfCounter：是否开启性能指标监控数据，如果开启则则客户端会周期性的上报监控数据，目前仅支持[Falcon](http://open-falcon.org/)，默认：false
-* falconPerfCounterTags：falcon监控数据标签，默认：空
-* falconPushInterval：falcon监控数据上报间隔，默认：10s
+* metaServers：必选项，meta_servers地址，默认：127.0.0.1:34601,127.0.0.1:34602,127.0.0.1:34603
+* operationTimeout：可选项，客户端请求的超时阈值，默认：1000ms
+* asyncWorkers：可选项，后台工作线程数，内部实际是Netty NIO处理客户端和replica_server之间RPC的线程，默认：4
+* enablePerfCounter：可选项，是否开启性能指标监控数据，如果开启则客户端会周期性的上报监控数据，目前仅支持[Falcon](http://open-falcon.org/)，默认：false
+* falconPerfCounterTags：可选项，falcon监控数据标签，如果开启监控，建议设置易于区分不同业务的标签名字。默认：空
+* falconPushInterval：可选项，falcon监控数据上报间隔，默认：10s
+* metaQueryTimeout: 可选项，与MetaServer建立连接的超时时间，一般首次建立连接将需要更多的时间，用户可以根据实际场景配置该参数，以降低服务首次启动后的请求超时问题。连接默认值：5000ms(2.0.0以前没有该参数，默认等于operation_timeout)
 
 其中ClientOptions实例提供两种创建方式，你可以使用：
 ```java
@@ -133,6 +134,7 @@ Java客户端的类都在```com.xiaomi.infra.pegasus.client```包下面，主要
 * Client接口直接在参数中指定表名，省去了打开表的动作，使用更便捷。
 * Table接口同时支持**同步和异步API**，而Client接口只支持**同步API**。
 * Table接口可以为每个操作设置单独的超时，而Client接口无法单独指定超时，只能使用配置文件中的默认超时。
+* Table接口在2.0.0中增加了backupRequestDelayMs参数，可以开启backup-request功能，以提高读性能，详情参见：[Backup-Request](/_docs/zh/administration/backup-request.md)
 * Table接口的超时更准确，而Client接口在首次读写请求时可能需要在内部初始化Table对象，所以首次读写的超时可能不太准确。
 * 推荐用户首选Table接口。
 
@@ -394,7 +396,7 @@ public boolean multiGet(String tableName, byte[] hashKey,
     * 传入参数：需传入TableName、HashKey、StartSortKey、StopSortKey、MultiGetOptions；选择性传入maxFetchCount、maxFetchSize。
     * 传出参数：数据通过values传出，values由用户在调用前new出来。
     * StopSortKeys如果为空，不论stopInclusive为何值，都会读到该HashKey的SortKey结束。
-    * maxFetchCount和maxFetchSize用于限制读取的数据量，maxFetchCount表示最多读取的数据条数，maxFetchSize表示最多读取的数据字节数，两者任一达到限制就停止读取。
+    * maxFetchCount和maxFetchSize用于限制读取的数据量，maxFetchCount表示最多读取的数据条数，maxFetchSize表示最多读取的数据字节数，两者任一达到限制就停止读取。需要注意的是，PegasusServer从1.12.3开始限制一次性读取的数据（包括过期和条件过滤的数据）为3000条，该接口读取的有效数据可能会小于期望的数值
     * MultiGetOptions说明：
       * startInclusive：是否包含StartSortKey，默认为true。
       * stopInclusive：是否包含StopSortKey，默认为false。
