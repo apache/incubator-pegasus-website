@@ -7,13 +7,13 @@ permalink: docs/build/compile-by-docker/
 Pegasus encapsulates the building environment into a [docker image](https://hub.docker.com/r/apachepegasus/build-env), you can build directly based on this environment.
 
 ```sh
-docker pull apachepegasus/build-env:centos6
+docker pull apachepegasus/build-env:centos7
 ```
 
 To build based on a formally released stable version (e.g {{ site.latest_pegasus_version }}), you can pull as follow:
 
 ```sh
-docker pull apachepegasus/build-env:{{ site.latest_pegasus_version }}-centos6
+docker pull apachepegasus/build-env:{{ site.latest_pegasus_version }}-centos7
 ```
 
 ## Compilation
@@ -22,7 +22,7 @@ Please refer to [Downloads](/docs/downloads) to fetch the sources under a direct
 
 ```sh
 docker run -v /your/local/apache-pegasus-source:/root/pegasus \
-           apachepegasus/build-env:{{ site.latest_pegasus_version }}-centos6 \
+           apachepegasus/build-env:{{ site.latest_pegasus_version }}-centos7 \
            /bin/bash -c "./run.sh build -c"
 ```
 
@@ -34,7 +34,7 @@ Package server binaries for deployment:
 
 ```bash
 docker run -v /your/local/apache-pegasus-source:/root/pegasus \
-           apachepegasus/build-env:{{ site.latest_pegasus_version }}-centos6 \
+           apachepegasus/build-env:{{ site.latest_pegasus_version }}-centos7 \
            /bin/bash -c "./run.sh pack_server"
 ```
 
@@ -42,7 +42,7 @@ Package client libraries for C/C++ development:
 
 ```bash
 docker run -v /your/local/apache-pegasus-source:/root/pegasus \
-           apachepegasus/build-env:{{ site.latest_pegasus_version }}-centos6 \
+           apachepegasus/build-env:{{ site.latest_pegasus_version }}-centos7 \
            /bin/bash -c "./run.sh pack_client"
 ```
 
@@ -50,7 +50,7 @@ Package toolset which includes various tools (shell, bench):
 
 ```bash
 docker run -v /your/local/apache-pegasus-source:/root/pegasus \
-           apachepegasus/build-env:{{ site.latest_pegasus_version }}-centos6 \
+           apachepegasus/build-env:{{ site.latest_pegasus_version }}-centos7 \
            /bin/bash -c "./run.sh pack_tools"
 ```
 

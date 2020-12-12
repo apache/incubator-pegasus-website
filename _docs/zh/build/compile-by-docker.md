@@ -7,13 +7,13 @@ permalink: docs/build/compile-by-docker/
 Pegasus将编译环境封装至[Docker镜像](https://hub.docker.com/r/apachepegasus/build-env)中，你可以直接基于此环境编译代码。
 
 ```sh
-docker pull apachepegasus/build-env:centos6
+docker pull apachepegasus/build-env:centos7
 ```
 
 如果希望基于正式发布的稳定版本（如 {{ site.latest_pegasus_version }}）进行编译，你可以下载：
 
 ```sh
-docker pull apachepegasus/build-env:{{ site.latest_pegasus_version }}-centos6
+docker pull apachepegasus/build-env:{{ site.latest_pegasus_version }}-centos7
 ```
 
 ## 编译
@@ -22,7 +22,7 @@ docker pull apachepegasus/build-env:{{ site.latest_pegasus_version }}-centos6
 
 ```sh
 docker run -v /your/local/apache-pegasus-source:/root/pegasus \
-           apachepegasus/build-env:{{ site.latest_pegasus_version }}-centos6 \
+           apachepegasus/build-env:{{ site.latest_pegasus_version }}-centos7 \
            /bin/bash -c "./run.sh build -c"
 ```
 
@@ -34,7 +34,7 @@ docker run -v /your/local/apache-pegasus-source:/root/pegasus \
 
 ```bash
 docker run -v /your/local/apache-pegasus-source:/root/pegasus \
-           apachepegasus/build-env:{{ site.latest_pegasus_version }}-centos6 \
+           apachepegasus/build-env:{{ site.latest_pegasus_version }}-centos7 \
            /bin/bash -c "./run.sh pack_server"
 ```
 
@@ -42,7 +42,7 @@ docker run -v /your/local/apache-pegasus-source:/root/pegasus \
 
 ```bash
 docker run -v /your/local/apache-pegasus-source:/root/pegasus \
-           apachepegasus/build-env:{{ site.latest_pegasus_version }}-centos6 \
+           apachepegasus/build-env:{{ site.latest_pegasus_version }}-centos7 \
            /bin/bash -c "./run.sh pack_client"
 ```
 
@@ -50,7 +50,7 @@ docker run -v /your/local/apache-pegasus-source:/root/pegasus \
 
 ```bash
 docker run -v /your/local/apache-pegasus-source:/root/pegasus \
-           apachepegasus/build-env:{{ site.latest_pegasus_version }}-centos6 \
+           apachepegasus/build-env:{{ site.latest_pegasus_version }}-centos7 \
            /bin/bash -c "./run.sh pack_tools"
 ```
 
