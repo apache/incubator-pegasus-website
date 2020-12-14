@@ -12,18 +12,18 @@
     <script src="https://cdn.bootcdn.net/ajax/libs/font-awesome/5.13.0/js/all.min.js"></script>
     <!-- Begin Jekyll SEO tag v2.7.1 -->
 <title>Compile By Docker | Pegasus</title>
-<meta name="generator" content="Jekyll v4.1.1" />
+<meta name="generator" content="Jekyll v4.2.0" />
 <meta property="og:title" content="Compile By Docker" />
 <meta property="og:locale" content="en_US" />
 <meta name="description" content="Download the docker image" />
 <meta property="og:description" content="Download the docker image" />
 <meta property="og:site_name" content="Pegasus" />
 <meta property="og:type" content="article" />
-<meta property="article:published_time" content="2020-12-07T10:54:54+00:00" />
+<meta property="article:published_time" content="2020-12-14T16:52:37+00:00" />
 <meta name="twitter:card" content="summary" />
 <meta property="twitter:title" content="Compile By Docker" />
 <script type="application/ld+json">
-{"url":"/docs/build/compile-by-docker/","@type":"BlogPosting","headline":"Compile By Docker","dateModified":"2020-12-07T10:54:54+00:00","datePublished":"2020-12-07T10:54:54+00:00","mainEntityOfPage":{"@type":"WebPage","@id":"/docs/build/compile-by-docker/"},"description":"Download the docker image","@context":"https://schema.org"}</script>
+{"url":"/docs/build/compile-by-docker/","@type":"BlogPosting","headline":"Compile By Docker","dateModified":"2020-12-14T16:52:37+00:00","datePublished":"2020-12-14T16:52:37+00:00","mainEntityOfPage":{"@type":"WebPage","@id":"/docs/build/compile-by-docker/"},"description":"Download the docker image","@context":"https://schema.org"}</script>
 <!-- End Jekyll SEO tag -->
 </head>
 
@@ -684,12 +684,12 @@
 
 <p>Pegasus encapsulates the building environment into a <a href="https://hub.docker.com/r/apachepegasus/build-env">docker image</a>, you can build directly based on this environment.</p>
 
-<div class="language-sh highlighter-rouge"><div class="highlight"><pre class="highlight"><code>docker pull apachepegasus/build-env:centos6
+<div class="language-sh highlighter-rouge"><div class="highlight"><pre class="highlight"><code>docker pull apachepegasus/build-env:centos7
 </code></pre></div></div>
 
 <p>To build based on a formally released stable version (e.g 2.1.0), you can pull as follow:</p>
 
-<div class="language-sh highlighter-rouge"><div class="highlight"><pre class="highlight"><code>docker pull apachepegasus/build-env:2.1.0-centos6
+<div class="language-sh highlighter-rouge"><div class="highlight"><pre class="highlight"><code>docker pull apachepegasus/build-env:2.1.0-centos7
 </code></pre></div></div>
 
 <h2 id="compilation">Compilation</h2>
@@ -697,7 +697,7 @@
 <p>Please refer to <a href="/en/docs/downloads">Downloads</a> to fetch the sources under a directory (<code class="language-plaintext highlighter-rouge">/your/local/apache-pegasus-source</code>). Then run the following command:</p>
 
 <div class="language-sh highlighter-rouge"><div class="highlight"><pre class="highlight"><code>docker run <span class="nt">-v</span> /your/local/apache-pegasus-source:/root/pegasus <span class="se">\</span>
-           apachepegasus/build-env:2.1.0-centos6 <span class="se">\</span>
+           apachepegasus/build-env:2.1.0-centos7 <span class="se">\</span>
            /bin/bash <span class="nt">-c</span> <span class="s2">"./run.sh build -c"</span>
 </code></pre></div></div>
 
@@ -708,21 +708,21 @@
 <p>Package server binaries for deployment:</p>
 
 <div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>docker run <span class="nt">-v</span> /your/local/apache-pegasus-source:/root/pegasus <span class="se">\</span>
-           apachepegasus/build-env:2.1.0-centos6 <span class="se">\</span>
+           apachepegasus/build-env:2.1.0-centos7 <span class="se">\</span>
            /bin/bash <span class="nt">-c</span> <span class="s2">"./run.sh pack_server"</span>
 </code></pre></div></div>
 
 <p>Package client libraries for C/C++ development:</p>
 
 <div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>docker run <span class="nt">-v</span> /your/local/apache-pegasus-source:/root/pegasus <span class="se">\</span>
-           apachepegasus/build-env:2.1.0-centos6 <span class="se">\</span>
+           apachepegasus/build-env:2.1.0-centos7 <span class="se">\</span>
            /bin/bash <span class="nt">-c</span> <span class="s2">"./run.sh pack_client"</span>
 </code></pre></div></div>
 
 <p>Package toolset which includes various tools (shell, bench):</p>
 
 <div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>docker run <span class="nt">-v</span> /your/local/apache-pegasus-source:/root/pegasus <span class="se">\</span>
-           apachepegasus/build-env:2.1.0-centos6 <span class="se">\</span>
+           apachepegasus/build-env:2.1.0-centos7 <span class="se">\</span>
            /bin/bash <span class="nt">-c</span> <span class="s2">"./run.sh pack_tools"</span>
 </code></pre></div></div>
 
