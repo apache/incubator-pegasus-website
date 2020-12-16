@@ -2059,44 +2059,6 @@ public Future<Pair<Pair<byte[], byte[]>, byte[]>> asyncNext();
 * 集群服务端对表设置了[表级写流量控制](/administration/throttling#服务端流控)。
 * 此时该表的瞬时流量（在这1秒内的写入操作数）达到了阈值，触发了reject流控操作，返回`ERR_BUSY`错误码。
 
-# Java客户端工具
-
-Pegasus Java客户端还提供了`PegasusCli`工具，支持简单的读写操作。
-
-使用mvn编译：
-```
-mvn clean package -DskipTests
-```
-
-编译后，在target文件夹下可以找到压缩包`pegasus-client-{version}-bin.tar.gz`，解压后得到`pegasus-client-{version}`文件夹，进入该文件夹，就可以找到PegasusCli工具。
-
-用法：
-```
-USAGE: PegasusCli <config-path> <table-name> <op-name> ...
-
-       <config-path> should be:
-         - zookeeper path  : zk://host1:port1,host2:port2,host3:port3/path/to/config
-         - local file path : file:///path/to/config
-         - java resource   : resource:///path/to/config
-
-       <op-name> should be:
-         - get <hash-key> <sort-key>
-         - set <hash-key> <sort-key> <value> [ttl_seconds]
-         - del <hash-key> <sort-key>
-         - multi_get <hash_key> [sort_key...]
-         - multi_get_sort_keys <hash_key>
-         - multi_set <hash_key> <sort_key> <value> [sort_key value...]
-         - multi_del <hash_key> <sort_key> [sort_key...]
-         - incr <hash_key> <sort_key> [increment]
-         - scan <hash_key> [start_sort_key] [stop_sort_key] [max_count]
-         - scan_all [max_count]
-         - copy_data <target_cluster_config_path> <target_table_name> [read_uncompress_type(none|zstd)] [write_compress_type(none|zstd)] [max_count]
-
-       For example:
-           PegasusCli file://./pegasus.properties temp get hash_key sort_key
-           PegasusCli file://./pegasus.properties temp scan hash_key '' '' 100
-```
-
 # 最佳实践
 
 ## 流量控制
