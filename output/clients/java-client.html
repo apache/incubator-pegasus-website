@@ -19,11 +19,11 @@
 <meta property="og:description" content="获取Java客户端" />
 <meta property="og:site_name" content="Pegasus" />
 <meta property="og:type" content="article" />
-<meta property="article:published_time" content="2020-12-14T16:52:37+00:00" />
+<meta property="article:published_time" content="2020-12-16T11:11:54+00:00" />
 <meta name="twitter:card" content="summary" />
 <meta property="twitter:title" content="Java Client" />
 <script type="application/ld+json">
-{"url":"/clients/java-client","@type":"BlogPosting","headline":"Java Client","dateModified":"2020-12-14T16:52:37+00:00","datePublished":"2020-12-14T16:52:37+00:00","mainEntityOfPage":{"@type":"WebPage","@id":"/clients/java-client"},"description":"获取Java客户端","@context":"https://schema.org"}</script>
+{"url":"/clients/java-client","@type":"BlogPosting","headline":"Java Client","dateModified":"2020-12-16T11:11:54+00:00","datePublished":"2020-12-16T11:11:54+00:00","mainEntityOfPage":{"@type":"WebPage","@id":"/clients/java-client"},"description":"获取Java客户端","@context":"https://schema.org"}</script>
 <!-- End Jekyll SEO tag -->
 </head>
 
@@ -2964,42 +2964,6 @@ public Future&lt;Long&gt; asyncIncr(byte[] hashKey, byte[] sortKey, long increme
   <li>此时该表的瞬时流量（在这1秒内的写入操作数）达到了阈值，触发了reject流控操作，返回<code class="language-plaintext highlighter-rouge">ERR_BUSY</code>错误码。</li>
 </ul>
 
-<h1 id="java客户端工具">Java客户端工具</h1>
-
-<p>Pegasus Java客户端还提供了<code class="language-plaintext highlighter-rouge">PegasusCli</code>工具，支持简单的读写操作。</p>
-
-<p>使用mvn编译：</p>
-<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>mvn clean package -DskipTests
-</code></pre></div></div>
-
-<p>编译后，在target文件夹下可以找到压缩包<code class="language-plaintext highlighter-rouge">pegasus-client-{version}-bin.tar.gz</code>，解压后得到<code class="language-plaintext highlighter-rouge">pegasus-client-{version}</code>文件夹，进入该文件夹，就可以找到PegasusCli工具。</p>
-
-<p>用法：</p>
-<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>USAGE: PegasusCli &lt;config-path&gt; &lt;table-name&gt; &lt;op-name&gt; ...
-
-       &lt;config-path&gt; should be:
-         - zookeeper path  : zk://host1:port1,host2:port2,host3:port3/path/to/config
-         - local file path : file:///path/to/config
-         - java resource   : resource:///path/to/config
-
-       &lt;op-name&gt; should be:
-         - get &lt;hash-key&gt; &lt;sort-key&gt;
-         - set &lt;hash-key&gt; &lt;sort-key&gt; &lt;value&gt; [ttl_seconds]
-         - del &lt;hash-key&gt; &lt;sort-key&gt;
-         - multi_get &lt;hash_key&gt; [sort_key...]
-         - multi_get_sort_keys &lt;hash_key&gt;
-         - multi_set &lt;hash_key&gt; &lt;sort_key&gt; &lt;value&gt; [sort_key value...]
-         - multi_del &lt;hash_key&gt; &lt;sort_key&gt; [sort_key...]
-         - incr &lt;hash_key&gt; &lt;sort_key&gt; [increment]
-         - scan &lt;hash_key&gt; [start_sort_key] [stop_sort_key] [max_count]
-         - scan_all [max_count]
-         - copy_data &lt;target_cluster_config_path&gt; &lt;target_table_name&gt; [read_uncompress_type(none|zstd)] [write_compress_type(none|zstd)] [max_count]
-
-       For example:
-           PegasusCli file://./pegasus.properties temp get hash_key sort_key
-           PegasusCli file://./pegasus.properties temp scan hash_key '' '' 100
-</code></pre></div></div>
-
 <h1 id="最佳实践">最佳实践</h1>
 
 <h2 id="流量控制">流量控制</h2>
@@ -3382,7 +3346,6 @@ public Future&lt;Long&gt; asyncIncr(byte[] hashKey, byte[] sortKey, long increme
       </li>
     </ul>
   </li>
-  <li><a href="#java客户端工具">Java客户端工具</a></li>
   <li><a href="#最佳实践">最佳实践</a>
     <ul>
       <li><a href="#流量控制">流量控制</a></li>
