@@ -14,9 +14,10 @@ Pegasus supports Linux only. Please don't hesitate to contact us via [Github Iss
 
 ## Ubuntu environment
 
-You can refer to the docker image [pegasus-build-dev/ubuntu16.04](https://github.com/pegasus-kv/pegasus-docker/blob/master/pegasus-build-env/ubuntu16.04/Dockerfile) to install all dependencies.
+You can refer to the docker image [pegasus-build-dev/ubuntu16.04](https://github.com/pegasus-kv/pegasus-docker/blob/2.1.0/pegasus-build-env/ubuntu16.04/Dockerfile) to install all dependencies.
 
 ```bash
+apt-get update -y; \
 apt-get -y install build-essential \
                    python3-pip \
                    libaio-dev \
@@ -41,7 +42,7 @@ pip3 install --no-cache-dir cmake
 
 ## CentOS environment
 
-You can refer to the docker image [pegasus-build-dev/centos7](https://github.com/pegasus-kv/pegasus-docker/blob/master/pegasus-build-env/centos7/Dockerfile) to install all dependencies.
+You can refer to the docker image [pegasus-build-dev/centos7](https://github.com/pegasus-kv/pegasus-docker/blob/2.1.0/pegasus-build-env/centos7/Dockerfile) to install all dependencies.
 
 ```bash
 yum -y install centos-release-scl \
