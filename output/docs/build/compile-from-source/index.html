@@ -19,11 +19,11 @@
 <meta property="og:description" content="Pegasus目前只支持Linux平台进行源码编译。编译过程中遇到问题，可以通过Github Issues向我们咨询。" />
 <meta property="og:site_name" content="Pegasus" />
 <meta property="og:type" content="article" />
-<meta property="article:published_time" content="2020-12-16T11:11:54+00:00" />
+<meta property="article:published_time" content="2020-12-26T10:31:24+00:00" />
 <meta name="twitter:card" content="summary" />
 <meta property="twitter:title" content="Compile From Source" />
 <script type="application/ld+json">
-{"url":"/docs/build/compile-from-source/","@type":"BlogPosting","headline":"Compile From Source","dateModified":"2020-12-16T11:11:54+00:00","datePublished":"2020-12-16T11:11:54+00:00","mainEntityOfPage":{"@type":"WebPage","@id":"/docs/build/compile-from-source/"},"description":"Pegasus目前只支持Linux平台进行源码编译。编译过程中遇到问题，可以通过Github Issues向我们咨询。","@context":"https://schema.org"}</script>
+{"url":"/docs/build/compile-from-source/","@type":"BlogPosting","headline":"Compile From Source","dateModified":"2020-12-26T10:31:24+00:00","datePublished":"2020-12-26T10:31:24+00:00","mainEntityOfPage":{"@type":"WebPage","@id":"/docs/build/compile-from-source/"},"description":"Pegasus目前只支持Linux平台进行源码编译。编译过程中遇到问题，可以通过Github Issues向我们咨询。","@context":"https://schema.org"}</script>
 <!-- End Jekyll SEO tag -->
 </head>
 
@@ -727,9 +727,10 @@
 
 <h2 id="ubuntu环境配置">Ubuntu环境配置</h2>
 
-<p>你可以参考 <a href="https://github.com/pegasus-kv/pegasus-docker/blob/master/pegasus-build-env/ubuntu16.04/Dockerfile">pegasus-build-dev/ubuntu16.04</a> 的Docker镜像安装全部依赖。</p>
+<p>你可以参考 <a href="https://github.com/pegasus-kv/pegasus-docker/blob/2.1.0/pegasus-build-env/ubuntu16.04/Dockerfile">pegasus-build-dev/ubuntu16.04</a> 的Docker镜像安装全部依赖。</p>
 
-<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>apt-get <span class="nt">-y</span> <span class="nb">install </span>build-essential <span class="se">\</span>
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>apt-get update <span class="nt">-y</span><span class="p">;</span> <span class="se">\</span>
+apt-get <span class="nt">-y</span> <span class="nb">install </span>build-essential <span class="se">\</span>
                    python3-pip <span class="se">\</span>
                    libaio-dev <span class="se">\</span>
                    libsnappy-dev <span class="se">\</span>
@@ -753,7 +754,7 @@ pip3 <span class="nb">install</span> <span class="nt">--no-cache-dir</span> cmak
 
 <h2 id="centos环境配置">CentOS环境配置</h2>
 
-<p>你可以参考 <a href="https://github.com/pegasus-kv/pegasus-docker/blob/master/pegasus-build-env/centos7/Dockerfile">pegasus-build-dev/centos7</a> 的Docker镜像安装全部依赖。</p>
+<p>你可以参考 <a href="https://github.com/pegasus-kv/pegasus-docker/blob/2.1.0/pegasus-build-env/centos7/Dockerfile">pegasus-build-dev/centos7</a> 的Docker镜像安装全部依赖。</p>
 
 <div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>yum <span class="nt">-y</span> <span class="nb">install </span>centos-release-scl <span class="se">\</span>
                scl-utils <span class="se">\</span>
