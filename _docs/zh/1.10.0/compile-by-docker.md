@@ -17,13 +17,15 @@ docker pull apachepegasus/build-env:{{ page.version }}-ubuntu1604
 
 请先参考[下载文档](/docs/downloads)获取源码到某目录（`/your/local/apache-pegasus-source`）下。
 
-由于历史原因，此版本需要额外下载第三方库源码包：
+由于历史原因，此版本需要额外下载第三方库源码包，同时还需略过安装 redis-proxy：
 
 ```sh
 cd /your/local/apache-pegasus-source/rdsn/thirdparty
-
 wget https://pegasus-thirdparties.oss-cn-beijing.aliyuncs.com/1.10.0-thirdparties-src.zip
 unzip 1.10.0-thirdparties-src.zip
+
+cd ../..
+sed -i /"add_subdirectory(redis_protocol)"/d src/CMakeLists.txt
 ```
 
 随后运行以下命令：
