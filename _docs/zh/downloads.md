@@ -27,9 +27,15 @@ git clone -b v2.1.0 --recursive https://github.com/apache/incubator-pegasus.git
 [1.12.3-rn]: https://github.com/apache/incubator-pegasus/releases/tag/v1.12.3
 [1.11.6-src]: https://github.com/apache/incubator-pegasus/releases/download/v1.11.6/apache-pegasus-1.11.6-incubating-src.zip
 [1.11.6-rn]: https://github.com/apache/incubator-pegasus/releases/tag/v1.11.6
+[1.11.3-src]: https://github.com/apache/incubator-pegasus/releases/download/v1.11.3/apache-pegasus-1.11.3-incubating-src.zip
+[1.11.3-rn]: https://github.com/apache/incubator-pegasus/releases/tag/v1.11.3
+[1.10.0-src]: https://github.com/apache/incubator-pegasus/releases/download/v1.10.0/apache-pegasus-1.10.0-incubating-src.zip
+[1.10.0-rn]: https://github.com/apache/incubator-pegasus/releases/tag/v1.10.0
 
 Name | Package | Release Notes
 ---|---|---
 Apache Pegasus 2.0.0 | [Source][2.0.0-src] | [Release Notes][2.0.0-rn]
 Apache Pegasus 1.12.3 | [Source][1.12.3-src] | [Release Notes][1.12.3-rn]
 Apache Pegasus 1.11.6 | [Source][1.11.6-src] | [Release Notes][1.11.6-rn]
+Apache Pegasus 1.11.3 | [Source][1.11.3-src] | [Release Notes][1.11.3-rn]
+Apache Pegasus 1.10.0 | [Source][1.10.0-src] | [Release Notes][1.10.0-rn]

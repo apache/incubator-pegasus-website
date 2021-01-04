@@ -90,6 +90,8 @@ pegasus_versions:
 - 2.0.0
 - 1.12.3
 - 1.11.6
+- 1.11.3
+- 1.10.0
 
 pegasus_github_url: "https://github.com/apache/incubator-pegasus"
 pegasus_website_github_url: "https://github.com/apache/incubator-pegasus-website"
