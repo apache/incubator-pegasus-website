@@ -1,0 +1,899 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Pegasus | Compile By Docker</title>
+    <link rel="stylesheet" href="/en/assets/css/app.css">
+    <link rel="shortcut icon" href="/en/assets/images/favicon.ico">
+    <link href="https://cdn.bootcdn.net/ajax/libs/tailwindcss/1.8.10/utilities.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/docsearch.js@2/dist/cdn/docsearch.min.css" />
+    <script src="https://cdn.bootcss.com/jquery/3.4.1/jquery.min.js"></script>
+    <script src="https://cdn.bootcdn.net/ajax/libs/font-awesome/5.13.0/js/all.min.js"></script>
+    <!-- Begin Jekyll SEO tag v2.7.1 -->
+<title>Compile By Docker | Pegasus</title>
+<meta name="generator" content="Jekyll v4.2.0" />
+<meta property="og:title" content="Compile By Docker" />
+<meta property="og:locale" content="en_US" />
+<meta name="description" content="下载Docker镜像" />
+<meta property="og:description" content="下载Docker镜像" />
+<meta property="og:site_name" content="Pegasus" />
+<meta property="og:type" content="article" />
+<meta property="article:published_time" content="2021-01-04T09:39:50+00:00" />
+<meta name="twitter:card" content="summary" />
+<meta property="twitter:title" content="Compile By Docker" />
+<script type="application/ld+json">
+{"url":"/2.0.0/docs/build/compile-by-docker/","@type":"BlogPosting","headline":"Compile By Docker","dateModified":"2021-01-04T09:39:50+00:00","datePublished":"2021-01-04T09:39:50+00:00","mainEntityOfPage":{"@type":"WebPage","@id":"/2.0.0/docs/build/compile-by-docker/"},"description":"下载Docker镜像","@context":"https://schema.org"}</script>
+<!-- End Jekyll SEO tag -->
+</head>
+
+
+<body>
+    <div class="dashboard is-full-height">
+        <!-- left panel -->
+        <div class="dashboard-panel is-medium is-hidden-mobile pl-0">
+            <div class="dashboard-panel-header has-text-centered">
+                <a href="/en/">
+                    <img src="/assets/images/pegasus-logo-inv.png" style="width: 80%;">
+                </a>
+                
+<div class="dropdown pt-3 has-text-left">
+    <div class="dropdown-trigger">
+        <button class="button" aria-haspopup="true" aria-controls="dropdown-menu3">
+            <span>2.0.0</span>
+            <span class="icon is-small">
+                <i class="fas fa-angle-down" aria-hidden="true"></i>
+            </span>
+        </button>
+    </div>
+    <div class="dropdown-menu">
+        <div class="dropdown-content">
+            
+
+            <!--URL of our latest verion always starts without version prefixed.-->
+            
+            
+            
+
+            <a href="/en/docs/build/compile-by-docker/" class="dropdown-item ">
+                2.1.0
+                
+                <b> (latest)</b>
+                
+            </a>
+            
+
+            <!--URL of our latest verion always starts without version prefixed.-->
+            
+            
+            
+
+            <a href="/en/2.0.0/docs/build/compile-by-docker/" class="dropdown-item is-active">
+                2.0.0
+                
+            </a>
+            
+
+            <!--URL of our latest verion always starts without version prefixed.-->
+            
+            
+            
+
+            <a href="/en/1.12.3/docs/build/compile-by-docker/" class="dropdown-item ">
+                1.12.3
+                
+            </a>
+            
+
+            <!--URL of our latest verion always starts without version prefixed.-->
+            
+            
+            
+
+            <a href="/en/1.11.6/docs/build/compile-by-docker/" class="dropdown-item ">
+                1.11.6
+                
+            </a>
+            
+        </div>
+    </div>
+</div>
+
+            </div>
+            <div class="dashboard-panel-main is-scrollable pl-6">
+                
+
+<aside class="menu">
+    
+    <p class="menu-label">The Pegasus documentation</p>
+    <ul class="menu-list">
+        
+        <li>
+            <a href="/en/docs/downloads"
+                class="">
+                Downloads
+            </a>
+        </li>
+        
+    </ul>
+    
+    <p class="menu-label">Building Pegasus</p>
+    <ul class="menu-list">
+        
+        <li>
+            <a href="/en/docs/build/compile-by-docker"
+                class="">
+                Compile by docker
+            </a>
+        </li>
+        
+        <li>
+            <a href="/en/docs/build/compile-from-source"
+                class="">
+                Compile from source
+            </a>
+        </li>
+        
+    </ul>
+    
+    <p class="menu-label">Client Libs</p>
+    <ul class="menu-list">
+        
+        <li>
+            <a href="/en/clients/java-client"
+                class="">
+                Java Client
+            </a>
+        </li>
+        
+        <li>
+            <a href="/en/clients/cpp-client"
+                class="">
+                C++ Client
+            </a>
+        </li>
+        
+        <li>
+            <a href="https://github.com/XiaoMi/pegasus-go-client"
+                class="">
+                Golang Client
+            </a>
+        </li>
+        
+        <li>
+            <a href="/en/clients/python-client"
+                class="">
+                Python Client
+            </a>
+        </li>
+        
+        <li>
+            <a href="/en/clients/node-client"
+                class="">
+                NodeJS Client
+            </a>
+        </li>
+        
+        <li>
+            <a href="/en/clients/scala-client"
+                class="">
+                Scala Client
+            </a>
+        </li>
+        
+    </ul>
+    
+    <p class="menu-label">Tools</p>
+    <ul class="menu-list">
+        
+        <li>
+            <a href="/en/docs/tools/shell"
+                class="">
+                Pegasus Shell
+            </a>
+        </li>
+        
+        <li>
+            <a href="https://github.com/pegasus-kv/admin-cli"
+                class="">
+                Admin CLI
+            </a>
+        </li>
+        
+        <li>
+            <a href="https://github.com/pegasus-kv/pegic"
+                class="">
+                Pegasus data access CLI
+            </a>
+        </li>
+        
+    </ul>
+    
+    <p class="menu-label">API</p>
+    <ul class="menu-list">
+        
+        <li>
+            <a href="/en/api/ttl"
+                class="">
+                TTL(Time To Live)
+            </a>
+        </li>
+        
+        <li>
+            <a href="/en/api/single-atomic"
+                class="">
+                Single-Atomic Operations
+            </a>
+        </li>
+        
+        <li>
+            <a href="/en/api/redis"
+                class="">
+                Redis Adaption
+            </a>
+        </li>
+        
+        <li>
+            <a href="/en/api/geo"
+                class="">
+                GEO Support
+            </a>
+        </li>
+        
+        <li>
+            <a href="/en/api/http"
+                class="">
+                HTTP API
+            </a>
+        </li>
+        
+    </ul>
+    
+    <p class="menu-label">Admin</p>
+    <ul class="menu-list">
+        
+        <li>
+            <a href="/en/administration/deployment"
+                class="">
+                Deployment
+            </a>
+        </li>
+        
+        <li>
+            <a href="/en/administration/config"
+                class="">
+                Configurations
+            </a>
+        </li>
+        
+        <li>
+            <a href="/en/administration/rebalance"
+                class="">
+                Rebalance
+            </a>
+        </li>
+        
+        <li>
+            <a href="/en/administration/monitoring"
+                class="">
+                Monitoring
+            </a>
+        </li>
+        
+        <li>
+            <a href="/en/administration/rolling-update"
+                class="">
+                Rolling-Update
+            </a>
+        </li>
+        
+        <li>
+            <a href="/en/administration/scale-in-out"
+                class="">
+                Scale-in and Scale-out
+            </a>
+        </li>
+        
+        <li>
+            <a href="/en/administration/resource-management"
+                class="">
+                Resource Management
+            </a>
+        </li>
+        
+        <li>
+            <a href="/en/administration/cold-backup"
+                class="">
+                Cold Backup
+            </a>
+        </li>
+        
+        <li>
+            <a href="/en/administration/meta-recovery"
+                class="">
+                Metadata Recovery
+            </a>
+        </li>
+        
+        <li>
+            <a href="/en/administration/replica-recovery"
+                class="">
+                Replica Data Recovery
+            </a>
+        </li>
+        
+        <li>
+            <a href="/en/administration/zk-migration"
+                class="">
+                Zookeeper Migration
+            </a>
+        </li>
+        
+        <li>
+            <a href="/en/administration/table-migration"
+                class="">
+                Table Migration
+            </a>
+        </li>
+        
+        <li>
+            <a href="/en/administration/table-soft-delete"
+                class="">
+                Table Soft-Delete
+            </a>
+        </li>
+        
+        <li>
+            <a href="/en/administration/table-env"
+                class="">
+                Table Environment Variables
+            </a>
+        </li>
+        
+        <li>
+            <a href="/en/administration/remote-commands"
+                class="">
+                Remote Command
+            </a>
+        </li>
+        
+        <li>
+            <a href="/en/administration/partition-split"
+                class="">
+                Partition-Split
+            </a>
+        </li>
+        
+        <li>
+            <a href="/en/administration/duplication"
+                class="">
+                Duplication
+            </a>
+        </li>
+        
+        <li>
+            <a href="/en/administration/compression"
+                class="">
+                Data Compression
+            </a>
+        </li>
+        
+        <li>
+            <a href="/en/administration/throttling"
+                class="">
+                Throttling
+            </a>
+        </li>
+        
+        <li>
+            <a href="/en/administration/experiences"
+                class="">
+                Experiences
+            </a>
+        </li>
+        
+        <li>
+            <a href="/en/administration/manual-compact"
+                class="">
+                Manual Compact
+            </a>
+        </li>
+        
+        <li>
+            <a href="/en/administration/usage-scenario"
+                class="">
+                Usage Scenario
+            </a>
+        </li>
+        
+        <li>
+            <a href="/en/administration/bad-disk"
+                class="">
+                Bad Disk Repair
+            </a>
+        </li>
+        
+        <li>
+            <a href="/en/administration/whitelist"
+                class="">
+                Whitelist
+            </a>
+        </li>
+        
+        <li>
+            <a href="/en/administration/backup-request"
+                class="">
+                Backup Request
+            </a>
+        </li>
+        
+    </ul>
+    
+</aside>
+            </div>
+        </div>
+
+        <!-- main section -->
+        <div class="dashboard-main is-scrollable">
+            <nav class="navbar is-hidden-desktop">
+    <div class="navbar-brand">
+        <a href="/en/" class="navbar-item">
+            <!-- Pegasus Icon -->
+            <img src="/assets/images/pegasus-square.png">
+        </a>
+        <div class="navbar-item">
+            
+
+<!--A simple language switch button that only supports zh and en.-->
+<!--IF its language is zh, then switches to en.-->
+
+<!--If you don't want a url to be relativized, you can add a space explicitly into the href to 
+    prevents a url from being relativized by polyglot.-->
+<a class="button is-light is-outlined is-inverted" href=" /2.0.0/docs/build/compile-by-docker/"><strong>中</strong></a>
+
+        </div>
+        <a role="button" class="navbar-burger burger" aria-label="menu" aria-expanded="false" data-target="navMenu">
+            <!-- Appears in mobile mode only -->
+            <span aria-hidden="true"></span>
+            <span aria-hidden="true"></span>
+            <span aria-hidden="true"></span>
+        </a>
+    </div>
+    <div class="navbar-menu" id="navMenu">
+        <div class="navbar-end">
+            
+            <!--dropdown-->
+            <div class="navbar-item has-dropdown is-hoverable">
+                <a href=""
+                    class="navbar-link ">
+                    <span>
+                        The Pegasus documentation
+                    </span>
+                </a>
+                <div class="navbar-dropdown">
+                    
+                    <a href="/en/docs/downloads"
+                        class="navbar-item ">
+                        Downloads
+                    </a>
+                    
+                </div>
+            </div>
+            
+            <!--dropdown-->
+            <div class="navbar-item has-dropdown is-hoverable">
+                <a href=""
+                    class="navbar-link ">
+                    <span>
+                        Building Pegasus
+                    </span>
+                </a>
+                <div class="navbar-dropdown">
+                    
+                    <a href="/en/docs/build/compile-by-docker"
+                        class="navbar-item ">
+                        Compile by docker
+                    </a>
+                    
+                    <a href="/en/docs/build/compile-from-source"
+                        class="navbar-item ">
+                        Compile from source
+                    </a>
+                    
+                </div>
+            </div>
+            
+            <!--dropdown-->
+            <div class="navbar-item has-dropdown is-hoverable">
+                <a href=""
+                    class="navbar-link ">
+                    <span>
+                        Client Libs
+                    </span>
+                </a>
+                <div class="navbar-dropdown">
+                    
+                    <a href="/en/clients/java-client"
+                        class="navbar-item ">
+                        Java Client
+                    </a>
+                    
+                    <a href="/en/clients/cpp-client"
+                        class="navbar-item ">
+                        C++ Client
+                    </a>
+                    
+                    <a href="https://github.com/XiaoMi/pegasus-go-client"
+                        class="navbar-item ">
+                        Golang Client
+                    </a>
+                    
+                    <a href="/en/clients/python-client"
+                        class="navbar-item ">
+                        Python Client
+                    </a>
+                    
+                    <a href="/en/clients/node-client"
+                        class="navbar-item ">
+                        NodeJS Client
+                    </a>
+                    
+                    <a href="/en/clients/scala-client"
+                        class="navbar-item ">
+                        Scala Client
+                    </a>
+                    
+                </div>
+            </div>
+            
+            <!--dropdown-->
+            <div class="navbar-item has-dropdown is-hoverable">
+                <a href=""
+                    class="navbar-link ">
+                    <span>
+                        Tools
+                    </span>
+                </a>
+                <div class="navbar-dropdown">
+                    
+                    <a href="/en/docs/tools/shell"
+                        class="navbar-item ">
+                        Pegasus Shell
+                    </a>
+                    
+                    <a href="https://github.com/pegasus-kv/admin-cli"
+                        class="navbar-item ">
+                        Admin CLI
+                    </a>
+                    
+                    <a href="https://github.com/pegasus-kv/pegic"
+                        class="navbar-item ">
+                        Pegasus data access CLI
+                    </a>
+                    
+                </div>
+            </div>
+            
+            <!--dropdown-->
+            <div class="navbar-item has-dropdown is-hoverable">
+                <a href=""
+                    class="navbar-link ">
+                    <span>
+                        API
+                    </span>
+                </a>
+                <div class="navbar-dropdown">
+                    
+                    <a href="/en/api/ttl"
+                        class="navbar-item ">
+                        TTL(Time To Live)
+                    </a>
+                    
+                    <a href="/en/api/single-atomic"
+                        class="navbar-item ">
+                        Single-Atomic Operations
+                    </a>
+                    
+                    <a href="/en/api/redis"
+                        class="navbar-item ">
+                        Redis Adaption
+                    </a>
+                    
+                    <a href="/en/api/geo"
+                        class="navbar-item ">
+                        GEO Support
+                    </a>
+                    
+                    <a href="/en/api/http"
+                        class="navbar-item ">
+                        HTTP API
+                    </a>
+                    
+                </div>
+            </div>
+            
+            <!--dropdown-->
+            <div class="navbar-item has-dropdown is-hoverable">
+                <a href=""
+                    class="navbar-link ">
+                    <span>
+                        Admin
+                    </span>
+                </a>
+                <div class="navbar-dropdown">
+                    
+                    <a href="/en/administration/deployment"
+                        class="navbar-item ">
+                        Deployment
+                    </a>
+                    
+                    <a href="/en/administration/config"
+                        class="navbar-item ">
+                        Configurations
+                    </a>
+                    
+                    <a href="/en/administration/rebalance"
+                        class="navbar-item ">
+                        Rebalance
+                    </a>
+                    
+                    <a href="/en/administration/monitoring"
+                        class="navbar-item ">
+                        Monitoring
+                    </a>
+                    
+                    <a href="/en/administration/rolling-update"
+                        class="navbar-item ">
+                        Rolling-Update
+                    </a>
+                    
+                    <a href="/en/administration/scale-in-out"
+                        class="navbar-item ">
+                        Scale-in and Scale-out
+                    </a>
+                    
+                    <a href="/en/administration/resource-management"
+                        class="navbar-item ">
+                        Resource Management
+                    </a>
+                    
+                    <a href="/en/administration/cold-backup"
+                        class="navbar-item ">
+                        Cold Backup
+                    </a>
+                    
+                    <a href="/en/administration/meta-recovery"
+                        class="navbar-item ">
+                        Metadata Recovery
+                    </a>
+                    
+                    <a href="/en/administration/replica-recovery"
+                        class="navbar-item ">
+                        Replica Data Recovery
+                    </a>
+                    
+                    <a href="/en/administration/zk-migration"
+                        class="navbar-item ">
+                        Zookeeper Migration
+                    </a>
+                    
+                    <a href="/en/administration/table-migration"
+                        class="navbar-item ">
+                        Table Migration
+                    </a>
+                    
+                    <a href="/en/administration/table-soft-delete"
+                        class="navbar-item ">
+                        Table Soft-Delete
+                    </a>
+                    
+                    <a href="/en/administration/table-env"
+                        class="navbar-item ">
+                        Table Environment Variables
+                    </a>
+                    
+                    <a href="/en/administration/remote-commands"
+                        class="navbar-item ">
+                        Remote Command
+                    </a>
+                    
+                    <a href="/en/administration/partition-split"
+                        class="navbar-item ">
+                        Partition-Split
+                    </a>
+                    
+                    <a href="/en/administration/duplication"
+                        class="navbar-item ">
+                        Duplication
+                    </a>
+                    
+                    <a href="/en/administration/compression"
+                        class="navbar-item ">
+                        Data Compression
+                    </a>
+                    
+                    <a href="/en/administration/throttling"
+                        class="navbar-item ">
+                        Throttling
+                    </a>
+                    
+                    <a href="/en/administration/experiences"
+                        class="navbar-item ">
+                        Experiences
+                    </a>
+                    
+                    <a href="/en/administration/manual-compact"
+                        class="navbar-item ">
+                        Manual Compact
+                    </a>
+                    
+                    <a href="/en/administration/usage-scenario"
+                        class="navbar-item ">
+                        Usage Scenario
+                    </a>
+                    
+                    <a href="/en/administration/bad-disk"
+                        class="navbar-item ">
+                        Bad Disk Repair
+                    </a>
+                    
+                    <a href="/en/administration/whitelist"
+                        class="navbar-item ">
+                        Whitelist
+                    </a>
+                    
+                    <a href="/en/administration/backup-request"
+                        class="navbar-item ">
+                        Backup Request
+                    </a>
+                    
+                </div>
+            </div>
+            
+        </div>
+    </div>
+</nav>
+
+<nav class="navbar is-hidden-mobile">
+    <div class="navbar-start w-full">
+        <div class="navbar-item pl-0 w-full">
+            <!--TODO(wutao): Given the limitation of docsearch that couldn't handle multiple input,
+                I make searchbox only shown in desktop. Fix this issue when docsearch.js v3 released.
+                Related issue: https://github.com/algolia/docsearch/issues/230-->
+            <div class="navbar-searchbox w-full bg-gray-200">
+    <div class="field">
+        <div class="control has-icons-right">
+            <input class="input searchbox-input focus:placeholder-transparent"
+                type="text" placeholder="Search the docs">
+            <span class="icon is-right">
+                <i class="fas fa-search searchbox-icon"></i>
+            </span>
+        </div>
+    </div>
+</div>
+        </div>
+    </div>
+    <div class="navbar-end">
+        <div class="navbar-item">
+            
+
+<!--A simple language switch button that only supports zh and en.-->
+<!--IF its language is zh, then switches to en.-->
+
+<!--If you don't want a url to be relativized, you can add a space explicitly into the href to 
+    prevents a url from being relativized by polyglot.-->
+<a class="button is-light is-outlined is-inverted" href=" /2.0.0/docs/build/compile-by-docker/"><strong>中</strong></a>
+
+        </div>
+    </div>
+</nav>
+
+            <section class="hero is-info lg:mr-3">
+                <div class="hero-body">
+                    
+                    <p class="title is-size-2 is-centered">Compile by docker</p>
+                </div>
+            </section>
+            <section class="section" style="padding-top: 2rem;">
+                <div class="content">
+                    <h2 id="下载docker镜像">下载Docker镜像</h2>
+
+<div class="language-sh highlighter-rouge"><div class="highlight"><pre class="highlight"><code>docker pull apachepegasus/build-env:2.0.0-centos7
+</code></pre></div></div>
+
+<div class="language-sh highlighter-rouge"><div class="highlight"><pre class="highlight"><code>docker pull apachepegasus/build-env:2.0.0-ubuntu1604
+</code></pre></div></div>
+
+<h2 id="编译">编译</h2>
+
+<p>请先参考<a href="/en/docs/downloads">下载文档</a>获取源码到某目录（<code class="language-plaintext highlighter-rouge">/your/local/apache-pegasus-source</code>）下。随后运行以下命令：</p>
+
+<div class="language-sh highlighter-rouge"><div class="highlight"><pre class="highlight"><code>docker run <span class="nt">-v</span> /your/local/apache-pegasus-source:/root/pegasus <span class="se">\</span>
+           apachepegasus/build-env:2.0.0-centos7 <span class="se">\</span>
+           /bin/bash <span class="nt">-c</span> <span class="s2">"./run.sh build -c"</span>
+</code></pre></div></div>
+
+<p>编译的结果会被放在项目根目录的<code class="language-plaintext highlighter-rouge">DSN_ROOT/</code>文件夹下，其中包含bin、include、lib目录。</p>
+
+<h2 id="编译打包">编译打包</h2>
+
+<p>打包server端程序包，用于服务部署：</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>docker run <span class="nt">-v</span> /your/local/apache-pegasus-source:/root/pegasus <span class="se">\</span>
+           apachepegasus/build-env:2.0.0-centos7 <span class="se">\</span>
+           /bin/bash <span class="nt">-c</span> <span class="s2">"./run.sh pack_server"</span>
+</code></pre></div></div>
+
+<p>打包client端库，用于C/C++端客户端开发：</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>docker run <span class="nt">-v</span> /your/local/apache-pegasus-source:/root/pegasus <span class="se">\</span>
+           apachepegasus/build-env:2.0.0-centos7 <span class="se">\</span>
+           /bin/bash <span class="nt">-c</span> <span class="s2">"./run.sh pack_client"</span>
+</code></pre></div></div>
+
+<p>打包tools工具集，里面包含了各种工具（shell、bench）：</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>docker run <span class="nt">-v</span> /your/local/apache-pegasus-source:/root/pegasus <span class="se">\</span>
+           apachepegasus/build-env:2.0.0-centos7 <span class="se">\</span>
+           /bin/bash <span class="nt">-c</span> <span class="s2">"./run.sh pack_tools"</span>
+</code></pre></div></div>
+
+<p>编译成功后，推荐先<a href="/en/overview/onebox">体验onebox集群</a>。</p>
+
+                </div>
+            </section>
+            <footer class="footer">
+    <div class="container">
+        <div class="content is-small has-text-centered">
+            <div style="margin-bottom: 20px;">
+                <a href="http://incubator.apache.org"><img src="/assets/images/egg-logo.png"
+                                                           alt="Apache Incubator"/></a>
+            </div>
+            Copyright &copy; 2020 <a href="http://www.apache.org">The Apache Software Foundation</a>.
+            Licensed under the <a href="http://www.apache.org/licenses/LICENSE-2.0">Apache License, Version
+            2.0</a>.
+            <br><br>
+            
+            Apache Pegasus is an effort undergoing incubation at The Apache Software Foundation (ASF),
+            sponsored by the Apache Incubator. Incubation is required of all newly accepted projects
+            until a further review indicates that the infrastructure, communications, and decision making process
+            have stabilized in a manner consistent with other successful ASF projects. While incubation status is
+            not necessarily a reflection of the completeness or stability of the code, it does indicate that the
+            project has yet to be fully endorsed by the ASF.
+            
+        </div>
+    </div>
+</footer>
+        </div>
+
+        <!-- right panel -->
+        <div class="dashboard-panel is-small is-scrollable is-hidden-mobile">
+            <p class="menu-label">
+    <span class="icon">
+        <i class="fa fa-bars" aria-hidden="true"></i>
+    </span>
+    Table of contents
+</p>
+<ul class="menu-list">
+  <li><a href="#下载docker镜像">下载Docker镜像</a></li>
+  <li><a href="#编译">编译</a></li>
+  <li><a href="#编译打包">编译打包</a></li>
+</ul>
+
+        </div>
+    </div>
+
+    <script src="/assets/js/app.js" type="text/javascript"></script>
+    <script src="https://cdn.jsdelivr.net/npm/docsearch.js@2/dist/cdn/docsearch.min.js"></script>
+
+<script>
+    docsearch({
+        indexName: 'apache_pegasus',
+        apiKey: '676624c2d6dc00808d3b7cf6724fc3c8',
+        inputSelector: '.searchbox-input',
+        debug: true,
+    });
+</script>
+</body>
+
+</html>

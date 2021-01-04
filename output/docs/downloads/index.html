@@ -19,11 +19,11 @@
 <meta property="og:description" content="我们推荐下载遵循ASF Release Policy发布的源码包：" />
 <meta property="og:site_name" content="Pegasus" />
 <meta property="og:type" content="article" />
-<meta property="article:published_time" content="2021-01-04T08:39:21+00:00" />
+<meta property="article:published_time" content="2021-01-04T09:39:50+00:00" />
 <meta name="twitter:card" content="summary" />
 <meta property="twitter:title" content="Downloads" />
 <script type="application/ld+json">
-{"url":"/docs/downloads/","@type":"BlogPosting","headline":"Downloads","dateModified":"2021-01-04T08:39:21+00:00","datePublished":"2021-01-04T08:39:21+00:00","mainEntityOfPage":{"@type":"WebPage","@id":"/docs/downloads/"},"description":"我们推荐下载遵循ASF Release Policy发布的源码包：","@context":"https://schema.org"}</script>
+{"url":"/docs/downloads/","@type":"BlogPosting","headline":"Downloads","dateModified":"2021-01-04T09:39:50+00:00","datePublished":"2021-01-04T09:39:50+00:00","mainEntityOfPage":{"@type":"WebPage","@id":"/docs/downloads/"},"description":"我们推荐下载遵循ASF Release Policy发布的源码包：","@context":"https://schema.org"}</script>
 <!-- End Jekyll SEO tag -->
 </head>
 
@@ -755,11 +755,37 @@
 
 <p>你也可以通过git clone的方式获取Pegasus源码：</p>
 
-<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>git clone https://github.com/apache/incubator-pegasus.git <span class="nt">--recursive</span>
-<span class="nb">cd </span>pegasus
-git checkout <span class="nt">-b</span> v2.1.0 v2.1.0
-git submodule update
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>git clone <span class="nt">-b</span> v2.1.0 <span class="nt">--recursive</span> https://github.com/apache/incubator-pegasus.git
 </code></pre></div></div>
+
+<p>在 2.1.0 版本以前，Pegasus 并未遵循 ASF 发版流程，这里我们仍然提供老版本下载渠道，方便升级：</p>
+
+<table>
+  <thead>
+    <tr>
+      <th>Name</th>
+      <th>Package</th>
+      <th>Release Notes</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>Apache Pegasus 2.0.0</td>
+      <td><a href="https://github.com/apache/incubator-pegasus/releases/download/v2.0.0/apache-pegasus-2.0.0-incubating-src.zip">Source</a></td>
+      <td><a href="https://github.com/apache/incubator-pegasus/releases/tag/v2.0.0">Release Notes</a></td>
+    </tr>
+    <tr>
+      <td>Apache Pegasus 1.12.3</td>
+      <td><a href="https://github.com/apache/incubator-pegasus/releases/download/v1.12.3/apache-pegasus-1.12.3-incubating-src.zip">Source</a></td>
+      <td><a href="https://github.com/apache/incubator-pegasus/releases/tag/v1.12.3">Release Notes</a></td>
+    </tr>
+    <tr>
+      <td>Apache Pegasus 1.11.6</td>
+      <td><a href="https://github.com/apache/incubator-pegasus/releases/download/v1.11.6/apache-pegasus-1.11.6-incubating-src.zip">Source</a></td>
+      <td><a href="https://github.com/apache/incubator-pegasus/releases/tag/v1.11.6">Release Notes</a></td>
+    </tr>
+  </tbody>
+</table>
 
                 </div>
             </section>
