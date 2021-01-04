@@ -16,8 +16,20 @@ Apache Pegasus 2.1.0 | [Source][2.1.0-src] | [asc][2.1.0-asc] | [sha512][2.1.0-s
 你也可以通过git clone的方式获取Pegasus源码：
 
 ```bash
-git clone {{ site.pegasus_github_url }}.git --recursive
-cd pegasus
-git checkout -b v2.1.0 v2.1.0
-git submodule update
+git clone -b v2.1.0 --recursive https://github.com/apache/incubator-pegasus.git
 ```
+
+在 2.1.0 版本以前，Pegasus 并未遵循 ASF 发版流程，这里我们仍然提供老版本下载渠道，方便升级：
+
+[2.0.0-src]: https://github.com/apache/incubator-pegasus/releases/download/v2.0.0/apache-pegasus-2.0.0-incubating-src.zip
+[2.0.0-rn]: https://github.com/apache/incubator-pegasus/releases/tag/v2.0.0
+[1.12.3-src]: https://github.com/apache/incubator-pegasus/releases/download/v1.12.3/apache-pegasus-1.12.3-incubating-src.zip
+[1.12.3-rn]: https://github.com/apache/incubator-pegasus/releases/tag/v1.12.3
+[1.11.6-src]: https://github.com/apache/incubator-pegasus/releases/download/v1.11.6/apache-pegasus-1.11.6-incubating-src.zip
+[1.11.6-rn]: https://github.com/apache/incubator-pegasus/releases/tag/v1.11.6
+
+Name | Package | Release Notes
+---|---|---
+Apache Pegasus 2.0.0 | [Source][2.0.0-src] | [Release Notes][2.0.0-rn]
+Apache Pegasus 1.12.3 | [Source][1.12.3-src] | [Release Notes][1.12.3-rn]
+Apache Pegasus 1.11.6 | [Source][1.11.6-src] | [Release Notes][1.11.6-rn]

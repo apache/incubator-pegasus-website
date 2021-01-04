@@ -87,7 +87,9 @@ sass:
 latest_pegasus_version: 2.1.0
 pegasus_versions:
 - 2.1.0
-- 1.x
+- 2.0.0
+- 1.12.3
+- 1.11.6
 
 pegasus_github_url: "https://github.com/apache/incubator-pegasus"
 pegasus_website_github_url: "https://github.com/apache/incubator-pegasus-website"
