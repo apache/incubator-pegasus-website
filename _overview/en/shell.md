@@ -1,5 +1,0 @@
----
-permalink: /overview/shell/
----
-
-TRANSLATING

@@ -1,5 +1,6 @@
 ---
-permalink: /overview/shell/
+permalink: /docs/tools/shell/
+redirect_from: /overview/shell/
 ---
 
 Pegasus提供了Shell工具，用于查看集群相关信息，创建/删除表，操作数据等。

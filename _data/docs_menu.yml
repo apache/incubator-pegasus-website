@@ -22,6 +22,14 @@
       link: /clients/node-client
     - name: title_scala-client
       link: /clients/scala-client
+- name: title_tools
+  items:
+    - name: title_shell
+      link: /docs/tools/shell
+    - name: title_admin_cli
+      link: https://github.com/pegasus-kv/admin-cli
+    - name: title_pegic
+      link: https://github.com/pegasus-kv/pegic
 - name: title_api
   items:
     - name: title_ttl

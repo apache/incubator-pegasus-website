@@ -13,5 +13,3 @@
       link: /docs/build/compile-by-docker
     - name: title_onebox
       link: /overview/onebox
-    - name: title_shell
-      link: /overview/shell
