@@ -19,11 +19,11 @@
 <meta property="og:description" content="我们推荐下载遵循ASF Release Policy发布的源码包：" />
 <meta property="og:site_name" content="Pegasus" />
 <meta property="og:type" content="article" />
-<meta property="article:published_time" content="2021-01-04T12:12:40+00:00" />
+<meta property="article:published_time" content="2021-01-05T03:59:19+00:00" />
 <meta name="twitter:card" content="summary" />
 <meta property="twitter:title" content="Downloads" />
 <script type="application/ld+json">
-{"url":"/docs/downloads/","@type":"BlogPosting","headline":"Downloads","dateModified":"2021-01-04T12:12:40+00:00","datePublished":"2021-01-04T12:12:40+00:00","mainEntityOfPage":{"@type":"WebPage","@id":"/docs/downloads/"},"description":"我们推荐下载遵循ASF Release Policy发布的源码包：","@context":"https://schema.org"}</script>
+{"url":"/docs/downloads/","@type":"BlogPosting","headline":"Downloads","dateModified":"2021-01-05T03:59:19+00:00","datePublished":"2021-01-05T03:59:19+00:00","mainEntityOfPage":{"@type":"WebPage","@id":"/docs/downloads/"},"description":"我们推荐下载遵循ASF Release Policy发布的源码包：","@context":"https://schema.org"}</script>
 <!-- End Jekyll SEO tag -->
 </head>
 
@@ -61,7 +61,7 @@
         <li>
             <a href="/docs/build/compile-by-docker"
                 class="">
-                使用Docker完成编译
+                使用Docker完成编译（推荐）
             </a>
         </li>
         
@@ -428,7 +428,7 @@
                     
                     <a href="/docs/build/compile-by-docker"
                         class="navbar-item ">
-                        使用Docker完成编译
+                        使用Docker完成编译（推荐）
                     </a>
                     
                     <a href="/docs/build/compile-from-source"
@@ -794,8 +794,18 @@
       <td><a href="https://github.com/apache/incubator-pegasus/releases/download/v1.10.0/apache-pegasus-1.10.0-incubating-src.zip">Source</a></td>
       <td><a href="https://github.com/apache/incubator-pegasus/releases/tag/v1.10.0">Release Notes</a></td>
     </tr>
+    <tr>
+      <td>Apache Pegasus 1.9.0</td>
+      <td><a href="https://github.com/apache/incubator-pegasus/releases/download/v1.9.0/apache-pegasus-1.9.0-incubating-src.zip">Source</a></td>
+      <td><a href="https://github.com/apache/incubator-pegasus/releases/tag/v1.9.0">Release Notes</a></td>
+    </tr>
   </tbody>
 </table>
+
+<p>上述各版本均可找到对应编译环境的镜像：<a href="https://hub.docker.com/r/apachepegasus/build-env/tags">https://hub.docker.com/r/apachepegasus/build-env/tags</a>，请参考 <a href="docs/build/compile-by-docker/">使用Docker完成编译（推荐）</a> 完成编译。</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>docker pull apachepegasus/build-env:{VERSION}-{OS}
+</code></pre></div></div>
 
                 </div>
             </section>

@@ -3,27 +3,27 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Pegasus | Compile By Docker</title>
-    <link rel="stylesheet" href="/assets/css/app.css">
-    <link rel="shortcut icon" href="/assets/images/favicon.ico">
+    <title>Pegasus | Compile From Source</title>
+    <link rel="stylesheet" href="/en/assets/css/app.css">
+    <link rel="shortcut icon" href="/en/assets/images/favicon.ico">
     <link href="https://cdn.bootcdn.net/ajax/libs/tailwindcss/1.8.10/utilities.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/docsearch.js@2/dist/cdn/docsearch.min.css" />
     <script src="https://cdn.bootcss.com/jquery/3.4.1/jquery.min.js"></script>
     <script src="https://cdn.bootcdn.net/ajax/libs/font-awesome/5.13.0/js/all.min.js"></script>
     <!-- Begin Jekyll SEO tag v2.7.1 -->
-<title>Compile By Docker | Pegasus</title>
+<title>Compile From Source | Pegasus</title>
 <meta name="generator" content="Jekyll v4.2.0" />
-<meta property="og:title" content="Compile By Docker" />
+<meta property="og:title" content="Compile From Source" />
 <meta property="og:locale" content="en_US" />
-<meta name="description" content="下载Docker镜像" />
-<meta property="og:description" content="下载Docker镜像" />
+<meta name="description" content="Pegasus目前只支持Linux平台进行源码编译。编译过程中遇到问题，可以通过Github Issues向我们咨询。" />
+<meta property="og:description" content="Pegasus目前只支持Linux平台进行源码编译。编译过程中遇到问题，可以通过Github Issues向我们咨询。" />
 <meta property="og:site_name" content="Pegasus" />
 <meta property="og:type" content="article" />
-<meta property="article:published_time" content="2021-01-04T12:12:40+00:00" />
+<meta property="article:published_time" content="2021-01-05T03:59:19+00:00" />
 <meta name="twitter:card" content="summary" />
-<meta property="twitter:title" content="Compile By Docker" />
+<meta property="twitter:title" content="Compile From Source" />
 <script type="application/ld+json">
-{"url":"/1.12.3/docs/build/compile-by-docker/","@type":"BlogPosting","headline":"Compile By Docker","dateModified":"2021-01-04T12:12:40+00:00","datePublished":"2021-01-04T12:12:40+00:00","mainEntityOfPage":{"@type":"WebPage","@id":"/1.12.3/docs/build/compile-by-docker/"},"description":"下载Docker镜像","@context":"https://schema.org"}</script>
+{"url":"/1.10.0/docs/build/compile-from-source/","@type":"BlogPosting","headline":"Compile From Source","dateModified":"2021-01-05T03:59:19+00:00","datePublished":"2021-01-05T03:59:19+00:00","mainEntityOfPage":{"@type":"WebPage","@id":"/1.10.0/docs/build/compile-from-source/"},"description":"Pegasus目前只支持Linux平台进行源码编译。编译过程中遇到问题，可以通过Github Issues向我们咨询。","@context":"https://schema.org"}</script>
 <!-- End Jekyll SEO tag -->
 </head>
 
@@ -33,14 +33,14 @@
         <!-- left panel -->
         <div class="dashboard-panel is-medium is-hidden-mobile pl-0">
             <div class="dashboard-panel-header has-text-centered">
-                <a href="/">
+                <a href="/en/">
                     <img src="/assets/images/pegasus-logo-inv.png" style="width: 80%;">
                 </a>
                 
 <div class="dropdown pt-3 has-text-left">
     <div class="dropdown-trigger">
         <button class="button" aria-haspopup="true" aria-controls="dropdown-menu3">
-            <span>1.12.3</span>
+            <span>1.10.0</span>
             <span class="icon is-small">
                 <i class="fas fa-angle-down" aria-hidden="true"></i>
             </span>
@@ -55,7 +55,7 @@
             
             
 
-            <a href="/docs/build/compile-by-docker/" class="dropdown-item ">
+            <a href="/en/docs/build/compile-from-source/" class="dropdown-item ">
                 2.1.0
                 
                 <b> (latest)</b>
@@ -68,7 +68,7 @@
             
             
 
-            <a href="/2.0.0/docs/build/compile-by-docker/" class="dropdown-item ">
+            <a href="/en/2.0.0/docs/build/compile-from-source/" class="dropdown-item ">
                 2.0.0
                 
             </a>
@@ -79,7 +79,7 @@
             
             
 
-            <a href="/1.12.3/docs/build/compile-by-docker/" class="dropdown-item is-active">
+            <a href="/en/1.12.3/docs/build/compile-from-source/" class="dropdown-item ">
                 1.12.3
                 
             </a>
@@ -90,7 +90,7 @@
             
             
 
-            <a href="/1.11.6/docs/build/compile-by-docker/" class="dropdown-item ">
+            <a href="/en/1.11.6/docs/build/compile-from-source/" class="dropdown-item ">
                 1.11.6
                 
             </a>
@@ -101,7 +101,7 @@
             
             
 
-            <a href="/1.11.3/docs/build/compile-by-docker/" class="dropdown-item ">
+            <a href="/en/1.11.3/docs/build/compile-from-source/" class="dropdown-item ">
                 1.11.3
                 
             </a>
@@ -112,7 +112,7 @@
             
             
 
-            <a href="/1.10.0/docs/build/compile-by-docker/" class="dropdown-item ">
+            <a href="/en/1.10.0/docs/build/compile-from-source/" class="dropdown-item is-active">
                 1.10.0
                 
             </a>
@@ -127,323 +127,323 @@
 
 <aside class="menu">
     
-    <p class="menu-label">Pegasus产品文档</p>
+    <p class="menu-label">The Pegasus documentation</p>
     <ul class="menu-list">
         
         <li>
-            <a href="/docs/downloads"
+            <a href="/en/docs/downloads"
                 class="">
-                下载
+                Downloads
             </a>
         </li>
         
     </ul>
     
-    <p class="menu-label">编译构建</p>
+    <p class="menu-label">Building Pegasus</p>
     <ul class="menu-list">
         
         <li>
-            <a href="/docs/build/compile-by-docker"
+            <a href="/en/docs/build/compile-by-docker"
                 class="">
-                使用Docker完成编译
+                Compile by docker (recommended)
             </a>
         </li>
         
         <li>
-            <a href="/docs/build/compile-from-source"
+            <a href="/en/docs/build/compile-from-source"
                 class="">
-                从源码编译
+                Compile from source
             </a>
         </li>
         
     </ul>
     
-    <p class="menu-label">客户端库</p>
+    <p class="menu-label">Client Libs</p>
     <ul class="menu-list">
         
         <li>
-            <a href="/clients/java-client"
+            <a href="/en/clients/java-client"
                 class="">
-                Java客户端
+                Java Client
             </a>
         </li>
         
         <li>
-            <a href="/clients/cpp-client"
+            <a href="/en/clients/cpp-client"
                 class="">
-                C++客户端
+                C++ Client
             </a>
         </li>
         
         <li>
             <a href="https://github.com/XiaoMi/pegasus-go-client"
                 class="">
-                Golang客户端
+                Golang Client
             </a>
         </li>
         
         <li>
-            <a href="/clients/python-client"
+            <a href="/en/clients/python-client"
                 class="">
-                Python客户端
+                Python Client
             </a>
         </li>
         
         <li>
-            <a href="/clients/node-client"
+            <a href="/en/clients/node-client"
                 class="">
-                NodeJS客户端
+                NodeJS Client
             </a>
         </li>
         
         <li>
-            <a href="/clients/scala-client"
+            <a href="/en/clients/scala-client"
                 class="">
-                Scala客户端
+                Scala Client
             </a>
         </li>
         
     </ul>
     
-    <p class="menu-label">生态工具</p>
+    <p class="menu-label">Tools</p>
     <ul class="menu-list">
         
         <li>
-            <a href="/docs/tools/shell"
+            <a href="/en/docs/tools/shell"
                 class="">
-                Pegasus Shell 工具
+                Pegasus Shell
             </a>
         </li>
         
         <li>
             <a href="https://github.com/pegasus-kv/admin-cli"
                 class="">
-                集群管理命令行
+                Admin CLI
             </a>
         </li>
         
         <li>
             <a href="https://github.com/pegasus-kv/pegic"
                 class="">
-                数据访问命令行
+                Pegasus data access CLI
             </a>
         </li>
         
     </ul>
     
-    <p class="menu-label">用户接口</p>
+    <p class="menu-label">API</p>
     <ul class="menu-list">
         
         <li>
-            <a href="/api/ttl"
+            <a href="/en/api/ttl"
                 class="">
-                TTL
+                TTL(Time To Live)
             </a>
         </li>
         
         <li>
-            <a href="/api/single-atomic"
+            <a href="/en/api/single-atomic"
                 class="">
-                单行原子操作
+                Single-Atomic Operations
             </a>
         </li>
         
         <li>
-            <a href="/api/redis"
+            <a href="/en/api/redis"
                 class="">
-                Redis适配
+                Redis Adaption
             </a>
         </li>
         
         <li>
-            <a href="/api/geo"
+            <a href="/en/api/geo"
                 class="">
-                GEO支持
+                GEO Support
             </a>
         </li>
         
         <li>
-            <a href="/api/http"
+            <a href="/en/api/http"
                 class="">
-                HTTP接口
+                HTTP API
             </a>
         </li>
         
     </ul>
     
-    <p class="menu-label">高效运维</p>
+    <p class="menu-label">Admin</p>
     <ul class="menu-list">
         
         <li>
-            <a href="/administration/deployment"
+            <a href="/en/administration/deployment"
                 class="">
-                集群部署
+                Deployment
             </a>
         </li>
         
         <li>
-            <a href="/administration/config"
+            <a href="/en/administration/config"
                 class="">
-                配置说明
+                Configurations
             </a>
         </li>
         
         <li>
-            <a href="/administration/rebalance"
+            <a href="/en/administration/rebalance"
                 class="">
-                负载均衡
+                Rebalance
             </a>
         </li>
         
         <li>
-            <a href="/administration/monitoring"
+            <a href="/en/administration/monitoring"
                 class="">
-                可视化监控
+                Monitoring
             </a>
         </li>
         
         <li>
-            <a href="/administration/rolling-update"
+            <a href="/en/administration/rolling-update"
                 class="">
-                集群升级
+                Rolling-Update
             </a>
         </li>
         
         <li>
-            <a href="/administration/scale-in-out"
+            <a href="/en/administration/scale-in-out"
                 class="">
-                集群扩容缩容
+                Scale-in and Scale-out
             </a>
         </li>
         
         <li>
-            <a href="/administration/resource-management"
+            <a href="/en/administration/resource-management"
                 class="">
-                资源管理
+                Resource Management
             </a>
         </li>
         
         <li>
-            <a href="/administration/cold-backup"
+            <a href="/en/administration/cold-backup"
                 class="">
-                冷备份
+                Cold Backup
             </a>
         </li>
         
         <li>
-            <a href="/administration/meta-recovery"
+            <a href="/en/administration/meta-recovery"
                 class="">
-                元数据恢复
+                Metadata Recovery
             </a>
         </li>
         
         <li>
-            <a href="/administration/replica-recovery"
+            <a href="/en/administration/replica-recovery"
                 class="">
-                Replica数据恢复
+                Replica Data Recovery
             </a>
         </li>
         
         <li>
-            <a href="/administration/zk-migration"
+            <a href="/en/administration/zk-migration"
                 class="">
-                Zookeeper迁移
+                Zookeeper Migration
             </a>
         </li>
         
         <li>
-            <a href="/administration/table-migration"
+            <a href="/en/administration/table-migration"
                 class="">
-                Table迁移
+                Table Migration
             </a>
         </li>
         
         <li>
-            <a href="/administration/table-soft-delete"
+            <a href="/en/administration/table-soft-delete"
                 class="">
-                Table软删除
+                Table Soft-Delete
             </a>
         </li>
         
         <li>
-            <a href="/administration/table-env"
+            <a href="/en/administration/table-env"
                 class="">
-                Table环境变量
+                Table Environment Variables
             </a>
         </li>
         
         <li>
-            <a href="/administration/remote-commands"
+            <a href="/en/administration/remote-commands"
                 class="">
-                远程命令
+                Remote Command
             </a>
         </li>
         
         <li>
-            <a href="/administration/partition-split"
+            <a href="/en/administration/partition-split"
                 class="">
                 Partition-Split
             </a>
         </li>
         
         <li>
-            <a href="/administration/duplication"
+            <a href="/en/administration/duplication"
                 class="">
-                跨机房同步
+                Duplication
             </a>
         </li>
         
         <li>
-            <a href="/administration/compression"
+            <a href="/en/administration/compression"
                 class="">
-                数据压缩
+                Data Compression
             </a>
         </li>
         
         <li>
-            <a href="/administration/throttling"
+            <a href="/en/administration/throttling"
                 class="">
-                流量控制
+                Throttling
             </a>
         </li>
         
         <li>
-            <a href="/administration/experiences"
+            <a href="/en/administration/experiences"
                 class="">
-                运维经验
+                Experiences
             </a>
         </li>
         
         <li>
-            <a href="/administration/manual-compact"
+            <a href="/en/administration/manual-compact"
                 class="">
-                Manual Compact功能
+                Manual Compact
             </a>
         </li>
         
         <li>
-            <a href="/administration/usage-scenario"
+            <a href="/en/administration/usage-scenario"
                 class="">
-                Usage Scenario功能
+                Usage Scenario
             </a>
         </li>
         
         <li>
-            <a href="/administration/bad-disk"
+            <a href="/en/administration/bad-disk"
                 class="">
-                坏盘检修
+                Bad Disk Repair
             </a>
         </li>
         
         <li>
-            <a href="/administration/whitelist"
+            <a href="/en/administration/whitelist"
                 class="">
-                白名单
+                Whitelist
             </a>
         </li>
         
         <li>
-            <a href="/administration/backup-request"
+            <a href="/en/administration/backup-request"
                 class="">
                 Backup Request
             </a>
@@ -459,7 +459,7 @@
         <div class="dashboard-main is-scrollable">
             <nav class="navbar is-hidden-desktop">
     <div class="navbar-brand">
-        <a href="/" class="navbar-item">
+        <a href="/en/" class="navbar-item">
             <!-- Pegasus Icon -->
             <img src="/assets/images/pegasus-square.png">
         </a>
@@ -469,7 +469,9 @@
 <!--A simple language switch button that only supports zh and en.-->
 <!--IF its language is zh, then switches to en.-->
 
-<a class="button is-light is-outlined is-inverted" href="/en/1.12.3/docs/build/compile-by-docker/"><strong>En</strong></a>
+<!--If you don't want a url to be relativized, you can add a space explicitly into the href to 
+    prevents a url from being relativized by polyglot.-->
+<a class="button is-light is-outlined is-inverted" href=" /1.10.0/docs/build/compile-from-source/"><strong>中</strong></a>
 
         </div>
         <a role="button" class="navbar-burger burger" aria-label="menu" aria-expanded="false" data-target="navMenu">
@@ -487,14 +489,14 @@
                 <a href=""
                     class="navbar-link ">
                     <span>
-                        Pegasus产品文档
+                        The Pegasus documentation
                     </span>
                 </a>
                 <div class="navbar-dropdown">
                     
-                    <a href="/docs/downloads"
+                    <a href="/en/docs/downloads"
                         class="navbar-item ">
-                        下载
+                        Downloads
                     </a>
                     
                 </div>
@@ -505,19 +507,19 @@
                 <a href=""
                     class="navbar-link ">
                     <span>
-                        编译构建
+                        Building Pegasus
                     </span>
                 </a>
                 <div class="navbar-dropdown">
                     
-                    <a href="/docs/build/compile-by-docker"
+                    <a href="/en/docs/build/compile-by-docker"
                         class="navbar-item ">
-                        使用Docker完成编译
+                        Compile by docker (recommended)
                     </a>
                     
-                    <a href="/docs/build/compile-from-source"
+                    <a href="/en/docs/build/compile-from-source"
                         class="navbar-item ">
-                        从源码编译
+                        Compile from source
                     </a>
                     
                 </div>
@@ -528,39 +530,39 @@
                 <a href=""
                     class="navbar-link ">
                     <span>
-                        客户端库
+                        Client Libs
                     </span>
                 </a>
                 <div class="navbar-dropdown">
                     
-                    <a href="/clients/java-client"
+                    <a href="/en/clients/java-client"
                         class="navbar-item ">
-                        Java客户端
+                        Java Client
                     </a>
                     
-                    <a href="/clients/cpp-client"
+                    <a href="/en/clients/cpp-client"
                         class="navbar-item ">
-                        C++客户端
+                        C++ Client
                     </a>
                     
                     <a href="https://github.com/XiaoMi/pegasus-go-client"
                         class="navbar-item ">
-                        Golang客户端
+                        Golang Client
                     </a>
                     
-                    <a href="/clients/python-client"
+                    <a href="/en/clients/python-client"
                         class="navbar-item ">
-                        Python客户端
+                        Python Client
                     </a>
                     
-                    <a href="/clients/node-client"
+                    <a href="/en/clients/node-client"
                         class="navbar-item ">
-                        NodeJS客户端
+                        NodeJS Client
                     </a>
                     
-                    <a href="/clients/scala-client"
+                    <a href="/en/clients/scala-client"
                         class="navbar-item ">
-                        Scala客户端
+                        Scala Client
                     </a>
                     
                 </div>
@@ -571,24 +573,24 @@
                 <a href=""
                     class="navbar-link ">
                     <span>
-                        生态工具
+                        Tools
                     </span>
                 </a>
                 <div class="navbar-dropdown">
                     
-                    <a href="/docs/tools/shell"
+                    <a href="/en/docs/tools/shell"
                         class="navbar-item ">
-                        Pegasus Shell 工具
+                        Pegasus Shell
                     </a>
                     
                     <a href="https://github.com/pegasus-kv/admin-cli"
                         class="navbar-item ">
-                        集群管理命令行
+                        Admin CLI
                     </a>
                     
                     <a href="https://github.com/pegasus-kv/pegic"
                         class="navbar-item ">
-                        数据访问命令行
+                        Pegasus data access CLI
                     </a>
                     
                 </div>
@@ -599,34 +601,34 @@
                 <a href=""
                     class="navbar-link ">
                     <span>
-                        用户接口
+                        API
                     </span>
                 </a>
                 <div class="navbar-dropdown">
                     
-                    <a href="/api/ttl"
+                    <a href="/en/api/ttl"
                         class="navbar-item ">
-                        TTL
+                        TTL(Time To Live)
                     </a>
                     
-                    <a href="/api/single-atomic"
+                    <a href="/en/api/single-atomic"
                         class="navbar-item ">
-                        单行原子操作
+                        Single-Atomic Operations
                     </a>
                     
-                    <a href="/api/redis"
+                    <a href="/en/api/redis"
                         class="navbar-item ">
-                        Redis适配
+                        Redis Adaption
                     </a>
                     
-                    <a href="/api/geo"
+                    <a href="/en/api/geo"
                         class="navbar-item ">
-                        GEO支持
+                        GEO Support
                     </a>
                     
-                    <a href="/api/http"
+                    <a href="/en/api/http"
                         class="navbar-item ">
-                        HTTP接口
+                        HTTP API
                     </a>
                     
                 </div>
@@ -637,132 +639,132 @@
                 <a href=""
                     class="navbar-link ">
                     <span>
-                        高效运维
+                        Admin
                     </span>
                 </a>
                 <div class="navbar-dropdown">
                     
-                    <a href="/administration/deployment"
+                    <a href="/en/administration/deployment"
                         class="navbar-item ">
-                        集群部署
+                        Deployment
                     </a>
                     
-                    <a href="/administration/config"
+                    <a href="/en/administration/config"
                         class="navbar-item ">
-                        配置说明
+                        Configurations
                     </a>
                     
-                    <a href="/administration/rebalance"
+                    <a href="/en/administration/rebalance"
                         class="navbar-item ">
-                        负载均衡
+                        Rebalance
                     </a>
                     
-                    <a href="/administration/monitoring"
+                    <a href="/en/administration/monitoring"
                         class="navbar-item ">
-                        可视化监控
+                        Monitoring
                     </a>
                     
-                    <a href="/administration/rolling-update"
+                    <a href="/en/administration/rolling-update"
                         class="navbar-item ">
-                        集群升级
+                        Rolling-Update
                     </a>
                     
-                    <a href="/administration/scale-in-out"
+                    <a href="/en/administration/scale-in-out"
                         class="navbar-item ">
-                        集群扩容缩容
+                        Scale-in and Scale-out
                     </a>
                     
-                    <a href="/administration/resource-management"
+                    <a href="/en/administration/resource-management"
                         class="navbar-item ">
-                        资源管理
+                        Resource Management
                     </a>
                     
-                    <a href="/administration/cold-backup"
+                    <a href="/en/administration/cold-backup"
                         class="navbar-item ">
-                        冷备份
+                        Cold Backup
                     </a>
                     
-                    <a href="/administration/meta-recovery"
+                    <a href="/en/administration/meta-recovery"
                         class="navbar-item ">
-                        元数据恢复
+                        Metadata Recovery
                     </a>
                     
-                    <a href="/administration/replica-recovery"
+                    <a href="/en/administration/replica-recovery"
                         class="navbar-item ">
-                        Replica数据恢复
+                        Replica Data Recovery
                     </a>
                     
-                    <a href="/administration/zk-migration"
+                    <a href="/en/administration/zk-migration"
                         class="navbar-item ">
-                        Zookeeper迁移
+                        Zookeeper Migration
                     </a>
                     
-                    <a href="/administration/table-migration"
+                    <a href="/en/administration/table-migration"
                         class="navbar-item ">
-                        Table迁移
+                        Table Migration
                     </a>
                     
-                    <a href="/administration/table-soft-delete"
+                    <a href="/en/administration/table-soft-delete"
                         class="navbar-item ">
-                        Table软删除
+                        Table Soft-Delete
                     </a>
                     
-                    <a href="/administration/table-env"
+                    <a href="/en/administration/table-env"
                         class="navbar-item ">
-                        Table环境变量
+                        Table Environment Variables
                     </a>
                     
-                    <a href="/administration/remote-commands"
+                    <a href="/en/administration/remote-commands"
                         class="navbar-item ">
-                        远程命令
+                        Remote Command
                     </a>
                     
-                    <a href="/administration/partition-split"
+                    <a href="/en/administration/partition-split"
                         class="navbar-item ">
                         Partition-Split
                     </a>
                     
-                    <a href="/administration/duplication"
+                    <a href="/en/administration/duplication"
                         class="navbar-item ">
-                        跨机房同步
+                        Duplication
                     </a>
                     
-                    <a href="/administration/compression"
+                    <a href="/en/administration/compression"
                         class="navbar-item ">
-                        数据压缩
+                        Data Compression
                     </a>
                     
-                    <a href="/administration/throttling"
+                    <a href="/en/administration/throttling"
                         class="navbar-item ">
-                        流量控制
+                        Throttling
                     </a>
                     
-                    <a href="/administration/experiences"
+                    <a href="/en/administration/experiences"
                         class="navbar-item ">
-                        运维经验
+                        Experiences
                     </a>
                     
-                    <a href="/administration/manual-compact"
+                    <a href="/en/administration/manual-compact"
                         class="navbar-item ">
-                        Manual Compact功能
+                        Manual Compact
                     </a>
                     
-                    <a href="/administration/usage-scenario"
+                    <a href="/en/administration/usage-scenario"
                         class="navbar-item ">
-                        Usage Scenario功能
+                        Usage Scenario
                     </a>
                     
-                    <a href="/administration/bad-disk"
+                    <a href="/en/administration/bad-disk"
                         class="navbar-item ">
-                        坏盘检修
+                        Bad Disk Repair
                     </a>
                     
-                    <a href="/administration/whitelist"
+                    <a href="/en/administration/whitelist"
                         class="navbar-item ">
-                        白名单
+                        Whitelist
                     </a>
                     
-                    <a href="/administration/backup-request"
+                    <a href="/en/administration/backup-request"
                         class="navbar-item ">
                         Backup Request
                     </a>
@@ -800,7 +802,9 @@
 <!--A simple language switch button that only supports zh and en.-->
 <!--IF its language is zh, then switches to en.-->
 
-<a class="button is-light is-outlined is-inverted" href="/en/1.12.3/docs/build/compile-by-docker/"><strong>En</strong></a>
+<!--If you don't want a url to be relativized, you can add a space explicitly into the href to 
+    prevents a url from being relativized by polyglot.-->
+<a class="button is-light is-outlined is-inverted" href=" /1.10.0/docs/build/compile-from-source/"><strong>中</strong></a>
 
         </div>
     </div>
@@ -809,54 +813,55 @@
             <section class="hero is-info lg:mr-3">
                 <div class="hero-body">
                     
-                    <p class="title is-size-2 is-centered">使用Docker完成编译</p>
+                    <p class="title is-size-2 is-centered">Compile from source</p>
                 </div>
             </section>
             <section class="section" style="padding-top: 2rem;">
                 <div class="content">
-                    <h2 id="下载docker镜像">下载Docker镜像</h2>
+                    <p>Pegasus目前只支持Linux平台进行源码编译。编译过程中遇到问题，可以通过<a href="https://github.com/apache/incubator-pegasus/issues">Github Issues</a>向我们咨询。</p>
 
-<div class="language-sh highlighter-rouge"><div class="highlight"><pre class="highlight"><code>docker pull apachepegasus/build-env:1.12.3-centos7
+<h2 id="环境要求">环境要求</h2>
+
+<ul>
+  <li>GCC 4.9.4+</li>
+  <li>CMake 3.11+</li>
+</ul>
+
+<h2 id="ubuntu环境配置">Ubuntu环境配置</h2>
+
+<p>你可以参考 <a href="https://github.com/pegasus-kv/pegasus-docker/blob/1.10.0/pegasus-build-env/ubuntu16.04/Dockerfile">pegasus-build-dev/ubuntu16.04</a> 的Docker镜像安装全部依赖。</p>
+
+<h2 id="centos环境配置">CentOS环境配置</h2>
+
+<p>你可以参考 <a href="https://github.com/pegasus-kv/pegasus-docker/blob/1.10.0/pegasus-build-env/centos7/Dockerfile">pegasus-build-dev/centos7</a> 的Docker镜像安装全部依赖。</p>
+
+<h2 id="源码编译">源码编译</h2>
+
+<p>请先参考<a href="/en/docs/downloads">下载文档</a>获取源码。</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>./run.sh build <span class="nt">-c</span>
 </code></pre></div></div>
 
-<div class="language-sh highlighter-rouge"><div class="highlight"><pre class="highlight"><code>docker pull apachepegasus/build-env:1.12.3-ubuntu1604
-</code></pre></div></div>
-
-<h2 id="编译">编译</h2>
-
-<p>请先参考<a href="/docs/downloads">下载文档</a>获取源码到某目录（<code class="language-plaintext highlighter-rouge">/your/local/apache-pegasus-source</code>）下。随后运行以下命令：</p>
-
-<div class="language-sh highlighter-rouge"><div class="highlight"><pre class="highlight"><code>docker run <span class="nt">-v</span> /your/local/apache-pegasus-source:/root/pegasus <span class="se">\</span>
-           apachepegasus/build-env:1.12.3-centos7 <span class="se">\</span>
-           /bin/bash <span class="nt">-c</span> <span class="s2">"./run.sh build -c"</span>
-</code></pre></div></div>
-
-<p>编译的结果会被放在项目根目录的<code class="language-plaintext highlighter-rouge">DSN_ROOT/</code>文件夹下，其中包含bin、include、lib目录。</p>
+<p>编译后输出会放在当前目录的<code class="language-plaintext highlighter-rouge">DSN_ROOT/</code>文件夹下，里面包含bin、include、lib目录。</p>
 
 <h2 id="编译打包">编译打包</h2>
 
 <p>打包server端程序包，用于服务部署：</p>
 
-<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>docker run <span class="nt">-v</span> /your/local/apache-pegasus-source:/root/pegasus <span class="se">\</span>
-           apachepegasus/build-env:1.12.3-centos7 <span class="se">\</span>
-           /bin/bash <span class="nt">-c</span> <span class="s2">"./run.sh pack_server"</span>
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>./run.sh pack_server
 </code></pre></div></div>
 
 <p>打包client端库，用于C/C++端客户端开发：</p>
 
-<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>docker run <span class="nt">-v</span> /your/local/apache-pegasus-source:/root/pegasus <span class="se">\</span>
-           apachepegasus/build-env:1.12.3-centos7 <span class="se">\</span>
-           /bin/bash <span class="nt">-c</span> <span class="s2">"./run.sh pack_client"</span>
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>./run.sh pack_client
 </code></pre></div></div>
 
 <p>打包tools工具集，里面包含了各种工具（shell、bench）：</p>
 
-<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>docker run <span class="nt">-v</span> /your/local/apache-pegasus-source:/root/pegasus <span class="se">\</span>
-           apachepegasus/build-env:1.12.3-centos7 <span class="se">\</span>
-           /bin/bash <span class="nt">-c</span> <span class="s2">"./run.sh pack_tools"</span>
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>./run.sh pack_tools
 </code></pre></div></div>
 
-<p>编译成功后，推荐先<a href="/overview/onebox">体验onebox集群</a>。</p>
+<p>编译成功后，推荐先<a href="/en/overview/onebox">体验onebox集群</a>。</p>
 
                 </div>
             </section>
@@ -890,11 +895,13 @@
     <span class="icon">
         <i class="fa fa-bars" aria-hidden="true"></i>
     </span>
-    本页导航
+    Table of contents
 </p>
 <ul class="menu-list">
-  <li><a href="#下载docker镜像">下载Docker镜像</a></li>
-  <li><a href="#编译">编译</a></li>
+  <li><a href="#环境要求">环境要求</a></li>
+  <li><a href="#ubuntu环境配置">Ubuntu环境配置</a></li>
+  <li><a href="#centos环境配置">CentOS环境配置</a></li>
+  <li><a href="#源码编译">源码编译</a></li>
   <li><a href="#编译打包">编译打包</a></li>
 </ul>
 
