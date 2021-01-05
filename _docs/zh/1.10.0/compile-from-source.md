@@ -1,6 +1,6 @@
 ---
-permalink: 1.11.6/docs/build/compile-from-source/
-version: 1.11.6
+permalink: 1.10.0/docs/build/compile-from-source/
+version: 1.10.0
 ---
 
 Pegasus目前只支持Linux平台进行源码编译。编译过程中遇到问题，可以通过[Github Issues]({{ site.pegasus_github_url }}/issues)向我们咨询。
@@ -22,22 +22,7 @@ Pegasus目前只支持Linux平台进行源码编译。编译过程中遇到问�
 
 请先参考[下载文档](/docs/downloads)获取源码。
 
-由于历史原因，此版本需要额外下载第三方库源码包，同时还需略过安装 redis-proxy：
-
-```sh
-cd /your/local/apache-pegasus-source/rdsn/thirdparty
-wget https://pegasus-thirdparties.oss-cn-beijing.aliyuncs.com/1.10.0-thirdparties-src.zip
-unzip 1.10.0-thirdparties-src.zip
-
-cd ../..
-sed -i /"add_subdirectory(redis_protocol)"/d src/CMakeLists.txt
-```
-
-随后运行编译：
-
 ```bash
-cd /your/local/apache-pegasus-source
-
 ./run.sh build -c
 ```
 

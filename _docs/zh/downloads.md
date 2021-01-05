@@ -31,6 +31,8 @@ git clone -b v2.1.0 --recursive https://github.com/apache/incubator-pegasus.git
 [1.11.3-rn]: https://github.com/apache/incubator-pegasus/releases/tag/v1.11.3
 [1.10.0-src]: https://github.com/apache/incubator-pegasus/releases/download/v1.10.0/apache-pegasus-1.10.0-incubating-src.zip
 [1.10.0-rn]: https://github.com/apache/incubator-pegasus/releases/tag/v1.10.0
+[1.9.0-src]: https://github.com/apache/incubator-pegasus/releases/download/v1.9.0/apache-pegasus-1.9.0-incubating-src.zip
+[1.9.0-rn]: https://github.com/apache/incubator-pegasus/releases/tag/v1.9.0
 
 Name | Package | Release Notes
 ---|---|---
@@ -39,3 +41,10 @@ Apache Pegasus 1.12.3 | [Source][1.12.3-src] | [Release Notes][1.12.3-rn]
 Apache Pegasus 1.11.6 | [Source][1.11.6-src] | [Release Notes][1.11.6-rn]
 Apache Pegasus 1.11.3 | [Source][1.11.3-src] | [Release Notes][1.11.3-rn]
 Apache Pegasus 1.10.0 | [Source][1.10.0-src] | [Release Notes][1.10.0-rn]
+Apache Pegasus 1.9.0 | [Source][1.9.0-src] | [Release Notes][1.9.0-rn]
+
+上述各版本均可找到对应编译环境的镜像：<https://hub.docker.com/r/apachepegasus/build-env/tags>，请参考 [{{site.data.translate['title_compile-by-docker'}}](docs/build/compile-by-docker/) 完成编译。
+
+```
+docker pull apachepegasus/build-env:{VERSION}-{OS}
+```

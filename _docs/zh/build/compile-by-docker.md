@@ -1,6 +1,5 @@
 ---
 permalink: docs/build/compile-by-docker/
-version: latest
 ---
 
 ## 下载Docker镜像
