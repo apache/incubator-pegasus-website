@@ -11,7 +11,7 @@ We recommend downloading the signed source release that follows [ASF Release Pol
 
 Name | Package | Signature | Checksum | Release Notes |
 ---|---|---|---|---|
-Apache Pegasus 2.1.0 | [Source][2.1.0-src] | [asc][2.1.0-asc] | [sha512][2.1.0-sha] | [Release Notes][2.1.0-rn]
+Apache Pegasus 2.1.0 | [Source][2.1.0-src] | [asc][2.1.0-asc] | [sha512][2.1.0-sha] | [2020-11-30][2.1.0-rn]
 
 You can also download the sources via git clone:
 
