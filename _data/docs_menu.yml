@@ -16,8 +16,10 @@
       link: /clients/cpp-client
     - name: title_go-client
       link: https://github.com/XiaoMi/pegasus-go-client
-    - name: title_python-client
-      link: /clients/python-client
+    - name: title_python2-client
+      link: /clients/python2-client
+    - name: title_python3-client
+      link: /clients/python3-client
     - name: title_node-client
       link: /clients/node-client
     - name: title_scala-client
