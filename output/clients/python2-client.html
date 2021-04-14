@@ -3,7 +3,7 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Pegasus | Cold Backup</title>
+    <title>Pegasus | Python2 Client</title>
     <link rel="stylesheet" href="/assets/css/app.css">
     <link rel="shortcut icon" href="/assets/images/favicon.ico">
     <link href="https://cdn.bootcdn.net/ajax/libs/tailwindcss/1.8.10/utilities.min.css" rel="stylesheet">
@@ -11,19 +11,19 @@
     <script src="https://cdn.bootcss.com/jquery/3.4.1/jquery.min.js"></script>
     <script src="https://cdn.bootcdn.net/ajax/libs/font-awesome/5.13.0/js/all.min.js"></script>
     <!-- Begin Jekyll SEO tag v2.7.1 -->
-<title>Cold Backup | Pegasus</title>
+<title>Python2 Client | Pegasus</title>
 <meta name="generator" content="Jekyll v4.2.0" />
-<meta property="og:title" content="Cold Backup" />
+<meta property="og:title" content="Python2 Client" />
 <meta property="og:locale" content="en_US" />
-<meta name="description" content="介绍" />
-<meta property="og:description" content="介绍" />
+<meta name="description" content="pegasus python client" />
+<meta property="og:description" content="pegasus python client" />
 <meta property="og:site_name" content="Pegasus" />
 <meta property="og:type" content="article" />
 <meta property="article:published_time" content="2021-04-14T02:55:21+00:00" />
 <meta name="twitter:card" content="summary" />
-<meta property="twitter:title" content="Cold Backup" />
+<meta property="twitter:title" content="Python2 Client" />
 <script type="application/ld+json">
-{"url":"/administration/cold-backup","@type":"BlogPosting","headline":"Cold Backup","dateModified":"2021-04-14T02:55:21+00:00","datePublished":"2021-04-14T02:55:21+00:00","mainEntityOfPage":{"@type":"WebPage","@id":"/administration/cold-backup"},"description":"介绍","@context":"https://schema.org"}</script>
+{"url":"/clients/python2-client","@type":"BlogPosting","headline":"Python2 Client","dateModified":"2021-04-14T02:55:21+00:00","datePublished":"2021-04-14T02:55:21+00:00","mainEntityOfPage":{"@type":"WebPage","@id":"/clients/python2-client"},"description":"pegasus python client","@context":"https://schema.org"}</script>
 <!-- End Jekyll SEO tag -->
 </head>
 
@@ -100,7 +100,7 @@
         
         <li>
             <a href="/clients/python2-client"
-                class="">
+                class="is-active">
                 Python2客户端
             </a>
         </li>
@@ -248,7 +248,7 @@
         
         <li>
             <a href="/administration/cold-backup"
-                class="is-active">
+                class="">
                 冷备份
             </a>
         </li>
@@ -392,7 +392,7 @@
 <!--A simple language switch button that only supports zh and en.-->
 <!--IF its language is zh, then switches to en.-->
 
-<a class="button is-light is-outlined is-inverted" href="/en/administration/cold-backup"><strong>En</strong></a>
+<a class="button is-light is-outlined is-inverted" href="/en/clients/python2-client"><strong>En</strong></a>
 
         </div>
         <a role="button" class="navbar-burger burger" aria-label="menu" aria-expanded="false" data-target="navMenu">
@@ -472,7 +472,7 @@
                     </a>
                     
                     <a href="/clients/python2-client"
-                        class="navbar-item ">
+                        class="navbar-item is-active">
                         Python2客户端
                     </a>
                     
@@ -606,7 +606,7 @@
                     </a>
                     
                     <a href="/administration/cold-backup"
-                        class="navbar-item is-active">
+                        class="navbar-item ">
                         冷备份
                     </a>
                     
@@ -728,7 +728,7 @@
 <!--A simple language switch button that only supports zh and en.-->
 <!--IF its language is zh, then switches to en.-->
 
-<a class="button is-light is-outlined is-inverted" href="/en/administration/cold-backup"><strong>En</strong></a>
+<a class="button is-light is-outlined is-inverted" href="/en/clients/python2-client"><strong>En</strong></a>
 
         </div>
     </div>
@@ -737,290 +737,451 @@
             <section class="hero is-info lg:mr-3">
                 <div class="hero-body">
                     
-                    <p class="title is-size-2 is-centered">冷备份</p>
+                    <p class="title is-size-2 is-centered">Python2客户端</p>
                 </div>
             </section>
             <section class="section" style="padding-top: 2rem;">
                 <div class="content">
-                    <h2 id="介绍">介绍</h2>
+                    <h1 id="pegasus-python-client">pegasus python client</h1>
 
-<p>Pegasus的冷备份功能用来将Pegasus中的数据定期生成快照文件，并备份到其他存储介质上，从而为数据容灾多提供一层保障。但由于备份的是某个时间点的数据快照文件，所以冷备份并不保证可以保留所有最新的数据，也就是说，恢复的时候可能会丢失最近一段时间的数据。</p>
+<h2 id="项目地址">项目地址</h2>
 
-<p>具体来看，冷备份过程要涉及到如下一些参数：</p>
+<p><a href="https://github.com/XiaoMi/pegasus-python-client">https://github.com/XiaoMi/pegasus-python-client</a></p>
 
-<ul>
-  <li>存储介质(backup_provider): 指其他的文件存储系统或服务，如本地文件系统或者HDFS。</li>
-  <li>数据冷备份的周期(backup_interval)：周期的长短决定了备份数据的覆盖范围。如果周期是1个月，那么恢复数据时，就可能只恢复一个月之前的数据。但如果周期设的太短，备份就会太频繁，从而使得备份开销很大。在小米内部，冷备份的周期通常是1天。</li>
-  <li>保留的冷备份个数(backup_history_count)：保留的备份个数越多，存储的空间开销就越大。在小米内部，一般保留最近的3个冷备份。</li>
-  <li>进行冷备份的表的集合(backup_app_ids)：并不是所有的表都值得进行冷备份。在小米内部，对于经常重灌全量数据的表，我们是不进行冷备份的。</li>
-</ul>
+<h2 id="版本要求">版本要求</h2>
 
-<p>在Pegasus中，以上这几个参数的组合称为一个冷备份策略(backup_policy)。数据的冷备份就行按照policy为单位进行的。</p>
+<p>Python 2.*</p>
 
-<h2 id="存储介质">存储介质</h2>
+<h2 id="安装">安装</h2>
 
-<p>目前Pegasus支持本地文件系统和FDS两种冷备份介质。如果需要支持更多的存储介质(如S3)，请联系我们或者直接把pull request砸过来。</p>
+<p><code class="language-plaintext highlighter-rouge">pip install pypegasus</code></p>
 
-<h3 id="fds">FDS</h3>
+<h2 id="使用">使用</h2>
 
-<p>FDS是小米生态云提供的存储产品，目前仅面向小米的生态链业务开放。更多详细的介绍<a href="https://cnbj6.cloud.mi.com/#/index/product/fds?_k=rq2znr">请戳这里</a>。</p>
+<p>pegasus python client使用了<a href="https://github.com/twisted/twisted">twisted</a>, 编写的代码会带有twisted的影子。</p>
 
-<h3 id="本地文件系统">本地文件系统</h3>
+<h3 id="示例">示例</h3>
 
-<p>通过使用Pegasus本地文件系统(local service)的备份接口，可以把Pegasus的数据备份到某个目录下。如果第三方存储介质支持以nfs或者Linux Fuse的方式挂载到本地某个目录下的话，该介质就可以通过local service来作为pegasus的备份介质。目前HDFS就是通过fuse的方式来支持的。</p>
+<p>完整的示例请参考<a href="https://github.com/XiaoMi/pegasus-python-client/blob/master/sample.py">sample</a>。以下是简单的示例：</p>
 
-<p>我们接下来会以本地文件系统为例，介绍冷备的创建和恢复的相关操作。然后，我们会介绍如何用fuse的方式将HDFS挂载到本地目录下。</p>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>#!/usr/bin/env python
+# coding:utf-8
 
-<h2 id="怎样开始冷备份">怎样开始冷备份</h2>
+from pypegasus.pgclient import Pegasus
 
-<h3 id="配置">配置</h3>
-<p>需要先设定一些参数来配置系统的冷备份功能：</p>
+from twisted.internet import reactor
+from twisted.internet.defer import inlineCallbacks
 
-<ol>
-  <li>
-    <p>配置 [meta_server].cold_backup_disable ：</p>
 
-    <div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>[meta_server]
-...
-;; 设置为false, 不然冷备份功能不会打开
-cold_backup_disabled = false
-...
-</code></pre></div>    </div>
-  </li>
-  <li>
-    <p>配置 [apps.meta].pools 和 [apps.replica].pools ：</p>
+@inlineCallbacks
+def basic_test():
+    # init
+    c = Pegasus(['127.0.0.1:34601', '127.0.0.1:34602'], 'temp')
 
-    <div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>[apps.meta]
-...
-;; 需增加THREAD_POOL_LOCAL_SERVICE，不然会没有可用的线程池而coredump
-pools = ...,THREAD_POOL_LOCAL_SERVICE
-   
-[apps.replica]
-...
-;; 需增加THREAD_POOL_LOCAL_SERVICE，不然会没有可用的线程池而coredump
-pools = ...,THREAD_POOL_LOCAL_SERVICE
-</code></pre></div>    </div>
-  </li>
-  <li>
-    <p>配置 [replication].cold_backup_root 和 [replication].max_concurrent_uploading_file_count ：</p>
+    suc = yield c.init()
+    if not suc:
+        reactor.stop()
+        print('ERROR: connect pegasus server failed')
+        return
 
-    <div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>[replication]
-;; 这个参数指定了冷备数据要保存到存储介质的什么文件夹下，一般建议填写集群名字
-cold_backup_root = onebox
-;; 这个参数指定了冷备份上传文件的并发数，根据自己的网络情况进行设置，建议参数为5
-max_concurrent_uploading_file_count = 5
-</code></pre></div>    </div>
-  </li>
-  <li>
-    <p>添加或修改 [block_service.xxxx] 配置段：</p>
+    # set
+    try:
+        ret = yield c.set('hkey1', 'skey1', 'value', 0, 500)
+        print('set ret: ', ret)
+    except Exception as e:
+        print(e)
 
-    <div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>;; 这样的一个section, 就指定了一种存储介质。可以按照自己的需求添加
-[block_service.my_backup_media]
-;; 指定这种存储介质使用的存储接口是local_service
-type = local_service
-;; 存储介质的初始化参数。对于local_service, 该参数要设置成一个本地目录，表示所有的备份全在此目录下。
-args = /home/weijiesun/pegasus_cold_backup
-</code></pre></div>    </div>
-  </li>
-</ol>
+    # get
+    ret = yield c.get('hkey1', 'skey1')
+    print('get ret: ', ret)
 
-<p>在上面的配置中，一定要区分清楚[replication].cold_backup_root和[block_service.my_backup_media].args所配置的两个路径：</p>
-<ul>
-  <li>前者指定了数据在某种存储介质下的存放目录。</li>
-  <li>后者是存储介质本身的初始化参数，是和type相关的。对于local_service而言，这个参数是一个绝对路径。换种说法，<strong>本地文件系统的某个目录</strong>，就是一种存储介质。</li>
-  <li>对于当前的配置情况而言，冷备数据会保存到<code class="language-plaintext highlighter-rouge">/home/weijiesun/pegasus_cold_backup/onebox</code>这个目录下。</li>
-</ul>
+    reactor.stop()
 
-<h3 id="创建冷备份策略">创建冷备份策略</h3>
 
-<p>通过<a href="/overview/shell#冷备份管理">Shell工具的add_backup_policy命令</a>可以创建一个冷备份策略：</p>
-
-<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>&gt;&gt;&gt; add_backup_policy -p policy1 -b my_backup_media -a 1 -i 300 -s 16:00 -c 3
-add backup policy succeed, policy_name = policy1
+if __name__ == "__main__":
+    reactor.callWhenRunning(basic_test)
+    reactor.run()
 </code></pre></div></div>
 
-<p>几个参数的含义如下：</p>
-<ul>
-  <li>-p: policy的名字，创建后就不能修改，某个集群只能有唯一的名字</li>
-  <li>-b: 存储介质的名称。系统会按指定的名称寻找对应的section, 并初始化存储介质。在上例中，系统从[block_service.my_backup_media]这一配置section中进行初始化。</li>
-  <li>-a: policy下app_id的集合。如果有多个，用逗号隔开。</li>
-  <li>-i: 备份周期，以秒为单位。</li>
-  <li>-s: 开始时间，精确到分钟。这个参数含义略显复杂，后文专门介绍。</li>
-  <li>-c: 冷备份的保留个数</li>
-</ul>
+<h3 id="log配置文件">log配置文件</h3>
 
-<p>对于-s参数指定的备份开始时间，其含义和-i指定备份周期是有联系的</p>
-<ul>
-  <li>如果备份周期是86400秒，也就是一天。那么-s就表示备份每天的启动时间。</li>
-  <li>如果备份周期不是一整天。那么开始时间就代表的着第一次备份的开启时间点。而这个时间点，指的是当前时间朝后推的第一个相对的时间点。</li>
-</ul>
+<p>pegasus python client使用了<a href="https://docs.python.org/2/library/logging.html">logging</a>日志包，默认配置如下：</p>
 
-<p>比如上面的”-i 60 -s 8:00”,就是说下次备份从8:00开始，然后每60秒开启一轮备份。而”-i 86400 -s 8:30”，指的是每天的8:30开启一轮备份。</p>
-
-<p>对于-a参数指定的app_id。目前pegasus并没有强制约束某个app_id只能属于一个policy, 但原则上不建议把同一个表加到不同的policy中。</p>
-
-<h3 id="查询冷备份策略">查询冷备份策略</h3>
-<p>可以用ls_backup_policy列举系统当前所有的策略：</p>
-<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>&gt;&gt;&gt; ls_backup_policy
-[1]
-    name                 : another_policy
-    backup_provider_type : my_backup_media
-    backup_interval      : 600s
-    app_ids              : {2}
-    start_time           : 16:10
-    status               : enabled
-    backup_history_count : 2
-
-[2]
-    name                 : policy1
-    backup_provider_type : my_backup_media
-    backup_interval      : 300s
-    app_ids              : {1}
-    start_time           : 16:00
-    status               : enabled
-    backup_history_count : 3
-
-
-ls backup policy succeed
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>[loggers]
+keys=root
+[logger_root]
+level=INFO
+handlers=hand01
+propagate=0
+[handlers]
+keys=hand01
+[handler_hand01]
+class=handlers.RotatingFileHandler
+formatter=form01
+args=('pegasus.log', 'a', 100*1024*1024, 10)
+[formatters]
+keys=form01
+[formatter_form01]
+format=%(asctime)s [%(thread)d] [%(levelname)s] %(filename)s:%(lineno)d %(message)s
+datefmt=%Y-%m-%d %H:%M:%S
 </code></pre></div></div>
 
-<p>也可以用query_backup_policy查询某个指定policy的信息：</p>
-<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>&gt;&gt;&gt; query_backup_policy -p policy1
-policy_info:
-    name                 : policy1
-    backup_provider_type : my_backup_media
-    backup_interval      : 300s
-    app_ids              : {1}
-    start_time           : 16:00
-    status               : enabled
-    backup_history_count : 3
+<p>如果用户有定制需求，可以在自己的代码目录添加配置文件<code class="language-plaintext highlighter-rouge">logger.conf</code></p>
 
-backup_infos:
-[1]
-    id         : 1533801635364
-    start_time : 2018-08-09 16:00:35
-    end_time   : 2018-08-09 16:01:15
-    app_ids    : {1}
+<h3 id="api说明">API说明</h3>
 
-query backup policy succeed
-</code></pre></div></div>
-<p>如上图所示，当query某个特定的policy时，该policy下已经完成或正在进行的备份也会显示出来。</p>
+<h4 id="初始化">初始化</h4>
 
-<h3 id="修改冷备份策略">修改冷备份策略</h3>
-<p>冷备份策略的一些参数，可以用modify_backup_policy命令进行修改：</p>
-<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>&gt;&gt;&gt; modify_backup_policy -p policy1 -s 17:00 -i 600
-Modify policy result: ERR_OK
-&gt;&gt;&gt; query_backup_policy -p policy1
-policy_info:
-    name                 : policy1
-    backup_provider_type : my_backup_media
-    backup_interval      : 600s
-    app_ids              : {1}
-    start_time           : 17:00
-    status               : enabled
-    backup_history_count : 3
+<p>初始化先构造Pegasus对象，在使用init函数完成初始化：</p>
 
-backup_infos:
-.....
-query backup policy succeed
-</code></pre></div></div>
-<p>可以修改的参数有：</p>
-<ul>
-  <li>app集合: 通过-a和-r参数进行增删app_id</li>
-  <li>backup_interval: 通过-i修改周期</li>
-  <li>start_time: 通过-s参数修改开始时间</li>
-</ul>
-
-<h3 id="禁用和重新开始冷备份策略">禁用和重新开始冷备份策略</h3>
-
-<p>可以用disable_backup_policy和enable_backup_policy来对某个policy进行禁用和开启</p>
-<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>&gt;&gt;&gt; disable_backup_policy -p policy1
-disable policy result: ERR_OK
-&gt;&gt;&gt; ls_backup_policy
-..........
-[2]
-    name                 : policy1
-    backup_provider_type : my_backup_media
-    backup_interval      : 600s
-    app_ids              : {1}
-    start_time           : 17:00
-    status               : disabled
-    backup_history_count : 3
-
-
-ls backup policy succeed
-&gt;&gt;&gt; enable_backup_policy -p policy1
-enable policy result: ERR_OK
-&gt;&gt;&gt; ls_backup_policy
-......
-[2]
-    name                 : policy1
-    backup_provider_type : my_backup_media
-    backup_interval      : 600s
-    app_ids              : {1}
-    start_time           : 17:00
-    status               : enabled
-    backup_history_count : 3
-
-
-ls backup policy succeed
-&gt;&gt;&gt;
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>class Pegasus(object):
+    """
+    Pegasus client class.
+    """
+    
+    def __init__(self, meta_addrs=None, table_name='',
+                 timeout=DEFAULT_TIMEOUT):
+        """
+        :param meta_addrs: (list) pagasus meta servers list.
+                           example: ['127.0.0.1:34601', '127.0.0.1:34602', '127.0.0.1:34603']
+        :param table_name: (str) table name/app name used in pegasus.
+        :param timeout: (int) default timeout in milliseconds when communicate with meta sever and replica server.
+        """
 </code></pre></div></div>
 
-<h3 id="查看备份的结果">查看备份的结果</h3>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>    def init(self):
+        """
+        Initialize the client before you can use it.
 
-<p>对于我们配置好的local_service, 备份存在/home/weijiesun/pegasus_cold_backup/onebox的目录下。</p>
-
-<p>这里稍微做展示，详细的文件内容大家可以自行翻看：</p>
-<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>weijiesun@weijiesun-kubuntu ~/pegasus_cold_backup/onebox/policy1 $ pwd
-/home/weijiesun/pegasus_cold_backup/onebox/policy1
-weijiesun@weijiesun-kubuntu ~/pegasus_cold_backup/onebox/policy1 $ ls
-1533802216079  1533802236170  1533802256259
+        :return: (DeferredList) True when initialized succeed, others when failed.
+        """
 </code></pre></div></div>
 
-<h2 id="从冷备中恢复数据">从冷备中恢复数据</h2>
+<h4 id="ttl">ttl</h4>
 
-<p>可以用restore_app从冷备中恢复表数据</p>
-<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>&gt;&gt;&gt; restore_app -c onebox -p policy1 -a temp -i 1 -t 1533802236170 -b my_backup_media -n result
-sleep 1 second to wait complete...
-        new app_id = 3
-</code></pre></div></div>
-<p>其中各个参数的含义如下（这些参数都可以通过在原集群上执行shell命令<code class="language-plaintext highlighter-rouge">query_backup_policy</code>得到）：</p>
-<ul>
-  <li>-c：旧集群的名称</li>
-  <li>-p：旧的policy名称</li>
-  <li>-a：旧表名称</li>
-  <li>-i：旧表的id</li>
-  <li>-t：旧的备份的时间戳编号</li>
-  <li>-b：存储介质名称</li>
-  <li>-n：新表的名称，如果不指定就使用旧名字，如果和新的名字冲突则报错</li>
-  <li>-s：是否跳过损坏的partition, 默认不跳过</li>
-</ul>
+<p>判断key的剩余的ttl时间</p>
 
-<p>对于恢复进度，可以用query_restore_status进行查看</p>
-<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>&gt;&gt;&gt; query_restore_status 3 -d
-pid           progress(%)   restore_status
-0             100           ok
-1             100           ok
-2             100           ok
-3             100           ok
-4             100           ok
-5             100           ok
-6             100           ok
-7             100           ok
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>def ttl(self, hash_key, sort_key, timeout=0):
+    """
+    Get ttl(time to live) of the data.
 
-the overall progress of restore is 100%
-
-annotations:
-    ok : mean restore complete
-    ongoing : mean restore is under going
-    skip : data on cold backup media is damaged, but skip the damaged partition
-    unknown : invalid, should login server and check it
+    :param hash_key: (str) which hash key used for this API.
+    :param sort_key: (str) which sort key used for this API.
+    :param timeout: (int) how long will the operation timeout in milliseconds.
+                    if timeout &gt; 0, it is a timeout value for current operation,
+                    else the timeout value specified to create the instance will be used.
+    :return: (tuple&lt;error_types.code.value, int&gt;) (code, ttl)
+             code: error_types.ERR_OK.value when data exist, error_types.ERR_OBJECT_NOT_FOUND.value when data not found.
+             ttl: in seconds, -1 means forever.
+    """
 </code></pre></div></div>
 
-<h2 id="怎样将数据备份到hdfs">怎样将数据备份到HDFS</h2>
+<h4 id="exist">exist</h4>
 
-<p>采用HDFS fuse即可，可以参考<a href="https://www.jianshu.com/p/1beb5325c6d8">这篇文章</a>。</p>
+<p>判断key是否存在</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>def exist(self, hash_key, sort_key, timeout=0):
+    """
+    Check value exist.
+
+    :param hash_key: (str) which hash key used for this API.
+    :param sort_key: (str) which sort key used for this API.
+    :param timeout: (int) how long will the operation timeout in milliseconds.
+                    if timeout &gt; 0, it is a timeout value for current operation,
+                    else the timeout value specified to create the instance will be used.
+    :return: (tuple&lt;error_types.code.value, None&gt;) (code, ign)
+             code: error_types.ERR_OK.value when data exist, error_types.ERR_OBJECT_NOT_FOUND.value when data not found.
+             ign: useless, should be ignored.
+    """
+</code></pre></div></div>
+
+<h4 id="set">set</h4>
+
+<p>插入一条数据（若已存在则会覆盖）</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>def set(self, hash_key, sort_key, value, ttl=0, timeout=0):
+    """
+    Set value to be stored in &lt;hash_key, sort_key&gt;.
+
+    :param hash_key: (str) which hash key used for this API.
+    :param sort_key: (str) which sort key used for this API.
+    :param value: (str) value to be stored under &lt;hash_key, sort_key&gt;.
+    :param ttl: (int) ttl(time to live) in seconds of this data.
+    :param timeout: (int) how long will the operation timeout in milliseconds.
+                    if timeout &gt; 0, it is a timeout value for current operation,
+                    else the timeout value specified to create the instance will be used.
+    :return: (tuple&lt;error_types.code.value, None&gt;) (code, ign)
+             code: error_types.ERR_OK.value when data stored succeed.
+             ign: useless, should be ignored.
+    """
+</code></pre></div></div>
+
+<h4 id="multi_set">multi_set</h4>
+
+<p>同时写一条hashkey的多条sortkey数据</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>def multi_set(self, hash_key, sortkey_value_dict, ttl=0, timeout=0):
+    """
+    Set multiple sort_keys-values under hash_key to be stored.
+
+    :param hash_key: (str) which hash key used for this API.
+    :param sortkey_value_dict: (dict) &lt;sort_key, value&gt; pairs in dict.
+    :param ttl: (int) ttl(time to live) in seconds of these data.
+    :param timeout: (int) how long will the operation timeout in milliseconds.
+                    if timeout &gt; 0, it is a timeout value for current operation,
+                    else the timeout value specified to create the instance will be used.
+    :return: (tuple&lt;error_types.code.value, _&gt;) (code, ign)
+             code: error_types.ERR_OK.value when data stored succeed.
+             ign: useless, should be ignored.
+    """
+</code></pre></div></div>
+
+<h4 id="get">get</h4>
+
+<p>获取一条数据</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>def get(self, hash_key, sort_key, timeout=0):
+    """
+    Get value stored in &lt;hash_key, sort_key&gt;.
+
+    :param hash_key: (str) which hash key used for this API.
+    :param sort_key: (str) which sort key used for this API.
+    :param timeout: (int) how long will the operation timeout in milliseconds.
+                    if timeout &gt; 0, it is a timeout value for current operation,
+                    else the timeout value specified to create the instance will be used.
+    :return: (tuple&lt;error_types.code.value, str&gt;) (code, value).
+             code: error_types.ERR_OK.value when data got succeed, error_types.ERR_OBJECT_NOT_FOUND.value when data not found.
+             value: data stored in this &lt;hash_key, sort_key&gt;
+    """
+</code></pre></div></div>
+
+<h4 id="multi_get">multi_get</h4>
+
+<p>同时读一条hashkey的多条sortkey数据</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>def multi_get(self, hash_key,
+              sortkey_set,
+              max_kv_count=100,
+              max_kv_size=1000000,
+              no_value=False,
+              timeout=0):
+    """
+    Get multiple values stored in &lt;hash_key, sortkey&gt; pairs.
+
+    :param hash_key: (str) which hash key used for this API.
+    :param sortkey_set: (set) sort keys in set.
+    :param max_kv_count: (int) max count of k-v pairs to be fetched. max_fetch_count &lt;= 0 means no limit.
+    :param max_kv_size: (int) max total data size of k-v pairs to be fetched. max_fetch_size &lt;= 0 means no limit.
+    :param no_value: (bool) whether to fetch value of these keys.
+    :param timeout: (int) how long will the operation timeout in milliseconds.
+                    if timeout &gt; 0, it is a timeout value for current operation,
+                    else the timeout value specified to create the instance will be used.
+    :return: (tuple&lt;error_types.code.value, dict&gt;) (code, kvs)
+             code: error_types.ERR_OK.value when data got succeed.
+             kvs: &lt;sort_key, value&gt; pairs in dict.
+    """
+</code></pre></div></div>
+
+<h4 id="multi_get_opt">multi_get_opt</h4>
+
+<p>同时读一条hashkey的多条sortkey数据, 读取的数据根据<code class="language-plaintext highlighter-rouge">multi_get_options</code>参数指定的模式确定。</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>def multi_get_opt(self, hash_key,
+                  start_sort_key, stop_sort_key,
+                  multi_get_options,
+                  max_kv_count=100,
+                  max_kv_size=1000000,
+                  timeout=0):
+    """
+    Get multiple values stored in hash_key, and sort key range in [start_sort_key, stop_sort_key) as default.
+
+    :param hash_key: (str) which hash key used for this API.
+    :param start_sort_key: (str) returned k-v pairs is start from start_sort_key.
+    :param stop_sort_key: (str) returned k-v pairs is stop at stop_sort_key.
+    :param multi_get_options: (MultiGetOptions) configurable multi_get options.
+    :param max_kv_count: (int) max count of k-v pairs to be fetched. max_fetch_count &lt;= 0 means no limit.
+    :param max_kv_size: (int) max total data size of k-v pairs to be fetched. max_fetch_size &lt;= 0 means no limit.
+    :param timeout: (int) how long will the operation timeout in milliseconds.
+                    if timeout &gt; 0, it is a timeout value for current operation,
+                    else the timeout value specified to create the instance will be used.
+    :return: (tuple&lt;error_types.code.value, dict&gt;) (code, kvs)
+             code: error_types.ERR_OK.value when data got succeed.
+             kvs: &lt;sort_key, value&gt; pairs in dict.
+    """
+</code></pre></div></div>
+
+<p>其中，<code class="language-plaintext highlighter-rouge">MultiGetOptions</code>可以指定sortkey的范围、是否包含边界、子串匹配、是否返回value、是否逆序等，具体定义如下：</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>class MultiGetOptions(object):
+    """
+    configurable options for multi_get.
+    """
+
+    def __init__(self):
+        self.start_inclusive = True
+        self.stop_inclusive = False
+        self.sortkey_filter_type = filter_type.FT_NO_FILTER
+        self.sortkey_filter_pattern = ""
+        self.no_value = False
+        self.reverse = False
+
+class filter_type:
+  FT_NO_FILTER = 0
+  FT_MATCH_ANYWHERE = 1
+  FT_MATCH_PREFIX = 2
+  FT_MATCH_POSTFIX = 3
+</code></pre></div></div>
+
+<h4 id="remove">remove</h4>
+
+<p>删除一条数据</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>def remove(self, hash_key, sort_key, timeout=0):
+    """
+    Remove the entire &lt;hash_key, sort_key&gt;-value in pegasus.
+
+    :param hash_key: (str) which hash key used for this API.
+    :param sort_key: (str) which sort key used for this API.
+    :param timeout: (int) how long will the operation timeout in milliseconds.
+                    if timeout &gt; 0, it is a timeout value for current operation,
+                    else the timeout value specified to create the instance will be used.
+    :return: (tuple&lt;error_types.code.value, None&gt;) (code, ign)
+             code: error_types.ERR_OK.value when data stored succeed.
+             ign: useless, should be ignored.
+    """
+</code></pre></div></div>
+
+<h4 id="multi_del">multi_del</h4>
+
+<p>批量删除一个hashkey下的多条sortkey数据</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>def multi_del(self, hash_key, sortkey_set, timeout=0):
+    """
+    Remove multiple entire &lt;hash_key, sort_key&gt;-values in pegasus.
+
+    :param hash_key: (str) which hash key used for this API.
+    :param sortkey_set: (set) sort keys in set.
+    :param timeout: (int) how long will the operation timeout in milliseconds.
+                    if timeout &gt; 0, it is a timeout value for current operation,
+                    else the timeout value specified to create the instance will be used.
+    :return: (tuple&lt;error_types.code.value, int&gt;) (code, count).
+             code: error_types.ERR_OK.value when data got succeed.
+             count: count of deleted k-v pairs.
+    """
+</code></pre></div></div>
+
+<h4 id="sort_key_count">sort_key_count</h4>
+
+<p>获取一个hashkey下的sortkey数量</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>def sort_key_count(self, hash_key, timeout=0):
+    """
+    Get the total sort key count under the hash_key.
+
+    :param hash_key: (str) which hash key used for this API.
+    :param timeout: (int) how long will the operation timeout in milliseconds.
+                    if timeout &gt; 0, it is a timeout value for current operation,
+                    else the timeout value specified to create the instance will be used.
+    :return: (tuple&lt;error_types.code.value, count&gt;) (code, count)
+             code: error_types.ERR_OK.value when data got succeed, error_types.ERR_OBJECT_NOT_FOUND.value when data not found.
+             value: total sort key count under the hash_key.
+    """
+</code></pre></div></div>
+
+<h4 id="get_sort_keys">get_sort_keys</h4>
+
+<p>获取一个hashkey下的sortkey值</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>def get_sort_keys(self, hash_key,
+                  max_kv_count=100,
+                  max_kv_size=1000000,
+                  timeout=0):
+    """
+    Get multiple sort keys under hash_key.
+
+    :param hash_key: (str) which hash key used for this API.
+    :param max_kv_count: (int) max count of k-v pairs to be fetched. max_fetch_count &lt;= 0 means no limit.
+    :param max_kv_size: (int) max total data size of k-v pairs to be fetched. max_fetch_size &lt;= 0 means no limit.
+    :param timeout: (int) how long will the operation timeout in milliseconds.
+                    if timeout &gt; 0, it is a timeout value for current operation,
+                    else the timeout value specified to create the instance will be used.
+    :return: (tuple&lt;error_types.code.value, set&gt;) (code, ks)
+             code: error_types.ERR_OK.value when data got succeed.
+             ks: &lt;sort_key, ign&gt; pairs in dict, ign will always be empty str.
+    """
+</code></pre></div></div>
+
+<h4 id="get_scanner">get_scanner</h4>
+
+<p>获取scanner对象，用于指定范围的数据扫描。可以通过<code class="language-plaintext highlighter-rouge">scan_options</code>参数指定扫描的模式。</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>def get_scanner(self, hash_key,
+                start_sort_key, stop_sort_key,
+                scan_options):
+    """
+    Get scanner for hash_key, start from start_sort_key, and stop at stop_sort_key.
+    Whether the scanner include the start_sort_key and stop_sort_key is configurable by scan_options
+
+    :param hash_key: (str) which hash key used for this API.
+    :param start_sort_key: (str) returned scanner is start from start_sort_key.
+    :param stop_sort_key: (str) returned scanner is stop at stop_sort_key.
+    :param scan_options: (ScanOptions) configurable scan options.
+    :return: (PegasusScanner) scanner, instance of PegasusScanner.
+    """
+</code></pre></div></div>
+
+<p>其中，<code class="language-plaintext highlighter-rouge">ScanOptions</code>可以指定是否包含边界、超时时间、一次从replica server批量获取的sortkey-value数量等，具体定义如下：</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>class ScanOptions(object):
+    """
+    configurable options for scan.
+    """
+
+    def __init__(self):
+        self.timeout_millis = 5000
+        self.batch_size = 1000
+        self.start_inclusive = True
+        self.stop_inclusive = False
+        self.snapshot = None                   # for future use
+</code></pre></div></div>
+
+<h4 id="get_unordered_scanners">get_unordered_scanners</h4>
+
+<p>一次性获取多个scanner，用于整个table的数据扫描。可以通过<code class="language-plaintext highlighter-rouge">scan_options</code>参数指定扫描的模式。</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>def get_unordered_scanners(self, max_split_count, scan_options):
+    """
+    Get scanners for the whole pegasus table.
+
+    :param max_split_count: (int) max count of scanners will be returned.
+    :param scan_options: (ScanOptions) configurable scan options.
+    :return: (list) instance of PegasusScanner list.
+             each scanner in this list can scan separate part of the whole pegasus table.
+    """
+</code></pre></div></div>
+
+<h4 id="scanner对象">scanner对象</h4>
+
+<p>用于数据扫描的对象，由<code class="language-plaintext highlighter-rouge">get_scanner</code>和<code class="language-plaintext highlighter-rouge">get_unordered_scanners</code>返回。使用它的<code class="language-plaintext highlighter-rouge">next</code>函数执行扫描过程。</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>class PegasusScanner(object):
+    """
+    Pegasus scanner class, used for scanning data in pegasus table.
+    """
+</code></pre></div></div>
+
+<h4 id="get_next">get_next</h4>
+
+<p>获取扫描得到的数据，需要循环执行，直到返回<code class="language-plaintext highlighter-rouge">None</code>结束扫描。</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>def get_next(self):
+    """
+    scan the next k-v pair for the scanner.
+    
+    :return: (tuple&lt;tuple&lt;hash_key, sort_key&gt;, value&gt; or None)
+             all the sort_keys returned by this API are in ascend order.
+    """
+</code></pre></div></div>
 
                 </div>
             </section>
@@ -1057,25 +1218,39 @@ annotations:
     本页导航
 </p>
 <ul class="menu-list">
-  <li><a href="#介绍">介绍</a></li>
-  <li><a href="#存储介质">存储介质</a>
+  <li><a href="#pegasus-python-client">pegasus python client</a>
     <ul>
-      <li><a href="#fds">FDS</a></li>
-      <li><a href="#本地文件系统">本地文件系统</a></li>
+      <li><a href="#项目地址">项目地址</a></li>
+      <li><a href="#版本要求">版本要求</a></li>
+      <li><a href="#安装">安装</a></li>
+      <li><a href="#使用">使用</a>
+        <ul>
+          <li><a href="#示例">示例</a></li>
+          <li><a href="#log配置文件">log配置文件</a></li>
+          <li><a href="#api说明">API说明</a>
+            <ul>
+              <li><a href="#初始化">初始化</a></li>
+              <li><a href="#ttl">ttl</a></li>
+              <li><a href="#exist">exist</a></li>
+              <li><a href="#set">set</a></li>
+              <li><a href="#multi_set">multi_set</a></li>
+              <li><a href="#get">get</a></li>
+              <li><a href="#multi_get">multi_get</a></li>
+              <li><a href="#multi_get_opt">multi_get_opt</a></li>
+              <li><a href="#remove">remove</a></li>
+              <li><a href="#multi_del">multi_del</a></li>
+              <li><a href="#sort_key_count">sort_key_count</a></li>
+              <li><a href="#get_sort_keys">get_sort_keys</a></li>
+              <li><a href="#get_scanner">get_scanner</a></li>
+              <li><a href="#get_unordered_scanners">get_unordered_scanners</a></li>
+              <li><a href="#scanner对象">scanner对象</a></li>
+              <li><a href="#get_next">get_next</a></li>
+            </ul>
+          </li>
+        </ul>
+      </li>
     </ul>
   </li>
-  <li><a href="#怎样开始冷备份">怎样开始冷备份</a>
-    <ul>
-      <li><a href="#配置">配置</a></li>
-      <li><a href="#创建冷备份策略">创建冷备份策略</a></li>
-      <li><a href="#查询冷备份策略">查询冷备份策略</a></li>
-      <li><a href="#修改冷备份策略">修改冷备份策略</a></li>
-      <li><a href="#禁用和重新开始冷备份策略">禁用和重新开始冷备份策略</a></li>
-      <li><a href="#查看备份的结果">查看备份的结果</a></li>
-    </ul>
-  </li>
-  <li><a href="#从冷备中恢复数据">从冷备中恢复数据</a></li>
-  <li><a href="#怎样将数据备份到hdfs">怎样将数据备份到HDFS</a></li>
 </ul>
 
         </div>

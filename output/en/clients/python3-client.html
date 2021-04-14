@@ -3,7 +3,7 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Pegasus | Scala Client</title>
+    <title>Pegasus | Python3 Client</title>
     <link rel="stylesheet" href="/en/assets/css/app.css">
     <link rel="shortcut icon" href="/en/assets/images/favicon.ico">
     <link href="https://cdn.bootcdn.net/ajax/libs/tailwindcss/1.8.10/utilities.min.css" rel="stylesheet">
@@ -11,19 +11,19 @@
     <script src="https://cdn.bootcss.com/jquery/3.4.1/jquery.min.js"></script>
     <script src="https://cdn.bootcdn.net/ajax/libs/font-awesome/5.13.0/js/all.min.js"></script>
     <!-- Begin Jekyll SEO tag v2.7.1 -->
-<title>Scala Client | Pegasus</title>
+<title>Python3 Client | Pegasus</title>
 <meta name="generator" content="Jekyll v4.2.0" />
-<meta property="og:title" content="Scala Client" />
+<meta property="og:title" content="Python3 Client" />
 <meta property="og:locale" content="en_US" />
-<meta name="description" content="TRANSLATING" />
-<meta property="og:description" content="TRANSLATING" />
+<meta name="description" content="pegasus python client" />
+<meta property="og:description" content="pegasus python client" />
 <meta property="og:site_name" content="Pegasus" />
 <meta property="og:type" content="article" />
 <meta property="article:published_time" content="2021-04-14T02:55:21+00:00" />
 <meta name="twitter:card" content="summary" />
-<meta property="twitter:title" content="Scala Client" />
+<meta property="twitter:title" content="Python3 Client" />
 <script type="application/ld+json">
-{"url":"/clients/scala-client","@type":"BlogPosting","headline":"Scala Client","dateModified":"2021-04-14T02:55:21+00:00","datePublished":"2021-04-14T02:55:21+00:00","mainEntityOfPage":{"@type":"WebPage","@id":"/clients/scala-client"},"description":"TRANSLATING","@context":"https://schema.org"}</script>
+{"url":"/clients/python3-client","@type":"BlogPosting","headline":"Python3 Client","dateModified":"2021-04-14T02:55:21+00:00","datePublished":"2021-04-14T02:55:21+00:00","mainEntityOfPage":{"@type":"WebPage","@id":"/clients/python3-client"},"description":"pegasus python client","@context":"https://schema.org"}</script>
 <!-- End Jekyll SEO tag -->
 </head>
 
@@ -107,7 +107,7 @@
         
         <li>
             <a href="/en/clients/python3-client"
-                class="">
+                class="is-active">
                 Python3 Client
             </a>
         </li>
@@ -121,7 +121,7 @@
         
         <li>
             <a href="/en/clients/scala-client"
-                class="is-active">
+                class="">
                 Scala Client
             </a>
         </li>
@@ -394,7 +394,7 @@
 
 <!--If you don't want a url to be relativized, you can add a space explicitly into the href to 
     prevents a url from being relativized by polyglot.-->
-<a class="button is-light is-outlined is-inverted" href=" /clients/scala-client"><strong>中</strong></a>
+<a class="button is-light is-outlined is-inverted" href=" /clients/python3-client"><strong>中</strong></a>
 
         </div>
         <a role="button" class="navbar-burger burger" aria-label="menu" aria-expanded="false" data-target="navMenu">
@@ -479,7 +479,7 @@
                     </a>
                     
                     <a href="/en/clients/python3-client"
-                        class="navbar-item ">
+                        class="navbar-item is-active">
                         Python3 Client
                     </a>
                     
@@ -489,7 +489,7 @@
                     </a>
                     
                     <a href="/en/clients/scala-client"
-                        class="navbar-item is-active">
+                        class="navbar-item ">
                         Scala Client
                     </a>
                     
@@ -732,7 +732,7 @@
 
 <!--If you don't want a url to be relativized, you can add a space explicitly into the href to 
     prevents a url from being relativized by polyglot.-->
-<a class="button is-light is-outlined is-inverted" href=" /clients/scala-client"><strong>中</strong></a>
+<a class="button is-light is-outlined is-inverted" href=" /clients/python3-client"><strong>中</strong></a>
 
         </div>
     </div>
@@ -741,12 +741,452 @@
             <section class="hero is-info lg:mr-3">
                 <div class="hero-body">
                     
-                    <p class="title is-size-2 is-centered">Scala Client</p>
+                    <p class="title is-size-2 is-centered">Python3 Client</p>
                 </div>
             </section>
             <section class="section" style="padding-top: 2rem;">
                 <div class="content">
-                    <p>TRANSLATING</p>
+                    <h1 id="pegasus-python-client">pegasus python client</h1>
+
+<h2 id="项目地址">项目地址</h2>
+
+<p><a href="https://github.com/XiaoMi/pegasus-python-client">https://github.com/XiaoMi/pegasus-python-client</a></p>
+
+<h2 id="版本要求">版本要求</h2>
+
+<p>Python 3.7+</p>
+
+<h2 id="安装">安装</h2>
+
+<p><code class="language-plaintext highlighter-rouge">pip3 install pypegasus3</code></p>
+
+<h2 id="使用">使用</h2>
+
+<p>pegasus python3 client 从 python2-client 改动而来，对原有的接口参数做了破坏性改动，由<code class="language-plaintext highlighter-rouge">str</code>改为<code class="language-plaintext highlighter-rouge">bytes</code>，并不再支持 python2 环境。</p>
+
+<p>其他使用方法与 python2 客户端无差异</p>
+
+<h3 id="示例">示例</h3>
+
+<p>完整的示例请参考<a href="https://github.com/XiaoMi/pegasus-python-client/blob/python3/sample.py">sample</a>。以下是简单的示例：</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>#!/usr/bin/env python
+# coding:utf-8
+
+from pypegasus.pgclient import Pegasus
+
+from twisted.internet import reactor
+from twisted.internet.defer import inlineCallbacks
+
+
+@inlineCallbacks
+def basic_test():
+    # init
+    c = Pegasus(['127.0.0.1:34601', '127.0.0.1:34602'], 'temp')
+
+    suc = yield c.init()
+    if not suc:
+        reactor.stop()
+        print('ERROR: connect pegasus server failed')
+        return
+
+    # set
+    try:
+        ret = yield c.set('hkey1', 'skey1', 'value', 0, 500)
+        print('set ret: ', ret)
+    except Exception as e:
+        print(e)
+
+    # get
+    ret = yield c.get('hkey1', 'skey1')
+    print('get ret: ',  bytes.decode(ret))
+
+    reactor.stop()
+
+
+if __name__ == "__main__":
+    reactor.callWhenRunning(basic_test)
+    reactor.run()
+</code></pre></div></div>
+
+<h3 id="log配置文件">log配置文件</h3>
+
+<p>pegasus python client使用了<a href="https://docs.python.org/2/library/logging.html">logging</a>日志包，默认配置如下：</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>[loggers]
+keys=root
+[logger_root]
+level=INFO
+handlers=hand01
+propagate=0
+[handlers]
+keys=hand01
+[handler_hand01]
+class=handlers.RotatingFileHandler
+formatter=form01
+args=('pegasus.log', 'a', 100*1024*1024, 10)
+[formatters]
+keys=form01
+[formatter_form01]
+format=%(asctime)s [%(thread)d] [%(levelname)s] %(filename)s:%(lineno)d %(message)s
+datefmt=%Y-%m-%d %H:%M:%S
+</code></pre></div></div>
+
+<p>如果用户有定制需求，可以在自己的代码目录添加配置文件<code class="language-plaintext highlighter-rouge">logger.conf</code></p>
+
+<h3 id="api说明">API说明</h3>
+
+<h4 id="初始化">初始化</h4>
+
+<p>初始化先构造Pegasus对象，在使用init函数完成初始化：</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>class Pegasus(object):
+    """
+    Pegasus client class.
+    """
+    
+    def __init__(self, meta_addrs=None, table_name='',
+                 timeout=DEFAULT_TIMEOUT):
+        """
+        :param meta_addrs: (list) pagasus meta servers list.
+                           example: ['127.0.0.1:34601', '127.0.0.1:34602', '127.0.0.1:34603']
+        :param table_name: (bytes) table name/app name used in pegasus.
+        :param timeout: (int) default timeout in milliseconds when communicate with meta sever and replica server.
+        """
+</code></pre></div></div>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>    def init(self):
+        """
+        Initialize the client before you can use it.
+
+        :return: (DeferredList) True when initialized succeed, others when failed.
+        """
+</code></pre></div></div>
+
+<h4 id="ttl">ttl</h4>
+
+<p>判断key的剩余的ttl时间</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>def ttl(self, hash_key, sort_key, timeout=0):
+    """
+    Get ttl(time to live) of the data.
+
+    :param hash_key: (bytes) which hash key used for this API.
+    :param sort_key: (bytes) which sort key used for this API.
+    :param timeout: (int) how long will the operation timeout in milliseconds.
+                    if timeout &gt; 0, it is a timeout value for current operation,
+                    else the timeout value specified to create the instance will be used.
+    :return: (tuple&lt;error_types.code.value, int&gt;) (code, ttl)
+             code: error_types.ERR_OK.value when data exist, error_types.ERR_OBJECT_NOT_FOUND.value when data not found.
+             ttl: in seconds, -1 means forever.
+    """
+</code></pre></div></div>
+
+<h4 id="exist">exist</h4>
+
+<p>判断key是否存在</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>def exist(self, hash_key, sort_key, timeout=0):
+    """
+    Check value exist.
+
+    :param hash_key: (bytes) which hash key used for this API.
+    :param sort_key: (bytes) which sort key used for this API.
+    :param timeout: (int) how long will the operation timeout in milliseconds.
+                    if timeout &gt; 0, it is a timeout value for current operation,
+                    else the timeout value specified to create the instance will be used.
+    :return: (tuple&lt;error_types.code.value, None&gt;) (code, ign)
+             code: error_types.ERR_OK.value when data exist, error_types.ERR_OBJECT_NOT_FOUND.value when data not found.
+             ign: useless, should be ignored.
+    """
+</code></pre></div></div>
+
+<h4 id="set">set</h4>
+
+<p>插入一条数据（若已存在则会覆盖）</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>def set(self, hash_key, sort_key, value, ttl=0, timeout=0):
+    """
+    Set value to be stored in &lt;hash_key, sort_key&gt;.
+
+    :param hash_key: (bytes) which hash key used for this API.
+    :param sort_key: (bytes) which sort key used for this API.
+    :param value: (bytes) value to be stored under &lt;hash_key, sort_key&gt;.
+    :param ttl: (int) ttl(time to live) in seconds of this data.
+    :param timeout: (int) how long will the operation timeout in milliseconds.
+                    if timeout &gt; 0, it is a timeout value for current operation,
+                    else the timeout value specified to create the instance will be used.
+    :return: (tuple&lt;error_types.code.value, None&gt;) (code, ign)
+             code: error_types.ERR_OK.value when data stored succeed.
+             ign: useless, should be ignored.
+    """
+</code></pre></div></div>
+
+<h4 id="multi_set">multi_set</h4>
+
+<p>同时写一条hashkey的多条sortkey数据</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>def multi_set(self, hash_key, sortkey_value_dict, ttl=0, timeout=0):
+    """
+    Set multiple sort_keys-values under hash_key to be stored.
+
+    :param hash_key: (bytes) which hash key used for this API.
+    :param sortkey_value_dict: (dict) &lt;sort_key, value&gt; pairs in dict.
+    :param ttl: (int) ttl(time to live) in seconds of these data.
+    :param timeout: (int) how long will the operation timeout in milliseconds.
+                    if timeout &gt; 0, it is a timeout value for current operation,
+                    else the timeout value specified to create the instance will be used.
+    :return: (tuple&lt;error_types.code.value, _&gt;) (code, ign)
+             code: error_types.ERR_OK.value when data stored succeed.
+             ign: useless, should be ignored.
+    """
+</code></pre></div></div>
+
+<h4 id="get">get</h4>
+
+<p>获取一条数据</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>def get(self, hash_key, sort_key, timeout=0):
+    """
+    Get value stored in &lt;hash_key, sort_key&gt;.
+
+    :param hash_key: (bytes) which hash key used for this API.
+    :param sort_key: (bytes) which sort key used for this API.
+    :param timeout: (int) how long will the operation timeout in milliseconds.
+                    if timeout &gt; 0, it is a timeout value for current operation,
+                    else the timeout value specified to create the instance will be used.
+    :return: (tuple&lt;error_types.code.value, bytes&gt;) (code, value).
+             code: error_types.ERR_OK.value when data got succeed, error_types.ERR_OBJECT_NOT_FOUND.value when data not found.
+             value: data stored in this &lt;hash_key, sort_key&gt;
+    """
+</code></pre></div></div>
+
+<h4 id="multi_get">multi_get</h4>
+
+<p>同时读一条hashkey的多条sortkey数据</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>def multi_get(self, hash_key,
+              sortkey_set,
+              max_kv_count=100,
+              max_kv_size=1000000,
+              no_value=False,
+              timeout=0):
+    """
+    Get multiple values stored in &lt;hash_key, sortkey&gt; pairs.
+
+    :param hash_key: (bytes) which hash key used for this API.
+    :param sortkey_set: (set) sort keys in set.
+    :param max_kv_count: (int) max count of k-v pairs to be fetched. max_fetch_count &lt;= 0 means no limit.
+    :param max_kv_size: (int) max total data size of k-v pairs to be fetched. max_fetch_size &lt;= 0 means no limit.
+    :param no_value: (bool) whether to fetch value of these keys.
+    :param timeout: (int) how long will the operation timeout in milliseconds.
+                    if timeout &gt; 0, it is a timeout value for current operation,
+                    else the timeout value specified to create the instance will be used.
+    :return: (tuple&lt;error_types.code.value, dict&gt;) (code, kvs)
+             code: error_types.ERR_OK.value when data got succeed.
+             kvs: &lt;sort_key, value&gt; pairs in dict.
+    """
+</code></pre></div></div>
+
+<h4 id="multi_get_opt">multi_get_opt</h4>
+
+<p>同时读一条hashkey的多条sortkey数据, 读取的数据根据<code class="language-plaintext highlighter-rouge">multi_get_options</code>参数指定的模式确定。</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>def multi_get_opt(self, hash_key,
+                  start_sort_key, stop_sort_key,
+                  multi_get_options,
+                  max_kv_count=100,
+                  max_kv_size=1000000,
+                  timeout=0):
+    """
+    Get multiple values stored in hash_key, and sort key range in [start_sort_key, stop_sort_key) as default.
+
+    :param hash_key: (bytes) which hash key used for this API.
+    :param start_sort_key: (bytes) returned k-v pairs is start from start_sort_key.
+    :param stop_sort_key: (bytes) returned k-v pairs is stop at stop_sort_key.
+    :param multi_get_options: (MultiGetOptions) configurable multi_get options.
+    :param max_kv_count: (int) max count of k-v pairs to be fetched. max_fetch_count &lt;= 0 means no limit.
+    :param max_kv_size: (int) max total data size of k-v pairs to be fetched. max_fetch_size &lt;= 0 means no limit.
+    :param timeout: (int) how long will the operation timeout in milliseconds.
+                    if timeout &gt; 0, it is a timeout value for current operation,
+                    else the timeout value specified to create the instance will be used.
+    :return: (tuple&lt;error_types.code.value, dict&gt;) (code, kvs)
+             code: error_types.ERR_OK.value when data got succeed.
+             kvs: &lt;sort_key, value&gt; pairs in dict.
+    """
+</code></pre></div></div>
+
+<p>其中，<code class="language-plaintext highlighter-rouge">MultiGetOptions</code>可以指定sortkey的范围、是否包含边界、子串匹配、是否返回value、是否逆序等，具体定义如下：</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>class MultiGetOptions(object):
+    """
+    configurable options for multi_get.
+    """
+
+    def __init__(self):
+        self.start_inclusive = True
+        self.stop_inclusive = False
+        self.sortkey_filter_type = filter_type.FT_NO_FILTER
+        self.sortkey_filter_pattern = ""
+        self.no_value = False
+        self.reverse = False
+
+class filter_type:
+  FT_NO_FILTER = 0
+  FT_MATCH_ANYWHERE = 1
+  FT_MATCH_PREFIX = 2
+  FT_MATCH_POSTFIX = 3
+</code></pre></div></div>
+
+<h4 id="remove">remove</h4>
+
+<p>删除一条数据</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>def remove(self, hash_key, sort_key, timeout=0):
+    """
+    Remove the entire &lt;hash_key, sort_key&gt;-value in pegasus.
+
+    :param hash_key: (bytes) which hash key used for this API.
+    :param sort_key: (bytes) which sort key used for this API.
+    :param timeout: (int) how long will the operation timeout in milliseconds.
+                    if timeout &gt; 0, it is a timeout value for current operation,
+                    else the timeout value specified to create the instance will be used.
+    :return: (tuple&lt;error_types.code.value, None&gt;) (code, ign)
+             code: error_types.ERR_OK.value when data stored succeed.
+             ign: useless, should be ignored.
+    """
+</code></pre></div></div>
+
+<h4 id="multi_del">multi_del</h4>
+
+<p>批量删除一个hashkey下的多条sortkey数据</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>def multi_del(self, hash_key, sortkey_set, timeout=0):
+    """
+    Remove multiple entire &lt;hash_key, sort_key&gt;-values in pegasus.
+
+    :param hash_key: (bytes) which hash key used for this API.
+    :param sortkey_set: (set) sort keys in set.
+    :param timeout: (int) how long will the operation timeout in milliseconds.
+                    if timeout &gt; 0, it is a timeout value for current operation,
+                    else the timeout value specified to create the instance will be used.
+    :return: (tuple&lt;error_types.code.value, int&gt;) (code, count).
+             code: error_types.ERR_OK.value when data got succeed.
+             count: count of deleted k-v pairs.
+    """
+</code></pre></div></div>
+
+<h4 id="sort_key_count">sort_key_count</h4>
+
+<p>获取一个hashkey下的sortkey数量</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>def sort_key_count(self, hash_key, timeout=0):
+    """
+    Get the total sort key count under the hash_key.
+
+    :param hash_key: (bytes) which hash key used for this API.
+    :param timeout: (int) how long will the operation timeout in milliseconds.
+                    if timeout &gt; 0, it is a timeout value for current operation,
+                    else the timeout value specified to create the instance will be used.
+    :return: (tuple&lt;error_types.code.value, count&gt;) (code, count)
+             code: error_types.ERR_OK.value when data got succeed, error_types.ERR_OBJECT_NOT_FOUND.value when data not found.
+             value: total sort key count under the hash_key.
+    """
+</code></pre></div></div>
+
+<h4 id="get_sort_keys">get_sort_keys</h4>
+
+<p>获取一个hashkey下的sortkey值</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>def get_sort_keys(self, hash_key,
+                  max_kv_count=100,
+                  max_kv_size=1000000,
+                  timeout=0):
+    """
+    Get multiple sort keys under hash_key.
+
+    :param hash_key: (bytes) which hash key used for this API.
+    :param max_kv_count: (int) max count of k-v pairs to be fetched. max_fetch_count &lt;= 0 means no limit.
+    :param max_kv_size: (int) max total data size of k-v pairs to be fetched. max_fetch_size &lt;= 0 means no limit.
+    :param timeout: (int) how long will the operation timeout in milliseconds.
+                    if timeout &gt; 0, it is a timeout value for current operation,
+                    else the timeout value specified to create the instance will be used.
+    :return: (tuple&lt;error_types.code.value, set&gt;) (code, ks)
+             code: error_types.ERR_OK.value when data got succeed.
+             ks: &lt;sort_key, ign&gt; pairs in dict, ign will always be empty bytes.
+    """
+</code></pre></div></div>
+
+<h4 id="get_scanner">get_scanner</h4>
+
+<p>获取scanner对象，用于指定范围的数据扫描。可以通过<code class="language-plaintext highlighter-rouge">scan_options</code>参数指定扫描的模式。</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>def get_scanner(self, hash_key,
+                start_sort_key, stop_sort_key,
+                scan_options):
+    """
+    Get scanner for hash_key, start from start_sort_key, and stop at stop_sort_key.
+    Whether the scanner include the start_sort_key and stop_sort_key is configurable by scan_options
+
+    :param hash_key: (bytes) which hash key used for this API.
+    :param start_sort_key: (bytes) returned scanner is start from start_sort_key.
+    :param stop_sort_key: (bytes) returned scanner is stop at stop_sort_key.
+    :param scan_options: (ScanOptions) configurable scan options.
+    :return: (PegasusScanner) scanner, instance of PegasusScanner.
+    """
+</code></pre></div></div>
+
+<p>其中，<code class="language-plaintext highlighter-rouge">ScanOptions</code>可以指定是否包含边界、超时时间、一次从replica server批量获取的sortkey-value数量等，具体定义如下：</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>class ScanOptions(object):
+    """
+    configurable options for scan.
+    """
+
+    def __init__(self):
+        self.timeout_millis = 5000
+        self.batch_size = 1000
+        self.start_inclusive = True
+        self.stop_inclusive = False
+        self.snapshot = None                   # for future use
+</code></pre></div></div>
+
+<h4 id="get_unordered_scanners">get_unordered_scanners</h4>
+
+<p>一次性获取多个scanner，用于整个table的数据扫描。可以通过<code class="language-plaintext highlighter-rouge">scan_options</code>参数指定扫描的模式。</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>def get_unordered_scanners(self, max_split_count, scan_options):
+    """
+    Get scanners for the whole pegasus table.
+
+    :param max_split_count: (int) max count of scanners will be returned.
+    :param scan_options: (ScanOptions) configurable scan options.
+    :return: (list) instance of PegasusScanner list.
+             each scanner in this list can scan separate part of the whole pegasus table.
+    """
+</code></pre></div></div>
+
+<h4 id="scanner对象">scanner对象</h4>
+
+<p>用于数据扫描的对象，由<code class="language-plaintext highlighter-rouge">get_scanner</code>和<code class="language-plaintext highlighter-rouge">get_unordered_scanners</code>返回。使用它的<code class="language-plaintext highlighter-rouge">next</code>函数执行扫描过程。</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>class PegasusScanner(object):
+    """
+    Pegasus scanner class, used for scanning data in pegasus table.
+    """
+</code></pre></div></div>
+
+<h4 id="get_next">get_next</h4>
+
+<p>获取扫描得到的数据，需要循环执行，直到返回<code class="language-plaintext highlighter-rouge">None</code>结束扫描。</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>def get_next(self):
+    """
+    scan the next k-v pair for the scanner.
+    :return: (tuple&lt;tuple&lt;hash_key, sort_key&gt;, value&gt; or None)
+                all the sort_keys returned by this API are in ascend order.
+    """
+</code></pre></div></div>
 
                 </div>
             </section>
@@ -782,7 +1222,41 @@
     </span>
     Table of contents
 </p>
-
+<ul class="menu-list">
+  <li><a href="#pegasus-python-client">pegasus python client</a>
+    <ul>
+      <li><a href="#项目地址">项目地址</a></li>
+      <li><a href="#版本要求">版本要求</a></li>
+      <li><a href="#安装">安装</a></li>
+      <li><a href="#使用">使用</a>
+        <ul>
+          <li><a href="#示例">示例</a></li>
+          <li><a href="#log配置文件">log配置文件</a></li>
+          <li><a href="#api说明">API说明</a>
+            <ul>
+              <li><a href="#初始化">初始化</a></li>
+              <li><a href="#ttl">ttl</a></li>
+              <li><a href="#exist">exist</a></li>
+              <li><a href="#set">set</a></li>
+              <li><a href="#multi_set">multi_set</a></li>
+              <li><a href="#get">get</a></li>
+              <li><a href="#multi_get">multi_get</a></li>
+              <li><a href="#multi_get_opt">multi_get_opt</a></li>
+              <li><a href="#remove">remove</a></li>
+              <li><a href="#multi_del">multi_del</a></li>
+              <li><a href="#sort_key_count">sort_key_count</a></li>
+              <li><a href="#get_sort_keys">get_sort_keys</a></li>
+              <li><a href="#get_scanner">get_scanner</a></li>
+              <li><a href="#get_unordered_scanners">get_unordered_scanners</a></li>
+              <li><a href="#scanner对象">scanner对象</a></li>
+              <li><a href="#get_next">get_next</a></li>
+            </ul>
+          </li>
+        </ul>
+      </li>
+    </ul>
+  </li>
+</ul>
 
         </div>
     </div>
