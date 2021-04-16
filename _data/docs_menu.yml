@@ -96,3 +96,5 @@
       link: /administration/whitelist
     - name: title_backup-request
       link: /administration/backup-request
+    - name: title_hotspot-detection
+      link: /administration/hotspot-detection
