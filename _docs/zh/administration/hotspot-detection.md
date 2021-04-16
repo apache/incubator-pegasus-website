@@ -73,7 +73,7 @@ Detect hotkey rpc is stopped now
 无论是检测成功还是检测失败都要先 stop 这次探测才能开始下一次探测
 
 ## 相关配置
-```
+```shell
 [pegasus.server]
 # 粗粒度筛查热点流量的阈值，灵敏度负相关
 hot_key_variance_threshold = 5
