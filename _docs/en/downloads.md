@@ -22,7 +22,7 @@ You can also download the sources via git clone:
 
 ```bash
 git clone {{ site.pegasus_github_url }}.git --recursive
-cd pegasus
+cd incubator-pegasus
 git checkout -b v2.2.0 v2.2.0
 git submodule update
 ```
