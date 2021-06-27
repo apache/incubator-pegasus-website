@@ -8,15 +8,20 @@ permalink: docs/downloads/
 [2.1.0-asc]: https://downloads.apache.org/incubator/pegasus/2.1.0/apache-pegasus-2.1.0-incubating-src.zip.asc
 [2.1.0-sha]: https://downloads.apache.org/incubator/pegasus/2.1.0/apache-pegasus-2.1.0-incubating-src.zip.sha512
 [2.1.0-rn]: https://cwiki.apache.org/confluence/x/cxbZCQ
+[2.2.0-src]: https://www.apache.org/dyn/closer.cgi?path=/incubator/pegasus/2.2.0/apache-pegasus-2.2.0-incubating-src.zip
+[2.2.0-asc]: https://downloads.apache.org/incubator/pegasus/2.2.0/apache-pegasus-2.2.0-incubating-src.zip.asc
+[2.2.0-sha]: https://downloads.apache.org/incubator/pegasus/2.2.0/apache-pegasus-2.2.0-incubating-src.zip.sha512
+[2.2.0-rn]: https://cwiki.apache.org/confluence/display/PEGASUS/Apache+Pegasus+2.2.0+Release+Notes
 
 Name | Package | Signature | Checksum | Release Notes |
 ---|---|---|---|---|
 Apache Pegasus 2.1.0 | [Source][2.1.0-src] | [asc][2.1.0-asc] | [sha512][2.1.0-sha] | [2020-11-30][2.1.0-rn]
+Apache Pegasus 2.2.0 | [Source][2.2.0-src] | [asc][2.2.0-asc] | [sha512][2.2.0-sha] | [2021-06-27][2.2.0-rn]
 
 你也可以通过git clone的方式获取Pegasus源码：
 
 ```bash
-git clone -b v2.1.0 --recursive https://github.com/apache/incubator-pegasus.git
+git clone -b v2.2.0 --recursive https://github.com/apache/incubator-pegasus.git
 ```
 
 在 2.1.0 版本以前，Pegasus 并未遵循 ASF 发版流程，这里我们仍然提供老版本下载渠道，方便升级：
