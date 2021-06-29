@@ -83,4 +83,6 @@ hot_bucket_variance_threshold = 7
 hotkey_buckets_num = 37
 # 一次探测最长时间
 max_seconds_to_detect_hotkey = 150
+# 单次探测收集时间周期
+hotkey_analyse_time_interval_s = 10
 ```
