@@ -23,6 +23,12 @@ contact_items:
 
       欢迎关注以及留言
 
+  - title: Apache Pegasus 微信公众号
+    description: >
+      关注我们的微信公众号 Apache Pegasus,了解更多技术内幕，并加入微信用户群
+    picture: /assets/images/wechat.jpeg
+
+
 contributor_items:
   - title: Pull Requests
     description: >

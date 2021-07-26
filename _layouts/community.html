@@ -25,6 +25,11 @@
                 <div class="columns is-multiline is-centered">
                     {% for item in page.contact_items %}
                     <div class="column is-4 has-text-centered">
+                        {% if item.picture %}
+                        <div class="picture">
+                            <img src={{ item.picture }} height="135" width="135"  />
+                        </div>
+                        {% endif %}
                         {% if item.icon %}
                         <div class="contributor-item-icon icon is-large">
                             <i class="{{ item.icon }} fa-4x"></i>
