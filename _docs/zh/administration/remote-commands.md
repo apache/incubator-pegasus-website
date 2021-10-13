@@ -69,7 +69,7 @@ Pegasus不同角色的进程支持不同的远程命令。但是collector没有�
 | replica.trigger-checkpoint | 对指定的replica手动触发`async_checkpoint`操作
 | replica.query-compact | 对指定的replica查询其执行[Manual-Compact](manual-compact)操作的状态
 | replica.query-app-envs | 对指定的replica查询其当前的[Table环境变量](table-env)
-| useless-dir-reserve-seconds | 动态修改无用文件夹的保留时间，方便快速释放存储空间，从[1.11.3版本](https://github.com/XiaoMi/pegasus/releases/tag/v1.11.3)开始支持，参见[垃圾文件夹管理](#resource-management#垃圾文件夹管理)
+| useless-dir-reserve-seconds | 动态修改无用文件夹的保留时间，方便快速释放存储空间，从1.11.3版本开始支持，参见[垃圾文件夹管理](#resource-management#垃圾文件夹管理)
 
 # 如何使用
 

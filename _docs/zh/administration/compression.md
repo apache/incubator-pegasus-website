@@ -14,8 +14,8 @@ permalink: administration/compression
 
 Pegasus服务端支持的压缩算法：
 * snappy
-* lz4 (从[v1.11.2版本](https://github.com/XiaoMi/pegasus/releases/tag/v1.11.2)开始支持)
-* zstd (从[v1.11.2版本](https://github.com/XiaoMi/pegasus/releases/tag/v1.11.2)开始支持)
+* lz4 (从v1.11.2版本开始支持)
+* zstd (从v1.11.2版本开始支持)
 
 通过[配置文件](config)来配置压缩算法，譬如：
 ```ini

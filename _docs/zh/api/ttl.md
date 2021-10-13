@@ -34,7 +34,7 @@ Pegasus Java Client中以下接口可以查询和设置TTL：
 * [ttl](/clients/java-client#ttl)：获取指定数据的TTL信息。
 * [set](/clients/java-client#set)和[batchSet](/clients/java-client#batchset)：都提供了设置TTL的参数，其中batchSet是在SetItem中设置的。
 * [multiSet](/clients/java-client#multiset)和[batchMultiSet](/clients/java-client#batchmultiset)：都提供了设置TTL的参数。
-* [incr](/clients/java-client#batchmultiset)：从[v1.11.1版本](https://github.com/XiaoMi/pegasus/releases/tag/v1.11.1)开始，incr接口也提供了修改TTL的功能。
+* [incr](/clients/java-client#batchmultiset)：从v1.11.1版本开始，incr接口也提供了修改TTL的功能。
 * [checkAndSet](/clients/java-client#checkandset)：在CheckAndSetOptions中提供了设置TTL的参数。
 
 Shell工具中以下命令可以查询和设置TTL：
@@ -42,7 +42,7 @@ Shell工具中以下命令可以查询和设置TTL：
 * [set](/overview/shell#set)和[multi_set](/overview/shell#multi_set)命令：都提供了设置TTL的参数。
 
 # 表级TTL
-从[v1.11.2版本](https://github.com/XiaoMi/pegasus/releases/tag/v1.11.2)开始，Pegasus支持表级TTL功能。
+从v1.11.2版本开始，Pegasus支持表级TTL功能。
 
 实现原理：
 * 用户在[Table环境变量](/administration/table-env)中设置`default_ttl`环境变量。
