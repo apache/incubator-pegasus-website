@@ -50,7 +50,7 @@ permalink: administration/scale-in-out
   * 重启是为了重置上面动态修改过的配置，并且让shell的`nodes -d`不再显示已经下线的节点。
   * 如果之前调整过配置参数`node_live_percentage_threshold_for_update`，重启时需要修改配置文件，再其调整为合适的值。
 
-以上过程可以自动化，我们提供了集群升级脚本[scripts/pegasus_offline_node_list.sh](https://github.com/XiaoMi/pegasus/blob/master/scripts/pegasus_offline_node_list.sh)。不过这个脚本并不能直接使用，因为其依赖minos部署工具来完成进程的远程stop操作。`pegasus_offline_node_list.sh`调用`pegasus_offline_node.sh`，因此这两个脚本的minos_client_dir都需要更改。你可以针对你们自己的部署系统，修改脚本中minos相关部分，使其可以正常工作。如需帮助，请联系我们。
+以上过程可以自动化，我们提供了集群升级脚本[scripts/pegasus_offline_node_list.sh](https://github.com/apache/incubator-pegasus/blob/master/scripts/pegasus_offline_node_list.sh)。不过这个脚本并不能直接使用，因为其依赖minos部署工具来完成进程的远程stop操作。`pegasus_offline_node_list.sh`调用`pegasus_offline_node.sh`，因此这两个脚本的minos_client_dir都需要更改。你可以针对你们自己的部署系统，修改脚本中minos相关部分，使其可以正常工作。如需帮助，请联系我们。
 
 注意：在使用集群升级脚本的时候，也要保证配置参数`node_live_percentage_threshold_for_update`的值足够小（有必要可以先升级meta-server），避免使集群进入freezed状态。
 

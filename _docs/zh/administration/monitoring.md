@@ -4,7 +4,7 @@ permalink: administration/monitoring
 
 ## 组件
 
-从[v1.12.0](https://github.com/XiaoMi/pegasus/releases)开始, Pegasus 支持使用 [Prometheus](https://prometheus.io/) 和 [Grafana](https://grafana.com/) 进项监控项的采集和展示。
+从v1.12.0开始, Pegasus 支持使用 [Prometheus](https://prometheus.io/) 和 [Grafana](https://grafana.com/) 进项监控项的采集和展示。
 
 - Prometheus
 

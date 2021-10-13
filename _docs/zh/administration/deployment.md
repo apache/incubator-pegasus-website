@@ -16,7 +16,7 @@ Pegasus集群依赖Zookeeper进行元数据存储和MetaServer抢锁，因此需
 记下Zookeeper的服务地址列表，后面配置文件要用。
 
 ## 准备配置文件
-我们提供了配置文件[src/server/config.ini](https://github.com/XiaoMi/pegasus/blob/master/src/server/config.ini)（从1.7.1版本开始支持），你需要修改该文件，替换所有``%{xxx}``形式的变量为合适的值，如下：
+我们提供了配置文件[src/server/config.ini](https://github.com/apache/incubator-pegasus/blob/master/src/server/config.ini)（从1.7.1版本开始支持），你需要修改该文件，替换所有``%{xxx}``形式的变量为合适的值，如下：
 
 | 变量  | 说明 | 示例 | 
 | ------------- | ------------- | ------------- |

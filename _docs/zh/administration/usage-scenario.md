@@ -2,7 +2,7 @@
 permalink: administration/usage-scenario
 ---
 
-注：Usage Scenario功能从[v1.8.1版本](https://github.com/XiaoMi/pegasus/releases/tag/v1.8.1)开始支持。
+注：Usage Scenario功能从v1.8.1版本开始支持。
 
 # 原理
 Usage Scenario功能，是指对于Pegasus的表，可以指定其使用场景。针对不同的场景，通过优化底层RocksDB的配置，以获得更好的读写性能。
@@ -42,7 +42,7 @@ A: A fast way to direct insert data to the DB:
 
 而我们的思路正是：通过针对不同业务场景，设置不同的RocksDB参数，调节RocksDB的行为，以提供更好的读写性能。具体来说：
 * 通过[Table环境变量](table-env)设置`rocksdb.usage_scenario`来指定当前的业务场景。
-* Replica在检测到该环境变量发生变化时，就会根据业务场景，动态修改RocksDB的配置参数。具体设置了哪些参数，请参见[src/server/pegasus_server_impl.cpp](https://github.com/XiaoMi/pegasus/blob/master/src/server/pegasus_server_impl.cpp)中的`set_usage_scenario()`方法。
+* Replica在检测到该环境变量发生变化时，就会根据业务场景，动态修改RocksDB的配置参数。具体设置了哪些参数，请参见[src/server/pegasus_server_impl.cpp](https://github.com/apache/incubator-pegasus/blob/master/src/server/pegasus_server_impl.cpp)中的`set_usage_scenario()`方法。
 
 # 支持场景
 
@@ -66,7 +66,7 @@ A: A fast way to direct insert data to the DB:
 Table环境变量不会立即生效，大约需要等几十秒后才能在所有replica上生效。
 
 ## 通过脚本设置
-我们提供了一个脚本工具[scripts/pegasus_set_usage_scenario.sh](https://github.com/XiaoMi/pegasus/blob/master/scripts/pegasus_set_usage_scenario.sh)来方便地设置，用法：
+我们提供了一个脚本工具[scripts/pegasus_set_usage_scenario.sh](https://github.com/apache/incubator-pegasus/blob/master/scripts/pegasus_set_usage_scenario.sh)来方便地设置，用法：
 ```
 $ ./scripts/pegasus_set_usage_scenario.sh   
 This tool is for set usage scenario of specified table(app).
