@@ -311,15 +311,15 @@ Pegasus提供了一些控制参数给些过程可以提供更精细的控制：
 
 通过把上面的这些负载均衡原语结合起来，pegasus提供了一些一些脚本来执行滚动升级、节点下线等一些操作，如：
 
-1. [scripts/migrate_node.sh](https://github.com/apache/incubator-pegasus/blob/master/scripts/migrate_node.sh)
+1. [scripts/migrate_node.sh](https://github.com/XiaoMi/pegasus/blob/master/scripts/migrate_node.sh)
 
    这个脚本用来把某个节点上服务的所有primary都赶走
 
-2. [scripts/pegasus_rolling_update.sh](https://github.com/apache/incubator-pegasus/blob/master/scripts/pegasus_rolling_update.sh)
+2. [scripts/pegasus_rolling_update.sh](https://github.com/XiaoMi/pegasus/blob/master/scripts/pegasus_rolling_update.sh)
 
    用来对集群中的节点做在线滚动升级
 
-3. [scripts/pegasus_offline_node_list.sh](https://github.com/apache/incubator-pegasus/blob/master/scripts/pegasus_offline_node_list.sh)
+3. [scripts/pegasus_offline_node_list.sh](https://github.com/XiaoMi/pegasus/blob/master/scripts/pegasus_offline_node_list.sh)
 
    用来做一批节点的下线
 

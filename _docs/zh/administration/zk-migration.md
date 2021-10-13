@@ -66,7 +66,7 @@ Pegasus提供了[元数据恢复](meta-recovery)功能，这个功能也可用�
 
    重新启动所有的meta server，集群进入正常状态。
 
-注：[scripts/pegasus_migrate_zookeeper.sh](https://github.com/apache/incubator-pegasus/blob/master/scripts/pegasus_migrate_zookeeper.sh)是我们在内部使用的迁移Zookeeper的脚本，虽然因为服务启停功能的兼容性不能直接使用，但是可以参考其中的流程，或者进行改造。
+注：[scripts/pegasus_migrate_zookeeper.sh](https://github.com/XiaoMi/pegasus/blob/master/scripts/pegasus_migrate_zookeeper.sh)是我们在内部使用的迁移Zookeeper的脚本，虽然因为服务启停功能的兼容性不能直接使用，但是可以参考其中的流程，或者进行改造。
 
 # 通过zkcopy工具迁移
 

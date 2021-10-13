@@ -78,7 +78,7 @@ S2中的Hilbert曲线编码由30位组成，每一位代表一层划分。下表
 
 经纬度经过坐标转换得到一维编码(字符串)后，就可以把这个一维编码作为key存储起来做**GEO索引数据**了，这里需要将这个一维编码拆分成hashkey和sortkey两部分，可以根据实际的业务场景采取不同的划分策略。
 
-GEO索引数据独立于原始数据，两类数据存储在不同的table内，通过[geo_client](https://github.com/apache/incubator-pegasus/blob/master/src/geo/lib/geo_client.h)做数据同步，同时支持原生Pegasus API和GEO API访问。
+GEO索引数据独立于原始数据，两类数据存储在不同的table内，通过[geo_client](https://github.com/XiaoMi/pegasus/blob/master/src/geo/lib/geo_client.h)做数据同步，同时支持原生Pegasus API和GEO API访问。
 
 下面讨论GEO索引数据的构造方式。
 
@@ -181,7 +181,7 @@ S2CellUnion GetCovering(const S2Region& region);
 - 对于`3.2.1`步取到的sub_cellid，hashkey是它的前缀，调用`scan(sub_cellid[0:hashkey_len], sub_cellid[hashkey_len:], sub_cellid[hashkey_len:])`搜索数据
   - 比如，一个12层cell `1/223320022232`的子区域`0001`,`0002`,`0003`,`0100`才跟目标区域相交时，则我们`scan("1/223320022232", "0001", "0003")`、`scan("1/223320022232", "0100", "0100")`。
 
-> 此处还有一个根据Hilbert曲线实现的一个优化，具体参见[代码](https://github.com/apache/incubator-pegasus/blob/master/src/geo/lib/geo_client.cpp)
+> 此处还有一个根据Hilbert曲线实现的一个优化，具体参见[代码](https://github.com/XiaoMi/pegasus/blob/master/src/geo/lib/geo_client.cpp#L510)
 
 得到`scan`的结果后，还需处理：
 
@@ -227,7 +227,7 @@ min_level = 12
 
 Pegasus GEO特性的使用有两种方式，一是直接使用C++ geo client；二是使用redis proxy。
 
-[C++ geo client代码](https://github.com/apache/incubator-pegasus/blob/master/src/geo/lib/geo_client.h)中有详细的API说明，这里不再赘述。
+[C++ geo client代码](https://github.com/XiaoMi/pegasus/blob/master/src/geo/lib/geo_client.h)中有详细的API说明，这里不再赘述。
 
 ## 配置文件
 
@@ -279,7 +279,7 @@ arguments = redis_cluster temp temp_geo
 
 集群配置：
 
-- 节点数：5个replica server节点（使用v1.9.2版本）
+- 节点数：5个replica server节点（使用[v1.9.2版本](https://github.com/XiaoMi/pegasus/releases/tag/v1.9.2)）
 - 测试表的Partition数：128个
 - 单条数据大小：120字节
 

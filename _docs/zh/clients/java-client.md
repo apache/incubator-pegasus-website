@@ -822,7 +822,7 @@ public long incr(String tableName, byte[] hashKey, byte[] sortKey, long incremen
    * 如果旧值不存在，则把旧值当做0处理，即新值等于increment。
    * TTL语义：如果旧值存在，新值的TTL和旧值保持一致；如果旧值不存在，新值将不设TTL。
 
-从Pegasus Server v1.11.1版本开始支持在incr操作时修改TTL，需使用[Pegasus Java Client 1.11.2-thrift-0.11.0-inlined-release](https://github.com/XiaoMi/pegasus-java-client/releases/tag/1.11.2-thrift-0.11.0-inlined-release)及以上版本来使用这个功能。
+从[Pegasus Server v1.11.1版本](https://github.com/XiaoMi/pegasus/releases/tag/v1.11.1)开始支持在incr操作时修改TTL，需使用[Pegasus Java Client 1.11.2-thrift-0.11.0-inlined-release](https://github.com/XiaoMi/pegasus-java-client/releases/tag/1.11.2-thrift-0.11.0-inlined-release)及以上版本来使用这个功能。
 ```
 /**
  * Atomically increment value.

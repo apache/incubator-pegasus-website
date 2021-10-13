@@ -99,7 +99,7 @@ permalink: administration/rolling-update
 
 # 升级脚本
 
-我们提供了集群升级脚本[scripts/pegasus_rolling_update.sh](https://github.com/apache/incubator-pegasus/blob/master/scripts/pegasus_rolling_update.sh)。该脚本采用[高可用升级](#高可用升级)流程，用于小米内部的集群升级。
+我们提供了集群升级脚本[scripts/pegasus_rolling_update.sh](https://github.com/XiaoMi/pegasus/blob/master/scripts/pegasus_rolling_update.sh)。该脚本采用[高可用升级](#高可用升级)流程，用于小米内部的集群升级。
 
 不过这个脚本并不能直接使用，因为其依赖minos部署工具来完成以下事情：
 * 获取集群的进程列表

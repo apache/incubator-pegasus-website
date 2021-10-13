@@ -20,7 +20,7 @@ permalink: administration/replica-recovery
 
 # DDD诊断工具
 
-从v1.11.0版本开始，Pegasus在Shell工具中提供了`ddd_diagnose`命令，以支持DDD自动诊断功能。
+从[v1.11.0版本](https://github.com/XiaoMi/pegasus/releases/tag/v1.11.0)开始，Pegasus在Shell工具中提供了`ddd_diagnose`命令，以支持DDD自动诊断功能。
 
 命令用法：
 ```

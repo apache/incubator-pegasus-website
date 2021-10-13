@@ -23,7 +23,7 @@ permalink: administration/throttling
 
 # 表级流控
 
-从v1.11.2版本开始，Pegasus支持Server端表级流控，目前只针对写操作。另外，从v1.12.0版本开始增加了基于吞吐量的限流。
+从[v1.11.2版本](https://github.com/XiaoMi/pegasus/releases/tag/v1.11.2)开始，Pegasus支持Server端表级流控，目前只针对写操作。另外，从[v1.12.0版本](https://github.com/XiaoMi/pegasus/releases/tag/v1.12.0)开始增加了基于吞吐量的限流。
 
 实现原理：
 * 用户可以在[Table环境变量](table-env)中设置`replica.write_throttling`和`replica.write_throttling_by_size`环境变量。其中`replica.write_throttling`是基于qps的限流，`replica.write_throttling_by_size`是基于吞吐量的限流。
