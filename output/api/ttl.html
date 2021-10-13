@@ -12,18 +12,18 @@
     <script src="https://cdn.bootcdn.net/ajax/libs/font-awesome/5.13.0/js/all.min.js"></script>
     <!-- Begin Jekyll SEO tag v2.7.1 -->
 <title>Ttl | Pegasus</title>
-<meta name="generator" content="Jekyll v4.2.0" />
+<meta name="generator" content="Jekyll v4.2.1" />
 <meta property="og:title" content="Ttl" />
 <meta property="og:locale" content="en_US" />
 <meta name="description" content="原理 Pegasus支持TTL（Time-To-Live）功能，即在写入数据的时候，可以指定数据的过期时间。一旦过期，数据对用户就是不可见的，通过get/multiGet等查询接口获取不到数据，就跟数据没有写入一样。" />
 <meta property="og:description" content="原理 Pegasus支持TTL（Time-To-Live）功能，即在写入数据的时候，可以指定数据的过期时间。一旦过期，数据对用户就是不可见的，通过get/multiGet等查询接口获取不到数据，就跟数据没有写入一样。" />
 <meta property="og:site_name" content="Pegasus" />
 <meta property="og:type" content="article" />
-<meta property="article:published_time" content="2021-07-26T02:33:28+00:00" />
+<meta property="article:published_time" content="2021-10-13T10:49:03+00:00" />
 <meta name="twitter:card" content="summary" />
 <meta property="twitter:title" content="Ttl" />
 <script type="application/ld+json">
-{"@type":"BlogPosting","headline":"Ttl","dateModified":"2021-07-26T02:33:28+00:00","datePublished":"2021-07-26T02:33:28+00:00","url":"/api/ttl","mainEntityOfPage":{"@type":"WebPage","@id":"/api/ttl"},"description":"原理 Pegasus支持TTL（Time-To-Live）功能，即在写入数据的时候，可以指定数据的过期时间。一旦过期，数据对用户就是不可见的，通过get/multiGet等查询接口获取不到数据，就跟数据没有写入一样。","@context":"https://schema.org"}</script>
+{"@type":"BlogPosting","headline":"Ttl","dateModified":"2021-10-13T10:49:03+00:00","datePublished":"2021-10-13T10:49:03+00:00","url":"/api/ttl","mainEntityOfPage":{"@type":"WebPage","@id":"/api/ttl"},"description":"原理 Pegasus支持TTL（Time-To-Live）功能，即在写入数据的时候，可以指定数据的过期时间。一旦过期，数据对用户就是不可见的，通过get/multiGet等查询接口获取不到数据，就跟数据没有写入一样。","@context":"https://schema.org"}</script>
 <!-- End Jekyll SEO tag -->
 </head>
 
@@ -796,7 +796,7 @@
   <li><a href="/clients/java-client#ttl">ttl</a>：获取指定数据的TTL信息。</li>
   <li><a href="/clients/java-client#set">set</a>和<a href="/clients/java-client#batchset">batchSet</a>：都提供了设置TTL的参数，其中batchSet是在SetItem中设置的。</li>
   <li><a href="/clients/java-client#multiset">multiSet</a>和<a href="/clients/java-client#batchmultiset">batchMultiSet</a>：都提供了设置TTL的参数。</li>
-  <li><a href="/clients/java-client#batchmultiset">incr</a>：从<a href="https://github.com/XiaoMi/pegasus/releases/tag/v1.11.1">v1.11.1版本</a>开始，incr接口也提供了修改TTL的功能。</li>
+  <li><a href="/clients/java-client#batchmultiset">incr</a>：从v1.11.1版本开始，incr接口也提供了修改TTL的功能。</li>
   <li><a href="/clients/java-client#checkandset">checkAndSet</a>：在CheckAndSetOptions中提供了设置TTL的参数。</li>
 </ul>
 
@@ -807,7 +807,7 @@
 </ul>
 
 <h1 id="表级ttl">表级TTL</h1>
-<p>从<a href="https://github.com/XiaoMi/pegasus/releases/tag/v1.11.2">v1.11.2版本</a>开始，Pegasus支持表级TTL功能。</p>
+<p>从v1.11.2版本开始，Pegasus支持表级TTL功能。</p>
 
 <p>实现原理：</p>
 <ul>

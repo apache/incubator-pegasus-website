@@ -12,18 +12,18 @@
     <script src="https://cdn.bootcdn.net/ajax/libs/font-awesome/5.13.0/js/all.min.js"></script>
     <!-- Begin Jekyll SEO tag v2.7.1 -->
 <title>Manual Compact | Pegasus</title>
-<meta name="generator" content="Jekyll v4.2.0" />
+<meta name="generator" content="Jekyll v4.2.1" />
 <meta property="og:title" content="Manual Compact" />
 <meta property="og:locale" content="en_US" />
 <meta name="description" content="注：manual compact功能从v1.8.1版本开始支持。 原理" />
 <meta property="og:description" content="注：manual compact功能从v1.8.1版本开始支持。 原理" />
 <meta property="og:site_name" content="Pegasus" />
 <meta property="og:type" content="article" />
-<meta property="article:published_time" content="2021-07-26T02:33:28+00:00" />
+<meta property="article:published_time" content="2021-10-13T10:49:03+00:00" />
 <meta name="twitter:card" content="summary" />
 <meta property="twitter:title" content="Manual Compact" />
 <script type="application/ld+json">
-{"@type":"BlogPosting","headline":"Manual Compact","dateModified":"2021-07-26T02:33:28+00:00","datePublished":"2021-07-26T02:33:28+00:00","url":"/administration/manual-compact","mainEntityOfPage":{"@type":"WebPage","@id":"/administration/manual-compact"},"description":"注：manual compact功能从v1.8.1版本开始支持。 原理","@context":"https://schema.org"}</script>
+{"@type":"BlogPosting","headline":"Manual Compact","dateModified":"2021-10-13T10:49:03+00:00","datePublished":"2021-10-13T10:49:03+00:00","url":"/administration/manual-compact","mainEntityOfPage":{"@type":"WebPage","@id":"/administration/manual-compact"},"description":"注：manual compact功能从v1.8.1版本开始支持。 原理","@context":"https://schema.org"}</script>
 <!-- End Jekyll SEO tag -->
 </head>
 
@@ -754,7 +754,7 @@
             </section>
             <section class="section" style="padding-top: 2rem;">
                 <div class="content">
-                    <p>注：manual compact功能从<a href="https://github.com/XiaoMi/pegasus/releases/tag/v1.8.1">v1.8.1版本</a>开始支持。</p>
+                    <p>注：manual compact功能从v1.8.1版本开始支持。</p>
 <h1 id="原理">原理</h1>
 
 <p>RocksDB除了根据需要自动触发compaction外，还能通过接口手动触发compaction，这个功能称之为<a href="https://github.com/facebook/rocksdb/wiki/Manual-Compaction">Manual Compaction</a>。其提供了<code class="language-plaintext highlighter-rouge">CompactRange()</code>接口，如下：</p>
@@ -828,8 +828,8 @@ virtual Status CompactRange(const CompactRangeOptions&amp; options,
       </li>
       <li>Manual Compact总开关：
         <ul>
-          <li><code class="language-plaintext highlighter-rouge">manual_compact.disabled</code>(从<a href="https://github.com/XiaoMi/pegasus/releases/tag/v1.9.0">v1.9.0版本</a>开始支持)：如果为true，则关闭Manual Compact功能，并且取消正在执行中的Manual Compact动作。如果不设置，默认为false。</li>
-          <li><code class="language-plaintext highlighter-rouge">manual_compact.max_concurrent_running_count</code>(从<a href="https://github.com/XiaoMi/pegasus/releases/tag/v1.11.3">v1.11.3版本</a>开始支持)：指定最大并发数。实际上，可执行的最大并发数由<code class="language-plaintext highlighter-rouge">该env参数</code>和<code class="language-plaintext highlighter-rouge">服务端MANUAL_COMPACT_THRAD_POOL的线程数</code>共同决定，取两者的较小值。</li>
+          <li><code class="language-plaintext highlighter-rouge">manual_compact.disabled</code>(从v1.9.0版本开始支持)：如果为true，则关闭Manual Compact功能，并且取消正在执行中的Manual Compact动作。如果不设置，默认为false。</li>
+          <li><code class="language-plaintext highlighter-rouge">manual_compact.max_concurrent_running_count</code>(从v1.11.3版本开始支持)：指定最大并发数。实际上，可执行的最大并发数由<code class="language-plaintext highlighter-rouge">该env参数</code>和<code class="language-plaintext highlighter-rouge">服务端MANUAL_COMPACT_THRAD_POOL的线程数</code>共同决定，取两者的较小值。</li>
         </ul>
       </li>
     </ul>
@@ -860,7 +860,7 @@ worker_count = 16
 <p>由于需要设置的环境变量比较多，且对数据格式有要求，所以强烈建议不要自己直接设置，而是通过我们提供的脚本工具来设置，如下所示。</p>
 
 <h2 id="通过脚本设置">通过脚本设置</h2>
-<p>我们提供了一个脚本工具<a href="https://github.com/XiaoMi/pegasus/blob/master/scripts/pegasus_manual_compact.sh">scripts/pegasus_manual_compact.sh</a>来方便地设置，用法：</p>
+<p>我们提供了一个脚本工具<a href="https://github.com/apache/incubator-pegasus/blob/master/scripts/pegasus_manual_compact.sh">scripts/pegasus_manual_compact.sh</a>来方便地设置，用法：</p>
 <div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>$ ./scripts/pegasus_manual_compact.sh 
 This tool is for manual compact specified table(app).
 USAGE: ./scripts/pegasus_manual_compact.sh -c cluster -a app-name [-t periodic|once] [-w] [-g trigger_time] [...]

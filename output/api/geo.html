@@ -12,18 +12,18 @@
     <script src="https://cdn.bootcdn.net/ajax/libs/font-awesome/5.13.0/js/all.min.js"></script>
     <!-- Begin Jekyll SEO tag v2.7.1 -->
 <title>Geo | Pegasus</title>
-<meta name="generator" content="Jekyll v4.2.0" />
+<meta name="generator" content="Jekyll v4.2.1" />
 <meta property="og:title" content="Geo" />
 <meta property="og:locale" content="en_US" />
 <meta name="description" content="Pegasus GEO支持" />
 <meta property="og:description" content="Pegasus GEO支持" />
 <meta property="og:site_name" content="Pegasus" />
 <meta property="og:type" content="article" />
-<meta property="article:published_time" content="2021-07-26T02:33:28+00:00" />
+<meta property="article:published_time" content="2021-10-13T10:49:03+00:00" />
 <meta name="twitter:card" content="summary" />
 <meta property="twitter:title" content="Geo" />
 <script type="application/ld+json">
-{"@type":"BlogPosting","headline":"Geo","dateModified":"2021-07-26T02:33:28+00:00","datePublished":"2021-07-26T02:33:28+00:00","url":"/api/geo","mainEntityOfPage":{"@type":"WebPage","@id":"/api/geo"},"description":"Pegasus GEO支持","@context":"https://schema.org"}</script>
+{"@type":"BlogPosting","headline":"Geo","dateModified":"2021-10-13T10:49:03+00:00","datePublished":"2021-10-13T10:49:03+00:00","url":"/api/geo","mainEntityOfPage":{"@type":"WebPage","@id":"/api/geo"},"description":"Pegasus GEO支持","@context":"https://schema.org"}</script>
 <!-- End Jekyll SEO tag -->
 </head>
 
@@ -1057,7 +1057,7 @@
 
 <p>经纬度经过坐标转换得到一维编码(字符串)后，就可以把这个一维编码作为key存储起来做<strong>GEO索引数据</strong>了，这里需要将这个一维编码拆分成hashkey和sortkey两部分，可以根据实际的业务场景采取不同的划分策略。</p>
 
-<p>GEO索引数据独立于原始数据，两类数据存储在不同的table内，通过<a href="https://github.com/XiaoMi/pegasus/blob/master/src/geo/lib/geo_client.h">geo_client</a>做数据同步，同时支持原生Pegasus API和GEO API访问。</p>
+<p>GEO索引数据独立于原始数据，两类数据存储在不同的table内，通过<a href="https://github.com/apache/incubator-pegasus/blob/master/src/geo/lib/geo_client.h">geo_client</a>做数据同步，同时支持原生Pegasus API和GEO API访问。</p>
 
 <p>下面讨论GEO索引数据的构造方式。</p>
 
@@ -1193,7 +1193,7 @@ S2CellUnion GetCovering(const S2Region&amp; region);
 </ul>
 
 <blockquote>
-  <p>此处还有一个根据Hilbert曲线实现的一个优化，具体参见<a href="https://github.com/XiaoMi/pegasus/blob/master/src/geo/lib/geo_client.cpp#L510">代码</a></p>
+  <p>此处还有一个根据Hilbert曲线实现的一个优化，具体参见<a href="https://github.com/apache/incubator-pegasus/blob/master/src/geo/lib/geo_client.cpp">代码</a></p>
 </blockquote>
 
 <p>得到<code class="language-plaintext highlighter-rouge">scan</code>的结果后，还需处理：</p>
@@ -1243,7 +1243,7 @@ min_level = 12
 
 <p>Pegasus GEO特性的使用有两种方式，一是直接使用C++ geo client；二是使用redis proxy。</p>
 
-<p><a href="https://github.com/XiaoMi/pegasus/blob/master/src/geo/lib/geo_client.h">C++ geo client代码</a>中有详细的API说明，这里不再赘述。</p>
+<p><a href="https://github.com/apache/incubator-pegasus/blob/master/src/geo/lib/geo_client.h">C++ geo client代码</a>中有详细的API说明，这里不再赘述。</p>
 
 <h2 id="配置文件">配置文件</h2>
 
@@ -1295,7 +1295,7 @@ arguments = redis_cluster temp temp_geo
 <p>集群配置：</p>
 
 <ul>
-  <li>节点数：5个replica server节点（使用<a href="https://github.com/XiaoMi/pegasus/releases/tag/v1.9.2">v1.9.2版本</a>）</li>
+  <li>节点数：5个replica server节点（使用v1.9.2版本）</li>
   <li>测试表的Partition数：128个</li>
   <li>单条数据大小：120字节</li>
 </ul>

@@ -12,18 +12,18 @@
     <script src="https://cdn.bootcdn.net/ajax/libs/font-awesome/5.13.0/js/all.min.js"></script>
     <!-- Begin Jekyll SEO tag v2.7.1 -->
 <title>Usage Scenario | Pegasus</title>
-<meta name="generator" content="Jekyll v4.2.0" />
+<meta name="generator" content="Jekyll v4.2.1" />
 <meta property="og:title" content="Usage Scenario" />
 <meta property="og:locale" content="en_US" />
 <meta name="description" content="注：Usage Scenario功能从v1.8.1版本开始支持。" />
 <meta property="og:description" content="注：Usage Scenario功能从v1.8.1版本开始支持。" />
 <meta property="og:site_name" content="Pegasus" />
 <meta property="og:type" content="article" />
-<meta property="article:published_time" content="2021-07-26T02:33:28+00:00" />
+<meta property="article:published_time" content="2021-10-13T10:49:03+00:00" />
 <meta name="twitter:card" content="summary" />
 <meta property="twitter:title" content="Usage Scenario" />
 <script type="application/ld+json">
-{"@type":"BlogPosting","headline":"Usage Scenario","dateModified":"2021-07-26T02:33:28+00:00","datePublished":"2021-07-26T02:33:28+00:00","url":"/administration/usage-scenario","mainEntityOfPage":{"@type":"WebPage","@id":"/administration/usage-scenario"},"description":"注：Usage Scenario功能从v1.8.1版本开始支持。","@context":"https://schema.org"}</script>
+{"@type":"BlogPosting","headline":"Usage Scenario","dateModified":"2021-10-13T10:49:03+00:00","datePublished":"2021-10-13T10:49:03+00:00","url":"/administration/usage-scenario","mainEntityOfPage":{"@type":"WebPage","@id":"/administration/usage-scenario"},"description":"注：Usage Scenario功能从v1.8.1版本开始支持。","@context":"https://schema.org"}</script>
 <!-- End Jekyll SEO tag -->
 </head>
 
@@ -754,7 +754,7 @@
             </section>
             <section class="section" style="padding-top: 2rem;">
                 <div class="content">
-                    <p>注：Usage Scenario功能从<a href="https://github.com/XiaoMi/pegasus/releases/tag/v1.8.1">v1.8.1版本</a>开始支持。</p>
+                    <p>注：Usage Scenario功能从v1.8.1版本开始支持。</p>
 
 <h1 id="原理">原理</h1>
 <p>Usage Scenario功能，是指对于Pegasus的表，可以指定其使用场景。针对不同的场景，通过优化底层RocksDB的配置，以获得更好的读写性能。</p>
@@ -798,7 +798,7 @@ A: A fast way to direct insert data to the DB:
 <p>而我们的思路正是：通过针对不同业务场景，设置不同的RocksDB参数，调节RocksDB的行为，以提供更好的读写性能。具体来说：</p>
 <ul>
   <li>通过<a href="table-env">Table环境变量</a>设置<code class="language-plaintext highlighter-rouge">rocksdb.usage_scenario</code>来指定当前的业务场景。</li>
-  <li>Replica在检测到该环境变量发生变化时，就会根据业务场景，动态修改RocksDB的配置参数。具体设置了哪些参数，请参见<a href="https://github.com/XiaoMi/pegasus/blob/master/src/server/pegasus_server_impl.cpp">src/server/pegasus_server_impl.cpp</a>中的<code class="language-plaintext highlighter-rouge">set_usage_scenario()</code>方法。</li>
+  <li>Replica在检测到该环境变量发生变化时，就会根据业务场景，动态修改RocksDB的配置参数。具体设置了哪些参数，请参见<a href="https://github.com/apache/incubator-pegasus/blob/master/src/server/pegasus_server_impl.cpp">src/server/pegasus_server_impl.cpp</a>中的<code class="language-plaintext highlighter-rouge">set_usage_scenario()</code>方法。</li>
 </ul>
 
 <h1 id="支持场景">支持场景</h1>
@@ -827,7 +827,7 @@ A: A fast way to direct insert data to the DB:
 <p>Table环境变量不会立即生效，大约需要等几十秒后才能在所有replica上生效。</p>
 
 <h2 id="通过脚本设置">通过脚本设置</h2>
-<p>我们提供了一个脚本工具<a href="https://github.com/XiaoMi/pegasus/blob/master/scripts/pegasus_set_usage_scenario.sh">scripts/pegasus_set_usage_scenario.sh</a>来方便地设置，用法：</p>
+<p>我们提供了一个脚本工具<a href="https://github.com/apache/incubator-pegasus/blob/master/scripts/pegasus_set_usage_scenario.sh">scripts/pegasus_set_usage_scenario.sh</a>来方便地设置，用法：</p>
 <div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>$ ./scripts/pegasus_set_usage_scenario.sh   
 This tool is for set usage scenario of specified table(app).
 USAGE: ./scripts/pegasus_set_usage_scenario.sh &lt;cluster-meta-list&gt; &lt;app-name&gt; &lt;normal|prefer_write|bulk_load&gt;

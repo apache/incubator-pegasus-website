@@ -12,18 +12,18 @@
     <script src="https://cdn.bootcdn.net/ajax/libs/font-awesome/5.13.0/js/all.min.js"></script>
     <!-- Begin Jekyll SEO tag v2.7.1 -->
 <title>Zk Migration | Pegasus</title>
-<meta name="generator" content="Jekyll v4.2.0" />
+<meta name="generator" content="Jekyll v4.2.1" />
 <meta property="og:title" content="Zk Migration" />
 <meta property="og:locale" content="en_US" />
 <meta name="description" content="由于Pegasus的meta server依赖Zookeeper存储元数据和抢主，所以Zookeeper服务的不稳定会造成Pegasus服务不稳定，有时就需要迁移到其他更稳定或者空闲的Zookeeper上。" />
 <meta property="og:description" content="由于Pegasus的meta server依赖Zookeeper存储元数据和抢主，所以Zookeeper服务的不稳定会造成Pegasus服务不稳定，有时就需要迁移到其他更稳定或者空闲的Zookeeper上。" />
 <meta property="og:site_name" content="Pegasus" />
 <meta property="og:type" content="article" />
-<meta property="article:published_time" content="2021-07-26T02:33:28+00:00" />
+<meta property="article:published_time" content="2021-10-13T10:49:03+00:00" />
 <meta name="twitter:card" content="summary" />
 <meta property="twitter:title" content="Zk Migration" />
 <script type="application/ld+json">
-{"@type":"BlogPosting","headline":"Zk Migration","dateModified":"2021-07-26T02:33:28+00:00","datePublished":"2021-07-26T02:33:28+00:00","url":"/administration/zk-migration","mainEntityOfPage":{"@type":"WebPage","@id":"/administration/zk-migration"},"description":"由于Pegasus的meta server依赖Zookeeper存储元数据和抢主，所以Zookeeper服务的不稳定会造成Pegasus服务不稳定，有时就需要迁移到其他更稳定或者空闲的Zookeeper上。","@context":"https://schema.org"}</script>
+{"@type":"BlogPosting","headline":"Zk Migration","dateModified":"2021-10-13T10:49:03+00:00","datePublished":"2021-10-13T10:49:03+00:00","url":"/administration/zk-migration","mainEntityOfPage":{"@type":"WebPage","@id":"/administration/zk-migration"},"description":"由于Pegasus的meta server依赖Zookeeper存储元数据和抢主，所以Zookeeper服务的不稳定会造成Pegasus服务不稳定，有时就需要迁移到其他更稳定或者空闲的Zookeeper上。","@context":"https://schema.org"}</script>
 <!-- End Jekyll SEO tag -->
 </head>
 
@@ -824,7 +824,7 @@
   </li>
 </ol>
 
-<p>注：<a href="https://github.com/XiaoMi/pegasus/blob/master/scripts/pegasus_migrate_zookeeper.sh">scripts/pegasus_migrate_zookeeper.sh</a>是我们在内部使用的迁移Zookeeper的脚本，虽然因为服务启停功能的兼容性不能直接使用，但是可以参考其中的流程，或者进行改造。</p>
+<p>注：<a href="https://github.com/apache/incubator-pegasus/blob/master/scripts/pegasus_migrate_zookeeper.sh">scripts/pegasus_migrate_zookeeper.sh</a>是我们在内部使用的迁移Zookeeper的脚本，虽然因为服务启停功能的兼容性不能直接使用，但是可以参考其中的流程，或者进行改造。</p>
 
 <h1 id="通过zkcopy工具迁移">通过zkcopy工具迁移</h1>
 

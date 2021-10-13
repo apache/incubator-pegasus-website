@@ -12,18 +12,18 @@
     <script src="https://cdn.bootcdn.net/ajax/libs/font-awesome/5.13.0/js/all.min.js"></script>
     <!-- Begin Jekyll SEO tag v2.7.1 -->
 <title>Table Migration | Pegasus</title>
-<meta name="generator" content="Jekyll v4.2.0" />
+<meta name="generator" content="Jekyll v4.2.1" />
 <meta property="og:title" content="Table Migration" />
 <meta property="og:locale" content="en_US" />
 <meta name="description" content="这里说的Table迁移是指将某个Pegasus集群的一个表的数据迁移到另一个Pegasus集群中。" />
 <meta property="og:description" content="这里说的Table迁移是指将某个Pegasus集群的一个表的数据迁移到另一个Pegasus集群中。" />
 <meta property="og:site_name" content="Pegasus" />
 <meta property="og:type" content="article" />
-<meta property="article:published_time" content="2021-07-26T02:33:28+00:00" />
+<meta property="article:published_time" content="2021-10-13T10:49:03+00:00" />
 <meta name="twitter:card" content="summary" />
 <meta property="twitter:title" content="Table Migration" />
 <script type="application/ld+json">
-{"@type":"BlogPosting","headline":"Table Migration","dateModified":"2021-07-26T02:33:28+00:00","datePublished":"2021-07-26T02:33:28+00:00","url":"/administration/table-migration","mainEntityOfPage":{"@type":"WebPage","@id":"/administration/table-migration"},"description":"这里说的Table迁移是指将某个Pegasus集群的一个表的数据迁移到另一个Pegasus集群中。","@context":"https://schema.org"}</script>
+{"@type":"BlogPosting","headline":"Table Migration","dateModified":"2021-10-13T10:49:03+00:00","datePublished":"2021-10-13T10:49:03+00:00","url":"/administration/table-migration","mainEntityOfPage":{"@type":"WebPage","@id":"/administration/table-migration"},"description":"这里说的Table迁移是指将某个Pegasus集群的一个表的数据迁移到另一个Pegasus集群中。","@context":"https://schema.org"}</script>
 <!-- End Jekyll SEO tag -->
 </head>
 
@@ -771,7 +771,7 @@
 <p>假设源集群为ClusterA，目标集群为ClusterB，需要迁移的表为TableA。迁移步骤如下：</p>
 <ul>
   <li>在目标集群上建表。由于copy_data命令并不会自动在目标集群上创建表，所以需要自己先建表。相对源表，新表的表名可以不同，partition count也可以不同。假设在目标集群上新建的表名为TableB。</li>
-  <li>在Shell工具的配置文件中添加目标集群的配置。因为copy_data命令需要通过<code class="language-plaintext highlighter-rouge">-c</code>参数指定目标集群，所以需要配置目标集群的MetaServer地址列表。在执行Shell所在文件夹，修改配置文件<a href="https://github.com/XiaoMi/pegasus/blob/master/src/shell/config.ini">src/shell/config.ini</a>，在文件最后添加如下几行（将ClusterB替换为你自己的集群名）：
+  <li>在Shell工具的配置文件中添加目标集群的配置。因为copy_data命令需要通过<code class="language-plaintext highlighter-rouge">-c</code>参数指定目标集群，所以需要配置目标集群的MetaServer地址列表。在执行Shell所在文件夹，修改配置文件<a href="https://github.com/apache/incubator-pegasus/blob/master/src/shell/config.ini">src/shell/config.ini</a>，在文件最后添加如下几行（将ClusterB替换为你自己的集群名）：
     <div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>[pegasus.clusters]
   ClusterB = {ClusterB的MetaServer地址}
 </code></pre></div>    </div>
