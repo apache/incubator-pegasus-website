@@ -11,11 +11,11 @@ permalink: docs/downloads/
 >   - 导入[KEYS文件](https://downloads.apache.org/incubator/pegasus/KEYS) 到GPG keychain：`gpg --import KEYS`
 >   - 执行命令 `gpg --verify apache-pegasus-2.2.0-incubating-src.zip.asc apache-pegasus-2.2.0-incubating-src.zip`
 
-[2.1.0-src]: https://www.apache.org/dyn/closer.cgi?path=/incubator/pegasus/2.1.0/apache-pegasus-2.1.0-incubating-src.zip
+[2.1.0-src]: https://www.apache.org/dyn/closer.lua?path=/incubator/pegasus/2.1.0/apache-pegasus-2.1.0-incubating-src.zip
 [2.1.0-asc]: https://downloads.apache.org/incubator/pegasus/2.1.0/apache-pegasus-2.1.0-incubating-src.zip.asc
 [2.1.0-sha]: https://downloads.apache.org/incubator/pegasus/2.1.0/apache-pegasus-2.1.0-incubating-src.zip.sha512
 [2.1.0-rn]: https://cwiki.apache.org/confluence/x/cxbZCQ
-[2.2.0-src]: https://www.apache.org/dyn/closer.cgi?path=/incubator/pegasus/2.2.0/apache-pegasus-2.2.0-incubating-src.zip
+[2.2.0-src]: https://www.apache.org/dyn/closer.lua?path=/incubator/pegasus/2.2.0/apache-pegasus-2.2.0-incubating-src.zip
 [2.2.0-asc]: https://downloads.apache.org/incubator/pegasus/2.2.0/apache-pegasus-2.2.0-incubating-src.zip.asc
 [2.2.0-sha]: https://downloads.apache.org/incubator/pegasus/2.2.0/apache-pegasus-2.2.0-incubating-src.zip.sha512
 [2.2.0-rn]: https://cwiki.apache.org/confluence/display/PEGASUS/Apache+Pegasus+2.2.0+Release+Notes
