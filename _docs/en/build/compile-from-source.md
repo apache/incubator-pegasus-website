@@ -9,7 +9,7 @@ Pegasus supports Linux only. Please don't hesitate to contact us via [Github Iss
 
 ## Requirements
 
-- GCC 4.9.4+
+- GCC 5+
 - CMake 3.11+
 
 ## Ubuntu environment
