@@ -7,7 +7,7 @@ Pegasus目前只支持Linux平台进行源码编译。编译过程中遇到问�
 
 ## 环境要求
 
-- GCC 4.9.4+
+- GCC 5+
 - CMake 3.11+
 
 ## Ubuntu环境配置
