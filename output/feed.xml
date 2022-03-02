@@ -1,69 +1,69 @@
-<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="4.2.1">Jekyll</generator><link href="/feed.xml" rel="self" type="application/atom+xml" /><link href="/" rel="alternate" type="text/html" /><updated>2021-11-26T07:32:36+00:00</updated><id>/feed.xml</id><title type="html">Pegasus</title><entry><title type="html">Pegasus Server 2.0.0 来了</title><link href="/2020/06/19/pegasus-2.0.0-is-out.html" rel="alternate" type="text/html" title="Pegasus Server 2.0.0 来了" /><published>2020-06-19T00:00:00+00:00</published><updated>2020-06-19T00:00:00+00:00</updated><id>/2020/06/19/pegasus-2.0.0-is-out</id><content type="html" xml:base="/2020/06/19/pegasus-2.0.0-is-out.html">&lt;p&gt;Pegasus Server 又发布新版本了！在去年的几个版本演进中，我们把工作的重点放在了Pegasus的服务稳定性上。在今年的 2.0.0 版本中，我们更进一步，提供了如下几个能够显著减少延迟和抖动的机制。&lt;/p&gt;
+<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="4.2.1">Jekyll</generator><link href="/feed.xml" rel="self" type="application/atom+xml" /><link href="/" rel="alternate" type="text/html" /><updated>2022-03-02T09:27:15+00:00</updated><id>/feed.xml</id><title type="html">Pegasus</title><entry><title type="html">Pegasus Server 2.0.0 来了</title><link href="/2020/06/19/pegasus-2.0.0-is-out.html" rel="alternate" type="text/html" title="Pegasus Server 2.0.0 来了" /><published>2020-06-19T00:00:00+00:00</published><updated>2020-06-19T00:00:00+00:00</updated><id>/2020/06/19/pegasus-2.0.0-is-out</id><content type="html" xml:base="/2020/06/19/pegasus-2.0.0-is-out.html"><![CDATA[<p>Pegasus Server 又发布新版本了！在去年的几个版本演进中，我们把工作的重点放在了Pegasus的服务稳定性上。在今年的 2.0.0 版本中，我们更进一步，提供了如下几个能够显著减少延迟和抖动的机制。</p>
 
-&lt;blockquote&gt;
-  &lt;p&gt;Github Release: &lt;a href=&quot;https://github.com/apache/incubator-pegasus/releases/tag/v2.0.0&quot;&gt;https://github.com/apache/incubator-pegasus/releases/tag/v2.0.0&lt;/a&gt;&lt;/p&gt;
-&lt;/blockquote&gt;
+<blockquote>
+  <p>Github Release: <a href="https://github.com/apache/incubator-pegasus/releases/tag/v2.0.0">https://github.com/apache/incubator-pegasus/releases/tag/v2.0.0</a></p>
+</blockquote>
 
-&lt;h2 id=&quot;跨机房异步复制&quot;&gt;跨机房异步复制&lt;/h2&gt;
+<h2 id="跨机房异步复制">跨机房异步复制</h2>
 
-&lt;p&gt;通过这个功能，我们可以把一个Pegasus表同时部署在主-备双集群上，从而支持业务的异地容灾，因为理论上双集群同时抖动甚至故障的概率要比单集群低很多。作为一个附带的优点，P99延迟相比单集群也会有显著改善。&lt;/p&gt;
+<p>通过这个功能，我们可以把一个Pegasus表同时部署在主-备双集群上，从而支持业务的异地容灾，因为理论上双集群同时抖动甚至故障的概率要比单集群低很多。作为一个附带的优点，P99延迟相比单集群也会有显著改善。</p>
 
-&lt;p&gt;这个方案唯一的代价是成本。因为一个数据写两份到双集群，总写入量翻倍，我们需要更多的机器来支持双倍写入量。&lt;/p&gt;
+<p>这个方案唯一的代价是成本。因为一个数据写两份到双集群，总写入量翻倍，我们需要更多的机器来支持双倍写入量。</p>
 
-&lt;h2 id=&quot;backup-request&quot;&gt;Backup Request&lt;/h2&gt;
+<h2 id="backup-request">Backup Request</h2>
 
-&lt;p&gt;该功能的意义在于以牺牲读一致性为代价, 换取更稳定的延迟。在推荐，广告等场景中，一致性的牺牲往往是可容忍的。&lt;/p&gt;
+<p>该功能的意义在于以牺牲读一致性为代价, 换取更稳定的延迟。在推荐，广告等场景中，一致性的牺牲往往是可容忍的。</p>
 
-&lt;p&gt;Backup Request 的实现原理很简单，如果 Pegasus 客户端发现访问延迟超过一定阈值，则会自动访问备节点。这对改善长尾延迟（tail latency）非常有帮助。在我们的测试下，长尾延迟（P999读）往往能降低 2-5 倍。&lt;/p&gt;
+<p>Backup Request 的实现原理很简单，如果 Pegasus 客户端发现访问延迟超过一定阈值，则会自动访问备节点。这对改善长尾延迟（tail latency）非常有帮助。在我们的测试下，长尾延迟（P999读）往往能降低 2-5 倍。</p>
 
-&lt;h2 id=&quot;扩容优化&quot;&gt;扩容优化&lt;/h2&gt;
+<h2 id="扩容优化">扩容优化</h2>
 
-&lt;p&gt;此前Pegasus在扩容时的大量数据搬迁会造成用户读延迟增高，我们研究后发现，其原因是新节点一边搬迁数据，一边提供读服务。&lt;/p&gt;
+<p>此前Pegasus在扩容时的大量数据搬迁会造成用户读延迟增高，我们研究后发现，其原因是新节点一边搬迁数据，一边提供读服务。</p>
 
-&lt;p&gt;通过扩容优化工具，Pegasus集群的新节点会在数据迁移完成后，才提供读服务。在测试下，使用该工具能将扩容时的P999读延迟显著降低20~30倍(600ms-&amp;gt;20ms)。&lt;/p&gt;
+<p>通过扩容优化工具，Pegasus集群的新节点会在数据迁移完成后，才提供读服务。在测试下，使用该工具能将扩容时的P999读延迟显著降低20~30倍(600ms-&gt;20ms)。</p>
 
-&lt;h2 id=&quot;冷备份限流&quot;&gt;冷备份限流&lt;/h2&gt;
+<h2 id="冷备份限流">冷备份限流</h2>
 
-&lt;p&gt;此前Pegasus缺少对冷备份的限流, 容易导致快照数据上传至FDS(小米内部对象存储)时的流量过高。现在我们补齐了这个缺陷。&lt;/p&gt;
+<p>此前Pegasus缺少对冷备份的限流, 容易导致快照数据上传至FDS(小米内部对象存储)时的流量过高。现在我们补齐了这个缺陷。</p>
 
-&lt;h2 id=&quot;结语&quot;&gt;结语&lt;/h2&gt;
+<h2 id="结语">结语</h2>
 
-&lt;p&gt;这次我们将版本号推进到 2.0，主要是因为该版本引入了向下不兼容的修改。因此我们也同时发布了 1.12-comp-with-2.0 版本，在出现问题而需要紧急回退的时候，可以回退至该版本。待问题修复后，可以继续升级至 2.0.0。&lt;/p&gt;
+<p>这次我们将版本号推进到 2.0，主要是因为该版本引入了向下不兼容的修改。因此我们也同时发布了 1.12-comp-with-2.0 版本，在出现问题而需要紧急回退的时候，可以回退至该版本。待问题修复后，可以继续升级至 2.0.0。</p>
 
-&lt;p&gt;当然，更多改进还在路上。Pegasus 2.0.0 只是我们在上一个阶段的成果，我们将会更快地推进 Pegasus 的开发进程，以提供一个更稳定，更高效，更易用的存储系统。&lt;/p&gt;
+<p>当然，更多改进还在路上。Pegasus 2.0.0 只是我们在上一个阶段的成果，我们将会更快地推进 Pegasus 的开发进程，以提供一个更稳定，更高效，更易用的存储系统。</p>
 
-&lt;p&gt;&lt;strong&gt;最后，感谢所有使用过，参与过Pegasus的同学的支持。&lt;/strong&gt;&lt;/p&gt;
+<p><strong>最后，感谢所有使用过，参与过Pegasus的同学的支持。</strong></p>
 
-&lt;blockquote&gt;
-  &lt;p&gt;PS: 上述功能的详细测试细节后续会以博客形式发布&lt;/p&gt;
-&lt;/blockquote&gt;</content><author><name>吴涛</name></author><summary type="html">Pegasus Server 又发布新版本了！在去年的几个版本演进中，我们把工作的重点放在了Pegasus的服务稳定性上。在今年的 2.0.0 版本中，我们更进一步，提供了如下几个能够显著减少延迟和抖动的机制。</summary></entry><entry><title type="html">Bulk Load 设计文档</title><link href="/2020/02/18/bulk-load-design.html" rel="alternate" type="text/html" title="Bulk Load 设计文档" /><published>2020-02-18T00:00:00+00:00</published><updated>2020-02-18T00:00:00+00:00</updated><id>/2020/02/18/bulk-load-design</id><content type="html" xml:base="/2020/02/18/bulk-load-design.html">&lt;h2 id=&quot;功能简介&quot;&gt;功能简介&lt;/h2&gt;
+<blockquote>
+  <p>PS: 上述功能的详细测试细节后续会以博客形式发布</p>
+</blockquote>]]></content><author><name>吴涛</name></author><summary type="html"><![CDATA[Pegasus Server 又发布新版本了！在去年的几个版本演进中，我们把工作的重点放在了Pegasus的服务稳定性上。在今年的 2.0.0 版本中，我们更进一步，提供了如下几个能够显著减少延迟和抖动的机制。]]></summary></entry><entry><title type="html">Bulk Load 设计文档</title><link href="/2020/02/18/bulk-load-design.html" rel="alternate" type="text/html" title="Bulk Load 设计文档" /><published>2020-02-18T00:00:00+00:00</published><updated>2020-02-18T00:00:00+00:00</updated><id>/2020/02/18/bulk-load-design</id><content type="html" xml:base="/2020/02/18/bulk-load-design.html"><![CDATA[<h2 id="功能简介">功能简介</h2>
 
-&lt;p&gt;Pegasus是强一致的分布式KV存储系统，每次写入数据时，需要每个partition的三个副本都写成功才会真正写下数据。而在业务实际使用上，发现向pegasus灌数据需要耗费大量时间，因此pegasus希望能够实现类似于HBase的bulk load功能，在尽量对读写影响小的情况下，能够快速灌入大量数据。&lt;/p&gt;
+<p>Pegasus是强一致的分布式KV存储系统，每次写入数据时，需要每个partition的三个副本都写成功才会真正写下数据。而在业务实际使用上，发现向pegasus灌数据需要耗费大量时间，因此pegasus希望能够实现类似于HBase的bulk load功能，在尽量对读写影响小的情况下，能够快速灌入大量数据。</p>
 
-&lt;p&gt;HBase提供多种写入数据的方式，Bulk Load是其中一种。HBase数据是以HFile的格式存储在HDFS上，Bulk load通过MapReduce等离线方式直接将数据组织成HFile格式的文件，再将这些文件导入到HBase的Region中，更详细的说明可参见 &lt;a href=&quot;http://hbase.apache.org/book.html#arch.bulk.load&quot;&gt;HBase book bulk load&lt;/a&gt;&lt;br /&gt;
-Pegasus使用RocksDB作为存储引擎，用户数据存储在RocksDB SST文件中，借鉴HBase的实现，Pegasus bulk load也首先离线生成用户数据，再直接将数据导入到RocksDB中来。RocksDB支持ingestion SST file的功能，详情可参见wiki: &lt;a href=&quot;https://github.com/facebook/rocksdb/wiki/Creating-and-Ingesting-SST-files&quot;&gt;Creating and Ingesting SST files&lt;/a&gt;&lt;/p&gt;
+<p>HBase提供多种写入数据的方式，Bulk Load是其中一种。HBase数据是以HFile的格式存储在HDFS上，Bulk load通过MapReduce等离线方式直接将数据组织成HFile格式的文件，再将这些文件导入到HBase的Region中，更详细的说明可参见 <a href="http://hbase.apache.org/book.html#arch.bulk.load">HBase book bulk load</a><br />
+Pegasus使用RocksDB作为存储引擎，用户数据存储在RocksDB SST文件中，借鉴HBase的实现，Pegasus bulk load也首先离线生成用户数据，再直接将数据导入到RocksDB中来。RocksDB支持ingestion SST file的功能，详情可参见wiki: <a href="https://github.com/facebook/rocksdb/wiki/Creating-and-Ingesting-SST-files">Creating and Ingesting SST files</a></p>
 
-&lt;p&gt;因此，Bulk load整体流程可分为以下三个步骤：（1）离线生成SST文件；（2）下载SST文件；（3）导入SST文件。本设计文档侧重于描述Pegasus server如何处理和进行Bulk load，如何离线生成SST文件不在本文档介绍之内。&lt;/p&gt;
+<p>因此，Bulk load整体流程可分为以下三个步骤：（1）离线生成SST文件；（2）下载SST文件；（3）导入SST文件。本设计文档侧重于描述Pegasus server如何处理和进行Bulk load，如何离线生成SST文件不在本文档介绍之内。</p>
 
-&lt;h2 id=&quot;概念说明&quot;&gt;概念说明&lt;/h2&gt;
+<h2 id="概念说明">概念说明</h2>
 
-&lt;h3 id=&quot;离线存储路径&quot;&gt;离线存储路径&lt;/h3&gt;
+<h3 id="离线存储路径">离线存储路径</h3>
 
-&lt;p&gt;目前Bulk load支持使用&lt;a href=&quot;http://docs.api.xiaomi.com/fds/introduction.html&quot;&gt;XiaoMi/FDS&lt;/a&gt;作为离线生成SST文件的存储介质，并且要求生成的SST文件被组织成如下的路径：&lt;/p&gt;
+<p>目前Bulk load支持使用<a href="http://docs.api.xiaomi.com/fds/introduction.html">XiaoMi/FDS</a>作为离线生成SST文件的存储介质，并且要求生成的SST文件被组织成如下的路径：</p>
 
-&lt;pre&gt;&lt;code class=&quot;language-txt&quot;&gt;&amp;lt;bulk_load_root&amp;gt;/&amp;lt;cluster_name&amp;gt;/&amp;lt;app_name&amp;gt;/{bulk_load_info}
-                                          /&amp;lt;partition_index&amp;gt;/&amp;lt;file_name&amp;gt;
-                                          /&amp;lt;partition_index&amp;gt;/{bulk_load_metadata}
-&lt;/code&gt;&lt;/pre&gt;
+<pre><code class="language-txt">&lt;bulk_load_root&gt;/&lt;cluster_name&gt;/&lt;app_name&gt;/{bulk_load_info}
+                                          /&lt;partition_index&gt;/&lt;file_name&gt;
+                                          /&lt;partition_index&gt;/{bulk_load_metadata}
+</code></pre>
 
-&lt;p&gt;在生成SST文件时，需要指定待导入数据的表名和所在集群名称，每个表需要有一个&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;bulk_load_info&lt;/code&gt;文件，每个partition除了SST文件之外还需要有一个&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;bulk_load_metadata&lt;/code&gt;文件。&lt;br /&gt;
-&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;bulk_load_info&lt;/code&gt;文件存储着待导入数据的表名、app_id和partition_count，这个文件的作用是用来在开始bulk_load时进行检查，检查表的信息是否匹配。&lt;br /&gt;
-&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;bulk_load_metadata&lt;/code&gt;则存储着partition待导入所有文件的名称，大小和md5值，以及所有文件的总大小。这个文件的作用是在下载SST文件时，进行下载进度统计和校验。&lt;br /&gt;
-我们目前在fds上为同一张表只保留一个bulk load的路径，这里毕竟只是一个中间路径，没有保留多个的必要性。&lt;/p&gt;
+<p>在生成SST文件时，需要指定待导入数据的表名和所在集群名称，每个表需要有一个<code class="language-plaintext highlighter-rouge">bulk_load_info</code>文件，每个partition除了SST文件之外还需要有一个<code class="language-plaintext highlighter-rouge">bulk_load_metadata</code>文件。<br />
+<code class="language-plaintext highlighter-rouge">bulk_load_info</code>文件存储着待导入数据的表名、app_id和partition_count，这个文件的作用是用来在开始bulk_load时进行检查，检查表的信息是否匹配。<br />
+<code class="language-plaintext highlighter-rouge">bulk_load_metadata</code>则存储着partition待导入所有文件的名称，大小和md5值，以及所有文件的总大小。这个文件的作用是在下载SST文件时，进行下载进度统计和校验。<br />
+我们目前在fds上为同一张表只保留一个bulk load的路径，这里毕竟只是一个中间路径，没有保留多个的必要性。</p>
 
-&lt;h3 id=&quot;bulk-load状态&quot;&gt;bulk load状态&lt;/h3&gt;
+<h3 id="bulk-load状态">bulk load状态</h3>
 
-&lt;pre&gt;&lt;code class=&quot;language-thrift&quot;&gt;enum bulk_load_status
+<pre><code class="language-thrift">enum bulk_load_status
 {
     BLS_INVALID,
     BLS_DOWNLOADING,
@@ -75,28 +75,28 @@ Pegasus使用RocksDB作为存储引擎，用户数据存储在RocksDB SST文件�
     BLS_PAUSED,
     BLS_CANCELED
 }
-&lt;/code&gt;&lt;/pre&gt;
+</code></pre>
 
-&lt;p&gt;我们为bulk load定义了多种状态，表app和每个partition都将有bulk load status，更多关于bulk load status的描述请参见后文。&lt;/p&gt;
+<p>我们为bulk load定义了多种状态，表app和每个partition都将有bulk load status，更多关于bulk load status的描述请参见后文。</p>
 
-&lt;h3 id=&quot;zookeeper上的路径&quot;&gt;zookeeper上的路径&lt;/h3&gt;
+<h3 id="zookeeper上的路径">zookeeper上的路径</h3>
 
-&lt;p&gt;首先，bulk load在app_info中新增了一个&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;is_bulk_loading&lt;/code&gt;的成员变量，用来标志当前表是否在进行bulk load，会在开始bulk load被设置为true，在bulk load成功或失败的时候被设置为false。&lt;br /&gt;
-由于bulk load是由meta驱动的，meta存储bulk load的状态，为了防止meta宕机后的状态丢失，bulk load的状态需要持久化到zookeeper上，bulk load的存储路径如下：&lt;/p&gt;
+<p>首先，bulk load在app_info中新增了一个<code class="language-plaintext highlighter-rouge">is_bulk_loading</code>的成员变量，用来标志当前表是否在进行bulk load，会在开始bulk load被设置为true，在bulk load成功或失败的时候被设置为false。<br />
+由于bulk load是由meta驱动的，meta存储bulk load的状态，为了防止meta宕机后的状态丢失，bulk load的状态需要持久化到zookeeper上，bulk load的存储路径如下：</p>
 
-&lt;pre&gt;&lt;code class=&quot;language-txt&quot;&gt;&amp;lt;cluster_root&amp;gt;/bulk_load/&amp;lt;app_id&amp;gt;/{app_bulk_load_info}
-                                 /&amp;lt;partition_index&amp;gt;/{partition_bulk_load_info}
-&lt;/code&gt;&lt;/pre&gt;
+<pre><code class="language-txt">&lt;cluster_root&gt;/bulk_load/&lt;app_id&gt;/{app_bulk_load_info}
+                                 /&lt;partition_index&gt;/{partition_bulk_load_info}
+</code></pre>
 
-&lt;p&gt;&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;app_bulk_load_info&lt;/code&gt;存储着app的bulk load状态和fds基本信息，&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;partition_bulk_load_info&lt;/code&gt;存储着partition的bulk load状态和bulk_load_metadata。&lt;/p&gt;
+<p><code class="language-plaintext highlighter-rouge">app_bulk_load_info</code>存储着app的bulk load状态和fds基本信息，<code class="language-plaintext highlighter-rouge">partition_bulk_load_info</code>存储着partition的bulk load状态和bulk_load_metadata。</p>
 
-&lt;h2 id=&quot;整体流程&quot;&gt;整体流程&lt;/h2&gt;
+<h2 id="整体流程">整体流程</h2>
 
-&lt;h3 id=&quot;start-bulk-load&quot;&gt;Start bulk load&lt;/h3&gt;
+<h3 id="start-bulk-load">Start bulk load</h3>
 
-&lt;pre&gt;&lt;code class=&quot;language-txt&quot;&gt;  
+<pre><code class="language-txt">  
 +--------+ bulk load  +------------+  create path  +-----------+  
-| client -----------&amp;gt;   meta_server --------------&amp;gt;  zookeeper |
+| client -----------&gt;   meta_server --------------&gt;  zookeeper |
 +--------+            +-----^------+               +-----------+
                             |
                             | verification
@@ -105,24 +105,24 @@ Pegasus使用RocksDB作为存储引擎，用户数据存储在RocksDB SST文件�
                       |    fds     |
                       +------------+
                     
-&lt;/code&gt;&lt;/pre&gt;
+</code></pre>
 
-&lt;ol&gt;
-  &lt;li&gt;client给meta server发送开始bulk load的request
-    &lt;ul&gt;
-      &lt;li&gt;检查参数: 检查表是否存在，表是否已经在进行bulk load，检查remote bulk_load_info文件中的数据是否合法等&lt;/li&gt;
-      &lt;li&gt;将meta server状态设置为steady，尽量避免进行load balance&lt;/li&gt;
-      &lt;li&gt;在zk上创建表的bulk load路径，创建每个partition的路径&lt;/li&gt;
-      &lt;li&gt;将表bulk load状态设置为downloading，并将每个partition的bulk load状态设置成downloading&lt;/li&gt;
-      &lt;li&gt;给每个partition发送bulk load request&lt;/li&gt;
-      &lt;li&gt;当给所有partition都发送request之后返回ERR_OK给client&lt;/li&gt;
-    &lt;/ul&gt;
-  &lt;/li&gt;
-&lt;/ol&gt;
+<ol>
+  <li>client给meta server发送开始bulk load的request
+    <ul>
+      <li>检查参数: 检查表是否存在，表是否已经在进行bulk load，检查remote bulk_load_info文件中的数据是否合法等</li>
+      <li>将meta server状态设置为steady，尽量避免进行load balance</li>
+      <li>在zk上创建表的bulk load路径，创建每个partition的路径</li>
+      <li>将表bulk load状态设置为downloading，并将每个partition的bulk load状态设置成downloading</li>
+      <li>给每个partition发送bulk load request</li>
+      <li>当给所有partition都发送request之后返回ERR_OK给client</li>
+    </ul>
+  </li>
+</ol>
 
-&lt;h3 id=&quot;download-sst-files&quot;&gt;download SST files&lt;/h3&gt;
+<h3 id="download-sst-files">download SST files</h3>
 
-&lt;pre&gt;&lt;code class=&quot;language-txt&quot;&gt;          +---------+
+<pre><code class="language-txt">          +---------+
           |  meta   |
           +----^----+
                |
@@ -130,7 +130,7 @@ Pegasus使用RocksDB作为存储引擎，用户数据存储在RocksDB SST文件�
                |       (downloading)
                |
           +----v----+
-      ---&amp;gt;| primary |&amp;lt;---
+      ---&gt;| primary |&lt;---
       |   +----^----+   |
       |        |        | group bulk load request/response
       |        |        |     (downloading)
@@ -145,34 +145,34 @@ Pegasus使用RocksDB作为存储引擎，用户数据存储在RocksDB SST文件�
   |           fds            |
   +--------------------------+
 
-&lt;/code&gt;&lt;/pre&gt;
+</code></pre>
 
-&lt;ol&gt;
-  &lt;li&gt;meta给primary发送bulk load request
-    &lt;ul&gt;
-      &lt;li&gt;将partition的bulk load状态设置为downloading&lt;/li&gt;
-      &lt;li&gt;在本地创建临时的bulk load文件夹，存储下载的SST文件&lt;/li&gt;
-      &lt;li&gt;从fds上下载bulk_load_metadata文件，并解析文件&lt;/li&gt;
-      &lt;li&gt;根据metadata文件逐一下载SST文件，并校验md5值&lt;/li&gt;
-      &lt;li&gt;更新下载进度，若下载完成则将状态从downloading更新为downloaded&lt;/li&gt;
-    &lt;/ul&gt;
-    &lt;ul&gt;
-      &lt;li&gt;给secondary发送group_bulk_load_request
-    - 上报整个group的下载状态和进度给meta&lt;/li&gt;
-    &lt;/ul&gt;
-  &lt;/li&gt;
-  &lt;li&gt;primary给secondary发送group bulk load request
-    &lt;ul&gt;
-      &lt;li&gt;同2的步骤，secondary从fds上下载并校验文件&lt;/li&gt;
-      &lt;li&gt;把下载状态和进度回复给primary&lt;/li&gt;
-    &lt;/ul&gt;
-  &lt;/li&gt;
-  &lt;li&gt;当meta收到partition完成下载，将partition bulk load状态设置为downloaded，若所有partition都为downloaded，app bulk load状态设置为downloaded&lt;/li&gt;
-&lt;/ol&gt;
+<ol>
+  <li>meta给primary发送bulk load request
+    <ul>
+      <li>将partition的bulk load状态设置为downloading</li>
+      <li>在本地创建临时的bulk load文件夹，存储下载的SST文件</li>
+      <li>从fds上下载bulk_load_metadata文件，并解析文件</li>
+      <li>根据metadata文件逐一下载SST文件，并校验md5值</li>
+      <li>更新下载进度，若下载完成则将状态从downloading更新为downloaded</li>
+    </ul>
+    <ul>
+      <li>给secondary发送group_bulk_load_request
+    - 上报整个group的下载状态和进度给meta</li>
+    </ul>
+  </li>
+  <li>primary给secondary发送group bulk load request
+    <ul>
+      <li>同2的步骤，secondary从fds上下载并校验文件</li>
+      <li>把下载状态和进度回复给primary</li>
+    </ul>
+  </li>
+  <li>当meta收到partition完成下载，将partition bulk load状态设置为downloaded，若所有partition都为downloaded，app bulk load状态设置为downloaded</li>
+</ol>
 
-&lt;h3 id=&quot;ingest-sst-files&quot;&gt;ingest SST files&lt;/h3&gt;
+<h3 id="ingest-sst-files">ingest SST files</h3>
 
-&lt;pre&gt;&lt;code class=&quot;language-txt&quot;&gt;          +-----------+
+<pre><code class="language-txt">          +-----------+
           |   meta    |
           +-----------+
              |     |
@@ -180,46 +180,46 @@ Pegasus使用RocksDB作为存储引擎，用户数据存储在RocksDB SST文件�
              |     |       (ingesting)
              |     |
           +--v-----v--+
-      ---&amp;gt;|  primary  |&amp;lt;---
+      ---&gt;|  primary  |&lt;---
       |   +---^---^---+   |
       |       |   |       | group bulk load request/response
       |       |   | 2pc   |      (ingesting)
       |       |   |       |
 +-----v-----+ |   | +-----v-----+
-| secondary |&amp;lt;-   -&amp;gt;| secondary |
+| secondary |&lt;-   -&gt;| secondary |
 +-----------+       +-----------+
 
-&lt;/code&gt;&lt;/pre&gt;
-&lt;p&gt;在ingesting阶段，meta与primary会有两种rpc，一种是和download阶段相同的bulk load request，用来交互ingest的状态，另一种是特殊的ingest rpc，用来执行真正的ingest操作。这两种rpc分别如下步骤的3和2所述，这里的2,3并不表示执行顺序。&lt;/p&gt;
+</code></pre>
+<p>在ingesting阶段，meta与primary会有两种rpc，一种是和download阶段相同的bulk load request，用来交互ingest的状态，另一种是特殊的ingest rpc，用来执行真正的ingest操作。这两种rpc分别如下步骤的3和2所述，这里的2,3并不表示执行顺序。</p>
 
-&lt;ol&gt;
-  &lt;li&gt;当app状态被设置为downloaded之后，将每个partition状态设置为ingesting，当所有partition均为ingesting时，app的bulk load status会被设置为ingesting&lt;/li&gt;
-  &lt;li&gt;当app状态为ingesting，meta会给所有primary发送ingest rpc
-    &lt;ul&gt;
-      &lt;li&gt;ingest rpc是一类特殊的写请求，primary收到后会执行2pc，每个replica的RocksDB在收到ingest请求后会将指定路径上的SST文件ingest到RocksDB中，在这个过程中，meta类似于用户client，发送了一个特殊的写请求&lt;/li&gt;
-      &lt;li&gt;当primary收到ingest rpc后会拒绝写入新数据，直到三备份都完成ingest之后再恢复写数据&lt;/li&gt;
-    &lt;/ul&gt;
-  &lt;/li&gt;
-  &lt;li&gt;当partition被设置为ingesting之后，meta会给primary发送bulk load request
-    &lt;ul&gt;
-      &lt;li&gt;若partition当前bulk load status为downloaded，则更新状态为ingesting，若是primary，则会给secondary发送group_bulk_load_request&lt;/li&gt;
-      &lt;li&gt;若partition的状态已经是ingesting，则secondary上报ingest的状态给primary，primary上报整个group的ingest状态给meta&lt;/li&gt;
-    &lt;/ul&gt;
-  &lt;/li&gt;
-  &lt;li&gt;若meta发现partition三备份都完成了ingest，则会将bulk load status设置为succeed，当所有partition都为succeed，app bulk load状态设置为succeed。&lt;/li&gt;
-&lt;/ol&gt;
+<ol>
+  <li>当app状态被设置为downloaded之后，将每个partition状态设置为ingesting，当所有partition均为ingesting时，app的bulk load status会被设置为ingesting</li>
+  <li>当app状态为ingesting，meta会给所有primary发送ingest rpc
+    <ul>
+      <li>ingest rpc是一类特殊的写请求，primary收到后会执行2pc，每个replica的RocksDB在收到ingest请求后会将指定路径上的SST文件ingest到RocksDB中，在这个过程中，meta类似于用户client，发送了一个特殊的写请求</li>
+      <li>当primary收到ingest rpc后会拒绝写入新数据，直到三备份都完成ingest之后再恢复写数据</li>
+    </ul>
+  </li>
+  <li>当partition被设置为ingesting之后，meta会给primary发送bulk load request
+    <ul>
+      <li>若partition当前bulk load status为downloaded，则更新状态为ingesting，若是primary，则会给secondary发送group_bulk_load_request</li>
+      <li>若partition的状态已经是ingesting，则secondary上报ingest的状态给primary，primary上报整个group的ingest状态给meta</li>
+    </ul>
+  </li>
+  <li>若meta发现partition三备份都完成了ingest，则会将bulk load status设置为succeed，当所有partition都为succeed，app bulk load状态设置为succeed。</li>
+</ol>
 
-&lt;h3 id=&quot;finish-bulk-load&quot;&gt;finish bulk load&lt;/h3&gt;
+<h3 id="finish-bulk-load">finish bulk load</h3>
 
-&lt;pre&gt;&lt;code class=&quot;language-txt&quot;&gt;          +---------+   remove path   +-----------+
-          |  meta   | --------------&amp;gt;   zookeeper |
+<pre><code class="language-txt">          +---------+   remove path   +-----------+
+          |  meta   | --------------&gt;   zookeeper |
           +---------+                 +-----------+
                |
                | bulk load request/response
                |        (succeed)
                |
           +----v----+
-      ---&amp;gt;| primary |&amp;lt;---
+      ---&gt;| primary |&lt;---
       |   +----^----+   |
       |                 | group bulk load/response
       |                 |       (succeed)
@@ -228,123 +228,123 @@ Pegasus使用RocksDB作为存储引擎，用户数据存储在RocksDB SST文件�
 | secondary |     | secondary |
 +-----------+     +-----------+
 
-&lt;/code&gt;&lt;/pre&gt;
+</code></pre>
 
-&lt;ol&gt;
-  &lt;li&gt;meta给primary发送bulk load request
-    &lt;ul&gt;
-      &lt;li&gt;若partition当前bulk load status为ingesting，则更新状态为succeed，若是primary，则会给secondary发送group_bulk_load_request&lt;/li&gt;
-      &lt;li&gt;若partition的状态已经是succeed，primary和secondary都会删除本地的bulk load文件夹，将bulk load状态设置为invalid&lt;/li&gt;
-    &lt;/ul&gt;
-  &lt;/li&gt;
-  &lt;li&gt;若meta发现表的所有partition都完成了bulk load则会删除zk上的bulk load文件夹&lt;/li&gt;
-&lt;/ol&gt;
+<ol>
+  <li>meta给primary发送bulk load request
+    <ul>
+      <li>若partition当前bulk load status为ingesting，则更新状态为succeed，若是primary，则会给secondary发送group_bulk_load_request</li>
+      <li>若partition的状态已经是succeed，primary和secondary都会删除本地的bulk load文件夹，将bulk load状态设置为invalid</li>
+    </ul>
+  </li>
+  <li>若meta发现表的所有partition都完成了bulk load则会删除zk上的bulk load文件夹</li>
+</ol>
 
-&lt;h3 id=&quot;download阶段的补充说明&quot;&gt;download阶段的补充说明&lt;/h3&gt;
+<h3 id="download阶段的补充说明">download阶段的补充说明</h3>
 
-&lt;p&gt;在download阶段，我们选择了primary和secondary同时从fds上下载文件的方式。若只有primary下载文件，再由secondary去learn这些数据可能存在两个问题。一方面，bulk load会下载大量数据，secondary需要从primary learn大量数据，而若三备份同时从fds上下载文件，我们可以对同时执行下载的replica个数进行限制，并且异步低优先级的执行这个下载任务，这样能尽可能减少对正常读写的影响。另一方面，若采用learn的形式，每个partition完成下载的时间点是不确定的，这对何时开始进入需要拒绝客户端写请求的ingest状态带来较大麻烦，而在现在的实现中，三备份同时下载，并且secondary向primary上报进度，primary向meta上报进度，meta server能够确定何时可以开始执行ingest。&lt;/p&gt;
+<p>在download阶段，我们选择了primary和secondary同时从fds上下载文件的方式。若只有primary下载文件，再由secondary去learn这些数据可能存在两个问题。一方面，bulk load会下载大量数据，secondary需要从primary learn大量数据，而若三备份同时从fds上下载文件，我们可以对同时执行下载的replica个数进行限制，并且异步低优先级的执行这个下载任务，这样能尽可能减少对正常读写的影响。另一方面，若采用learn的形式，每个partition完成下载的时间点是不确定的，这对何时开始进入需要拒绝客户端写请求的ingest状态带来较大麻烦，而在现在的实现中，三备份同时下载，并且secondary向primary上报进度，primary向meta上报进度，meta server能够确定何时可以开始执行ingest。</p>
 
-&lt;h3 id=&quot;ingest阶段的补充说明&quot;&gt;ingest阶段的补充说明&lt;/h3&gt;
+<h3 id="ingest阶段的补充说明">ingest阶段的补充说明</h3>
 
-&lt;p&gt;RocksDB在执行ingest SST文件时，为了保证数据一致性会拒绝写请求，因此在bulk load的ingestion阶段，pegasus也会拒绝客户端的写请求。同时，由于RocksDB的ingest操作是一个同步的耗时操作，ingest所用的时间会随着SST文件的大小和个数的增长而增长，因此ingest不能在replication线程池中执行，否则会阻塞replication线程池中执行的操作，如meta与replica之间的config同步，replica之间的group_check等。在目前的实现中，为ingestion定义了一个新的线程池，thread_count为24与replication线程池一致，尽可能减少ingestion阶段的时间，因为这段时间是不可写的。&lt;/p&gt;
+<p>RocksDB在执行ingest SST文件时，为了保证数据一致性会拒绝写请求，因此在bulk load的ingestion阶段，pegasus也会拒绝客户端的写请求。同时，由于RocksDB的ingest操作是一个同步的耗时操作，ingest所用的时间会随着SST文件的大小和个数的增长而增长，因此ingest不能在replication线程池中执行，否则会阻塞replication线程池中执行的操作，如meta与replica之间的config同步，replica之间的group_check等。在目前的实现中，为ingestion定义了一个新的线程池，thread_count为24与replication线程池一致，尽可能减少ingestion阶段的时间，因为这段时间是不可写的。</p>
 
-&lt;p&gt;Ingest rpc和传统写请求也有不同，在pegasus现在的设计中一主一备也可以写成功，而ingest不同，若当前group不是健康的一主两备就会直接认为ingest失败。&lt;/p&gt;
+<p>Ingest rpc和传统写请求也有不同，在pegasus现在的设计中一主一备也可以写成功，而ingest不同，若当前group不是健康的一主两备就会直接认为ingest失败。</p>
 
-&lt;pre&gt;&lt;code class=&quot;language-thrift&quot;&gt;enum ingestion_status
+<pre><code class="language-thrift">enum ingestion_status
 {
     IS_INVALID,
     IS_RUNNING,
     IS_SUCCEED,
     IS_FAILED
 }
-&lt;/code&gt;&lt;/pre&gt;
+</code></pre>
 
-&lt;p&gt;我们还为ingest定义了如上状态，在未进行bulk load和开始bulk load时，状态为IS_INVALID, 在bulk load状态被设置为ingesting时，ingest状态为IS_RUNNING，在RocksDB执行ingest之后依照ingest的结果被设置为IS_SUCCEED或IS_FAILED，在bulk load全部完成后会被重新设置为IS_INVALID。&lt;/p&gt;
+<p>我们还为ingest定义了如上状态，在未进行bulk load和开始bulk load时，状态为IS_INVALID, 在bulk load状态被设置为ingesting时，ingest状态为IS_RUNNING，在RocksDB执行ingest之后依照ingest的结果被设置为IS_SUCCEED或IS_FAILED，在bulk load全部完成后会被重新设置为IS_INVALID。</p>
 
-&lt;h2 id=&quot;异常处理&quot;&gt;异常处理&lt;/h2&gt;
+<h2 id="异常处理">异常处理</h2>
 
-&lt;p&gt;在bulk load的设计中，若replica发生config变换，进程挂掉或者机器宕机，meta server都会认为本次bulk load失败。因为一旦出现如上问题，replica group的一主两备的信息都可能发生变化，而bulk load需要三备份都从fds上下载SST文件并ingest到RocksDB中。因此在遇到如上问题时候，meta都会将app状态重新设置为downloading，重新开始bulk load。在bulk load过程中，最耗时的是下载SST文件，只要保证重新下载的时间较短，那么在failover阶段重新开始bulk load也不会开销过大。目前下载文件时，会先检查本地是否存在同名文件，若存在同名文件并且md5与远端文件相同则无需重新下载，这样能保证无需重复下载文件。结合了failover的bulk load status转换如下图所示：&lt;/p&gt;
+<p>在bulk load的设计中，若replica发生config变换，进程挂掉或者机器宕机，meta server都会认为本次bulk load失败。因为一旦出现如上问题，replica group的一主两备的信息都可能发生变化，而bulk load需要三备份都从fds上下载SST文件并ingest到RocksDB中。因此在遇到如上问题时候，meta都会将app状态重新设置为downloading，重新开始bulk load。在bulk load过程中，最耗时的是下载SST文件，只要保证重新下载的时间较短，那么在failover阶段重新开始bulk load也不会开销过大。目前下载文件时，会先检查本地是否存在同名文件，若存在同名文件并且md5与远端文件相同则无需重新下载，这样能保证无需重复下载文件。结合了failover的bulk load status转换如下图所示：</p>
 
-&lt;pre&gt;&lt;code class=&quot;language-txt&quot;&gt;                   Invalid
+<pre><code class="language-txt">                   Invalid
                       |
              Err      v
-         ---------Downloading &amp;lt;---------|
+         ---------Downloading &lt;---------|
          |            |                 |
          |            v         Err     |
-         |        Downloaded  ---------&amp;gt;|
+         |        Downloaded  ---------&gt;|
          |            |                 |
          | IngestErr  v         Err     |
-         |&amp;lt;------- Ingesting  ---------&amp;gt;|
+         |&lt;------- Ingesting  ---------&gt;|
          |            |                 |
          v            v         Err     |
-       Failed       Succeed   ---------&amp;gt;|
-&lt;/code&gt;&lt;/pre&gt;
+       Failed       Succeed   ---------&gt;|
+</code></pre>
 
-&lt;ul&gt;
-  &lt;li&gt;在downloaded, succeed阶段遇到问题都会回退到downloading&lt;/li&gt;
-  &lt;li&gt;若在downloading阶段遇到问题，如远端文件不存在等问题，会直接转换成failed状态，删除本地和zk上的bulk load文件夹&lt;/li&gt;
-  &lt;li&gt;比较特殊的是ingesting，如果遇到的是timeout或者2pc导致的问题会回退到downloading阶段重新开始，若遇到的RocksDB的ingest问题则会直接认为bulk load失败&lt;/li&gt;
-&lt;/ul&gt;
+<ul>
+  <li>在downloaded, succeed阶段遇到问题都会回退到downloading</li>
+  <li>若在downloading阶段遇到问题，如远端文件不存在等问题，会直接转换成failed状态，删除本地和zk上的bulk load文件夹</li>
+  <li>比较特殊的是ingesting，如果遇到的是timeout或者2pc导致的问题会回退到downloading阶段重新开始，若遇到的RocksDB的ingest问题则会直接认为bulk load失败</li>
+</ul>
 
-&lt;p&gt;为了更好的管理和控制bulk load，当集群负载较重时，为了保证集群的稳定性，可能需要暂停bulk load或者取消bulk load，结合暂停和取消功能的bulk load status转换如下图所示：&lt;/p&gt;
+<p>为了更好的管理和控制bulk load，当集群负载较重时，为了保证集群的稳定性，可能需要暂停bulk load或者取消bulk load，结合暂停和取消功能的bulk load status转换如下图所示：</p>
 
-&lt;pre&gt;&lt;code class=&quot;language-txt&quot;&gt;                    Invalid
+<pre><code class="language-txt">                    Invalid
                        |         pause  
-           cancel      v       ----------&amp;gt;
-         |&amp;lt;------- Downloading &amp;lt;---------- Paused
+           cancel      v       ----------&gt;
+         |&lt;------- Downloading &lt;---------- Paused
          |             |         restart
          | cancel      v
-         |&amp;lt;------- Downloaded  
+         |&lt;------- Downloaded  
          |             |
          | cancel      v
-         |&amp;lt;------- Ingesting  
+         |&lt;------- Ingesting  
          |             |
          | cancel      v
-         |&amp;lt;-------  Succeed  
+         |&lt;-------  Succeed  
          |
          v
-      Canceled &amp;lt;--------------------------- Failed
+      Canceled &lt;--------------------------- Failed
                           cancel
-&lt;/code&gt;&lt;/pre&gt;
+</code></pre>
 
-&lt;ul&gt;
-  &lt;li&gt;只有在app状态为downloading时，才能pause bulk load，在暂停之后可以restart bulk load，会重新到downloading状态&lt;/li&gt;
-  &lt;li&gt;cancel可以从任何一个状态转换，取消bulk load会删除已经下载的文件，删除remote stroage的bulk load状态，就像bulk load成功或者失败一样，cancel bulk load能够确保bulk load停止。&lt;/li&gt;
-&lt;/ul&gt;
+<ul>
+  <li>只有在app状态为downloading时，才能pause bulk load，在暂停之后可以restart bulk load，会重新到downloading状态</li>
+  <li>cancel可以从任何一个状态转换，取消bulk load会删除已经下载的文件，删除remote stroage的bulk load状态，就像bulk load成功或者失败一样，cancel bulk load能够确保bulk load停止。</li>
+</ul>
 
-&lt;p&gt;若meta server出现进程挂掉或者机器宕机等问题，新meta会从zk上获得bulk load状态信息。zk上的&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;bulk load&lt;/code&gt;文件夹存储着每个正在进行bulk load的表和partition的信息，meta server需要将这些信息同步到内存中，并根据其中的状态继续进行bulk load。&lt;/p&gt;
+<p>若meta server出现进程挂掉或者机器宕机等问题，新meta会从zk上获得bulk load状态信息。zk上的<code class="language-plaintext highlighter-rouge">bulk load</code>文件夹存储着每个正在进行bulk load的表和partition的信息，meta server需要将这些信息同步到内存中，并根据其中的状态继续进行bulk load。</p>
 
-&lt;p&gt;需要说明的是，如果在bulk load在ingestion阶段失败或者在ingestion阶段执行cancel bulk load操作，可能会出现部分partition完成ingestion，而部分失败或者被cancel的情况，即部分partition成功导入了数据，部分partition没有导入数据的现象。&lt;/p&gt;
+<p>需要说明的是，如果在bulk load在ingestion阶段失败或者在ingestion阶段执行cancel bulk load操作，可能会出现部分partition完成ingestion，而部分失败或者被cancel的情况，即部分partition成功导入了数据，部分partition没有导入数据的现象。</p>
 
-&lt;h2 id=&quot;ingest的数据一致性&quot;&gt;ingest的数据一致性&lt;/h2&gt;
+<h2 id="ingest的数据一致性">ingest的数据一致性</h2>
 
-&lt;p&gt;RocksDB在ingest时提供两种模式，一种是认为ingestion的文件数据是最新的，另一种则认为它们是最老的，目前我们认为ingestion的数据是最新的。
-即如下图所示：&lt;/p&gt;
+<p>RocksDB在ingest时提供两种模式，一种是认为ingestion的文件数据是最新的，另一种则认为它们是最老的，目前我们认为ingestion的数据是最新的。
+即如下图所示：</p>
 
-&lt;pre&gt;&lt;code class=&quot;language-txt&quot;&gt;ingest(a=2)                       -&amp;gt; a = 2
-write(a=1) ingest(a=2)            -&amp;gt; a = 2
-write(a=1) ingest(a=2) write(a=3) -&amp;gt; a = 3
-write(a=1) ingest(a=2) del(a)     -&amp;gt; a not existed
-&lt;/code&gt;&lt;/pre&gt;
+<pre><code class="language-txt">ingest(a=2)                       -&gt; a = 2
+write(a=1) ingest(a=2)            -&gt; a = 2
+write(a=1) ingest(a=2) write(a=3) -&gt; a = 3
+write(a=1) ingest(a=2) del(a)     -&gt; a not existed
+</code></pre>
 
-&lt;h2 id=&quot;todo&quot;&gt;TODO&lt;/h2&gt;
+<h2 id="todo">TODO</h2>
 
-&lt;ol&gt;
-  &lt;li&gt;允许配置RocksDB ingest的更多参数&lt;/li&gt;
-  &lt;li&gt;考虑bulk load如何计算CU&lt;/li&gt;
-&lt;/ol&gt;</content><author><name>何昱晨</name></author><summary type="html">功能简介</summary></entry><entry><title type="html">Partition Split设计文档</title><link href="/2020/02/06/partition-split-design.html" rel="alternate" type="text/html" title="Partition Split设计文档" /><published>2020-02-06T00:00:00+00:00</published><updated>2020-02-06T00:00:00+00:00</updated><id>/2020/02/06/partition-split-design</id><content type="html" xml:base="/2020/02/06/partition-split-design.html">&lt;p&gt;关于partition split的基本概念和操作示例可以参照 &lt;a href=&quot;https://pegasus.apache.org/administration/partition-split&quot;&gt;administration/partition-split&lt;/a&gt;，这里将主要描述partition split的设计和实现细节。&lt;/p&gt;
+<ol>
+  <li>允许配置RocksDB ingest的更多参数</li>
+  <li>考虑bulk load如何计算CU</li>
+</ol>]]></content><author><name>何昱晨</name></author><summary type="html"><![CDATA[功能简介]]></summary></entry><entry><title type="html">Partition Split设计文档</title><link href="/2020/02/06/partition-split-design.html" rel="alternate" type="text/html" title="Partition Split设计文档" /><published>2020-02-06T00:00:00+00:00</published><updated>2020-02-06T00:00:00+00:00</updated><id>/2020/02/06/partition-split-design</id><content type="html" xml:base="/2020/02/06/partition-split-design.html"><![CDATA[<p>关于partition split的基本概念和操作示例可以参照 <a href="https://pegasus.apache.org/administration/partition-split">administration/partition-split</a>，这里将主要描述partition split的设计和实现细节。</p>
 
-&lt;hr /&gt;
+<hr />
 
-&lt;h2 id=&quot;功能简介&quot;&gt;功能简介&lt;/h2&gt;
+<h2 id="功能简介">功能简介</h2>
 
-&lt;p&gt;Pegasus在创建table时需要指定partition个数，且该个数为2的幂次。然而，在原有设计中，表的partition个数并不会随着数据量变化而动态变化。在用户的数据量和访问QPS增加，当前partition个数无法满足需求之前，我们需要人工地增加partition数目，避免阈值达到后的服务降级。&lt;/p&gt;
+<p>Pegasus在创建table时需要指定partition个数，且该个数为2的幂次。然而，在原有设计中，表的partition个数并不会随着数据量变化而动态变化。在用户的数据量和访问QPS增加，当前partition个数无法满足需求之前，我们需要人工地增加partition数目，避免阈值达到后的服务降级。</p>
 
-&lt;p&gt;为了简化系统的设计和实现，我们这里要求增加后的partition个数必须是之前的2倍。若原partition个数为8，split后partition个数将变成16。具体来说，原partition序号为 [0, 7]，split后partition序号为 [0, 15]，0号partition将分裂为0号与8号，以此类推。&lt;/p&gt;
+<p>为了简化系统的设计和实现，我们这里要求增加后的partition个数必须是之前的2倍。若原partition个数为8，split后partition个数将变成16。具体来说，原partition序号为 [0, 7]，split后partition序号为 [0, 15]，0号partition将分裂为0号与8号，以此类推。</p>
 
-&lt;p&gt;下图显示了表id为1，0号partition在split前后的示意图：&lt;/p&gt;
+<p>下图显示了表id为1，0号partition在split前后的示意图：</p>
 
-&lt;pre&gt;&lt;code class=&quot;language-txt&quot;&gt; +------+   +------+    +------+
+<pre><code class="language-txt"> +------+   +------+    +------+
  | 1.0  |   | 1.0  |    | 1.0  |
  +------+   +------+    +------+
  primary    secondary   secondary
@@ -361,23 +361,23 @@ write(a=1) ingest(a=2) del(a)     -&amp;gt; a not existed
  | 1.0  |   | 1.0  |    | 1.0  |   | 1.8  |   | 1.8  |    | 1.8  |
  +------+   +------+    +------+   +------+   +------+    +------+ 
  primary    secondary   secondary  primary    secondary   secondary
-&lt;/code&gt;&lt;/pre&gt;
+</code></pre>
 
-&lt;h2 id=&quot;整体流程&quot;&gt;整体流程&lt;/h2&gt;
+<h2 id="整体流程">整体流程</h2>
 
-&lt;p&gt;为了方便描述和画示意图，我们将整体流程分为下面3个部分：&lt;/p&gt;
+<p>为了方便描述和画示意图，我们将整体流程分为下面3个部分：</p>
 
-&lt;ul&gt;
-  &lt;li&gt;开始partition split&lt;/li&gt;
-  &lt;li&gt;replica执行partition split&lt;/li&gt;
-  &lt;li&gt;注册child partition&lt;/li&gt;
-&lt;/ul&gt;
+<ul>
+  <li>开始partition split</li>
+  <li>replica执行partition split</li>
+  <li>注册child partition</li>
+</ul>
 
-&lt;h3 id=&quot;start-partition-split&quot;&gt;Start partition split&lt;/h3&gt;
+<h3 id="start-partition-split">Start partition split</h3>
 
-&lt;pre&gt;&lt;code class=&quot;language-txt&quot;&gt;  
+<pre><code class="language-txt">  
 +--------+  split   +------------+ partition_count*2 +-----------+  
-| client ----------&amp;gt; meta_server --------------------&amp;gt; zookeeper |
+| client ----------&gt; meta_server --------------------&gt; zookeeper |
 +--------+          +------------+                   +-----------+
                           |
                           | on_config_sync
@@ -386,47 +386,47 @@ write(a=1) ingest(a=2) del(a)     -&amp;gt; a not existed
                  | primary partition |
                  +-------------------+
 
-&lt;/code&gt;&lt;/pre&gt;
+</code></pre>
 
-&lt;p&gt;开始partition split的流程如上图所示：&lt;/p&gt;
+<p>开始partition split的流程如上图所示：</p>
 
-&lt;ol&gt;
-  &lt;li&gt;client发送partition split请求给meta server；&lt;/li&gt;
-  &lt;li&gt;meta_server收到请求后，将执行如下操作：
-    &lt;ul&gt;
-      &lt;li&gt;检查请求的参数，如app是否存在、partition_count是否正确等，若参数检查正常则继续执行，否则返回错误给client;&lt;/li&gt;
-      &lt;li&gt;修改zookeeper以及meta内存中的partition_count为新partition_count；&lt;/li&gt;
-      &lt;li&gt;在meta_server内存中为新增的partition初始化数据结构partition_config，并将其ballot设为-1；&lt;/li&gt;
-      &lt;li&gt;返回ERR_OK给client&lt;/li&gt;
-    &lt;/ul&gt;
-  &lt;/li&gt;
-  &lt;li&gt;每个partition的primary通过与meta server之间的config_sync发现meta_server同步的partition_count为本地partition_count的2倍，则开始执行本replica group的split&lt;/li&gt;
-&lt;/ol&gt;
+<ol>
+  <li>client发送partition split请求给meta server；</li>
+  <li>meta_server收到请求后，将执行如下操作：
+    <ul>
+      <li>检查请求的参数，如app是否存在、partition_count是否正确等，若参数检查正常则继续执行，否则返回错误给client;</li>
+      <li>修改zookeeper以及meta内存中的partition_count为新partition_count；</li>
+      <li>在meta_server内存中为新增的partition初始化数据结构partition_config，并将其ballot设为-1；</li>
+      <li>返回ERR_OK给client</li>
+    </ul>
+  </li>
+  <li>每个partition的primary通过与meta server之间的config_sync发现meta_server同步的partition_count为本地partition_count的2倍，则开始执行本replica group的split</li>
+</ol>
 
-&lt;h3 id=&quot;execute-partition-split&quot;&gt;Execute partition split&lt;/h3&gt;
+<h3 id="execute-partition-split">Execute partition split</h3>
 
-&lt;p&gt;partition split是指replica group中的每个replica一分为二的过程。一般来说，一个replica group会包括一个primary和两个secondary共三个replica，分裂后，会新增三个replica，并分别对应前面的一主两备。我们称之前的三个replica为parent，新增的为child。&lt;/p&gt;
+<p>partition split是指replica group中的每个replica一分为二的过程。一般来说，一个replica group会包括一个primary和两个secondary共三个replica，分裂后，会新增三个replica，并分别对应前面的一主两备。我们称之前的三个replica为parent，新增的为child。</p>
 
-&lt;p&gt;partition split的过程与learn比较类似，但也有一定的区别。learn是potential secondary从primary上拷贝数据，它们位于两台不同的机器；而split是三个child分别从它们对应的parent复制数据，child与parent在同一台机器上，并在同一个盘上。因此，child可以：&lt;/p&gt;
+<p>partition split的过程与learn比较类似，但也有一定的区别。learn是potential secondary从primary上拷贝数据，它们位于两台不同的机器；而split是三个child分别从它们对应的parent复制数据，child与parent在同一台机器上，并在同一个盘上。因此，child可以：</p>
 
-&lt;ul&gt;
-  &lt;li&gt;直接复制parent内存中的mutation，而无需对mutation进行序列化和反序列化；&lt;/li&gt;
-  &lt;li&gt;直接读取private log并replay private log，而无需再拷贝private log；&lt;/li&gt;
-  &lt;li&gt;直接apply parent生成的rocksdb checkpoint，而无需进行sst文件的拷贝。&lt;/li&gt;
-&lt;/ul&gt;
+<ul>
+  <li>直接复制parent内存中的mutation，而无需对mutation进行序列化和反序列化；</li>
+  <li>直接读取private log并replay private log，而无需再拷贝private log；</li>
+  <li>直接apply parent生成的rocksdb checkpoint，而无需进行sst文件的拷贝。</li>
+</ul>
 
-&lt;pre&gt;&lt;code class=&quot;language-txt&quot;&gt;+--------+                          +-------+
+<pre><code class="language-txt">+--------+                          +-------+
 | parent |                          | child |
 +--------+                          +-------+
     |         4. create child           |
-    |----------------------------------&amp;gt;|
+    |----------------------------------&gt;|
     |                                   |
     |         5. async learn            |
-    |----------------------------------&amp;gt;|
+    |----------------------------------&gt;|
     |           (2pc async)             |
     |                                   |
     |      6. finish async learn        |
-    |&amp;lt;----------------------------------|
+    |&lt;----------------------------------|
     |     (send to primary parent)      |
     |                                   |
     |  7. all child finish async learn  |
@@ -434,165 +434,165 @@ write(a=1) ingest(a=2) del(a)     -&amp;gt; a not existed
     | （2pc sync, wait for sync_point)  |
     |                                   |
     |  8. update child partition_count  |
-    |----------------------------------&amp;gt;|
+    |----------------------------------&gt;|
     |                                   |
     | 9. update partition_count ack     |
-    |&amp;lt;---------------------------------&amp;gt;|
+    |&lt;---------------------------------&gt;|
     |                                   |
-&lt;/code&gt;&lt;/pre&gt;
+</code></pre>
 
-&lt;p&gt;replica执行partition split的流程如上图所示：&lt;/p&gt;
+<p>replica执行partition split的流程如上图所示：</p>
 
-&lt;ol&gt;
-  &lt;li&gt;primary parent创建自己的child，child的ballot以及app_info.partition_count设为与parent相等，同时，让child的数据与parent位于同一块磁盘。并且，通过group_check通知各个secondary创建他们的child;&lt;/li&gt;
-  &lt;li&gt;child异步learn parent的状态
-    &lt;ul&gt;
-      &lt;li&gt;复制parent的prepare list;&lt;/li&gt;
-      &lt;li&gt;apply parent的checkpoint;&lt;/li&gt;
-      &lt;li&gt;读取private log并relay log;&lt;/li&gt;
-      &lt;li&gt;复制parent内存中的mutation;&lt;/li&gt;
-      &lt;li&gt;在这期间，parent收到的写请求也会异步地复制给child&lt;/li&gt;
-    &lt;/ul&gt;
-  &lt;/li&gt;
-  &lt;li&gt;当child完成异步复制之后，会给primary parent发送通知&lt;/li&gt;
-  &lt;li&gt;当primary parent收到所有child的通知之后，将写请求改为同步复制
-    &lt;ul&gt;
-      &lt;li&gt;在此后的2PC过程中，secondary都必须收到child的回复后才能向primary回复ACK，而primary也必须收到child的确认才可以commit&lt;/li&gt;
-      &lt;li&gt;我们将同步复制模式后的第一个decree称为&lt;strong&gt;&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;同步点&lt;/code&gt;&lt;/strong&gt;，当同步点mutation commit后，所有的child已拥有所需的全部数据&lt;/li&gt;
-    &lt;/ul&gt;
-  &lt;/li&gt;
-  &lt;li&gt;primary通知所有的child更新partition_count为新partition_count，并把该信息写入磁盘文件.app_info中&lt;/li&gt;
-  &lt;li&gt;当primary收到所有child更新partition_count成功的ack后，准备向meta_server注册child&lt;/li&gt;
-&lt;/ol&gt;
+<ol>
+  <li>primary parent创建自己的child，child的ballot以及app_info.partition_count设为与parent相等，同时，让child的数据与parent位于同一块磁盘。并且，通过group_check通知各个secondary创建他们的child;</li>
+  <li>child异步learn parent的状态
+    <ul>
+      <li>复制parent的prepare list;</li>
+      <li>apply parent的checkpoint;</li>
+      <li>读取private log并relay log;</li>
+      <li>复制parent内存中的mutation;</li>
+      <li>在这期间，parent收到的写请求也会异步地复制给child</li>
+    </ul>
+  </li>
+  <li>当child完成异步复制之后，会给primary parent发送通知</li>
+  <li>当primary parent收到所有child的通知之后，将写请求改为同步复制
+    <ul>
+      <li>在此后的2PC过程中，secondary都必须收到child的回复后才能向primary回复ACK，而primary也必须收到child的确认才可以commit</li>
+      <li>我们将同步复制模式后的第一个decree称为<strong><code class="language-plaintext highlighter-rouge">同步点</code></strong>，当同步点mutation commit后，所有的child已拥有所需的全部数据</li>
+    </ul>
+  </li>
+  <li>primary通知所有的child更新partition_count为新partition_count，并把该信息写入磁盘文件.app_info中</li>
+  <li>当primary收到所有child更新partition_count成功的ack后，准备向meta_server注册child</li>
+</ol>
 
-&lt;h3 id=&quot;register-child&quot;&gt;Register child&lt;/h3&gt;
+<h3 id="register-child">Register child</h3>
 
-&lt;pre&gt;&lt;code class=&quot;language-txt&quot;&gt;+----------------+ 10. register child +-------------+                         +-----------+
-|                |-------------------&amp;gt;|             | 11. update child config |           |
-| parent primary |                    | meta_server |------------------------&amp;gt;| zookeeper |
-|                |&amp;lt;-------------------|             |                         |           |
+<pre><code class="language-txt">+----------------+ 10. register child +-------------+                         +-----------+
+|                |-------------------&gt;|             | 11. update child config |           |
+| parent primary |                    | meta_server |------------------------&gt;| zookeeper |
+|                |&lt;-------------------|             |                         |           |
 +----------------+        ack         +-------------+                         +-----------+
         |
         | 12. active child
 +-------v---------+
 |  child primary  |
 +-----------------+
-&lt;/code&gt;&lt;/pre&gt;
+</code></pre>
 
-&lt;p&gt;注册child的流程如上图所示：&lt;/p&gt;
+<p>注册child的流程如上图所示：</p>
 
-&lt;ol&gt;
-  &lt;li&gt;primary向meta server注册child partition
-    &lt;ul&gt;
-      &lt;li&gt;将child的ballot设为ballot(parent) + 1&lt;/li&gt;
-      &lt;li&gt;parent暂时拒绝读写访问，此时，parent和child都不响应client的读写请求&lt;/li&gt;
-      &lt;li&gt;向meta_server发送注册child的请求&lt;/li&gt;
-    &lt;/ul&gt;
-  &lt;/li&gt;
-  &lt;li&gt;meta_server收到注册请求后，将更新child的partition_configuration，并将它写入zookeeper和内存，然后返回ERR_OK给primary parent&lt;/li&gt;
-  &lt;li&gt;primary从meta_server收到注册成功的回复，先激活child：
-    &lt;ul&gt;
-      &lt;li&gt;将对应的child的状态由PS_PARTITION_SPLIT改为PS_PRIMARY；&lt;/li&gt;
-      &lt;li&gt;这个升级为PS_PRIMARY的child会通过group_check让其它机器上的child升级为PS_SECONARY。此时, child partition可以开始提供正常的读写服务&lt;/li&gt;
-    &lt;/ul&gt;
-  &lt;/li&gt;
-  &lt;li&gt;primary parent通知所有的seconadary更新app_info.partition_count，并恢复读写服务。&lt;/li&gt;
-&lt;/ol&gt;
+<ol>
+  <li>primary向meta server注册child partition
+    <ul>
+      <li>将child的ballot设为ballot(parent) + 1</li>
+      <li>parent暂时拒绝读写访问，此时，parent和child都不响应client的读写请求</li>
+      <li>向meta_server发送注册child的请求</li>
+    </ul>
+  </li>
+  <li>meta_server收到注册请求后，将更新child的partition_configuration，并将它写入zookeeper和内存，然后返回ERR_OK给primary parent</li>
+  <li>primary从meta_server收到注册成功的回复，先激活child：
+    <ul>
+      <li>将对应的child的状态由PS_PARTITION_SPLIT改为PS_PRIMARY；</li>
+      <li>这个升级为PS_PRIMARY的child会通过group_check让其它机器上的child升级为PS_SECONARY。此时, child partition可以开始提供正常的读写服务</li>
+    </ul>
+  </li>
+  <li>primary parent通知所有的seconadary更新app_info.partition_count，并恢复读写服务。</li>
+</ol>
 
-&lt;p&gt;在第13步之前，parent与child所对应的所有读写请求都由parent处理；在第13步之后，parent将拒绝child对应的请求。&lt;/p&gt;
+<p>在第13步之前，parent与child所对应的所有读写请求都由parent处理；在第13步之后，parent将拒绝child对应的请求。</p>
 
-&lt;h2 id=&quot;split过程中如何处理client请求&quot;&gt;split过程中如何处理client请求&lt;/h2&gt;
+<h2 id="split过程中如何处理client请求">split过程中如何处理client请求</h2>
 
-&lt;p&gt;我们引入&lt;strong&gt;&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;partition_version&lt;/code&gt;&lt;/strong&gt;这个概念，来保证client读写数据的正确性，即，不要把数据写错地方，不要读到错误的数据，不要读不到数据。&lt;/p&gt;
+<p>我们引入<strong><code class="language-plaintext highlighter-rouge">partition_version</code></strong>这个概念，来保证client读写数据的正确性，即，不要把数据写错地方，不要读到错误的数据，不要读不到数据。</p>
 
-&lt;blockquote&gt;
-  &lt;p&gt;partition_version是primary内存中的一个变量，一般应为partition_count – 1，在split过程中拒绝读写时候会被设置为-1&lt;/p&gt;
-&lt;/blockquote&gt;
+<blockquote>
+  <p>partition_version是primary内存中的一个变量，一般应为partition_count – 1，在split过程中拒绝读写时候会被设置为-1</p>
+</blockquote>
 
-&lt;p&gt;client在向server端发读写请求时，会在请求的header中带上所访问的hash_key的hash值，primary将此hash值与partition_version进行按位与操作，检查结果是否等于partitionId。
-检查的过程用伪代码表示如下：&lt;/p&gt;
+<p>client在向server端发读写请求时，会在请求的header中带上所访问的hash_key的hash值，primary将此hash值与partition_version进行按位与操作，检查结果是否等于partitionId。
+检查的过程用伪代码表示如下：</p>
 
-&lt;div class=&quot;language-plaintext highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;if partition_version == -1
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>if partition_version == -1
     return ERR_OBJECT_NOT_FOUND
-elif partition_version &amp;amp; hash ! = partition
+elif partition_version &amp; hash ! = partition
     return ERR_PARENT_PARTITION_MISUSED
 return ERR_OK
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+</code></pre></div></div>
 
-&lt;p&gt;client收到ERR_OBJECT_NOT_FOUND时，会从meta_server更新当前partition的信息；收到ERR_PARENT_PARTITION_MISUSED时，会更新table所有partition的信息。信息更新后，再向正确的partition重发请求&lt;/p&gt;
+<p>client收到ERR_OBJECT_NOT_FOUND时，会从meta_server更新当前partition的信息；收到ERR_PARENT_PARTITION_MISUSED时，会更新table所有partition的信息。信息更新后，再向正确的partition重发请求</p>
 
-&lt;p&gt;下面举一个例子来分析partition_version的作用：&lt;br /&gt;
-假设split前，table的partition个数为4，split后为8，client需要读写hash_key的hash值为5的key-value，&lt;/p&gt;
+<p>下面举一个例子来分析partition_version的作用：<br />
+假设split前，table的partition个数为4，split后为8，client需要读写hash_key的hash值为5的key-value，</p>
 
-&lt;ol&gt;
-  &lt;li&gt;split前，hash % partition_count = 5%4 = 1，访问replica1，正确&lt;/li&gt;
-  &lt;li&gt;split命令发出后&lt;/li&gt;
-  &lt;li&gt;
-    &lt;div class=&quot;language-plaintext highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;partition_count(meta) = 8 
+<ol>
+  <li>split前，hash % partition_count = 5%4 = 1，访问replica1，正确</li>
+  <li>split命令发出后</li>
+  <li>
+    <div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>partition_count(meta) = 8 
 ballot(replica5) = -1 
 partition_count(replica1) = 4  
 partition_version(replica1) = 4–1 = 3
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;    &lt;/div&gt;
-  &lt;/li&gt;
-&lt;/ol&gt;
+</code></pre></div>    </div>
+  </li>
+</ol>
 
-&lt;ul&gt;
-  &lt;li&gt;对于之前加入的client，由于缓存，&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;partition_count(client-old) = 4&lt;/code&gt;，会访问replica1&lt;/li&gt;
-  &lt;li&gt;对于此时新加入的client，它从meta得到新的状态，&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;partition_count(client-new) = 8&lt;/code&gt;，通过&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;hash % partition_count = 5%8 = 5&lt;/code&gt;得知应该访问replica5，但是，ballot(replica5) = -1，client知道replica5暂不存在，所以根据&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;hash % (partition_count / 2) = 1&lt;/code&gt;，会访问replica1，replica1收到请求后，检查&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;hash &amp;amp; partition_version(replica1) = 5&amp;amp;3 = 1&lt;/code&gt;，正确
-    &lt;ol&gt;
-      &lt;li&gt;split完成后&lt;/li&gt;
-    &lt;/ol&gt;
-  &lt;/li&gt;
-&lt;/ul&gt;
+<ul>
+  <li>对于之前加入的client，由于缓存，<code class="language-plaintext highlighter-rouge">partition_count(client-old) = 4</code>，会访问replica1</li>
+  <li>对于此时新加入的client，它从meta得到新的状态，<code class="language-plaintext highlighter-rouge">partition_count(client-new) = 8</code>，通过<code class="language-plaintext highlighter-rouge">hash % partition_count = 5%8 = 5</code>得知应该访问replica5，但是，ballot(replica5) = -1，client知道replica5暂不存在，所以根据<code class="language-plaintext highlighter-rouge">hash % (partition_count / 2) = 1</code>，会访问replica1，replica1收到请求后，检查<code class="language-plaintext highlighter-rouge">hash &amp; partition_version(replica1) = 5&amp;3 = 1</code>，正确
+    <ol>
+      <li>split完成后</li>
+    </ol>
+  </li>
+</ul>
 
-&lt;div class=&quot;language-plaintext highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;partition_count(replica1) = partition_count(replica5) = 8
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>partition_count(replica1) = partition_count(replica5) = 8
 partition_version(replica1) = partition_version(replica5) = 7
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+</code></pre></div></div>
 
-&lt;ul&gt;
-  &lt;li&gt;对于之前的cilent，由于缓存的原因，继续访问replica1，但replica1收到请求后，检查&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;hash &amp;amp; partition(replica1) = 5 % 8 = 5&lt;/code&gt;，由于5不等于partitionId，所以拒绝访问，并通知client从meta_server更新config，client更新后，将会访问replica5，读写也正确&lt;/li&gt;
-  &lt;li&gt;对于此时新加入的client，将会直接访问replica5，读写也正确&lt;/li&gt;
-&lt;/ul&gt;
+<ul>
+  <li>对于之前的cilent，由于缓存的原因，继续访问replica1，但replica1收到请求后，检查<code class="language-plaintext highlighter-rouge">hash &amp; partition(replica1) = 5 % 8 = 5</code>，由于5不等于partitionId，所以拒绝访问，并通知client从meta_server更新config，client更新后，将会访问replica5，读写也正确</li>
+  <li>对于此时新加入的client，将会直接访问replica5，读写也正确</li>
+</ul>
 
-&lt;p&gt;上面描述的交互依赖于一个前提，即request header中的hash必须是希望访问的hash_key的hash值，而这个假设对于绝大部分请求都成立，除了全表scan。在full_scan时，request header中的hash是partitionId，因此可能会得到冗余数据。&lt;br /&gt;
-因此，我们为full_scan增加一步检查操作，replica server从rocksdb中读到数据后，检查数据的hash，滤除无效数据。这样，除了在split的过程中，client不会读到无效数据。由于full_scan本身不具备原子性和一致性，想完全解决一致性问题很难，而split是一个非频繁操作，我们只要让split避开full_scan的时间段就可以了。&lt;/p&gt;
+<p>上面描述的交互依赖于一个前提，即request header中的hash必须是希望访问的hash_key的hash值，而这个假设对于绝大部分请求都成立，除了全表scan。在full_scan时，request header中的hash是partitionId，因此可能会得到冗余数据。<br />
+因此，我们为full_scan增加一步检查操作，replica server从rocksdb中读到数据后，检查数据的hash，滤除无效数据。这样，除了在split的过程中，client不会读到无效数据。由于full_scan本身不具备原子性和一致性，想完全解决一致性问题很难，而split是一个非频繁操作，我们只要让split避开full_scan的时间段就可以了。</p>
 
-&lt;p&gt;partition_version除了用于client的访问控制，还用于无效数据清理。
-partition split结束后，历史数据会同时存在于parent和child，但实际上应该分别只保留一半数据。我们同样可以使用&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;partition_version &amp;amp; hash == partitionId&lt;/code&gt;把无效数据区分出来，并通过rocksdb filter回收清理这些数据。&lt;/p&gt;
+<p>partition_version除了用于client的访问控制，还用于无效数据清理。
+partition split结束后，历史数据会同时存在于parent和child，但实际上应该分别只保留一半数据。我们同样可以使用<code class="language-plaintext highlighter-rouge">partition_version &amp; hash == partitionId</code>把无效数据区分出来，并通过rocksdb filter回收清理这些数据。</p>
 
-&lt;h2 id=&quot;异常处理&quot;&gt;异常处理&lt;/h2&gt;
+<h2 id="异常处理">异常处理</h2>
 
-&lt;p&gt;在执行partition split时，我们需要检查partition的健康状态，我们认为只有在partition健康的情况下，才会开始split。一个典型的“不健康”场景是partition正在执行learn，或者secondary数量过少。并且，replica是通过on_config_sync检查partition_count是否翻倍来判断是否需要执行split，而on_config_sync是周期性执行的，replica完全可以等到partition健康再进行split。&lt;/p&gt;
+<p>在执行partition split时，我们需要检查partition的健康状态，我们认为只有在partition健康的情况下，才会开始split。一个典型的“不健康”场景是partition正在执行learn，或者secondary数量过少。并且，replica是通过on_config_sync检查partition_count是否翻倍来判断是否需要执行split，而on_config_sync是周期性执行的，replica完全可以等到partition健康再进行split。</p>
 
-&lt;p&gt;在执行partition split过程中，parent的ballot不能发生变化，一旦发生变化，将抛弃这个partition所有的child，重新开始split过程。即在split过程中，如果发生replica迁移，无论是因为故障还是负载均衡的原因，我们都认为本次split失败，在之后的on_config_sync中重新split。&lt;/p&gt;
+<p>在执行partition split过程中，parent的ballot不能发生变化，一旦发生变化，将抛弃这个partition所有的child，重新开始split过程。即在split过程中，如果发生replica迁移，无论是因为故障还是负载均衡的原因，我们都认为本次split失败，在之后的on_config_sync中重新split。</p>
 
-&lt;p&gt;若在partition split过程中，meta_server发生故障，meta group会选出一个新的leader，会从zookeeper中得到新的partition_count，并通过on_config_sync开始split&lt;/p&gt;</content><author><name>何昱晨</name></author><summary type="html">关于partition split的基本概念和操作示例可以参照 administration/partition-split，这里将主要描述partition split的设计和实现细节。</summary></entry><entry><title type="html">跨机房同步设计文档</title><link href="/2019/06/09/duplication-design.html" rel="alternate" type="text/html" title="跨机房同步设计文档" /><published>2019-06-09T00:00:00+00:00</published><updated>2019-06-09T00:00:00+00:00</updated><id>/2019/06/09/duplication-design</id><content type="html" xml:base="/2019/06/09/duplication-design.html">&lt;p&gt;关于热备份的基本概念和使用可以参照 &lt;a href=&quot;/administration/duplication&quot;&gt;administration/duplication&lt;/a&gt;，这里将主要描述跨机房同步的设计方案和执行细节。&lt;/p&gt;
+<p>若在partition split过程中，meta_server发生故障，meta group会选出一个新的leader，会从zookeeper中得到新的partition_count，并通过on_config_sync开始split</p>]]></content><author><name>何昱晨</name></author><summary type="html"><![CDATA[关于partition split的基本概念和操作示例可以参照 administration/partition-split，这里将主要描述partition split的设计和实现细节。]]></summary></entry><entry><title type="html">跨机房同步设计文档</title><link href="/2019/06/09/duplication-design.html" rel="alternate" type="text/html" title="跨机房同步设计文档" /><published>2019-06-09T00:00:00+00:00</published><updated>2019-06-09T00:00:00+00:00</updated><id>/2019/06/09/duplication-design</id><content type="html" xml:base="/2019/06/09/duplication-design.html"><![CDATA[<p>关于热备份的基本概念和使用可以参照 <a href="/administration/duplication">administration/duplication</a>，这里将主要描述跨机房同步的设计方案和执行细节。</p>
 
-&lt;hr /&gt;
+<hr />
 
-&lt;h2 id=&quot;背景&quot;&gt;背景&lt;/h2&gt;
+<h2 id="背景">背景</h2>
 
-&lt;p&gt;小米内部有些业务对服务可用性有较高要求，但又不堪每年数次机房故障的烦恼，于是向 pegasus 团队寻求帮助，希望在机房故障时，服务能够切换流量至备用机房而数据不致丢失。因为成本所限，在小米内部以双机房为主。&lt;/p&gt;
+<p>小米内部有些业务对服务可用性有较高要求，但又不堪每年数次机房故障的烦恼，于是向 pegasus 团队寻求帮助，希望在机房故障时，服务能够切换流量至备用机房而数据不致丢失。因为成本所限，在小米内部以双机房为主。</p>
 
-&lt;p&gt;通常解决该问题有几种思路：&lt;/p&gt;
+<p>通常解决该问题有几种思路：</p>
 
-&lt;ol&gt;
-  &lt;li&gt;
-    &lt;p&gt;由 client 将数据同步写至两机房。这种方法较为低效，容易受跨机房专线带宽影响，并且延时高，同机房 1ms 内的写延时在跨机房下通常会放大到几十毫秒，优点是一致性强，但需要 client 实现。服务端的复杂度小，客户端的复杂度大。&lt;/p&gt;
-  &lt;/li&gt;
-  &lt;li&gt;
-    &lt;p&gt;使用 raft/paxos 协议进行 quorum write 实现机房间同步。这种做法需要至少 3 副本分别在 3 机房部署，延时较高但提供强一致性，因为要考虑跨集群的元信息管理，这是实现难度最大的一种方案。&lt;/p&gt;
-  &lt;/li&gt;
-  &lt;li&gt;
-    &lt;p&gt;在两机房下分别部署两个 pegasus 集群，集群间进行异步复制。机房 A 的数据可能会在 1 分钟后复制到机房 B，但 client 对此无感知，只感知机房 A。在机房 A 故障时，用户可以选择写机房 B。这种方案适合 &lt;strong&gt;最终一致性/弱一致性&lt;/strong&gt; 要求的场景。后面会讲解我们如何实现 “最终一致性”。&lt;/p&gt;
-  &lt;/li&gt;
-&lt;/ol&gt;
+<ol>
+  <li>
+    <p>由 client 将数据同步写至两机房。这种方法较为低效，容易受跨机房专线带宽影响，并且延时高，同机房 1ms 内的写延时在跨机房下通常会放大到几十毫秒，优点是一致性强，但需要 client 实现。服务端的复杂度小，客户端的复杂度大。</p>
+  </li>
+  <li>
+    <p>使用 raft/paxos 协议进行 quorum write 实现机房间同步。这种做法需要至少 3 副本分别在 3 机房部署，延时较高但提供强一致性，因为要考虑跨集群的元信息管理，这是实现难度最大的一种方案。</p>
+  </li>
+  <li>
+    <p>在两机房下分别部署两个 pegasus 集群，集群间进行异步复制。机房 A 的数据可能会在 1 分钟后复制到机房 B，但 client 对此无感知，只感知机房 A。在机房 A 故障时，用户可以选择写机房 B。这种方案适合 <strong>最终一致性/弱一致性</strong> 要求的场景。后面会讲解我们如何实现 “最终一致性”。</p>
+  </li>
+</ol>
 
-&lt;p&gt;基于实际业务需求考虑，我们选择方案3。&lt;/p&gt;
+<p>基于实际业务需求考虑，我们选择方案3。</p>
 
-&lt;div class=&quot;language-plaintext highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;+-------+    +-------+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>+-------+    +-------+
 | +---+ |    | +---+ |
-| | P +--------&amp;gt; S | |
+| | P +--------&gt; S | |
 | +-+-+ |    | +---+ |
 |   |   |    |       |
 | +-v-+ |    |       |
@@ -600,131 +600,131 @@ partition split结束后，历史数据会同时存在于parent和child，但实
 | +---+ |    |       |
 +-------+    +-------+
   dead         alive
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+</code></pre></div></div>
 
-&lt;p&gt;如上图可看到，只用两机房，使用 raft 协议进行进行跨机房同步依然
-无法避免机房故障时的停服。（5节点同理）&lt;/p&gt;
+<p>如上图可看到，只用两机房，使用 raft 协议进行进行跨机房同步依然
+无法避免机房故障时的停服。（5节点同理）</p>
 
-&lt;div class=&quot;language-plaintext highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;          +---+                     +---+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>          +---+                     +---+
           | A |                     | B |
           +-+-+                     +-+-+
             |                         |
 +--------------------------------------------------+
 |    +------v-------+          +------v-------+    |
-|    |  pegasus A   &amp;lt;----------&amp;gt;  pegasus B   |    |
+|    |  pegasus A   &lt;----------&gt;  pegasus B   |    |
 |    +--------------+          +--------------+    |
 +--------------------------------------------------+
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+</code></pre></div></div>
 
-&lt;p&gt;如上图可看到，虽然是各写一个机房，但理想情况下 A B 都能读到所有的数据。
-机房故障时，原来访问A集群的客户端可以切换至B集群。&lt;/p&gt;
+<p>如上图可看到，虽然是各写一个机房，但理想情况下 A B 都能读到所有的数据。
+机房故障时，原来访问A集群的客户端可以切换至B集群。</p>
 
-&lt;h2 id=&quot;架构选择&quot;&gt;架构选择&lt;/h2&gt;
+<h2 id="架构选择">架构选择</h2>
 
-&lt;p&gt;即使同样是做方案 3 的集群间异步同步，业内的做法也有不同：&lt;/p&gt;
+<p>即使同样是做方案 3 的集群间异步同步，业内的做法也有不同：</p>
 
-&lt;ol&gt;
-  &lt;li&gt;
-    &lt;p&gt;&lt;strong&gt;各集群单副本&lt;/strong&gt;：这种方案考虑到多集群已存在冗余的情况下，可以减少单集群内的副本数。同时既然一致性已没有保证，大可以索性脱离一致性协议，完全依赖于稳定的集群间网络，保证即使单机房宕机，损失的数据量也是仅仅几十毫秒内的请求量级。考虑机房数为 5 的时候，如果每个机房都是 3 副本，那么全量数据就是 3*5=15 副本，这时候简化为各集群单副本的方案就是几乎最自然的选择。&lt;/p&gt;
-  &lt;/li&gt;
-  &lt;li&gt;
-    &lt;p&gt;&lt;strong&gt;同步工具作为外部依赖使用&lt;/strong&gt;：跨机房同步自然是尽可能不影响服务是最好，所以同步工具可以作为外部依赖部署，单纯访问节点磁盘的日志（WAL）并转发日志。这个方案对日志 GC 有前提条件，即&lt;strong&gt;日志不可以在同步完成前被删除&lt;/strong&gt;，否则就丢数据了。但存储服务日志的 GC 是外部工具难以控制的，所以可以把日志强行保留一周以上，但缺点是磁盘空间的成本较大。同步工具作为外部依赖的优点在于稳定性强，不影响服务，缺点在于对服务的控制能力差，很难处理一些琐碎的一致性问题（后面会讲到），&lt;strong&gt;难以实现最终一致性&lt;/strong&gt;。&lt;/p&gt;
-  &lt;/li&gt;
-  &lt;li&gt;
-    &lt;p&gt;&lt;strong&gt;同步工具嵌入到服务内部&lt;/strong&gt;：对应到 Pegasus 则是将热备份功能集成至 ReplicaServer 中。这种做法在工具稳定前会有一段阵痛期，即工具的稳定性会影响服务的稳定性。但实现的灵活性较优，同时易于部署，不需要部署额外的服务。&lt;/p&gt;
-  &lt;/li&gt;
-&lt;/ol&gt;
+<ol>
+  <li>
+    <p><strong>各集群单副本</strong>：这种方案考虑到多集群已存在冗余的情况下，可以减少单集群内的副本数。同时既然一致性已没有保证，大可以索性脱离一致性协议，完全依赖于稳定的集群间网络，保证即使单机房宕机，损失的数据量也是仅仅几十毫秒内的请求量级。考虑机房数为 5 的时候，如果每个机房都是 3 副本，那么全量数据就是 3*5=15 副本，这时候简化为各集群单副本的方案就是几乎最自然的选择。</p>
+  </li>
+  <li>
+    <p><strong>同步工具作为外部依赖使用</strong>：跨机房同步自然是尽可能不影响服务是最好，所以同步工具可以作为外部依赖部署，单纯访问节点磁盘的日志（WAL）并转发日志。这个方案对日志 GC 有前提条件，即<strong>日志不可以在同步完成前被删除</strong>，否则就丢数据了。但存储服务日志的 GC 是外部工具难以控制的，所以可以把日志强行保留一周以上，但缺点是磁盘空间的成本较大。同步工具作为外部依赖的优点在于稳定性强，不影响服务，缺点在于对服务的控制能力差，很难处理一些琐碎的一致性问题（后面会讲到），<strong>难以实现最终一致性</strong>。</p>
+  </li>
+  <li>
+    <p><strong>同步工具嵌入到服务内部</strong>：对应到 Pegasus 则是将热备份功能集成至 ReplicaServer 中。这种做法在工具稳定前会有一段阵痛期，即工具的稳定性会影响服务的稳定性。但实现的灵活性较优，同时易于部署，不需要部署额外的服务。</p>
+  </li>
+</ol>
 
-&lt;p&gt;最初 Pegasus 的热备份方案借鉴于 HBase Replication，基本只考虑了第三种方案。而确实这种方案更容易保证 Pegasus 数据的一致性。&lt;/p&gt;
+<p>最初 Pegasus 的热备份方案借鉴于 HBase Replication，基本只考虑了第三种方案。而确实这种方案更容易保证 Pegasus 数据的一致性。</p>
 
-&lt;h2 id=&quot;基本概念&quot;&gt;基本概念&lt;/h2&gt;
+<h2 id="基本概念">基本概念</h2>
 
-&lt;ul&gt;
-  &lt;li&gt;&lt;strong&gt;duplicate_rpc&lt;/strong&gt;&lt;/li&gt;
-  &lt;li&gt;&lt;strong&gt;cluster id&lt;/strong&gt;&lt;/li&gt;
-  &lt;li&gt;&lt;strong&gt;timetag&lt;/strong&gt;&lt;/li&gt;
-  &lt;li&gt;&lt;strong&gt;confirmed_decree&lt;/strong&gt;&lt;/li&gt;
-&lt;/ul&gt;
+<ul>
+  <li><strong>duplicate_rpc</strong></li>
+  <li><strong>cluster id</strong></li>
+  <li><strong>timetag</strong></li>
+  <li><strong>confirmed_decree</strong></li>
+</ul>
 
-&lt;div class=&quot;language-plaintext highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;+----------+     +----------+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>+----------+     +----------+
 | +------+ |     | +------+ |
-| | app1 +---------&amp;gt; app1 | |
+| | app1 +---------&gt; app1 | |
 | +------+ |     | +------+ |
 |          |     |          |
 | cluster1 |     | cluster2 |
 +----------+     +----------+
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+</code></pre></div></div>
 
-&lt;p&gt;pegasus 的热备份以表为粒度。支持单向和双向的复制。为了运维方便，两集群表名必须一致。为了可扩展性和易用性，两集群 partition count 可不同。&lt;/p&gt;
+<p>pegasus 的热备份以表为粒度。支持单向和双向的复制。为了运维方便，两集群表名必须一致。为了可扩展性和易用性，两集群 partition count 可不同。</p>
 
-&lt;div class=&quot;language-plaintext highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;                                    +------------+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>                                    +------------+
                                     | +--------+ |
-                               +------&amp;gt;replica1| |
+                               +------&gt;replica1| |
                                |    | +--------+ |
 +------------+                 |    |            |
 | +--------+ |                 |    | +--------+ |
-| |replica1| |                 +------&amp;gt;replica2| |
+| |replica1| |                 +------&gt;replica2| |
 | +--------+ |                 |    | +--------+ |
-|            +-----------------&amp;gt;    |            |
+|            +-----------------&gt;    |            |
 | +--------+ |                 |    | +--------+ |
-| |replica2| |                 +------&amp;gt;replica3| |
+| |replica2| |                 +------&gt;replica3| |
 | +--------+ |                 |    | +--------+ |
 +------------+                 |    |            |
                                |    | +--------+ |
-                               +------&amp;gt;replica4| |
+                               +------&gt;replica4| |
   cluster A                         | +--------+ |
                                     +------------+
 
                                       cluster B
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+</code></pre></div></div>
 
-&lt;h3 id=&quot;duplicate_rpc&quot;&gt;duplicate_rpc&lt;/h3&gt;
+<h3 id="duplicate_rpc">duplicate_rpc</h3>
 
-&lt;p&gt;如上图所示，每个 replica （这里特指每个分片的 primary，注意 secondary 不负责热备份复制）独自复制自己的 private log 到目的集群，replica 之间互不影响。数据复制直接通过 pegasus client 来完成。每一条写入 A 的记录（如 set / multiset）都会通过 pegasus client 复制到 B。为了将热备份的写与常规写区别开，我们这里定义 &lt;strong&gt;&lt;em&gt;duplicate_rpc&lt;/em&gt;&lt;/strong&gt; 表示热备写。&lt;/p&gt;
+<p>如上图所示，每个 replica （这里特指每个分片的 primary，注意 secondary 不负责热备份复制）独自复制自己的 private log 到目的集群，replica 之间互不影响。数据复制直接通过 pegasus client 来完成。每一条写入 A 的记录（如 set / multiset）都会通过 pegasus client 复制到 B。为了将热备份的写与常规写区别开，我们这里定义 <strong><em>duplicate_rpc</em></strong> 表示热备写。</p>
 
-&lt;p&gt;A-&amp;gt;B 的热备写，B 也同样会经由三副本的 PacificA 协议提交，并且写入 private log 中。&lt;/p&gt;
+<p>A-&gt;B 的热备写，B 也同样会经由三副本的 PacificA 协议提交，并且写入 private log 中。</p>
 
-&lt;h3 id=&quot;集群间写冲突&quot;&gt;集群间写冲突&lt;/h3&gt;
+<h3 id="集群间写冲突">集群间写冲突</h3>
 
-&lt;p&gt;假设 A,B 两集群故障断连1小时，那么 B 可能在1小时后才收到来自 A 的热备写，这时候 A 的热备写可能比 B 的数据更老，我们就要引入&lt;strong&gt;“数据时间戳”(timestamp)&lt;/strong&gt;的概念，避免老的写却覆盖了新的数据。&lt;/p&gt;
+<p>假设 A,B 两集群故障断连1小时，那么 B 可能在1小时后才收到来自 A 的热备写，这时候 A 的热备写可能比 B 的数据更老，我们就要引入<strong>“数据时间戳”(timestamp)</strong>的概念，避免老的写却覆盖了新的数据。</p>
 
-&lt;p&gt;实现的方式就是在每次写之前进行一次读操作，并校验数据时间戳是否小于写的时间戳，如果是则允许写入，不是的话就忽略这个写。这个机制通常被称为 &lt;em&gt;“last write wins”&lt;/em&gt;, 这个问题也被称作 &lt;em&gt;“active-active writes collision”&lt;/em&gt;, 是存储系统做异步多活的常见问题和解法。&lt;/p&gt;
+<p>实现的方式就是在每次写之前进行一次读操作，并校验数据时间戳是否小于写的时间戳，如果是则允许写入，不是的话就忽略这个写。这个机制通常被称为 <em>“last write wins”</em>, 这个问题也被称作 <em>“active-active writes collision”</em>, 是存储系统做异步多活的常见问题和解法。</p>
 
-&lt;p&gt;显然从“直接写”到“读后写”，多了一次读操作的开销，损害了我们的写性能。有什么做法可以优化? 事实上我们可以引入&lt;strong&gt;多版本机制&lt;/strong&gt;: 多个时间戳的写可以共存, 读的时候选取最新的读。具体做法就是在每个 key 后带上时间戳, 如下:&lt;/p&gt;
+<p>显然从“直接写”到“读后写”，多了一次读操作的开销，损害了我们的写性能。有什么做法可以优化? 事实上我们可以引入<strong>多版本机制</strong>: 多个时间戳的写可以共存, 读的时候选取最新的读。具体做法就是在每个 key 后带上时间戳, 如下:</p>
 
-&lt;pre&gt;&lt;code class=&quot;language-txt&quot;&gt;hashkey sortkey 20190914 =&amp;gt; value
-hashkey sortkey 20190913 =&amp;gt; value
-hashkey sortkey 20190912 =&amp;gt; value
-&lt;/code&gt;&lt;/pre&gt;
+<pre><code class="language-txt">hashkey sortkey 20190914 =&gt; value
+hashkey sortkey 20190913 =&gt; value
+hashkey sortkey 20190912 =&gt; value
+</code></pre>
 
-&lt;p&gt;每次读的时候可以只读时间戳最大的那一项。这种&lt;strong&gt;多版本读写&lt;/strong&gt;性能更好, 但是需要改动数据编码, 我们会在后面讨论数据编码改动的问题。&lt;/p&gt;
+<p>每次读的时候可以只读时间戳最大的那一项。这种<strong>多版本读写</strong>性能更好, 但是需要改动数据编码, 我们会在后面讨论数据编码改动的问题。</p>
 
-&lt;p&gt;两集群的写仅用时间戳会出现极偶然的情况: 时间戳冲突, 换句话说就是两集群恰好在同一时间写某个 key。为了避免两集群数据不同的情况, 我们引入 &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;cluster_id&lt;/code&gt; 的概念。运维在配置热备份时需要配置各个集群的 cluster_id, 例如 A 集群为 1, B 集群为 2, 如下:&lt;/p&gt;
+<p>两集群的写仅用时间戳会出现极偶然的情况: 时间戳冲突, 换句话说就是两集群恰好在同一时间写某个 key。为了避免两集群数据不同的情况, 我们引入 <code class="language-plaintext highlighter-rouge">cluster_id</code> 的概念。运维在配置热备份时需要配置各个集群的 cluster_id, 例如 A 集群为 1, B 集群为 2, 如下:</p>
 
-&lt;div class=&quot;language-ini highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;nn&quot;&gt;[duplication-group]&lt;/span&gt;
- &lt;span class=&quot;py&quot;&gt;A&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;1&lt;/span&gt;
- &lt;span class=&quot;py&quot;&gt;B&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;2&lt;/span&gt;
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+<div class="language-ini highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nn">[duplication-group]</span>
+ <span class="py">A</span><span class="p">=</span><span class="s">1</span>
+ <span class="py">B</span><span class="p">=</span><span class="s">2</span>
+</code></pre></div></div>
 
-&lt;p&gt;这样当 timestamp 相同时我们比较 cluster_id, 如 B 集群的 id 更大, 则冲突写会以 B 集群的数据为准。我们将 timestamp 和 cluster_id 结合编码为一个 uint64 整型数, 引入了 &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;timetag&lt;/code&gt; 的概念。这样比较大小时只需要比较一个整数, 并且存储更紧凑。&lt;/p&gt;
+<p>这样当 timestamp 相同时我们比较 cluster_id, 如 B 集群的 id 更大, 则冲突写会以 B 集群的数据为准。我们将 timestamp 和 cluster_id 结合编码为一个 uint64 整型数, 引入了 <code class="language-plaintext highlighter-rouge">timetag</code> 的概念。这样比较大小时只需要比较一个整数, 并且存储更紧凑。</p>
 
-&lt;div class=&quot;language-c highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;n&quot;&gt;timetag&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;timestamp&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;&amp;lt;&amp;lt;&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;8u&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;|&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;cluster_id&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;&amp;lt;&amp;lt;&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;1u&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;|&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;delete_tag&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+<div class="language-c highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">timetag</span> <span class="o">=</span> <span class="n">timestamp</span> <span class="o">&lt;&lt;</span> <span class="mi">8u</span> <span class="o">|</span> <span class="n">cluster_id</span> <span class="o">&lt;&lt;</span> <span class="mi">1u</span> <span class="o">|</span> <span class="n">delete_tag</span><span class="p">;</span>
+</code></pre></div></div>
 
-&lt;h3 id=&quot;confirmed_decree&quot;&gt;confirmed_decree&lt;/h3&gt;
+<h3 id="confirmed_decree">confirmed_decree</h3>
 
-&lt;p&gt;热备份同时也需要容忍在 ReplicaServer 主备切换下复制的进度不会丢失，例如当前 replica1 复制到日志 decree=5001，此时发生主备切换，我们不想看到 replica1 从 0 开始，所以为了能够支持 &lt;strong&gt;&lt;em&gt;断点续传&lt;/em&gt;&lt;/strong&gt;，我们引入 &lt;strong&gt;&lt;em&gt;confirmed_decree&lt;/em&gt;&lt;/strong&gt;。&lt;/p&gt;
+<p>热备份同时也需要容忍在 ReplicaServer 主备切换下复制的进度不会丢失，例如当前 replica1 复制到日志 decree=5001，此时发生主备切换，我们不想看到 replica1 从 0 开始，所以为了能够支持 <strong><em>断点续传</em></strong>，我们引入 <strong><em>confirmed_decree</em></strong>。</p>
 
-&lt;p&gt;ReplicaServer 定期向 MetaServer 汇报当前热备份的进度（如 confirmed_decree=5001），一旦 MetaServer 将该进度持久化至 Zookeeper，当 。ReplicaServer 故障恢复时即可安全地从 confirmed_decree=5001 重新开始热备份。&lt;/p&gt;
+<p>ReplicaServer 定期向 MetaServer 汇报当前热备份的进度（如 confirmed_decree=5001），一旦 MetaServer 将该进度持久化至 Zookeeper，当 。ReplicaServer 故障恢复时即可安全地从 confirmed_decree=5001 重新开始热备份。</p>
 
-&lt;h2 id=&quot;流程&quot;&gt;流程&lt;/h2&gt;
+<h2 id="流程">流程</h2>
 
-&lt;h3 id=&quot;1-热备份元信息同步&quot;&gt;1. 热备份元信息同步&lt;/h3&gt;
+<h3 id="1-热备份元信息同步">1. 热备份元信息同步</h3>
 
-&lt;p&gt;热备份相关的元信息首先会记录至 MetaServer 上，ReplicaServer 通过 &lt;strong&gt;&lt;em&gt;duplication sync&lt;/em&gt;&lt;/strong&gt; 定期同步元信息，包括各个分片的 confirmed_decree。&lt;/p&gt;
+<p>热备份相关的元信息首先会记录至 MetaServer 上，ReplicaServer 通过 <strong><em>duplication sync</em></strong> 定期同步元信息，包括各个分片的 confirmed_decree。</p>
 
-&lt;div class=&quot;language-plaintext highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;+----------+  add dup  +----------+
-|  client  +-----------&amp;gt;   meta   |
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>+----------+  add dup  +----------+
+|  client  +-----------&gt;   meta   |
 +----------+           +----+-----+
                             |
                             | duplication sync
@@ -732,15 +732,15 @@ hashkey sortkey 20190912 =&amp;gt; value
                       +-----v-----+
                       |  replica  |
                       +-----------+
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+</code></pre></div></div>
 
-&lt;h3 id=&quot;2-热备份日志复制&quot;&gt;2. 热备份日志复制&lt;/h3&gt;
+<h3 id="2-热备份日志复制">2. 热备份日志复制</h3>
 
-&lt;p&gt;每个 replica 首先读取 private log，为了限制流量，每次只会读入一个日志块而非一整个日志文件。每一批日志统一传递给 &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;mutation_duplicator&lt;/code&gt; 进行发送。&lt;/p&gt;
+<p>每个 replica 首先读取 private log，为了限制流量，每次只会读入一个日志块而非一整个日志文件。每一批日志统一传递给 <code class="language-plaintext highlighter-rouge">mutation_duplicator</code> 进行发送。</p>
 
-&lt;p&gt;&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;mutation_duplicator&lt;/code&gt; 是一个可插拔的接口类。我们目前只实现用 pegasus client 将日志分发至目标集群，未来如有需求也可接入 HBase 等系统，例如将 Pegasus 的数据通过热备份实时同步到 HBase 中。&lt;/p&gt;
+<p><code class="language-plaintext highlighter-rouge">mutation_duplicator</code> 是一个可插拔的接口类。我们目前只实现用 pegasus client 将日志分发至目标集群，未来如有需求也可接入 HBase 等系统，例如将 Pegasus 的数据通过热备份实时同步到 HBase 中。</p>
 
-&lt;div class=&quot;language-plaintext highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;+----------------------+      2
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>+----------------------+      2
 |  private_log_loader  +--------------+
 +-----------^----------+              |
             | 1            +----------v----------+
@@ -749,60 +749,60 @@ hashkey sortkey 20190912 =&amp;gt; value
  |                 |            |
  |   private log   |            |
  |                 |     +------=----------------------+  pegasus client
- |                 |     | pegasus_mutation_duplicator +-----------------&amp;gt;
+ |                 |     | pegasus_mutation_duplicator +-----------------&gt;
  +-----------------+     +-----------------------------+        3
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+</code></pre></div></div>
 
-&lt;p&gt;每个日志块的一批写中可能有多组 hashkey，不同的 hashkey 可以并行分发而不会影响正确性，从而可以提高热备份效率。而如果 hashkey 相同，例如：&lt;/p&gt;
+<p>每个日志块的一批写中可能有多组 hashkey，不同的 hashkey 可以并行分发而不会影响正确性，从而可以提高热备份效率。而如果 hashkey 相同，例如：</p>
 
-&lt;ol&gt;
-  &lt;li&gt;&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;Set: hashkey=&quot;h&quot;, sortkey=&quot;s1&quot;, value=&quot;v1&quot;&lt;/code&gt;&lt;/li&gt;
-  &lt;li&gt;&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;Set: hashkey=&quot;h&quot;, sortkey=&quot;s2&quot;, value=&quot;v2&quot;&lt;/code&gt;&lt;/li&gt;
-&lt;/ol&gt;
+<ol>
+  <li><code class="language-plaintext highlighter-rouge">Set: hashkey="h", sortkey="s1", value="v1"</code></li>
+  <li><code class="language-plaintext highlighter-rouge">Set: hashkey="h", sortkey="s2", value="v2"</code></li>
+</ol>
 
-&lt;p&gt;这两条写有先后关系，则它们必须串行依次发送。&lt;/p&gt;
+<p>这两条写有先后关系，则它们必须串行依次发送。</p>
 
-&lt;ol&gt;
-  &lt;li&gt;&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;Set: hashkey=&quot;h1&quot;, sortkey=&quot;s1&quot;, value=&quot;v1&quot;&lt;/code&gt;&lt;/li&gt;
-  &lt;li&gt;&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;Set: hashkey=&quot;h2&quot;, sortkey=&quot;s2&quot;, value=&quot;v2&quot;&lt;/code&gt;&lt;/li&gt;
-&lt;/ol&gt;
+<ol>
+  <li><code class="language-plaintext highlighter-rouge">Set: hashkey="h1", sortkey="s1", value="v1"</code></li>
+  <li><code class="language-plaintext highlighter-rouge">Set: hashkey="h2", sortkey="s2", value="v2"</code></li>
+</ol>
 
-&lt;p&gt;这两条写是不相干的，它们无需串行发送。&lt;/p&gt;
+<p>这两条写是不相干的，它们无需串行发送。</p>
 
-&lt;h2 id=&quot;日志完整性&quot;&gt;日志完整性&lt;/h2&gt;
+<h2 id="日志完整性">日志完整性</h2>
 
-&lt;p&gt;在引入热备份之前，Pegasus 的日志会定期被清理，无用的日志文件会被删除（通常日志的保留时间为5分钟）。但在引入热备份之后，如果有被删除的日志还没有被复制到远端集群，两集群就会数据不一致。我们引入了几个机制来保证日志的完整性，从而实现两集群的最终一致性：&lt;/p&gt;
+<p>在引入热备份之前，Pegasus 的日志会定期被清理，无用的日志文件会被删除（通常日志的保留时间为5分钟）。但在引入热备份之后，如果有被删除的日志还没有被复制到远端集群，两集群就会数据不一致。我们引入了几个机制来保证日志的完整性，从而实现两集群的最终一致性：</p>
 
-&lt;h3 id=&quot;1-gc-delay&quot;&gt;1. GC Delay&lt;/h3&gt;
+<h3 id="1-gc-delay">1. GC Delay</h3>
 
-&lt;p&gt;Pegasus 先前认为 &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;last_durable_decree&lt;/code&gt; 之后的日志即可被删除回收（Garbage Collected），因为它们已经被持久化至 rocksdb 的 sst files 中，即使宕机重启数据也不会丢失。但考虑如果热备份的进度较慢，我们则需要延后 GC，保证数据只有在 &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;confirmed_decree&lt;/code&gt; 之后的日志才可被 GC。&lt;/p&gt;
+<p>Pegasus 先前认为 <code class="language-plaintext highlighter-rouge">last_durable_decree</code> 之后的日志即可被删除回收（Garbage Collected），因为它们已经被持久化至 rocksdb 的 sst files 中，即使宕机重启数据也不会丢失。但考虑如果热备份的进度较慢，我们则需要延后 GC，保证数据只有在 <code class="language-plaintext highlighter-rouge">confirmed_decree</code> 之后的日志才可被 GC。</p>
 
-&lt;p&gt;当然我们也可以将日志 GC 的时间设置的相当长，例如一周，因为此时数据必然已复制到远端集群（什么环境下复制一条日志需要超过 1 周时间？）。最终我们没有选择这种方法。&lt;/p&gt;
+<p>当然我们也可以将日志 GC 的时间设置的相当长，例如一周，因为此时数据必然已复制到远端集群（什么环境下复制一条日志需要超过 1 周时间？）。最终我们没有选择这种方法。</p>
 
-&lt;h3 id=&quot;2-broadcast-confirmed_decree&quot;&gt;2. Broadcast confirmed_decree&lt;/h3&gt;
+<h3 id="2-broadcast-confirmed_decree">2. Broadcast confirmed_decree</h3>
 
-&lt;p&gt;虽然 primary 不会 GC 那些未被热备的日志，但 secondary 并未遵守这一约定，这些丢失日志的 secondary 有朝一日也会被提拔为 primary，从而影响日志完整性。所以 primary 需要将 confirmed_decree 通过组间心跳（group check）的方式通知 secondary，保证它们不会误删日志。&lt;/p&gt;
+<p>虽然 primary 不会 GC 那些未被热备的日志，但 secondary 并未遵守这一约定，这些丢失日志的 secondary 有朝一日也会被提拔为 primary，从而影响日志完整性。所以 primary 需要将 confirmed_decree 通过组间心跳（group check）的方式通知 secondary，保证它们不会误删日志。</p>
 
-&lt;div class=&quot;language-plaintext highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;+---------+            +-----------+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>+---------+            +-----------+
 |         |            |           |
-| primary +-----------&amp;gt;+ secondary |
+| primary +-----------&gt;+ secondary |
 |         |            |           |
 +---+-----+            +-----------+
     |       confirmed=5001
     |                  +-----------+
     |                  |           |
-    +-----------------&amp;gt;+ secondary |
+    +-----------------&gt;+ secondary |
                        |           |
       group check      +-----------+
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+</code></pre></div></div>
 
-&lt;p&gt;这里有一个问题：由于 secondary 滞后于 primary 了解到热备份正在进行，所以在创建热备份后，secondary 有一定概率误删日志。这是一个已知的设计bug。我们会在后续引入新机制来修复该问题。&lt;/p&gt;
+<p>这里有一个问题：由于 secondary 滞后于 primary 了解到热备份正在进行，所以在创建热备份后，secondary 有一定概率误删日志。这是一个已知的设计bug。我们会在后续引入新机制来修复该问题。</p>
 
-&lt;h3 id=&quot;3-replica-learn-step-back&quot;&gt;3. Replica Learn Step Back&lt;/h3&gt;
+<h3 id="3-replica-learn-step-back">3. Replica Learn Step Back</h3>
 
-&lt;p&gt;当一个 replica 新加入3副本组中，由于它的数据滞后于 primary，它会通过 &lt;strong&gt;&lt;em&gt;replica learn&lt;/em&gt;&lt;/strong&gt; 来拷贝新日志以跟上组员的进度。此时从何处开始拷贝日志（称为 &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;learn_start_decree&lt;/code&gt;）就是一个问题。&lt;/p&gt;
+<p>当一个 replica 新加入3副本组中，由于它的数据滞后于 primary，它会通过 <strong><em>replica learn</em></strong> 来拷贝新日志以跟上组员的进度。此时从何处开始拷贝日志（称为 <code class="language-plaintext highlighter-rouge">learn_start_decree</code>）就是一个问题。</p>
 
-&lt;div class=&quot;language-plaintext highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;learnee confirmed_decree=300
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>learnee confirmed_decree=300
 
 +-----------------------------------+
 |   +---rocksdb+---+                |
@@ -817,17 +817,17 @@ hashkey sortkey 20190912 =&amp;gt; value
 |  201                800           |
 |                                   |
 +-----------------------------------+
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+</code></pre></div></div>
 
-&lt;p&gt;如上图显示，primary(learnee) 的完整数据集包括 rocksdb + private log，且 private log 的范围为 [201, 800]。&lt;/p&gt;
+<p>如上图显示，primary(learnee) 的完整数据集包括 rocksdb + private log，且 private log 的范围为 [201, 800]。</p>
 
-&lt;p&gt;假设 learner 数据为空，普通情况下，此时显然日志拷贝应该从 decree=501 开始。因为小于 501 的数据全部都已经在 rocksdb checkpoint 里了，这些老旧的日志在 learn 的时候不需要再拷贝。&lt;/p&gt;
+<p>假设 learner 数据为空，普通情况下，此时显然日志拷贝应该从 decree=501 开始。因为小于 501 的数据全部都已经在 rocksdb checkpoint 里了，这些老旧的日志在 learn 的时候不需要再拷贝。</p>
 
-&lt;p&gt;但考虑到热备份情况，因为 [301, 800] 的日志都还没有热备份，所以我们需要相比普通情况多复制 [301, 500] 的日志。这意味着热备份一定程度上会降低 learn 的效率，也就是降低负载均衡，数据迁移的效率。&lt;/p&gt;
+<p>但考虑到热备份情况，因为 [301, 800] 的日志都还没有热备份，所以我们需要相比普通情况多复制 [301, 500] 的日志。这意味着热备份一定程度上会降低 learn 的效率，也就是降低负载均衡，数据迁移的效率。</p>
 
-&lt;p&gt;原来从 decree=501 开始的 learn，在热备份时需要从 decree=301 开始，这个策略我们称为 &lt;strong&gt;&lt;em&gt;“Learn Step Back”&lt;/em&gt;&lt;/strong&gt;。注意虽然我们上述讨论的是 learner 数据为空的情况，但 learner 数据非空的情况同理：&lt;/p&gt;
+<p>原来从 decree=501 开始的 learn，在热备份时需要从 decree=301 开始，这个策略我们称为 <strong><em>“Learn Step Back”</em></strong>。注意虽然我们上述讨论的是 learner 数据为空的情况，但 learner 数据非空的情况同理：</p>
 
-&lt;div class=&quot;language-plaintext highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;learner
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>learner
 
 +-----------------------------------+
 |   +--+rocksdb+---+                |
@@ -842,24 +842,24 @@ hashkey sortkey 20190912 =&amp;gt; value
 |  251      400                     |
 |                                   |
 +-----------------------------------+
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+</code></pre></div></div>
 
-&lt;p&gt;我们假设 learner 已经持有 [251, 400] 的日志，下一步 learnee 将会复制 [301, 800] 的日志，与 learner 数据为空的情况相同。新的日志集将会把旧的日志集覆盖。&lt;/p&gt;
+<p>我们假设 learner 已经持有 [251, 400] 的日志，下一步 learnee 将会复制 [301, 800] 的日志，与 learner 数据为空的情况相同。新的日志集将会把旧的日志集覆盖。</p>
 
-&lt;h3 id=&quot;4-sync-is_duplicating-to-every-replica&quot;&gt;4. Sync is_duplicating to every replica&lt;/h3&gt;
+<h3 id="4-sync-is_duplicating-to-every-replica">4. Sync is_duplicating to every replica</h3>
 
-&lt;p&gt;不管是考虑 GC，还是考虑 learn，我们都需要让每一个 replica 知道“自己正在进行热备份”，因为普通的表不应该考虑 GC Delay，也不应该考虑在 learn 的过程中补齐未热备份的日志，只有热备份的表需要额外考虑这些事情。所以我们需要向所有 replica 同步一个标识（&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;is_duplicating&lt;/code&gt;）。&lt;/p&gt;
+<p>不管是考虑 GC，还是考虑 learn，我们都需要让每一个 replica 知道“自己正在进行热备份”，因为普通的表不应该考虑 GC Delay，也不应该考虑在 learn 的过程中补齐未热备份的日志，只有热备份的表需要额外考虑这些事情。所以我们需要向所有 replica 同步一个标识（<code class="language-plaintext highlighter-rouge">is_duplicating</code>）。</p>
 
-&lt;p&gt;这个同步不需要考虑强一致性：不需要在 &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;is_duplicating&lt;/code&gt; 的值改变时强一致地通知所有 replica。但我们需要保证在 replica learn 的过程中，该标识能够立刻同步给 learner。因此，我们让这个标识通过 config sync 同步。&lt;/p&gt;
+<p>这个同步不需要考虑强一致性：不需要在 <code class="language-plaintext highlighter-rouge">is_duplicating</code> 的值改变时强一致地通知所有 replica。但我们需要保证在 replica learn 的过程中，该标识能够立刻同步给 learner。因此，我们让这个标识通过 config sync 同步。</p>
 
-&lt;h3 id=&quot;5-apply-learned-state&quot;&gt;5. Apply Learned State&lt;/h3&gt;
+<h3 id="5-apply-learned-state">5. Apply Learned State</h3>
 
-&lt;p&gt;原先流程中，learner 收到 [21-60] 之间的日志后首先会放入 learn/ 目录下，然后简单地重放每一条日志并写入 rocksdb。Learn 流程完成后这些日志即丢弃。
-如果没有热备份，该流程并没有问题。但考虑到热备份，如果 learner 丢弃 [21-60] 的日志，那么热备份的日志完整性就有问题。&lt;/p&gt;
+<p>原先流程中，learner 收到 [21-60] 之间的日志后首先会放入 learn/ 目录下，然后简单地重放每一条日志并写入 rocksdb。Learn 流程完成后这些日志即丢弃。
+如果没有热备份，该流程并没有问题。但考虑到热备份，如果 learner 丢弃 [21-60] 的日志，那么热备份的日志完整性就有问题。</p>
 
-&lt;p&gt;为了解决这一问题，我们会将 learn/ 目录 rename 至 plog 目录，替代之前所有的日志。&lt;/p&gt;
+<p>为了解决这一问题，我们会将 learn/ 目录 rename 至 plog 目录，替代之前所有的日志。</p>
 
-&lt;div class=&quot;language-plaintext highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;                     +----+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>                     +----+
                      | 60 |
                      +----+
                      | 59 |
@@ -874,13 +874,13 @@ hashkey sortkey 20190912 =&amp;gt; value
 +-----------+     +---------+--------+
 |   plog/   |     |  learn/ | cache  |
 +-----------+     +---------+--------+
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+</code></pre></div></div>
 
-&lt;p&gt;在 learn 的过程中，还可能有部分日志不是以文件的形式复制到 learner，而是以内存形式拷贝到 “cache” 中（我们也将此称为 “learn cache”），如上图的 [61,62]。原先这些日志只会在写入 rocksdb 后被丢弃，现在它们还需要被写至 private log 中。&lt;/p&gt;
+<p>在 learn 的过程中，还可能有部分日志不是以文件的形式复制到 learner，而是以内存形式拷贝到 “cache” 中（我们也将此称为 “learn cache”），如上图的 [61,62]。原先这些日志只会在写入 rocksdb 后被丢弃，现在它们还需要被写至 private log 中。</p>
 
-&lt;p&gt;最终在这样一轮 learn 完成后，我们得到的日志集如下：&lt;/p&gt;
+<p>最终在这样一轮 learn 完成后，我们得到的日志集如下：</p>
 
-&lt;div class=&quot;language-plaintext highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;                  +----+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>                  +----+
                   | 62 |
                   +----+
                   | 61 |
@@ -895,81 +895,81 @@ hashkey sortkey 20190912 =&amp;gt; value
                   +----+
                   | 21 |
                   +----+
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+</code></pre></div></div>
 
-&lt;p&gt;通过整合上述的几个机制，Pegasus实现了在热备份过程中，数据不会丢失。&lt;/p&gt;</content><author><name>吴涛</name></author><summary type="html">关于热备份的基本概念和使用可以参照 administration/duplication，这里将主要描述跨机房同步的设计方案和执行细节。</summary></entry><entry><title type="html">我如何为 Pegasus 编写网站？</title><link href="/2019/06/09/how-i-build-pegasus-website.html" rel="alternate" type="text/html" title="我如何为 Pegasus 编写网站？" /><published>2019-06-09T00:00:00+00:00</published><updated>2019-06-09T00:00:00+00:00</updated><id>/2019/06/09/how-i-build-pegasus-website</id><content type="html" xml:base="/2019/06/09/how-i-build-pegasus-website.html">&lt;p&gt;这篇文章主要讲述我搭建本网站的所做所想，可以对想要参与的小伙伴提供参考。&lt;/p&gt;
+<p>通过整合上述的几个机制，Pegasus实现了在热备份过程中，数据不会丢失。</p>]]></content><author><name>吴涛</name></author><summary type="html"><![CDATA[关于热备份的基本概念和使用可以参照 administration/duplication，这里将主要描述跨机房同步的设计方案和执行细节。]]></summary></entry><entry><title type="html">我如何为 Pegasus 编写网站？</title><link href="/2019/06/09/how-i-build-pegasus-website.html" rel="alternate" type="text/html" title="我如何为 Pegasus 编写网站？" /><published>2019-06-09T00:00:00+00:00</published><updated>2019-06-09T00:00:00+00:00</updated><id>/2019/06/09/how-i-build-pegasus-website</id><content type="html" xml:base="/2019/06/09/how-i-build-pegasus-website.html"><![CDATA[<p>这篇文章主要讲述我搭建本网站的所做所想，可以对想要参与的小伙伴提供参考。</p>
 
-&lt;hr /&gt;
+<hr />
 
-&lt;h2 id=&quot;为什么要为-pegasus-编写网站&quot;&gt;为什么要为 Pegasus 编写网站？&lt;/h2&gt;
+<h2 id="为什么要为-pegasus-编写网站">为什么要为 Pegasus 编写网站？</h2>
 
-&lt;p&gt;许多人以为开源软件的核心就是非盈利性地把源代码开放给大家看，重点在于宣传自己的“非盈利性”。
+<p>许多人以为开源软件的核心就是非盈利性地把源代码开放给大家看，重点在于宣传自己的“非盈利性”。
 所以把项目开放在 Github 之后即完成了所谓 “开源” 这一目标。其实这种观点是错误的。
-“开源”不是为了让大家来学习你的代码（代码是为功能服务的，没有所谓好或不好），而是为了让大家更好地使用你的代码。&lt;/p&gt;
+“开源”不是为了让大家来学习你的代码（代码是为功能服务的，没有所谓好或不好），而是为了让大家更好地使用你的代码。</p>
 
-&lt;p&gt;对使用者而言，开源软件意味着我们能够免费地使用它或它的某个部分，但如果它并不好用，很难用，
+<p>对使用者而言，开源软件意味着我们能够免费地使用它或它的某个部分，但如果它并不好用，很难用，
 或者出现问题用户无法找到解决的途径，那么“开源”并没有帮助它成为一个更好的软件，而只是吸引到了大众的视线，
-对公司而言是完成了技术宣传的指标。&lt;/p&gt;
+对公司而言是完成了技术宣传的指标。</p>
 
-&lt;p&gt;优秀的开源软件，首先需要是一个优秀的软件，并且需要通过开源让这个软件变得更优秀。仅仅只是放在
+<p>优秀的开源软件，首先需要是一个优秀的软件，并且需要通过开源让这个软件变得更优秀。仅仅只是放在
 Github，那么它和一个非商业的闭源软件没有本质上的区别。Pegasus 希望称为一个优秀的开源软件，
-而非一份“非盈利性代码仓库”。&lt;/p&gt;
+而非一份“非盈利性代码仓库”。</p>
 
-&lt;p&gt;这个网站的目的就是为此，我希望大家能更舒适地阅读文档，更轻松地了解 Pegasus，更容易地参与 Pegasus
-的社区。&lt;/p&gt;
+<p>这个网站的目的就是为此，我希望大家能更舒适地阅读文档，更轻松地了解 Pegasus，更容易地参与 Pegasus
+的社区。</p>
 
-&lt;h2 id=&quot;这个网站部署在哪里&quot;&gt;这个网站部署在哪里？&lt;/h2&gt;
+<h2 id="这个网站部署在哪里">这个网站部署在哪里？</h2>
 
-&lt;p&gt;这个网站使用 Github Pages 部署。项目地址在：&lt;a href=&quot;https://github.com/apache/incubator-pegasus-website&quot;&gt;apache/incubator-pegasus-website&lt;/a&gt;。
-master 分支的代码就对应这个网站的全部内容。提交至 master 后，Github Page 会自动将网站部署至 &lt;a href=&quot;https://pegasus.apache.org/&quot;&gt;https://pegasus.apache.org/&lt;/a&gt; 上。&lt;/p&gt;
+<p>这个网站使用 Github Pages 部署。项目地址在：<a href="https://github.com/apache/incubator-pegasus-website">apache/incubator-pegasus-website</a>。
+master 分支的代码就对应这个网站的全部内容。提交至 master 后，Github Page 会自动将网站部署至 <a href="https://pegasus.apache.org/">https://pegasus.apache.org/</a> 上。</p>
 
-&lt;h2 id=&quot;开发环境&quot;&gt;开发环境&lt;/h2&gt;
+<h2 id="开发环境">开发环境</h2>
 
-&lt;p&gt;我们使用 &lt;a href=&quot;https://jekyllrb.com/&quot;&gt;jekyll&lt;/a&gt; 静态网页框架，使用 &lt;a href=&quot;https://bulma.io&quot;&gt;Bulma&lt;/a&gt; 作为前端组件库。&lt;/p&gt;
+<p>我们使用 <a href="https://jekyllrb.com/">jekyll</a> 静态网页框架，使用 <a href="https://bulma.io">Bulma</a> 作为前端组件库。</p>
 
-&lt;p&gt;jekyll 是用 Ruby 开发的，所以你首先需要安装 Ruby，首选的方法是 &lt;a href=&quot;http://rvm.io/&quot;&gt;用 RVM 安装&lt;/a&gt;。&lt;/p&gt;
+<p>jekyll 是用 Ruby 开发的，所以你首先需要安装 Ruby，首选的方法是 <a href="http://rvm.io/">用 RVM 安装</a>。</p>
 
-&lt;p&gt;中国大陆用户可能在获取 Ruby 依赖库（Ruby Gem）的时候遇到政策性的网络问题，你可以使用 &lt;a href=&quot;https://gems.ruby-china.com/&quot;&gt;Ruby 中国镜像站&lt;/a&gt;。&lt;/p&gt;
+<p>中国大陆用户可能在获取 Ruby 依赖库（Ruby Gem）的时候遇到政策性的网络问题，你可以使用 <a href="https://gems.ruby-china.com/">Ruby 中国镜像站</a>。</p>
 
-&lt;p&gt;最后你只需要在本地安装 jekyll 和 bundler：&lt;/p&gt;
+<p>最后你只需要在本地安装 jekyll 和 bundler：</p>
 
-&lt;div class=&quot;language-bash highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;nb&quot;&gt;cd &lt;/span&gt;pegasus.apache.org
-gem &lt;span class=&quot;nb&quot;&gt;install &lt;/span&gt;bundler jekyll
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nb">cd </span>pegasus.apache.org
+gem <span class="nb">install </span>bundler jekyll
 bundle
 jekyll serve
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+</code></pre></div></div>
 
-&lt;p&gt;使用 &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;jekyll serve&lt;/code&gt; 命令后，你可以在本地浏览器打开 &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;http://127.0.0.1:4000&lt;/code&gt; 调试网页。&lt;/p&gt;
+<p>使用 <code class="language-plaintext highlighter-rouge">jekyll serve</code> 命令后，你可以在本地浏览器打开 <code class="language-plaintext highlighter-rouge">http://127.0.0.1:4000</code> 调试网页。</p>
 
-&lt;pre&gt;&lt;code class=&quot;language-txt&quot;&gt;       Jekyll Feed: Generating feed for posts
+<pre><code class="language-txt">       Jekyll Feed: Generating feed for posts
                     done in 6.514 seconds.
  Auto-regeneration: enabled for '/home/mi/docs-cn'
     Server address: http://127.0.0.1:4000
   Server running... press ctrl-c to stop.
-&lt;/code&gt;&lt;/pre&gt;
+</code></pre>
 
-&lt;h2 id=&quot;感谢&quot;&gt;感谢&lt;/h2&gt;
+<h2 id="感谢">感谢</h2>
 
-&lt;p&gt;本站最初基于 &lt;a href=&quot;http://www.csrhymes.com/bulma-clean-theme/&quot;&gt;chrisrhymes/bulma-clean-theme&lt;/a&gt;，
+<p>本站最初基于 <a href="http://www.csrhymes.com/bulma-clean-theme/">chrisrhymes/bulma-clean-theme</a>，
 它为我提供了如何使用 bulma 和 jekyll 的示例。虽然最终实际使用这个模板的地方不多，
-但文档和博客部分的配色与样式还是有所借鉴，还有整个网站的字体也是沿用该模板。&lt;/p&gt;</content><author><name>吴涛</name></author><summary type="html">这篇文章主要讲述我搭建本网站的所做所想，可以对想要参与的小伙伴提供参考。</summary></entry><entry><title type="html">Pegasus 线程梳理</title><link href="/2019/04/29/threads-in-pegasus.html" rel="alternate" type="text/html" title="Pegasus 线程梳理" /><published>2019-04-29T00:00:00+00:00</published><updated>2019-04-29T00:00:00+00:00</updated><id>/2019/04/29/threads-in-pegasus</id><content type="html" xml:base="/2019/04/29/threads-in-pegasus.html">&lt;p&gt;当前在我们的推荐配置下，Pegasus Replica Server 一共会有 174 线程在工作，所有的线程都是长线程。
-这些线程到底是用来做什么的，我们在这篇文章进行梳理。&lt;/p&gt;
+但文档和博客部分的配色与样式还是有所借鉴，还有整个网站的字体也是沿用该模板。</p>]]></content><author><name>吴涛</name></author><summary type="html"><![CDATA[这篇文章主要讲述我搭建本网站的所做所想，可以对想要参与的小伙伴提供参考。]]></summary></entry><entry><title type="html">Pegasus 线程梳理</title><link href="/2019/04/29/threads-in-pegasus.html" rel="alternate" type="text/html" title="Pegasus 线程梳理" /><published>2019-04-29T00:00:00+00:00</published><updated>2019-04-29T00:00:00+00:00</updated><id>/2019/04/29/threads-in-pegasus</id><content type="html" xml:base="/2019/04/29/threads-in-pegasus.html"><![CDATA[<p>当前在我们的推荐配置下，Pegasus Replica Server 一共会有 174 线程在工作，所有的线程都是长线程。
+这些线程到底是用来做什么的，我们在这篇文章进行梳理。</p>
 
-&lt;hr /&gt;
+<hr />
 
-&lt;h3 id=&quot;线程总览&quot;&gt;线程总览&lt;/h3&gt;
+<h3 id="线程总览">线程总览</h3>
 
-&lt;p&gt;多数线程会通过 wait 的方式沉睡，实际对 CPU 的竞争影响较小，典型的 pstack 情况是&lt;/p&gt;
+<p>多数线程会通过 wait 的方式沉睡，实际对 CPU 的竞争影响较小，典型的 pstack 情况是</p>
 
-&lt;ul&gt;
-  &lt;li&gt;pthread_cond_wait: 49&lt;/li&gt;
-  &lt;li&gt;epoll_wait: 36&lt;/li&gt;
-  &lt;li&gt;sem_wait: 81&lt;/li&gt;
-&lt;/ul&gt;
+<ul>
+  <li>pthread_cond_wait: 49</li>
+  <li>epoll_wait: 36</li>
+  <li>sem_wait: 81</li>
+</ul>
 
-&lt;p&gt;这样算下来会发现实际运转的线程数是 174-49-36-81=8，而我们的机器通常配置的核心数是 24 核，平时的计算资源存在一定冗余。&lt;/p&gt;
+<p>这样算下来会发现实际运转的线程数是 174-49-36-81=8，而我们的机器通常配置的核心数是 24 核，平时的计算资源存在一定冗余。</p>
 
-&lt;pre&gt;&lt;code class=&quot;language-txt&quot;&gt;THREAD_POOL_COMPACT
+<pre><code class="language-txt">THREAD_POOL_COMPACT
 worker_count = 8
 
 THREAD_POOL_FDS_SERVICE
@@ -995,404 +995,404 @@ worker_count = 24
 
 THREAD_POOL_DEFAULT
 worker_count = 8
-&lt;/code&gt;&lt;/pre&gt;
+</code></pre>
 
-&lt;p&gt;抛开 meta_server 的线程池（&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;THREAD_POOL_DLOCK&lt;/code&gt;，&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;THREAD_POOL_META_STATE&lt;/code&gt;），由 rDSN 托管的线程数算下来应该是 82 个，多出来的 92 线程如何分配？&lt;/p&gt;
+<p>抛开 meta_server 的线程池（<code class="language-plaintext highlighter-rouge">THREAD_POOL_DLOCK</code>，<code class="language-plaintext highlighter-rouge">THREAD_POOL_META_STATE</code>），由 rDSN 托管的线程数算下来应该是 82 个，多出来的 92 线程如何分配？</p>
 
-&lt;h3 id=&quot;30-个线程负责定时任务的处理&quot;&gt;30 个线程负责定时任务的处理&lt;/h3&gt;
+<h3 id="30-个线程负责定时任务的处理">30 个线程负责定时任务的处理</h3>
 
-&lt;p&gt;30 个线程负责 timer_service，即定时任务的处理。&lt;/p&gt;
+<p>30 个线程负责 timer_service，即定时任务的处理。</p>
 
-&lt;p&gt;rDSN 默认为每个线程池分配一个 timer 线程，理论上有 7 个线程池，就是 7 线程。但是因为 &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;THREAD_POOL_REPLICATION&lt;/code&gt; 是各个线程 share nothing 的，所以它的每个 worker 线程会单独配一个 timer 线程。因此总 timer 线程数是 24 + 6 = 30。&lt;/p&gt;
+<p>rDSN 默认为每个线程池分配一个 timer 线程，理论上有 7 个线程池，就是 7 线程。但是因为 <code class="language-plaintext highlighter-rouge">THREAD_POOL_REPLICATION</code> 是各个线程 share nothing 的，所以它的每个 worker 线程会单独配一个 timer 线程。因此总 timer 线程数是 24 + 6 = 30。</p>
 
-&lt;h3 id=&quot;40-个线程负责网络报文处理&quot;&gt;40 个线程负责网络报文处理&lt;/h3&gt;
+<h3 id="40-个线程负责网络报文处理">40 个线程负责网络报文处理</h3>
 
-&lt;p&gt;20 个线程负责 tcp 的处理（asio_net_provider），20 个线程执行 udp 的处理（asio_udp_provider）&lt;/p&gt;
+<p>20 个线程负责 tcp 的处理（asio_net_provider），20 个线程执行 udp 的处理（asio_udp_provider）</p>
 
-&lt;p&gt;目前每个 rpc_channel (udp/tcp) 对每个 &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;network_header_format&lt;/code&gt; 都会配置 4 个 worker 线程。&lt;/p&gt;
+<p>目前每个 rpc_channel (udp/tcp) 对每个 <code class="language-plaintext highlighter-rouge">network_header_format</code> 都会配置 4 个 worker 线程。</p>
 
-&lt;p&gt;我们目前有四种 format：RAW，THRIFT，HTTP，DSN，（目前不清楚第 5 种的类型）&lt;/p&gt;
+<p>我们目前有四种 format：RAW，THRIFT，HTTP，DSN，（目前不清楚第 5 种的类型）</p>
 
-&lt;p&gt;相关配置：&lt;/p&gt;
+<p>相关配置：</p>
 
-&lt;div class=&quot;language-ini highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;nn&quot;&gt;[network]&lt;/span&gt;
-&lt;span class=&quot;py&quot;&gt;io_service_worker_count&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;4&lt;/span&gt;
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+<div class="language-ini highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nn">[network]</span>
+<span class="py">io_service_worker_count</span> <span class="p">=</span> <span class="s">4</span>
+</code></pre></div></div>
 
-&lt;h3 id=&quot;2-个线程负责上报监控到-falcon&quot;&gt;2 个线程负责上报监控到 falcon&lt;/h3&gt;
+<h3 id="2-个线程负责上报监控到-falcon">2 个线程负责上报监控到 falcon</h3>
 
-&lt;p&gt;2 个线程负责上报监控到 falcon，这里的线程数是写死的。&lt;/p&gt;
+<p>2 个线程负责上报监控到 falcon，这里的线程数是写死的。</p>
 
-&lt;p&gt;参考：
-&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;pegasus_counter_reporter&lt;/code&gt;&lt;/p&gt;
+<p>参考：
+<code class="language-plaintext highlighter-rouge">pegasus_counter_reporter</code></p>
 
-&lt;h2 id=&quot;1-个线程负责-aio-读写磁盘&quot;&gt;1 个线程负责 aio 读写磁盘&lt;/h2&gt;
+<h2 id="1-个线程负责-aio-读写磁盘">1 个线程负责 aio 读写磁盘</h2>
 
-&lt;p&gt;1 个线程执行 aio 读写磁盘的任务，即 libaio 的 get_event 操作。&lt;/p&gt;
+<p>1 个线程执行 aio 读写磁盘的任务，即 libaio 的 get_event 操作。</p>
 
-&lt;h3 id=&quot;16-个线程执行-rocksdb-后台操作&quot;&gt;16 个线程执行 rocksdb 后台操作&lt;/h3&gt;
+<h3 id="16-个线程执行-rocksdb-后台操作">16 个线程执行 rocksdb 后台操作</h3>
 
-&lt;p&gt;其中 12 个线程执行 rocskdb background compaction。&lt;/p&gt;
+<p>其中 12 个线程执行 rocskdb background compaction。</p>
 
-&lt;p&gt;4 个线程执行 rocksdb background flush。&lt;/p&gt;
+<p>4 个线程执行 rocksdb background flush。</p>
 
-&lt;p&gt;参考：
-&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;pegasus_server_impl&lt;/code&gt;&lt;/p&gt;
+<p>参考：
+<code class="language-plaintext highlighter-rouge">pegasus_server_impl</code></p>
 
-&lt;p&gt;相关配置：&lt;/p&gt;
+<p>相关配置：</p>
 
-&lt;div class=&quot;language-ini highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;nn&quot;&gt;[pegasus.server]&lt;/span&gt;
-&lt;span class=&quot;py&quot;&gt;rocksdb_max_background_flushes&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;4&lt;/span&gt;
-&lt;span class=&quot;py&quot;&gt;rocksdb_max_background_compactions&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;12&lt;/span&gt;
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+<div class="language-ini highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nn">[pegasus.server]</span>
+<span class="py">rocksdb_max_background_flushes</span><span class="p">=</span><span class="s">4</span>
+<span class="py">rocksdb_max_background_compactions</span><span class="p">=</span><span class="s">12</span>
+</code></pre></div></div>
 
-&lt;h3 id=&quot;2-个线程执行-shared_io_service&quot;&gt;2 个线程执行 shared_io_service&lt;/h3&gt;
+<h3 id="2-个线程执行-shared_io_service">2 个线程执行 shared_io_service</h3>
 
-&lt;p&gt;2 个线程执行 shared_io_service，给 percentile 类型的 perf-counter 用&lt;/p&gt;
+<p>2 个线程执行 shared_io_service，给 percentile 类型的 perf-counter 用</p>
 
-&lt;p&gt;相关配置：&lt;/p&gt;
+<p>相关配置：</p>
 
-&lt;div class=&quot;language-ini highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;nn&quot;&gt;[core]&lt;/span&gt;
-&lt;span class=&quot;py&quot;&gt;timer_service_worker_count&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;2&lt;/span&gt;
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;</content><author><name>吴涛</name></author><summary type="html">当前在我们的推荐配置下，Pegasus Replica Server 一共会有 174 线程在工作，所有的线程都是长线程。 这些线程到底是用来做什么的，我们在这篇文章进行梳理。</summary></entry><entry><title type="html">Pegasus 的 last_flushed_decree</title><link href="/2018/03/07/last_flushed_decree.html" rel="alternate" type="text/html" title="Pegasus 的 last_flushed_decree" /><published>2018-03-07T00:00:00+00:00</published><updated>2018-03-07T00:00:00+00:00</updated><id>/2018/03/07/last_flushed_decree</id><content type="html" xml:base="/2018/03/07/last_flushed_decree.html">&lt;p&gt;本文主要为大家梳理 &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;last_flushed_decree&lt;/code&gt; 的原理。&lt;/p&gt;
+<div class="language-ini highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nn">[core]</span>
+<span class="py">timer_service_worker_count</span><span class="p">=</span><span class="s">2</span>
+</code></pre></div></div>]]></content><author><name>吴涛</name></author><summary type="html"><![CDATA[当前在我们的推荐配置下，Pegasus Replica Server 一共会有 174 线程在工作，所有的线程都是长线程。 这些线程到底是用来做什么的，我们在这篇文章进行梳理。]]></summary></entry><entry><title type="html">Pegasus 的 last_flushed_decree</title><link href="/2018/03/07/last_flushed_decree.html" rel="alternate" type="text/html" title="Pegasus 的 last_flushed_decree" /><published>2018-03-07T00:00:00+00:00</published><updated>2018-03-07T00:00:00+00:00</updated><id>/2018/03/07/last_flushed_decree</id><content type="html" xml:base="/2018/03/07/last_flushed_decree.html"><![CDATA[<p>本文主要为大家梳理 <code class="language-plaintext highlighter-rouge">last_flushed_decree</code> 的原理。</p>
 
-&lt;hr /&gt;
+<hr />
 
-&lt;p&gt;一般的强一致性存储分为 &lt;strong&gt;replicated log&lt;/strong&gt; 和 &lt;strong&gt;db storage&lt;/strong&gt; 两层。replicated log 用于日志的复制，通过一致性协议（如 PacificA）进行组间复制同步，日志同步完成后，数据方可写入 db storage。通常来讲，在数据写入 db storage 之后，与其相对应的那一条日志即可被删除。因为 db storage 具备持久性，既然 db storage 中已经存有一份数据，在日志中就不需要再留一份。为了避免日志占用空间过大，我们需要定期删除日志，这一过程被称为 &lt;strong&gt;log compaction&lt;/strong&gt;。&lt;/p&gt;
+<p>一般的强一致性存储分为 <strong>replicated log</strong> 和 <strong>db storage</strong> 两层。replicated log 用于日志的复制，通过一致性协议（如 PacificA）进行组间复制同步，日志同步完成后，数据方可写入 db storage。通常来讲，在数据写入 db storage 之后，与其相对应的那一条日志即可被删除。因为 db storage 具备持久性，既然 db storage 中已经存有一份数据，在日志中就不需要再留一份。为了避免日志占用空间过大，我们需要定期删除日志，这一过程被称为 <strong>log compaction</strong>。</p>
 
-&lt;p&gt;这个简单的过程在 pegasus 中，问题稍微复杂了一些。&lt;/p&gt;
+<p>这个简单的过程在 pegasus 中，问题稍微复杂了一些。</p>
 
-&lt;p&gt;首先 pegasus 在使用 rocksdb 时，关闭了其 write-ahead-log，这样写操作就只会直接落到不具备持久性的 memtable。显然，当数据尚未从 memtable 落至 sstable 时，日志是不可随便清理的。因此，pegasus 在 rocksdb 内部维护了一个 &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;last_flushed_decree&lt;/code&gt;，当数据从 memtable 写落至 sstable 时，它就会更新，表示从〔0, last_flushed_decree〕之间的日志都可以被清除。&lt;/p&gt;
+<p>首先 pegasus 在使用 rocksdb 时，关闭了其 write-ahead-log，这样写操作就只会直接落到不具备持久性的 memtable。显然，当数据尚未从 memtable 落至 sstable 时，日志是不可随便清理的。因此，pegasus 在 rocksdb 内部维护了一个 <code class="language-plaintext highlighter-rouge">last_flushed_decree</code>，当数据从 memtable 写落至 sstable 时，它就会更新，表示从〔0, last_flushed_decree〕之间的日志都可以被清除。</p>
 
-&lt;p&gt;故事到了这里还要再加一层复杂性：有一些日志只是心跳（&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;WRITE_EMPTY&lt;/code&gt;），它们不含有任何数据。我们&lt;strong&gt;把心跳写入日志中&lt;/strong&gt;，可以避免某个表
-长时间无数据写，日志无法被清理的情况，同时也可以起到坏节点检测的作用。许多一致性协议（如 Raft）都会将心跳写入日志，这里不做赘述。&lt;/p&gt;
+<p>故事到了这里还要再加一层复杂性：有一些日志只是心跳（<code class="language-plaintext highlighter-rouge">WRITE_EMPTY</code>），它们不含有任何数据。我们<strong>把心跳写入日志中</strong>，可以避免某个表
+长时间无数据写，日志无法被清理的情况，同时也可以起到坏节点检测的作用。许多一致性协议（如 Raft）都会将心跳写入日志，这里不做赘述。</p>
 
-&lt;p&gt;&lt;strong&gt;但心跳是否需要写入 rocksdb 呢？&lt;/strong&gt;&lt;/p&gt;
+<p><strong>但心跳是否需要写入 rocksdb 呢？</strong></p>
 
-&lt;p&gt;这里讲一下架构，每个 pegasus 的 replica server 上都有许多分片，每个分片拥有一个 rocksdb 实例，而每个 rocksdb 维护一个 &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;last_flushed_decree&lt;/code&gt;。所有的实例都会写入同一个日志，这被称为 shared log。每个实例自己会单独写一个 WAL，被称为 private log。复杂点在 &lt;strong&gt;shared log&lt;/strong&gt;。&lt;/p&gt;
+<p>这里讲一下架构，每个 pegasus 的 replica server 上都有许多分片，每个分片拥有一个 rocksdb 实例，而每个 rocksdb 维护一个 <code class="language-plaintext highlighter-rouge">last_flushed_decree</code>。所有的实例都会写入同一个日志，这被称为 shared log。每个实例自己会单独写一个 WAL，被称为 private log。复杂点在 <strong>shared log</strong>。</p>
 
-&lt;pre&gt;&lt;code class=&quot;language-txt&quot;&gt;&amp;lt;r:1 d:1&amp;gt; 表示 replica id 为 1 的实例所写入的 decree = 1 的日志
+<pre><code class="language-txt">&lt;r:1 d:1&gt; 表示 replica id 为 1 的实例所写入的 decree = 1 的日志
 
    0         1         2         3         4         5
-&amp;lt;r:1 d:1&amp;gt; &amp;lt;r:2 d:1&amp;gt; &amp;lt;r:2 d:2&amp;gt; &amp;lt;r:2 d:3&amp;gt; &amp;lt;r:2 d:4&amp;gt; &amp;lt;r:2 d:5&amp;gt;
-&lt;/code&gt;&lt;/pre&gt;
+&lt;r:1 d:1&gt; &lt;r:2 d:1&gt; &lt;r:2 d:2&gt; &lt;r:2 d:3&gt; &lt;r:2 d:4&gt; &lt;r:2 d:5&gt;
+</code></pre>
 
-&lt;p&gt;可以看到，r1 写入 1 条日志后，r2 不断地写入 5 条日志。假设 r2 的 &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;last_flushed_decree = 5&lt;/code&gt;，那么当前 shared_log 应当将 [0, 5] 的日志全部删掉，即删掉从 &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;&amp;lt;r:1 d:1&amp;gt;&lt;/code&gt; 到 &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;&amp;lt;r:2 d:5&amp;gt;&lt;/code&gt;。&lt;/p&gt;
+<p>可以看到，r1 写入 1 条日志后，r2 不断地写入 5 条日志。假设 r2 的 <code class="language-plaintext highlighter-rouge">last_flushed_decree = 5</code>，那么当前 shared_log 应当将 [0, 5] 的日志全部删掉，即删掉从 <code class="language-plaintext highlighter-rouge">&lt;r:1 d:1&gt;</code> 到 <code class="language-plaintext highlighter-rouge">&lt;r:2 d:5&gt;</code>。</p>
 
-&lt;p&gt;这时候问题来了：如果 &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;&amp;lt;r:1 d:1&amp;gt;&lt;/code&gt; 是一个心跳请求，且不写 rocksdb 的话，那就意味着 r1 的 last_flushed_decree = 0，也就意味着 &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;&amp;lt;r:1 d:1&amp;gt;&lt;/code&gt; 不可被删。这就给我们带来了困扰，因为日志只能 “前缀删除”，即只能删除 [0, 5]，不能删除 [1, 5]。&lt;/p&gt;
+<p>这时候问题来了：如果 <code class="language-plaintext highlighter-rouge">&lt;r:1 d:1&gt;</code> 是一个心跳请求，且不写 rocksdb 的话，那就意味着 r1 的 last_flushed_decree = 0，也就意味着 <code class="language-plaintext highlighter-rouge">&lt;r:1 d:1&gt;</code> 不可被删。这就给我们带来了困扰，因为日志只能 “前缀删除”，即只能删除 [0, 5]，不能删除 [1, 5]。</p>
 
-&lt;p&gt;如果 r1 长时间没有数据写入，而 r2 长时间有较大吞吐，那么 shared log 可能会因为 r1 而无法清理，造成磁盘空间不足的情况。
-这个问题是 shared log 的一个弊端。因此我们在设计上选择将每次心跳都写入 &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;rocksdb&lt;/code&gt;，这样就能及时更新 &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;last_flushed_decree&lt;/code&gt;，
+<p>如果 r1 长时间没有数据写入，而 r2 长时间有较大吞吐，那么 shared log 可能会因为 r1 而无法清理，造成磁盘空间不足的情况。
+这个问题是 shared log 的一个弊端。因此我们在设计上选择将每次心跳都写入 <code class="language-plaintext highlighter-rouge">rocksdb</code>，这样就能及时更新 <code class="language-plaintext highlighter-rouge">last_flushed_decree</code>，
 shared log 也可以及时被删除。
-如何将一个没有任何数据的心跳 “写入” rocksdb 呢？实际上我们也仅仅只是写入一个 &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;key=&quot;&quot;&lt;/code&gt;，&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;value=&quot;&quot;&lt;/code&gt; 的记录，这对系统几乎没有开销。&lt;/p&gt;
+如何将一个没有任何数据的心跳 “写入” rocksdb 呢？实际上我们也仅仅只是写入一个 <code class="language-plaintext highlighter-rouge">key=""</code>，<code class="language-plaintext highlighter-rouge">value=""</code> 的记录，这对系统几乎没有开销。</p>
 
-&lt;p&gt;但如果我们没有 shared log 呢？假设我们仅使用 private log 作为唯一的 WAL 存储，那么 rocksdb 虽然仍需维护 &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;last_flushed_decree&lt;/code&gt;，
-但并不需要处理心跳，这一定程度上可以减少写路径的复杂度。&lt;/p&gt;</content><author><name>吴涛</name></author><summary type="html">本文主要为大家梳理 last_flushed_decree 的原理。</summary></entry><entry><title type="html">Meta Server 的设计</title><link href="/2017/11/21/meta-server-design.html" rel="alternate" type="text/html" title="Meta Server 的设计" /><published>2017-11-21T00:00:00+00:00</published><updated>2017-11-21T00:00:00+00:00</updated><id>/2017/11/21/meta-server-design</id><content type="html" xml:base="/2017/11/21/meta-server-design.html">&lt;p&gt;在 Pegasus 的架构中，Meta Server 是一个专门用于管理元数据的服务节点，我们在这篇文章中详细讨论它的内部机制。&lt;/p&gt;
+<p>但如果我们没有 shared log 呢？假设我们仅使用 private log 作为唯一的 WAL 存储，那么 rocksdb 虽然仍需维护 <code class="language-plaintext highlighter-rouge">last_flushed_decree</code>，
+但并不需要处理心跳，这一定程度上可以减少写路径的复杂度。</p>]]></content><author><name>吴涛</name></author><summary type="html"><![CDATA[本文主要为大家梳理 last_flushed_decree 的原理。]]></summary></entry><entry><title type="html">Meta Server 的设计</title><link href="/2017/11/21/meta-server-design.html" rel="alternate" type="text/html" title="Meta Server 的设计" /><published>2017-11-21T00:00:00+00:00</published><updated>2017-11-21T00:00:00+00:00</updated><id>/2017/11/21/meta-server-design</id><content type="html" xml:base="/2017/11/21/meta-server-design.html"><![CDATA[<p>在 Pegasus 的架构中，Meta Server 是一个专门用于管理元数据的服务节点，我们在这篇文章中详细讨论它的内部机制。</p>
 
-&lt;hr /&gt;
+<hr />
 
-&lt;p&gt;MetaServer的主要功能如下：&lt;/p&gt;
+<p>MetaServer的主要功能如下：</p>
 
-&lt;ol&gt;
-  &lt;li&gt;Table的管理&lt;/li&gt;
-  &lt;li&gt;ReplicaGroup的管理&lt;/li&gt;
-  &lt;li&gt;ReplicaServer的管理&lt;/li&gt;
-  &lt;li&gt;集群负载的均衡&lt;/li&gt;
-&lt;/ol&gt;
+<ol>
+  <li>Table的管理</li>
+  <li>ReplicaGroup的管理</li>
+  <li>ReplicaServer的管理</li>
+  <li>集群负载的均衡</li>
+</ol>
 
-&lt;h3 id=&quot;table的管理&quot;&gt;Table的管理&lt;/h3&gt;
+<h3 id="table的管理">Table的管理</h3>
 
-&lt;p&gt;在Pegasus里，table相当于一个namespace，不同的table下可以有相同的(HashKey, SortKey)序对。在使用table前，需要在向MetaServer先发起建表的申请。&lt;/p&gt;
+<p>在Pegasus里，table相当于一个namespace，不同的table下可以有相同的(HashKey, SortKey)序对。在使用table前，需要在向MetaServer先发起建表的申请。</p>
 
-&lt;p&gt;MetaServer在建表的时候，首先对表名以及选项做一些合法性的检查。如果检查通过，会把表的元信息持久化存储到Zookeeper上。在持久化完成后，MetaServer会为表中的每个分片都创建一条记录，叫做&lt;strong&gt;PartitionConfiguration&lt;/strong&gt;。该记录里最主要的内容就是当前分片的version以及分片的composition(即Primary和Secondary分别位于哪个ReplicaServer)。&lt;/p&gt;
+<p>MetaServer在建表的时候，首先对表名以及选项做一些合法性的检查。如果检查通过，会把表的元信息持久化存储到Zookeeper上。在持久化完成后，MetaServer会为表中的每个分片都创建一条记录，叫做<strong>PartitionConfiguration</strong>。该记录里最主要的内容就是当前分片的version以及分片的composition(即Primary和Secondary分别位于哪个ReplicaServer)。</p>
 
-&lt;p&gt;在表创建好后，一个分片的composition初始化为空。MetaServer会为空分片分配Primary和Secondary。等一个分片有一主两备后，就可以对外提供读写服务了。假如一张表所有的分片都满足一主两备份，那么这张表就是可以正常工作的。&lt;/p&gt;
+<p>在表创建好后，一个分片的composition初始化为空。MetaServer会为空分片分配Primary和Secondary。等一个分片有一主两备后，就可以对外提供读写服务了。假如一张表所有的分片都满足一主两备份，那么这张表就是可以正常工作的。</p>
 
-&lt;p&gt;如果用户不再需要使用一张表，可以调用删除接口对Pegasus的表进行删除。删除的信息也是先做持久化，然后再异步的将删除信息通知到各个ReplicaServer上。等所有相关ReplicaServer都得知表已经删除后，该表就变得不可访问。注意，此时数据并未作物理删除。真正的物理删除，要在一定的时间周期后发生。在此期间，假如用户想撤回删除操作，也是可以调用相关接口将表召回。这个功能称为&lt;strong&gt;软删除&lt;/strong&gt;。&lt;/p&gt;
+<p>如果用户不再需要使用一张表，可以调用删除接口对Pegasus的表进行删除。删除的信息也是先做持久化，然后再异步的将删除信息通知到各个ReplicaServer上。等所有相关ReplicaServer都得知表已经删除后，该表就变得不可访问。注意，此时数据并未作物理删除。真正的物理删除，要在一定的时间周期后发生。在此期间，假如用户想撤回删除操作，也是可以调用相关接口将表召回。这个功能称为<strong>软删除</strong>。</p>
 
-&lt;h3 id=&quot;replicagroup的管理&quot;&gt;ReplicaGroup的管理&lt;/h3&gt;
+<h3 id="replicagroup的管理">ReplicaGroup的管理</h3>
 
-&lt;p&gt;ReplicaGroup的管理就是上文说的对&lt;strong&gt;PartitionConfiguration&lt;/strong&gt;的管理。MetaServer会对空的分片分配Primary和Secondary。随着系统中ReplicaServer的加入和移除，PartitionConfiguration中的composition也可能发生变化。其中这些变化，有可能是主动的，也可能是被动的，如：&lt;/p&gt;
+<p>ReplicaGroup的管理就是上文说的对<strong>PartitionConfiguration</strong>的管理。MetaServer会对空的分片分配Primary和Secondary。随着系统中ReplicaServer的加入和移除，PartitionConfiguration中的composition也可能发生变化。其中这些变化，有可能是主动的，也可能是被动的，如：</p>
 
-&lt;ul&gt;
-  &lt;li&gt;Primary向Secondary发送prepare消息超时，而要求踢出某个Secondary&lt;/li&gt;
-  &lt;li&gt;MetaServer通过心跳探测到某个ReplicaServer失联了，发起group变更&lt;/li&gt;
-  &lt;li&gt;因为一些负载均衡的需求，Primary可能会主动发生降级，以进行迁移&lt;/li&gt;
-&lt;/ul&gt;
+<ul>
+  <li>Primary向Secondary发送prepare消息超时，而要求踢出某个Secondary</li>
+  <li>MetaServer通过心跳探测到某个ReplicaServer失联了，发起group变更</li>
+  <li>因为一些负载均衡的需求，Primary可能会主动发生降级，以进行迁移</li>
+</ul>
 
-&lt;p&gt;发生ReplicaGroup成员变更的原因不一而足，这里不再一一列举。但总的来说，成员的每一次变更，都会在MetaServer这里进行记录，每次变更所引发的PartitionConfiguration变化，也都会由MetaServer进行持久化。&lt;/p&gt;
+<p>发生ReplicaGroup成员变更的原因不一而足，这里不再一一列举。但总的来说，成员的每一次变更，都会在MetaServer这里进行记录，每次变更所引发的PartitionConfiguration变化，也都会由MetaServer进行持久化。</p>
 
-&lt;p&gt;值得说明的是，和很多Raft系的存储系统(Kudu、&lt;a href=&quot;https://github.com/pingcap/tikv&quot;&gt;TiKV&lt;/a&gt;)不同，Pegasus的MetaServer并非group成员变更的&lt;strong&gt;见证者&lt;/strong&gt;，而是&lt;strong&gt;持有者&lt;/strong&gt;。在前者的实现中，group的成员变更是由group本生发起，并先在group内部做持久化，之后再异步通知给MetaServer。&lt;/p&gt;
+<p>值得说明的是，和很多Raft系的存储系统(Kudu、<a href="https://github.com/pingcap/tikv">TiKV</a>)不同，Pegasus的MetaServer并非group成员变更的<strong>见证者</strong>，而是<strong>持有者</strong>。在前者的实现中，group的成员变更是由group本生发起，并先在group内部做持久化，之后再异步通知给MetaServer。</p>
 
-&lt;p&gt;而在Pegasus中，group的状态变化都是先在MetaServer上发生的，然后再在group的成员之间得以体现。哪怕是一个Primary想要踢出一个Secondary, 也要先向MetaServer发起申请；等MetaServer“登记在案”后，这个变更才会在Primary上生效。&lt;/p&gt;
+<p>而在Pegasus中，group的状态变化都是先在MetaServer上发生的，然后再在group的成员之间得以体现。哪怕是一个Primary想要踢出一个Secondary, 也要先向MetaServer发起申请；等MetaServer“登记在案”后，这个变更才会在Primary上生效。</p>
 
-&lt;h3 id=&quot;replicaserver的管理&quot;&gt;ReplicaServer的管理&lt;/h3&gt;
+<h3 id="replicaserver的管理">ReplicaServer的管理</h3>
 
-&lt;p&gt;当一台ReplicaServer上线时，它会首先向MetaServer进行注册。注册成功后，MetaServer会指定一些Replica让该Server进行服务。&lt;/p&gt;
+<p>当一台ReplicaServer上线时，它会首先向MetaServer进行注册。注册成功后，MetaServer会指定一些Replica让该Server进行服务。</p>
 
-&lt;p&gt;在ReplicaServer和MetaServer都正常运行时，ReplicaServer会定期向MetaServer发送心跳消息，来确保在MetaServer端自己“活着”。当MetaServer检测到ReplicaServer的心跳断掉后，会把这台机器标记为下线并尝试对受影响的ReplicaGroup做调整。这一过程，我们叫做&lt;strong&gt;FailureDetector&lt;/strong&gt;。&lt;/p&gt;
+<p>在ReplicaServer和MetaServer都正常运行时，ReplicaServer会定期向MetaServer发送心跳消息，来确保在MetaServer端自己“活着”。当MetaServer检测到ReplicaServer的心跳断掉后，会把这台机器标记为下线并尝试对受影响的ReplicaGroup做调整。这一过程，我们叫做<strong>FailureDetector</strong>。</p>
 
-&lt;p&gt;当前的FailureDetector是按照PacificA中描述的算法来实现的。主要的改动有两点：&lt;/p&gt;
+<p>当前的FailureDetector是按照PacificA中描述的算法来实现的。主要的改动有两点：</p>
 
-&lt;ul&gt;
-  &lt;li&gt;PacificA中要求FailureDetector在ReplicaGroup中的Primary和Secondary之间实施，而Pegasus在MetaServer和ReplicaServer之间实施。&lt;/li&gt;
-  &lt;li&gt;因为MetaServer的服务是采用主备模式保证高可用的，所以我们对论文中的算法做了些强化：即FailureDetector的双方是ReplicaServer和“主备MetaServer组成的group”。这样的做法，可以使得FD可以对抗单个MetaServer的不可用。&lt;/li&gt;
-&lt;/ul&gt;
+<ul>
+  <li>PacificA中要求FailureDetector在ReplicaGroup中的Primary和Secondary之间实施，而Pegasus在MetaServer和ReplicaServer之间实施。</li>
+  <li>因为MetaServer的服务是采用主备模式保证高可用的，所以我们对论文中的算法做了些强化：即FailureDetector的双方是ReplicaServer和“主备MetaServer组成的group”。这样的做法，可以使得FD可以对抗单个MetaServer的不可用。</li>
+</ul>
 
-&lt;p&gt;算法的细节不再展开，这里简述下算法所蕴含的几个设计原则：&lt;/p&gt;
+<p>算法的细节不再展开，这里简述下算法所蕴含的几个设计原则：</p>
 
-&lt;ol&gt;
-  &lt;li&gt;
-    &lt;p&gt;所有的ReplicaServer无条件服从MetaServer&lt;/p&gt;
+<ol>
+  <li>
+    <p>所有的ReplicaServer无条件服从MetaServer</p>
 
-    &lt;p&gt;当MetaServer认为ReplicaServer不可用时，并不会再借助其他外界信息来做进一步确认。为了更进一步说明问题，考虑以下情况：
-&lt;img src=&quot;/assets/images/network-partition.png&quot; alt=&quot;network-partition&quot; class=&quot;docs-image&quot; /&gt;
-上图给出了一种比较诡异的网络分区情况：即网络中所有其他的组件都可以正常连通，只有MetaServer和一台ReplicaServer发生了网络分区。在这种情况下，仅仅把ReplicaServer的生死交给MetaServer来仲裁可能略显武断。但考虑到这种情况其实极其罕见，并且就简化系统设计出发，我们认为这样处理并无不妥。而且假如我们不开上帝视角的话，判断一个“crash”是不是“真的crash”本身就是非常困难的事情。&lt;/p&gt;
+    <p>当MetaServer认为ReplicaServer不可用时，并不会再借助其他外界信息来做进一步确认。为了更进一步说明问题，考虑以下情况：
+<img src="/assets/images/network-partition.png" alt="network-partition" class="docs-image" />
+上图给出了一种比较诡异的网络分区情况：即网络中所有其他的组件都可以正常连通，只有MetaServer和一台ReplicaServer发生了网络分区。在这种情况下，仅仅把ReplicaServer的生死交给MetaServer来仲裁可能略显武断。但考虑到这种情况其实极其罕见，并且就简化系统设计出发，我们认为这样处理并无不妥。而且假如我们不开上帝视角的话，判断一个“crash”是不是“真的crash”本身就是非常困难的事情。</p>
 
-    &lt;p&gt;与此相对应的是另外一种情况：假如ReplicaServer因为一些原因发生了写流程的阻塞(磁盘阻塞，写线程死锁)，而心跳则由于在另外的线程中得以向MetaServer正常发送。这种情况当前Pegasus是无法处理的。一般来说，应对这种问题的方法还是要在server的写线程里引入心跳，后续Pegasus可以在这方面跟进。&lt;/p&gt;
-  &lt;/li&gt;
-  &lt;li&gt;
-    &lt;p&gt;Pefect Failure Detector&lt;/p&gt;
+    <p>与此相对应的是另外一种情况：假如ReplicaServer因为一些原因发生了写流程的阻塞(磁盘阻塞，写线程死锁)，而心跳则由于在另外的线程中得以向MetaServer正常发送。这种情况当前Pegasus是无法处理的。一般来说，应对这种问题的方法还是要在server的写线程里引入心跳，后续Pegasus可以在这方面跟进。</p>
+  </li>
+  <li>
+    <p>Pefect Failure Detector</p>
 
-    &lt;p&gt;当MetaServer声称一个ReplicaServer不可用时，该ReplicaServer一定要处于不可服务的状态。这一点是由算法本身来保障的。之所以要有这一要求，是为了防止系统中某个ReplicaGroup可能会出现双主的局面。&lt;/p&gt;
+    <p>当MetaServer声称一个ReplicaServer不可用时，该ReplicaServer一定要处于不可服务的状态。这一点是由算法本身来保障的。之所以要有这一要求，是为了防止系统中某个ReplicaGroup可能会出现双主的局面。</p>
 
-    &lt;p&gt;Pegasus使用基于租约的心跳机制来进行失败检测，其原理如下（以下的worker对应ReplicaServer, master对应MetaServer）：
-&lt;img src=&quot;/assets/images/perfect-failure-detector.png&quot; alt=&quot;perfect-failure-detector&quot; class=&quot;docs-image&quot; /&gt;
-说明：&lt;/p&gt;
-    &lt;ul&gt;
-      &lt;li&gt;beacon总是从worker发送给master，发送间隔为beacon_interval&lt;/li&gt;
-      &lt;li&gt;对于worker，超时时间为lease_period&lt;/li&gt;
-      &lt;li&gt;对于master，超时时间为grace_period&lt;/li&gt;
-      &lt;li&gt;通常来说：grace_period &amp;gt; lease_period &amp;gt; beacon_interval * 2&lt;/li&gt;
-    &lt;/ul&gt;
+    <p>Pegasus使用基于租约的心跳机制来进行失败检测，其原理如下（以下的worker对应ReplicaServer, master对应MetaServer）：
+<img src="/assets/images/perfect-failure-detector.png" alt="perfect-failure-detector" class="docs-image" />
+说明：</p>
+    <ul>
+      <li>beacon总是从worker发送给master，发送间隔为beacon_interval</li>
+      <li>对于worker，超时时间为lease_period</li>
+      <li>对于master，超时时间为grace_period</li>
+      <li>通常来说：grace_period &gt; lease_period &gt; beacon_interval * 2</li>
+    </ul>
 
-    &lt;p&gt;以上租约机制还可以用租房子来进行比喻：&lt;/p&gt;
-    &lt;ul&gt;
-      &lt;li&gt;在租房过程中涉及到两种角色：租户和房东。租户的目标就是成为房子的primary（获得对房子的使用权）；房东的原则是保证同一时刻只有一个租户拥有对房子的使用权（避免一房多租）。&lt;/li&gt;
-      &lt;li&gt;租户定期向房东交租金，以获取对房子的使用权。如果要一直住下去，就要不停地续租。租户交租金有个习惯，就是每次总是交到距离交租金当天以后固定天数（lease period）为止。但是由于一些原因，并不是每次都能成功将租金交给房东（譬如找不到房东了或者转账失败了）。租户从最后一次成功交租金的那天（last send time with ack）开始算时间，当发现租金所覆盖的天数达到了（lease timeout），就知道房子到期了，会自觉搬出去。&lt;/li&gt;
-      &lt;li&gt;房东从最后一次成功收到租户交来的租金那天开始算时间，当发现房子到期了却还没有收到续租的租金，就会考虑新找租户了。当然房东人比较好，会给租户几天宽限期（grace period）。如果从上次收到租金时间（last beacon receive time）到现在超过了宽限期，就会让新的租户搬进去。由于此时租户已经自觉搬出去了，就不会出现两个租户同时去住一个房子的尴尬情况。&lt;/li&gt;
-      &lt;li&gt;所以上面两个时间：lease period和grace period，后者总是大于前者。&lt;/li&gt;
-    &lt;/ul&gt;
-  &lt;/li&gt;
-&lt;/ol&gt;
+    <p>以上租约机制还可以用租房子来进行比喻：</p>
+    <ul>
+      <li>在租房过程中涉及到两种角色：租户和房东。租户的目标就是成为房子的primary（获得对房子的使用权）；房东的原则是保证同一时刻只有一个租户拥有对房子的使用权（避免一房多租）。</li>
+      <li>租户定期向房东交租金，以获取对房子的使用权。如果要一直住下去，就要不停地续租。租户交租金有个习惯，就是每次总是交到距离交租金当天以后固定天数（lease period）为止。但是由于一些原因，并不是每次都能成功将租金交给房东（譬如找不到房东了或者转账失败了）。租户从最后一次成功交租金的那天（last send time with ack）开始算时间，当发现租金所覆盖的天数达到了（lease timeout），就知道房子到期了，会自觉搬出去。</li>
+      <li>房东从最后一次成功收到租户交来的租金那天开始算时间，当发现房子到期了却还没有收到续租的租金，就会考虑新找租户了。当然房东人比较好，会给租户几天宽限期（grace period）。如果从上次收到租金时间（last beacon receive time）到现在超过了宽限期，就会让新的租户搬进去。由于此时租户已经自觉搬出去了，就不会出现两个租户同时去住一个房子的尴尬情况。</li>
+      <li>所以上面两个时间：lease period和grace period，后者总是大于前者。</li>
+    </ul>
+  </li>
+</ol>
 
-&lt;h3 id=&quot;集群的负载均衡&quot;&gt;集群的负载均衡&lt;/h3&gt;
+<h3 id="集群的负载均衡">集群的负载均衡</h3>
 
-&lt;p&gt;在Pegasus里，集群的负载均衡主要由两方面组成：&lt;/p&gt;
+<p>在Pegasus里，集群的负载均衡主要由两方面组成：</p>
 
-&lt;ol&gt;
-  &lt;li&gt;
-    &lt;p&gt;cure: 如果某个ReplicaGroup不满足主备条件了，该如何处理&lt;/p&gt;
+<ol>
+  <li>
+    <p>cure: 如果某个ReplicaGroup不满足主备条件了，该如何处理</p>
 
-    &lt;p&gt;简单来说：&lt;/p&gt;
-    &lt;ul&gt;
-      &lt;li&gt;如果一个ReplicaGroup中缺少Primary, MetaServer会选择一个Secondary提名为新的Primary;&lt;/li&gt;
-      &lt;li&gt;如果ReplicaGroup中缺Secondary，MetaServer会根据负载选一个合适的Secondary;&lt;/li&gt;
-      &lt;li&gt;如果备份太多，MetaServer会根据负载选一个删除。&lt;/li&gt;
-    &lt;/ul&gt;
-  &lt;/li&gt;
-  &lt;li&gt;
-    &lt;p&gt;balancer: 分片如果在ReplicaServer上分布不均衡，该怎么调节&lt;/p&gt;
+    <p>简单来说：</p>
+    <ul>
+      <li>如果一个ReplicaGroup中缺少Primary, MetaServer会选择一个Secondary提名为新的Primary;</li>
+      <li>如果ReplicaGroup中缺Secondary，MetaServer会根据负载选一个合适的Secondary;</li>
+      <li>如果备份太多，MetaServer会根据负载选一个删除。</li>
+    </ul>
+  </li>
+  <li>
+    <p>balancer: 分片如果在ReplicaServer上分布不均衡，该怎么调节</p>
 
-    &lt;p&gt;当前Pegasus在做ReplicaServer的均衡时，考虑的因素包括：&lt;/p&gt;
-    &lt;ul&gt;
-      &lt;li&gt;每个ReplicaServer的各个磁盘上的Replica的个数&lt;/li&gt;
-      &lt;li&gt;Primary和Secondary分开考虑&lt;/li&gt;
-      &lt;li&gt;各个表分开考虑&lt;/li&gt;
-      &lt;li&gt;如果可以通过做Primary切换来调匀，则优先做Primary切换。&lt;/li&gt;
-    &lt;/ul&gt;
-  &lt;/li&gt;
-&lt;/ol&gt;
+    <p>当前Pegasus在做ReplicaServer的均衡时，考虑的因素包括：</p>
+    <ul>
+      <li>每个ReplicaServer的各个磁盘上的Replica的个数</li>
+      <li>Primary和Secondary分开考虑</li>
+      <li>各个表分开考虑</li>
+      <li>如果可以通过做Primary切换来调匀，则优先做Primary切换。</li>
+    </ul>
+  </li>
+</ol>
 
-&lt;p&gt;具体的balancer算法，我们会用专门的章节来进行介绍。&lt;/p&gt;
+<p>具体的balancer算法，我们会用专门的章节来进行介绍。</p>
 
-&lt;h3 id=&quot;metaserver的高可用&quot;&gt;MetaServer的高可用&lt;/h3&gt;
+<h3 id="metaserver的高可用">MetaServer的高可用</h3>
 
-&lt;p&gt;为了保证MetaServer本身不会成为系统的单点，MetaServer依赖Zookeeper做了高可用。在具体的实现上，我们主要使用了Zookeeper节点的ephemeral和sequence特性来封装了一个分布式锁。该锁可以保证同一时刻只有一个MetaServer作为leader而提供服务；如果leader不可用，某个follower会收到通知而成为新的leader。&lt;/p&gt;
+<p>为了保证MetaServer本身不会成为系统的单点，MetaServer依赖Zookeeper做了高可用。在具体的实现上，我们主要使用了Zookeeper节点的ephemeral和sequence特性来封装了一个分布式锁。该锁可以保证同一时刻只有一个MetaServer作为leader而提供服务；如果leader不可用，某个follower会收到通知而成为新的leader。</p>
 
-&lt;p&gt;为了保证MetaServer的leader和follower能拥有一致的集群元数据，元数据的持久化我们也是通过Zookeeper来完成的。&lt;/p&gt;
+<p>为了保证MetaServer的leader和follower能拥有一致的集群元数据，元数据的持久化我们也是通过Zookeeper来完成的。</p>
 
-&lt;p&gt;我们使用了Zookeeper官方的c语言库来访问Zookeeper集群。因为其没有提供CMakeLists的构建方式，所以目前这部分代码是单独抽取了出来的。后面重构我们的构建过程后，应该可以把这个依赖去掉而直接用原生代码。&lt;/p&gt;
+<p>我们使用了Zookeeper官方的c语言库来访问Zookeeper集群。因为其没有提供CMakeLists的构建方式，所以目前这部分代码是单独抽取了出来的。后面重构我们的构建过程后，应该可以把这个依赖去掉而直接用原生代码。</p>
 
-&lt;h3 id=&quot;metaserver的bootstrap&quot;&gt;MetaServer的bootstrap&lt;/h3&gt;
+<h3 id="metaserver的bootstrap">MetaServer的bootstrap</h3>
 
-&lt;p&gt;当一个MetaServer的进程启动时，它会首先根据配置好的zookeeper服务的路径，来检测自己是否能够成为leader。如果是leader, 它会向zookeeper拉去当前集群的所有元数据，包括：&lt;/p&gt;
+<p>当一个MetaServer的进程启动时，它会首先根据配置好的zookeeper服务的路径，来检测自己是否能够成为leader。如果是leader, 它会向zookeeper拉去当前集群的所有元数据，包括：</p>
 
-&lt;ol&gt;
-  &lt;li&gt;有哪些表，以及这些表的各种参数&lt;/li&gt;
-  &lt;li&gt;每个表的各个Partition的组成情况，将所有Partition中涉及到的机器求并集，会顺便解析到一个机器列表&lt;/li&gt;
-&lt;/ol&gt;
+<ol>
+  <li>有哪些表，以及这些表的各种参数</li>
+  <li>每个表的各个Partition的组成情况，将所有Partition中涉及到的机器求并集，会顺便解析到一个机器列表</li>
+</ol>
 
-&lt;p&gt;当MetaServer获取了所有的这些信息后，会构建自己的内存数据结构。特别的，ReplicaServer的集合初始化为2中得到的机器列表。&lt;/p&gt;
+<p>当MetaServer获取了所有的这些信息后，会构建自己的内存数据结构。特别的，ReplicaServer的集合初始化为2中得到的机器列表。</p>
 
-&lt;p&gt;随后，MetaServer开启FD的模块和负载均衡的模块，MetaServer就启动完成了。&lt;/p&gt;</content><author><name>Pegasus</name></author><summary type="html">在 Pegasus 的架构中，Meta Server 是一个专门用于管理元数据的服务节点，我们在这篇文章中详细讨论它的内部机制。</summary></entry><entry><title type="html">Replica Server 的设计</title><link href="/2017/11/21/replica-server-design.html" rel="alternate" type="text/html" title="Replica Server 的设计" /><published>2017-11-21T00:00:00+00:00</published><updated>2017-11-21T00:00:00+00:00</updated><id>/2017/11/21/replica-server-design</id><content type="html" xml:base="/2017/11/21/replica-server-design.html">&lt;p&gt;在 Pegasus 的架构中，ReplicaServer负责数据的读写请求。我们在这篇文章中详细讨论它的内部机制。&lt;/p&gt;
+<p>随后，MetaServer开启FD的模块和负载均衡的模块，MetaServer就启动完成了。</p>]]></content><author><name>Pegasus</name></author><summary type="html"><![CDATA[在 Pegasus 的架构中，Meta Server 是一个专门用于管理元数据的服务节点，我们在这篇文章中详细讨论它的内部机制。]]></summary></entry><entry><title type="html">Replica Server 的设计</title><link href="/2017/11/21/replica-server-design.html" rel="alternate" type="text/html" title="Replica Server 的设计" /><published>2017-11-21T00:00:00+00:00</published><updated>2017-11-21T00:00:00+00:00</updated><id>/2017/11/21/replica-server-design</id><content type="html" xml:base="/2017/11/21/replica-server-design.html"><![CDATA[<p>在 Pegasus 的架构中，ReplicaServer负责数据的读写请求。我们在这篇文章中详细讨论它的内部机制。</p>
 
-&lt;hr /&gt;
+<hr />
 
-&lt;h3 id=&quot;读写流程&quot;&gt;读写流程&lt;/h3&gt;
+<h3 id="读写流程">读写流程</h3>
 
-&lt;p&gt;ReplicaServer由一个个的Replica的组成，每个Replica表示一个数据分片的Primary或者Secondary。真正的读写流程，则是由这些Replica来完成的。&lt;/p&gt;
+<p>ReplicaServer由一个个的Replica的组成，每个Replica表示一个数据分片的Primary或者Secondary。真正的读写流程，则是由这些Replica来完成的。</p>
 
-&lt;p&gt;前面说过，当客户端有一个写请求时，会根据MetaServer的记录查询到分片对应的ReplicaServer。具体来说，客户端需要的其实是分片Primary所在的ReplicaServer。当获取到这一信息后，客户端会构造一条请求发送给ReplicaServer。请求除数据本身外，最主要的就包含了分片的编号，在Pegasus里，这个编号叫&lt;strong&gt;Gpid&lt;/strong&gt;(global partition id)。&lt;/p&gt;
+<p>前面说过，当客户端有一个写请求时，会根据MetaServer的记录查询到分片对应的ReplicaServer。具体来说，客户端需要的其实是分片Primary所在的ReplicaServer。当获取到这一信息后，客户端会构造一条请求发送给ReplicaServer。请求除数据本身外，最主要的就包含了分片的编号，在Pegasus里，这个编号叫<strong>Gpid</strong>(global partition id)。</p>
 
-&lt;p&gt;ReplicaServer在收到写请求时，会检查自己是不是能对请求做响应，如果可以的话，相应的写请求会进入写流程。具体的写流程不再赘述，大体过程就是先prepare再commit的两阶段提交。&lt;/p&gt;
+<p>ReplicaServer在收到写请求时，会检查自己是不是能对请求做响应，如果可以的话，相应的写请求会进入写流程。具体的写流程不再赘述，大体过程就是先prepare再commit的两阶段提交。</p>
 
-&lt;p&gt;可能导致ReplicaServer不能响应写请求的原因有：&lt;/p&gt;
+<p>可能导致ReplicaServer不能响应写请求的原因有：</p>
 
-&lt;ol&gt;
-  &lt;li&gt;ReplicaServer无法向MetaServer持续汇报心跳，自动下线&lt;/li&gt;
-  &lt;li&gt;Replica在IO上发生了一些无法恢复的异常故障，自动下线&lt;/li&gt;
-  &lt;li&gt;MetaServer将Replica的Primary进行了迁移&lt;/li&gt;
-  &lt;li&gt;Primary在和MetaServer进行group成员变更的操作，拒绝写&lt;/li&gt;
-  &lt;li&gt;当前Secondary个数太少，Replica出于安全性考虑拒绝写&lt;/li&gt;
-  &lt;li&gt;出于流控考虑而拒绝写&lt;/li&gt;
-&lt;/ol&gt;
+<ol>
+  <li>ReplicaServer无法向MetaServer持续汇报心跳，自动下线</li>
+  <li>Replica在IO上发生了一些无法恢复的异常故障，自动下线</li>
+  <li>MetaServer将Replica的Primary进行了迁移</li>
+  <li>Primary在和MetaServer进行group成员变更的操作，拒绝写</li>
+  <li>当前Secondary个数太少，Replica出于安全性考虑拒绝写</li>
+  <li>出于流控考虑而拒绝写</li>
+</ol>
 
-&lt;p&gt;这些类型的问题，Pegasus都会以错误码的形式返回给客户端。根据不同的错误类型，客户端可以选择合适的处理策略：&lt;/p&gt;
+<p>这些类型的问题，Pegasus都会以错误码的形式返回给客户端。根据不同的错误类型，客户端可以选择合适的处理策略：</p>
 
-&lt;ul&gt;
-  &lt;li&gt;无脑重试&lt;/li&gt;
-  &lt;li&gt;降低发送频率&lt;/li&gt;
-  &lt;li&gt;重新向MetaServer请求路由信息&lt;/li&gt;
-  &lt;li&gt;放弃&lt;/li&gt;
-&lt;/ul&gt;
+<ul>
+  <li>无脑重试</li>
+  <li>降低发送频率</li>
+  <li>重新向MetaServer请求路由信息</li>
+  <li>放弃</li>
+</ul>
 
-&lt;p&gt;在目前Pegasus提供的客户端中，对这些错误都做了合适的处理。&lt;/p&gt;
+<p>在目前Pegasus提供的客户端中，对这些错误都做了合适的处理。</p>
 
-&lt;p&gt;读流程比写流程简单些，直接由Primary进行读请求的响应。&lt;/p&gt;
+<p>读流程比写流程简单些，直接由Primary进行读请求的响应。</p>
 
-&lt;p&gt;除此之外，Pegasus还提供了两种scan的，允许用户对写入的数据进行遍历：&lt;/p&gt;
+<p>除此之外，Pegasus还提供了两种scan的，允许用户对写入的数据进行遍历：</p>
 
-&lt;ul&gt;
-  &lt;li&gt;HashScan: 可以对同一个HashKey下的所有(SorkKey, Value)序对进行扫描，扫描结果按SortKey排序输出。该操作在对应Primary上完成。&lt;/li&gt;
-  &lt;li&gt;table全局scan: 可以对一个表中的所有数据进行遍历。该操作在实现上会获取一个表中所有的Partition，然后逐个对Primary进行HashScan。&lt;/li&gt;
-&lt;/ul&gt;
+<ul>
+  <li>HashScan: 可以对同一个HashKey下的所有(SorkKey, Value)序对进行扫描，扫描结果按SortKey排序输出。该操作在对应Primary上完成。</li>
+  <li>table全局scan: 可以对一个表中的所有数据进行遍历。该操作在实现上会获取一个表中所有的Partition，然后逐个对Primary进行HashScan。</li>
+</ul>
 
-&lt;h3 id=&quot;读写一致性模型&quot;&gt;读写一致性模型&lt;/h3&gt;
+<h3 id="读写一致性模型">读写一致性模型</h3>
 
-&lt;ol&gt;
-  &lt;li&gt;
-    &lt;p&gt;read-your-write consistency&lt;/p&gt;
+<ol>
+  <li>
+    <p>read-your-write consistency</p>
 
-    &lt;p&gt;假如一个写请求已经成功返回，那么后续的读一定可以读出来。&lt;/p&gt;
-  &lt;/li&gt;
-  &lt;li&gt;
-    &lt;p&gt;无external consistency&lt;/p&gt;
+    <p>假如一个写请求已经成功返回，那么后续的读一定可以读出来。</p>
+  </li>
+  <li>
+    <p>无external consistency</p>
 
-    &lt;p&gt;两个先后发起的写请求，并不保证前面那个一定比后面那个先成功。&lt;/p&gt;
-  &lt;/li&gt;
-  &lt;li&gt;
-    &lt;p&gt;无snapshot consistency&lt;/p&gt;
+    <p>两个先后发起的写请求，并不保证前面那个一定比后面那个先成功。</p>
+  </li>
+  <li>
+    <p>无snapshot consistency</p>
 
-    &lt;p&gt;scan请求到的数据是不遵守因果律的，有可能后写进去的数据先扫描出来。之所以这样，是因为Pegasus在实现scan的时候并没有打snapshot。Pegasus在后续上可以跟进。&lt;/p&gt;
-  &lt;/li&gt;
-&lt;/ol&gt;
+    <p>scan请求到的数据是不遵守因果律的，有可能后写进去的数据先扫描出来。之所以这样，是因为Pegasus在实现scan的时候并没有打snapshot。Pegasus在后续上可以跟进。</p>
+  </li>
+</ol>
 
-&lt;h3 id=&quot;sharedlog和privatelog&quot;&gt;SharedLog和PrivateLog&lt;/h3&gt;
+<h3 id="sharedlog和privatelog">SharedLog和PrivateLog</h3>
 
-&lt;p&gt;前面介绍过，Pegasus在实现上追随了RSM(Replicated state machine)的模板：所有的写请求先写入到WAL(write ahead log)，然后再提交到存储引擎。在多Replica并存的存储系统中，WAL的处理是一个比较棘手的问题，因为每一个Replica都需要写WAL。如果Replica较多的话，这意味着对磁盘的随机写。一般来讲，我们是希望避免磁盘的随机写的。&lt;/p&gt;
+<p>前面介绍过，Pegasus在实现上追随了RSM(Replicated state machine)的模板：所有的写请求先写入到WAL(write ahead log)，然后再提交到存储引擎。在多Replica并存的存储系统中，WAL的处理是一个比较棘手的问题，因为每一个Replica都需要写WAL。如果Replica较多的话，这意味着对磁盘的随机写。一般来讲，我们是希望避免磁盘的随机写的。</p>
 
-&lt;p&gt;对于这类问题，一般的解决办法是多个Replica合写一个WAL，例如HBase就采取了这种做法。但这种做法所带来的劣势是对Replica的迁移重建工作非常的不友好。就Pegasus的架构来看，合写WAL意味着添加PotentialSecondary的时候会有易错且速度慢的log split操作。&lt;/p&gt;
+<p>对于这类问题，一般的解决办法是多个Replica合写一个WAL，例如HBase就采取了这种做法。但这种做法所带来的劣势是对Replica的迁移重建工作非常的不友好。就Pegasus的架构来看，合写WAL意味着添加PotentialSecondary的时候会有易错且速度慢的log split操作。</p>
 
-&lt;p&gt;Kudu在应对此类问题上提供了另外一个思路：无视这个问题，每个Replica各写一份WAL。之所以能这么做，我们认为出发点主要在于写请求是不会直接落盘，而是进操作系统的buffer cache的。有了一层buffer cache, 这意味着HDD的随机写可以得到一定程度的抑制；对于SSD，其写放大的问题也可以得到规避。但在这种做法下，如果开启写文件的立即落盘(fsync/O_DIRECT)，整个写请求会有比较严重的性能损耗。&lt;/p&gt;
+<p>Kudu在应对此类问题上提供了另外一个思路：无视这个问题，每个Replica各写一份WAL。之所以能这么做，我们认为出发点主要在于写请求是不会直接落盘，而是进操作系统的buffer cache的。有了一层buffer cache, 这意味着HDD的随机写可以得到一定程度的抑制；对于SSD，其写放大的问题也可以得到规避。但在这种做法下，如果开启写文件的立即落盘(fsync/O_DIRECT)，整个写请求会有比较严重的性能损耗。</p>
 
-&lt;p&gt;Pegasus在这里采取了另外一种做法：&lt;/p&gt;
+<p>Pegasus在这里采取了另外一种做法：</p>
 
-&lt;ol&gt;
-  &lt;li&gt;所有的写请求先合着写一个WAL，叫做&lt;strong&gt;SharedLog&lt;/strong&gt;;&lt;/li&gt;
-  &lt;li&gt;同时，对于每个Replica, 所有的请求都有一个内存cache, 然后以批量的方式写各自的WAL，叫做&lt;strong&gt;PrivateLog&lt;/strong&gt;；&lt;/li&gt;
-  &lt;li&gt;在进程重启的时候，PrivateLog缺失的部分可以在重放SharedLog时补全；&lt;/li&gt;
-  &lt;li&gt;添加PotentialSecondary时，直接使用PrivateLog。&lt;/li&gt;
-&lt;/ol&gt;
+<ol>
+  <li>所有的写请求先合着写一个WAL，叫做<strong>SharedLog</strong>;</li>
+  <li>同时，对于每个Replica, 所有的请求都有一个内存cache, 然后以批量的方式写各自的WAL，叫做<strong>PrivateLog</strong>；</li>
+  <li>在进程重启的时候，PrivateLog缺失的部分可以在重放SharedLog时补全；</li>
+  <li>添加PotentialSecondary时，直接使用PrivateLog。</li>
+</ol>
 
-&lt;h3 id=&quot;要不要立即落盘&quot;&gt;要不要立即落盘&lt;/h3&gt;
+<h3 id="要不要立即落盘">要不要立即落盘</h3>
 
-&lt;p&gt;要不要立即落盘也是个很有趣的问题，需要纠结的点如下：&lt;/p&gt;
+<p>要不要立即落盘也是个很有趣的问题，需要纠结的点如下：</p>
 
-&lt;ul&gt;
-  &lt;li&gt;对于多副本的系统而言，只写OS缓存并不特别糟糕，因为单机断电的数据丢失并不会造成数据的真正丢失&lt;/li&gt;
-  &lt;li&gt;对于单机房部署的集群，整机房的断电+不立即落盘可能会导致部分数据的丢失。为了应对这种问题，可以立即落盘或者加备用电池。&lt;/li&gt;
-  &lt;li&gt;对于两地三机房部署的集群，所有机房全部不可用的可能性非常低，所以就算不立即落盘，一般问题也不大。&lt;/li&gt;
-&lt;/ul&gt;
+<ul>
+  <li>对于多副本的系统而言，只写OS缓存并不特别糟糕，因为单机断电的数据丢失并不会造成数据的真正丢失</li>
+  <li>对于单机房部署的集群，整机房的断电+不立即落盘可能会导致部分数据的丢失。为了应对这种问题，可以立即落盘或者加备用电池。</li>
+  <li>对于两地三机房部署的集群，所有机房全部不可用的可能性非常低，所以就算不立即落盘，一般问题也不大。</li>
+</ul>
 
-&lt;p&gt;Pegasus当前在写WAL上并没有采用即时落盘的方式，主要是性能和安全上的一种权衡。后续这一点可以作为一个配置项供用户选择。&lt;/p&gt;
+<p>Pegasus当前在写WAL上并没有采用即时落盘的方式，主要是性能和安全上的一种权衡。后续这一点可以作为一个配置项供用户选择。</p>
 
-&lt;h3 id=&quot;存储引擎&quot;&gt;存储引擎&lt;/h3&gt;
+<h3 id="存储引擎">存储引擎</h3>
 
-&lt;p&gt;Pegasus选择&lt;a href=&quot;https://github.com/facebook/rocksdb&quot;&gt;rocksdb&lt;/a&gt;作为了单个Replica的存储引擎。在rocksdb的使用上，有三点需要说明一下：&lt;/p&gt;
+<p>Pegasus选择<a href="https://github.com/facebook/rocksdb">rocksdb</a>作为了单个Replica的存储引擎。在rocksdb的使用上，有三点需要说明一下：</p>
 
-&lt;ul&gt;
-  &lt;li&gt;我们关闭掉了rocksdb的WAL。&lt;/li&gt;
-  &lt;li&gt;PacificA对每条写请求都编了SequenceID, rocksdb对写请求也有内部的SequenceID。我们对二者做了融合，来支持我们自定义的checkpoint的生成。&lt;/li&gt;
-  &lt;li&gt;我们给rocksdb添加了一些compaction filter以支持Pegasus的语义：例如某个value的TTL。&lt;/li&gt;
-&lt;/ul&gt;
+<ul>
+  <li>我们关闭掉了rocksdb的WAL。</li>
+  <li>PacificA对每条写请求都编了SequenceID, rocksdb对写请求也有内部的SequenceID。我们对二者做了融合，来支持我们自定义的checkpoint的生成。</li>
+  <li>我们给rocksdb添加了一些compaction filter以支持Pegasus的语义：例如某个value的TTL。</li>
+</ul>
 
-&lt;p&gt;和很多一致性协议的实现一样，Pegasus中PacificA的实现也是和存储引擎解耦的。如果后面有对其他存储引擎的需求，Pegasus也可能会引入。&lt;/p&gt;
+<p>和很多一致性协议的实现一样，Pegasus中PacificA的实现也是和存储引擎解耦的。如果后面有对其他存储引擎的需求，Pegasus也可能会引入。</p>
 
-&lt;h3 id=&quot;是否共享存储引擎&quot;&gt;是否共享存储引擎&lt;/h3&gt;
+<h3 id="是否共享存储引擎">是否共享存储引擎</h3>
 
-&lt;p&gt;在实现ReplicaServer上，另一个值得强调的点是“多个Replica共享一个存储引擎实例，还是每个Replica使用一个存储引擎实例”。主要的考虑点如下：&lt;/p&gt;
+<p>在实现ReplicaServer上，另一个值得强调的点是“多个Replica共享一个存储引擎实例，还是每个Replica使用一个存储引擎实例”。主要的考虑点如下：</p>
 
-&lt;ol&gt;
-  &lt;li&gt;共享存储引擎实例，意味着存储引擎是并发写的。如果存储引擎对并发写优化的不是很好，很有可能会成为性能瓶颈。&lt;/li&gt;
-  &lt;li&gt;共享存储引擎不利于向replica group中添加新的成员。&lt;/li&gt;
-  &lt;li&gt;如果一个存储引擎有自己的WAL，那么不共享存储引擎很有可能会造成磁盘的随机写。&lt;/li&gt;
-  &lt;li&gt;一般在存储引擎的实现中，都会有单独的compaction过程。不共享存储引擎，并且存储引擎数太多的话，可能会导致过多的线程开销，各自在compaction时也可能引发随机写。&lt;/li&gt;
-&lt;/ol&gt;
+<ol>
+  <li>共享存储引擎实例，意味着存储引擎是并发写的。如果存储引擎对并发写优化的不是很好，很有可能会成为性能瓶颈。</li>
+  <li>共享存储引擎不利于向replica group中添加新的成员。</li>
+  <li>如果一个存储引擎有自己的WAL，那么不共享存储引擎很有可能会造成磁盘的随机写。</li>
+  <li>一般在存储引擎的实现中，都会有单独的compaction过程。不共享存储引擎，并且存储引擎数太多的话，可能会导致过多的线程开销，各自在compaction时也可能引发随机写。</li>
+</ol>
 
-&lt;p&gt;Pegasus目前各个Replica是不共享存储引擎的。我们关掉rocksdb的WAL一方面的考虑也是为了避免3。&lt;/p&gt;
+<p>Pegasus目前各个Replica是不共享存储引擎的。我们关掉rocksdb的WAL一方面的考虑也是为了避免3。</p>
 
-&lt;h3 id=&quot;replica的状态转换&quot;&gt;Replica的状态转换&lt;/h3&gt;
+<h3 id="replica的状态转换">Replica的状态转换</h3>
 
-&lt;p&gt;在Pegasus中，一个Replica有如下几种状态：&lt;/p&gt;
+<p>在Pegasus中，一个Replica有如下几种状态：</p>
 
-&lt;ul&gt;
-  &lt;li&gt;Primary&lt;/li&gt;
-  &lt;li&gt;Secondary&lt;/li&gt;
-  &lt;li&gt;PotentialSecondary(learner)：当group中新添加一个成员时，在它补全完数据成为Secondary之前的状态&lt;/li&gt;
-  &lt;li&gt;Inactive：和MetaServer断开连接时候的状态，或者在向MetaServer请求修改group的PartitionConfiguration时的状态&lt;/li&gt;
-  &lt;li&gt;Error：当Replica发生IO或者逻辑错误时候的状态&lt;/li&gt;
-&lt;/ul&gt;
+<ul>
+  <li>Primary</li>
+  <li>Secondary</li>
+  <li>PotentialSecondary(learner)：当group中新添加一个成员时，在它补全完数据成为Secondary之前的状态</li>
+  <li>Inactive：和MetaServer断开连接时候的状态，或者在向MetaServer请求修改group的PartitionConfiguration时的状态</li>
+  <li>Error：当Replica发生IO或者逻辑错误时候的状态</li>
+</ul>
 
-&lt;p&gt;这几个状态的转换图不再展开，这里简述下状态转换的一些原则：&lt;/p&gt;
+<p>这几个状态的转换图不再展开，这里简述下状态转换的一些原则：</p>
 
-&lt;ul&gt;
-  &lt;li&gt;Primary负责管理一个group中所有成员的状态。当Primary和Secondary或者Learner通信失败时，会采取措施将其移除。Secondary或者Learner从来不去尝试推翻一个Primary，推翻并选举新的Primary时MetaServer的责任。&lt;/li&gt;
-  &lt;li&gt;当管理者决定触发状态变化时，&lt;strong&gt;当事人&lt;/strong&gt;不会立即得到通知。例如，MetaServer因为探活失败要移除旧Primary时，不会通知旧Primary“我要移除你”；同理，当Primary因为通信失败要移除一个Secondary或者Learner时，也不会通知对应的Secondary或者Learner。这么做的原因也很好理解，这些动作之所以会发生，是因为网络不通，此时和&lt;strong&gt;当事人&lt;/strong&gt;做通知是没有意义的。当事人在和决策者或者MetaServer恢复通信后，会根据对方的状态做响应变化。&lt;/li&gt;
-&lt;/ul&gt;
+<ul>
+  <li>Primary负责管理一个group中所有成员的状态。当Primary和Secondary或者Learner通信失败时，会采取措施将其移除。Secondary或者Learner从来不去尝试推翻一个Primary，推翻并选举新的Primary时MetaServer的责任。</li>
+  <li>当管理者决定触发状态变化时，<strong>当事人</strong>不会立即得到通知。例如，MetaServer因为探活失败要移除旧Primary时，不会通知旧Primary“我要移除你”；同理，当Primary因为通信失败要移除一个Secondary或者Learner时，也不会通知对应的Secondary或者Learner。这么做的原因也很好理解，这些动作之所以会发生，是因为网络不通，此时和<strong>当事人</strong>做通知是没有意义的。当事人在和决策者或者MetaServer恢复通信后，会根据对方的状态做响应变化。</li>
+</ul>
 
-&lt;p&gt;下面以Primary移除一个Secondary为例来阐述上述原则：&lt;/p&gt;
+<p>下面以Primary移除一个Secondary为例来阐述上述原则：</p>
 
-&lt;ul&gt;
-  &lt;li&gt;Primary向Secondary发送prepare消息失败时，准备移除该Secondary&lt;/li&gt;
-  &lt;li&gt;Primary会进入一个拒绝写的状态&lt;/li&gt;
-  &lt;li&gt;开始把移除掉Secondary新的PartitionConfiguration发送给MetaServer&lt;/li&gt;
-  &lt;li&gt;MetaServer在把新PartitionConfiguration持久化后会回复Primary成功&lt;/li&gt;
-  &lt;li&gt;Primary把新的PartitionConfiguration修改到本地，并恢复到响应写的状态&lt;/li&gt;
-&lt;/ul&gt;
+<ul>
+  <li>Primary向Secondary发送prepare消息失败时，准备移除该Secondary</li>
+  <li>Primary会进入一个拒绝写的状态</li>
+  <li>开始把移除掉Secondary新的PartitionConfiguration发送给MetaServer</li>
+  <li>MetaServer在把新PartitionConfiguration持久化后会回复Primary成功</li>
+  <li>Primary把新的PartitionConfiguration修改到本地，并恢复到响应写的状态</li>
+</ul>
 
-&lt;h3 id=&quot;添加learner&quot;&gt;添加Learner&lt;/h3&gt;
+<h3 id="添加learner">添加Learner</h3>
 
-&lt;p&gt;添加Learner是整个一致性协议部分中最复杂的一个环节，这里概述以下其过程：&lt;/p&gt;
+<p>添加Learner是整个一致性协议部分中最复杂的一个环节，这里概述以下其过程：</p>
 
-&lt;ul&gt;
-  &lt;li&gt;MetaServer向Primary发起add_secondary的提议，把一个新的Replica添加到某台机器上。这一过程不会修改PartitionConfiguration。&lt;/li&gt;
-  &lt;li&gt;Primary&lt;strong&gt;定期&lt;/strong&gt;向对应机器发起添加Learner的邀请&lt;/li&gt;
-  &lt;li&gt;Leaner在收到Primary的邀请后，开始向Primary拷贝数据。整个拷贝数据的过程比较复杂，要根据Learner当前的数据量决定是拷贝Primary的数据库镜像、PrivateLog、还是内存中对写请求的缓存。&lt;/li&gt;
-  &lt;li&gt;Leaner在拷贝到Primary的全部数据后，会通知Primary拷贝完成&lt;/li&gt;
-  &lt;li&gt;Primary向MetaServer发起修改PartitionConfiguration的请求。请求期间同样拒绝写，并且仍旧是MetaServer持久化完成后Primary才会修改本地视图。&lt;/li&gt;
-&lt;/ul&gt;
+<ul>
+  <li>MetaServer向Primary发起add_secondary的提议，把一个新的Replica添加到某台机器上。这一过程不会修改PartitionConfiguration。</li>
+  <li>Primary<strong>定期</strong>向对应机器发起添加Learner的邀请</li>
+  <li>Leaner在收到Primary的邀请后，开始向Primary拷贝数据。整个拷贝数据的过程比较复杂，要根据Learner当前的数据量决定是拷贝Primary的数据库镜像、PrivateLog、还是内存中对写请求的缓存。</li>
+  <li>Leaner在拷贝到Primary的全部数据后，会通知Primary拷贝完成</li>
+  <li>Primary向MetaServer发起修改PartitionConfiguration的请求。请求期间同样拒绝写，并且仍旧是MetaServer持久化完成后Primary才会修改本地视图。</li>
+</ul>
 
-&lt;h3 id=&quot;replicaserver的bootstrap&quot;&gt;ReplicaServer的bootstrap&lt;/h3&gt;
+<h3 id="replicaserver的bootstrap">ReplicaServer的bootstrap</h3>
 
-&lt;p&gt;当一个ReplicaServer的进程启动时，它会加载自己的所有replica，并且重放所有的WAL。这些replica会被设置为inactive，是不会向外界提供读写服务的。&lt;/p&gt;
+<p>当一个ReplicaServer的进程启动时，它会加载自己的所有replica，并且重放所有的WAL。这些replica会被设置为inactive，是不会向外界提供读写服务的。</p>
 
-&lt;p&gt;等加载完成后，ReplicaServer会启动FD模块连接MetaServer。连接成功后会向MetaServer查询自己服务的replica列表，并和自己加载的replica列表相比较并做相应调整：&lt;/p&gt;
+<p>等加载完成后，ReplicaServer会启动FD模块连接MetaServer。连接成功后会向MetaServer查询自己服务的replica列表，并和自己加载的replica列表相比较并做相应调整：</p>
 
-&lt;ul&gt;
-  &lt;li&gt;如果本地多出了一部分replica, replica server会将其关闭&lt;/li&gt;
-  &lt;li&gt;如果MetaServer多出了一部分replica，请求MetaServer将其移除&lt;/li&gt;
-  &lt;li&gt;如果MetaServer和本地都有，按MetaServer所标记的角色进行服务&lt;/li&gt;
-&lt;/ul&gt;
+<ul>
+  <li>如果本地多出了一部分replica, replica server会将其关闭</li>
+  <li>如果MetaServer多出了一部分replica，请求MetaServer将其移除</li>
+  <li>如果MetaServer和本地都有，按MetaServer所标记的角色进行服务</li>
+</ul>
 
-&lt;p&gt;ReplicaServer向MetaServer查询replica列表并做本地调整的这一过程叫&lt;strong&gt;ConfigSync&lt;/strong&gt;。这一过程并不仅限于bootstrap时候会有，而是在集群运行过程中会定期发生的一个任务。&lt;/p&gt;</content><author><name>Pegasus</name></author><summary type="html">在 Pegasus 的架构中，ReplicaServer负责数据的读写请求。我们在这篇文章中详细讨论它的内部机制。</summary></entry></feed>
+<p>ReplicaServer向MetaServer查询replica列表并做本地调整的这一过程叫<strong>ConfigSync</strong>。这一过程并不仅限于bootstrap时候会有，而是在集群运行过程中会定期发生的一个任务。</p>]]></content><author><name>Pegasus</name></author><summary type="html"><![CDATA[在 Pegasus 的架构中，ReplicaServer负责数据的读写请求。我们在这篇文章中详细讨论它的内部机制。]]></summary></entry></feed>
