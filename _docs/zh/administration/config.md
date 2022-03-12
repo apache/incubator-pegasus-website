@@ -15,7 +15,7 @@ Pegasus的配置为ini格式，主要有以下组成部分：
 * RocksDB相关：Pegasus所依赖的RocksDB的参数配置。
 * 其他杂项：Pegasus中一些组件模块的参数配置，譬如日志、监控、Zookeeper配置等。
 
-配置文件中会涉及到一些rDSN的概念，对这些概念的进一步理解，请参见[rDSN项目](https://github.com/XiaoMi/rdsn)。
+配置文件中会涉及到一些rDSN的概念，对这些概念的进一步理解，请参见 [rDSN项目](https://github.com/XiaoMi/rdsn) 。
 
 下面列举出了Pegasus配置文件的部分说明。这些配置项有些是和client通用的，比如app、task、threadpool等，其他是server端所独有的。要理解这些配置的真正含义，建议先阅读PacificA论文，并了解清楚rDSN项目和Pegasus架构。
 

@@ -27,8 +27,8 @@ public PegasusTableInterface openTable(String tableName, int backupRequestDelayM
 
 另外，由于delay时间设置的是p999时间，大约1000个请求里只有1个请求会发送backup request，因此额外请求量（也就是开启backup request的额外开销）比例在0.1%左右。依此类推，若想要降低P999时延，则可以将 `backupRequestDelayMs` 设置为P99延迟，由此会增加1%的额外读流量。
 
-|  test case   | enable backup request  |  read p9999  |  
-| ---- | ---- | ---- |
-| 3-clients 15-threads | no | 988671 |
-| 3-clients 15-threads | yes| 153599 |
+| test case            | enable backup request | read p9999 |  
+|----------------------|-----------------------|------------|
+| 3-clients 15-threads | no                    | 988671     |
+| 3-clients 15-threads | yes                   | 153599     |
 

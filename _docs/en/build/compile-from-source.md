@@ -78,7 +78,7 @@ pip3 install --no-cache-dir cmake
 
 ## Compilation
 
-Please refer to [Downloads](/docs/downloads) to fetch the sources。
+Please refer to [Downloads](/_docs/en/downloads.md) to fetch the sources。
 
 ```bash
 ./run.sh build -c
@@ -106,4 +106,4 @@ Package toolset which includes various tools (shell, bench):
 ./run.sh pack_tools
 ```
 
-If this is your first time compiling Pegasus, it's recommended to try [onebox](/overview/onebox).
+If this is your first time compiling Pegasus, it's recommended to try [onebox](/_overview/en/onebox.md).

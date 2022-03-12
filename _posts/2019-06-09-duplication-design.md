@@ -4,7 +4,7 @@ layout: post
 author: 吴涛
 ---
 
-关于热备份的基本概念和使用可以参照 [administration/duplication](/administration/duplication)，这里将主要描述跨机房同步的设计方案和执行细节。
+关于热备份的基本概念和使用可以参照 [administration/duplication](/_docs/zh/administration/duplication.md)，这里将主要描述跨机房同步的设计方案和执行细节。
 
 -----
 

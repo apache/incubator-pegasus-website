@@ -57,7 +57,7 @@ A: A fast way to direct insert data to the DB:
 
 # 如何设置
 ## 通过shell设置
-通过shell的[set_app_envs命令](/overview/shell#set_app_envs)来设置，譬如设置temp表为bulk_load模式：
+通过shell的[set_app_envs命令](/_docs/zh/tools/shell.md#set_app_envs)来设置，譬如设置temp表为bulk_load模式：
 ```
 >>> use temp
 >>> set_app_envs rocksdb.usage_scenario bulk_load

@@ -17,7 +17,7 @@ permalink: administration/throttling
 
 # 客户端流控
 
-目前Java客户端提供了流控工具，参见[Java客户端文档#流量控制](/clients/java-client#流量控制)。
+目前Java客户端提供了流控工具，参见[Java客户端文档#流量控制](/_docs/zh/clients/java-client.md#流量控制)。
 
 # 服务端流控
 

@@ -31,26 +31,26 @@ Pegasus的TTL是通过在RocksDB中存储数据时记录数据的过期时间，
 我们在客户端和Shell工具都提供了设置和查询TTL的接口。
 
 Pegasus Java Client中以下接口可以查询和设置TTL：
-* [ttl](/clients/java-client#ttl)：获取指定数据的TTL信息。
-* [set](/clients/java-client#set)和[batchSet](/clients/java-client#batchset)：都提供了设置TTL的参数，其中batchSet是在SetItem中设置的。
-* [multiSet](/clients/java-client#multiset)和[batchMultiSet](/clients/java-client#batchmultiset)：都提供了设置TTL的参数。
-* [incr](/clients/java-client#batchmultiset)：从v1.11.1版本开始，incr接口也提供了修改TTL的功能。
-* [checkAndSet](/clients/java-client#checkandset)：在CheckAndSetOptions中提供了设置TTL的参数。
+* [ttl](/_docs/zh/clients/java-client.md#ttl)：获取指定数据的TTL信息。
+* [set](/_docs/zh/clients/java-client.md#set)和[batchSet](/_docs/zh/clients/java-client.md#batchset)：都提供了设置TTL的参数，其中batchSet是在SetItem中设置的。
+* [multiSet](/_docs/zh/clients/java-client.md#multiset)和[batchMultiSet](/_docs/zh/clients/java-client.md#batchmultiset)：都提供了设置TTL的参数。
+* [incr](/_docs/zh/clients/java-client.md#batchmultiset)：从v1.11.1版本开始，incr接口也提供了修改TTL的功能。
+* [checkAndSet](/_docs/zh/clients/java-client.md#checkandset)：在CheckAndSetOptions中提供了设置TTL的参数。
 
 Shell工具中以下命令可以查询和设置TTL：
-* [ttl](/overview/shell#ttl)命令：获取指定数据的TTL信息。
-* [set](/overview/shell#set)和[multi_set](/overview/shell#multi_set)命令：都提供了设置TTL的参数。
+* [ttl](/_docs/zh/tools/shell.md#ttl)命令：获取指定数据的TTL信息。
+* [set](/_docs/zh/tools/shell.md#set)和[multi_set](/_docs/zh/tools/shell.md#multi_set)命令：都提供了设置TTL的参数。
 
 # 表级TTL
 从v1.11.2版本开始，Pegasus支持表级TTL功能。
 
 实现原理：
-* 用户在[Table环境变量](/administration/table-env)中设置`default_ttl`环境变量。
+* 用户在[Table环境变量](/_docs/zh/administration/table-env.md)中设置`default_ttl`环境变量。
 * MetaServer将环境变量异步地通知到各个ReplicaServer，使该表的每个replica都获取到该环境变量，这个过程大约有几秒到几十秒不等的延迟，但是不会超过一分钟。
 * replica获得环境变量后，解析获得default_ttl配置，并立即开始生效。生效之后：
   * 用户新写入的数据，如果TTL=0（使用默认TTL=0或者显式设置TTL=0），则将数据的实际TTL设置为default_ttl。
   * RocksDB在进行compaction的时候，如果compact输入文件的原数据没有TTL，则将compact输出文件的新数据的TTL设置为default_ttl。这个过程依赖于compaction的触发时机，所以时间点是不确定的。
-  * 如果执行[Manual Compact](/administration/manual-compact)，那么所有文件都会经过compaction处理，原来没有TTL的数据都会设置TTL为default_ttl。
+  * 如果执行[Manual Compact](/_docs/zh/administration/manual-compact.md)，那么所有文件都会经过compaction处理，原来没有TTL的数据都会设置TTL为default_ttl。
 
 考虑这样的场景：业务方在初期写入数据时没有设置TTL，后来改变需求，希望所有数据都加TTL，并且以前没有设置TTL的数据从现在开始计算TTL，那么就可以通过`表级TTL`加上`Manual Compact`的功能实现这个目的。
 
@@ -64,6 +64,6 @@ TTLExpireTime = InsertTime + TTLSeconds = now + TTLRemainingSeconds
 InsertTime = now + TTLRemainingSeconds - TTLSeconds
 ```
 其中：
-* TTLRemainingSeconds：通过[Shell的ttl命令](/overview/shell#ttl)获取。
+* TTLRemainingSeconds：通过[Shell的ttl命令](/_docs/zh/tools/shell.md#ttl)获取。
 * now：执行Shell ttl命令的时间。
 * TTLSeconds：用户知道数据写入时设置的TTL。

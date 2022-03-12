@@ -7,7 +7,7 @@ permalink: api/single-atomic
 # 原理
 Pegasus采用Hash分片，同一个HashKey的数据总是存储在同一个Partition中，即相同的Replica中。同时，Pegasus实现时，同一个Replica的写操作在server端总是串行执行的。因此对于同一HashKey下的数据操作，可以很方便地实现原子的语义。
 
-对于纯粹的写操作，譬如[multiSet](/clients/java-client#multiset)和[multiDel](/clients/java-client#multidel)，单个操作中对多个SortKey同时set或者del，原子语义很容易理解，要么同时成功，要么同时失败，所以这两个操作属于单行原子操作。
+对于纯粹的写操作，譬如[multiSet](/_docs/zh/clients/java-client.md#multiset)和[multiDel](/_docs/zh/clients/java-client.md#multidel)，单个操作中对多个SortKey同时set或者del，原子语义很容易理解，要么同时成功，要么同时失败，所以这两个操作属于单行原子操作。
 
 不过我们这里重点关注的是另一类操作：**先读后写，并且写操作依赖读的结果**。这类操作的特点就是：它们是**非幂等**的，即同一个操作如何多次重复执行，造成的结果（包括数据实际的更新情况、返回给用户的结果）可能是不同的。原子增减和CAS操作都属于这类。Pegasus能保证这类操作的原子性和一致性，因为：
 * 同一个HashKey的数据总是存储在同一个Replica中；
@@ -33,7 +33,7 @@ Pegasus采用Hash分片，同一个HashKey的数据总是存储在同一个Parti
 # CAS操作
 另一类很有用的原子操作就是CAS（Compare-And-Swap），直译就是对比交换，最初是表示一条CPU的原子指令，其作用是让CPU先进行比较两个值是否相等，然后原子地更新某个位置的值。基于CAS操作，可以实现很多高级的并发特性，譬如锁。因此很多编程语言也原生地提供CAS操作。
 
-Pegasus提供了check_and_set的CAS操作，其语义就是：根据HashKey的某一个SortKey的值是否满足某种条件，来决定是否修改另一个SortKey的值。我们将用于判断条件的SortKey称之为`CheckSortKey`，将用于设置值的SortKey称之为`SetSortKey`。对应地，CheckSortKey的value称之为`CheckValue`，SetSortKey要设置的value称之为`SetValue`。接口参见[checkAndSet](/clients/java-client#checkandset)，以及其扩展版本[checkAndMutate](/clients/java-client#checkandmutate)和[compareExchange](/clients/java-client#compareexchange)。
+Pegasus提供了check_and_set的CAS操作，其语义就是：根据HashKey的某一个SortKey的值是否满足某种条件，来决定是否修改另一个SortKey的值。我们将用于判断条件的SortKey称之为`CheckSortKey`，将用于设置值的SortKey称之为`SetSortKey`。对应地，CheckSortKey的value称之为`CheckValue`，SetSortKey要设置的value称之为`SetValue`。接口参见[checkAndSet](/_docs/zh/clients/java-client.md#checkandset)，以及其扩展版本[checkAndMutate](/_docs/zh/clients/java-client.md#checkandmutate)和[compareExchange](/_docs/zh/clients/java-client.md#compareexchange)。
 
 语义解释：
 * 只有当CheckValue满足指定的条件时，才会设置SetSortKey的值。
@@ -45,7 +45,7 @@ Pegasus提供了check_and_set的CAS操作，其语义就是：根据HashKey的�
 * 可以通过选项`CheckAndSetOptions.returnCheckValue`指定返回CheckValue的值。
 * 可以通过选项`CheckAndSetOptions.setValueTTLSeconds`指定SetValue的TTL。
 
-为了方便使用，Pegasus Java Client还提供了compare_exchange接口：当HashKey的某个SortKey的value按照字节串比较**等于**用户指定的ExpectedValue时，就将其value更新为用户指定的DesiredValue。从语义上来看，compare_exchange更像是Compare-And-Swap的另外一种说法。接口参见[compareExchange](/clients/java-client#compareexchange)。
+为了方便使用，Pegasus Java Client还提供了compare_exchange接口：当HashKey的某个SortKey的value按照字节串比较**等于**用户指定的ExpectedValue时，就将其value更新为用户指定的DesiredValue。从语义上来看，compare_exchange更像是Compare-And-Swap的另外一种说法。接口参见[compareExchange](/_docs/zh/clients/java-client.md#compareexchange)。
 
 compare_exchange其实是check_and_set的特化版本：
 * CheckSortKey和SetSortKey相同。

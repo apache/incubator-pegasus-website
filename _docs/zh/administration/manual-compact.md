@@ -86,7 +86,7 @@ virtual Status CompactRange(const CompactRangeOptions& options,
 
 ## 通过shell设置
 
-既然Manual Compact功能是利用[Table环境变量](table-env)触发的，那么可以直接通过shell功能的[set_app_envs命令](/overview/shell#set_app_envs)来设置。需要设置的环境变量参照上面的描述，环境变量设置后不会立即生效，大约需要等几十秒后才能在所有replica上生效。
+既然Manual Compact功能是利用[Table环境变量](table-env)触发的，那么可以直接通过shell功能的[set_app_envs命令](/_docs/zh/tools/shell.md#set_app_envs)来设置。需要设置的环境变量参照上面的描述，环境变量设置后不会立即生效，大约需要等几十秒后才能在所有replica上生效。
 
 由于需要设置的环境变量比较多，且对数据格式有要求，所以强烈建议不要自己直接设置，而是通过我们提供的脚本工具来设置，如下所示。
 

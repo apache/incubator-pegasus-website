@@ -4,7 +4,7 @@ permalink: administration/compression
 
 # 客户端压缩
 
-请参考 [Java客户端文档#数据序列化](/clients/java-client#数据序列化) 和 [Java客户端文档#数据压缩](/clients/java-client#数据压缩) 。
+请参考 [Java客户端文档#数据序列化](/_docs/zh/clients/java-client.md#数据序列化) 和 [Java客户端文档#数据压缩](/_docs/zh/clients/java-client.md#数据压缩) 。
 
 # 服务端压缩
 

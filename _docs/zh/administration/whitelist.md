@@ -40,12 +40,12 @@ Pegasus的白名单功能用来防止非预期的replica server加入集群。�
 
 由于扩容需replica server先与meta server通信，如果此时白名单未更新，会导致meta server拒绝这个新replica server加入集群。
 
-所以，开启白名单的集群扩容步骤，需要在普通[扩容流程](membership-change#扩容流程)前，进行一下步骤：
+所以，开启白名单的集群扩容步骤，需要在普通[扩容流程](/_docs/zh/administration/scale-in-out.md#扩容流程)前，进行一下步骤：
 1. 修改meta server白名单配置，加入新replica servers
 2. 重启meta server
 
 ### 缩容
 
-[缩容流程](membership-change#缩容流程)中，白名单不会造成任何影响。白名单的更新也可以在缩容完成之后任意时刻进行。
+[缩容流程](/_docs/zh/administration/scale-in-out.md#缩容流程)中，白名单不会造成任何影响。白名单的更新也可以在缩容完成之后任意时刻进行。
 
 但为了安全，建议及时更新白名单。只需在缩容流程的最后一步“重启meta server”前，修改meta server的白名单配置。

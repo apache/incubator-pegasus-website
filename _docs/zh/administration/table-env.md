@@ -22,11 +22,11 @@ Table环境变量具有如下特性：
 * 环境变量的key通过都是采用`.`分隔的字段的形式，方便组织。
 
 目前通过Table环境变量支持的功能包括：
-* [Manual-Compact功能](manual-compact)
-* [Usage-Scenario功能](usage-scenario)
+* [Manual-Compact功能](/_docs/zh/administration/manual-compact.md)
+* [Usage-Scenario功能](/_docs/zh/administration/usage-scenario.md)
 
 # 操作命令
-Pegasus的[Shell工具](/overview/shell#set_app_envs)中提供了操作Table环境变量的命令。这些命令执行前都需要先执行`use xxx`选择表。
+Pegasus的[Shell工具](/_docs/zh/tools/shell.md#set_app_envs)中提供了操作Table环境变量的命令。这些命令执行前都需要先执行`use xxx`选择表。
 
 ## get_app_envs
 获取环境变量列表，用法：`get_app_envs`
@@ -112,7 +112,7 @@ rocksdb.usage_scenario | string | normal \| prefer_write \| bulk_load | bulk_loa
 replica.deny_client_write | bool | true \| false | true | 拒绝写请求 | 1.11.2
 replica.write_throttling | string | 特定格式 | 1000\*delay\*100 | [流量控制#表级流控](throttling#表级流控) | 1.11.2
 replica.write_throttling_by_size | string | 特定格式 | 1000\*delay\*100 | [流量控制#表级流控](throttling#表级流控) | 1.12.0
-default_ttl | int | >=0 | 86400 | [表级TTL](/api/ttl#表级TTL) | 1.11.2
+default_ttl | int | >=0 | 86400 | [表级TTL](/_docs/zh/api/ttl.md#表级TTL) | 1.11.2
 manual_compact.disabled | bool | true \| false | true | [Manual-Compact](manual-compact) | 1.9.0
 manual_compact.max_concurrent_running_count | int | >=0 | 10 | [Manual-Compact](manual-compact) | 1.11.3
 manual_compact.once.trigger_time | int | Unix Timestamp in Seconds | 1547091115 | [Manual-Compact](manual-compact) | 1.8.1
@@ -121,7 +121,7 @@ manual_compact.once.bottommost_level_compaction | string | force \| skip | force
 manual_compact.periodic.trigger_time | string | 特定格式 | 3:00,5:00 | [Manual-Compact](manual-compact) | 1.8.1
 manual_compact.periodic.target_level | int | -1 \| >=1 | 2 | [Manual-Compact](manual-compact) | 1.8.1
 manual_compact.periodic.bottommost_level_compaction | string | force \| skip | force | [Manual-Compact](manual-compact) | 1.8.1
-rocksdb.checkpoint.reserve_min_count | int | >=1 | 2 | [Rocksdb-Checkpoint管理](resource-management#rocksdb-checkpoint管理) | 1.11.3
-rocksdb.checkpoint.reserve_time_seconds | int | >=0 | 600 | [Rocksdb-Checkpoint管理](resource-management#rocksdb-checkpoint管理) | 1.11.3
+rocksdb.checkpoint.reserve_min_count | int | >=1 | 2 | [Rocksdb-Checkpoint管理](resource-management#Rocksdb-Checkpoint管理) | 1.11.3
+rocksdb.checkpoint.reserve_time_seconds | int | >=0 | 600 | [Rocksdb-Checkpoint管理](resource-management#Rocksdb-Checkpoint管理) | 1.11.3
 business.info | string | 特定格式(使用utf-8编码) | depart=云平台部-存储平台,user=qinzuoyan&wutao1 | 记录表的业务归属信息，可用于生成账单 | -
 replica.slow_query_threshold | int | >=20 | 30 | 慢查询阈值 | 1.12.0

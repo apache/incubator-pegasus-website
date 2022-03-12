@@ -8,7 +8,7 @@ permalink: administration/table-migration
 
 # copy_data迁移
 
-Shell工具的[copy_data命令](/overview/shell#copy_data)的原理：通过scan接口从源集群的表中逐条读入数据，然后通过set接口将数据逐条写入到目标集群的表中。如果set的数据在目标集群的表中已经存在，会直接覆盖。
+Shell工具的[copy_data命令](/_docs/zh/tools/shell.md#copy_data)的原理：通过scan接口从源集群的表中逐条读入数据，然后通过set接口将数据逐条写入到目标集群的表中。如果set的数据在目标集群的表中已经存在，会直接覆盖。
 
 copy_data命令：
 ```
@@ -33,7 +33,7 @@ copy_data命令：
 
 # 冷备份迁移
 
-所谓冷备份迁移，就是利用Pegasus的[冷备份功能](/administration/cold-backup)，先将数据备份到HDFS或者其他介质上，然后恢复到新的表中。
+所谓冷备份迁移，就是利用Pegasus的[冷备份功能](/_docs/zh/administration/cold-backup.md)，先将数据备份到HDFS或者其他介质上，然后恢复到新的表中。
 
 冷备份迁移的好处：
 * 速度更快：因为冷备份是拷贝文件，相对copy_data的逐条拷贝，速度要快很多。

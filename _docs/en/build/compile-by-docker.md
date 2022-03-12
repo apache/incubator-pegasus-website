@@ -18,7 +18,7 @@ docker pull apachepegasus/build-env:{{ site.latest_pegasus_version }}-centos7
 
 ## Compilation
 
-Please refer to [Downloads](/docs/downloads) to fetch the sources under a directory (`/your/local/apache-pegasus-source`). Then run the following command:
+Please refer to [Downloads](/_docs/en/downloads.md) to fetch the sources under a directory (`/your/local/apache-pegasus-source`). Then run the following command:
 
 ```sh
 docker run -v /your/local/apache-pegasus-source:/root/pegasus \
@@ -54,4 +54,4 @@ docker run -v /your/local/apache-pegasus-source:/root/pegasus \
            /bin/bash -c "./run.sh pack_tools"
 ```
 
-If this is your first time compiling Pegasus, it's recommended to try [onebox](/overview/onebox).
+If this is your first time compiling Pegasus, it's recommended to try [onebox](/_overview/en/onebox.md).

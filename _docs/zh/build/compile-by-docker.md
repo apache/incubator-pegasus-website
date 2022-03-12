@@ -18,7 +18,7 @@ docker pull apachepegasus/build-env:{{ site.latest_pegasus_version }}-centos7
 
 ## 编译
 
-请先参考[下载文档](/docs/downloads)获取源码到某目录（`/your/local/apache-pegasus-source`）下。随后运行以下命令：
+请先参考[下载文档](/_docs/zh/downloads.md)获取源码到某目录（`/your/local/apache-pegasus-source`）下。随后运行以下命令：
 
 ```sh
 docker run -v /your/local/apache-pegasus-source:/root/pegasus \
@@ -54,4 +54,4 @@ docker run -v /your/local/apache-pegasus-source:/root/pegasus \
            /bin/bash -c "./run.sh pack_tools"
 ```
 
-编译成功后，推荐先[体验onebox集群](/overview/onebox)。
+编译成功后，推荐先[体验onebox集群](/_overview/zh/onebox.md)。

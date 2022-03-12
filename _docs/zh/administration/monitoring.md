@@ -128,7 +128,7 @@ scrape_configs:
 ./prometheus --config.file=prometheus.yml
 ```
 
-进入网址 [localhost:9090](http://localhost:9090) 看到如下界面即表示到这一步为止是成功的。
+进入网址 http://localhost:9090 看到如下界面即表示到这一步为止是成功的。
 
 ![prometheus-server](/assets/images/prometheus-server.png)
 
@@ -179,7 +179,7 @@ INFO[07-24|14:37:00] cleanup of expired auth tokens done      logger=auth count=
 
     ![grafana-login](/assets/images/grafana-login.png)
 
-    - 默认地址：[http://localhost:3000](http://localhost:3000)
+    - 默认地址：http://localhost:3000
     - 默认账户：admin
     - 默认密码：admin
 
