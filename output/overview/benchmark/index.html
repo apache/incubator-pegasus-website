@@ -19,11 +19,11 @@
 <meta property="og:description" content="测试环境" />
 <meta property="og:site_name" content="Pegasus" />
 <meta property="og:type" content="article" />
-<meta property="article:published_time" content="2022-03-12T08:11:28+00:00" />
+<meta property="article:published_time" content="2022-03-12T09:31:56+00:00" />
 <meta name="twitter:card" content="summary" />
 <meta property="twitter:title" content="Benchmark" />
 <script type="application/ld+json">
-{"@context":"https://schema.org","@type":"BlogPosting","dateModified":"2022-03-12T08:11:28+00:00","datePublished":"2022-03-12T08:11:28+00:00","description":"测试环境","headline":"Benchmark","mainEntityOfPage":{"@type":"WebPage","@id":"/overview/benchmark/"},"url":"/overview/benchmark/"}</script>
+{"@context":"https://schema.org","@type":"BlogPosting","dateModified":"2022-03-12T09:31:56+00:00","datePublished":"2022-03-12T09:31:56+00:00","description":"测试环境","headline":"Benchmark","mainEntityOfPage":{"@type":"WebPage","@id":"/overview/benchmark/"},"url":"/overview/benchmark/"}</script>
 <!-- End Jekyll SEO tag -->
 </head>
 
@@ -880,7 +880,7 @@
 
 <h3 id="rocksdb限速">RocksDB限速</h3>
 
-<p>Pegasus底层采用RocksDB做存储引擎，当数据写入增多，会触发compaction操作，占用较多磁盘IO，出现较多的毛刺现象。该项测试展示了开启<a href="/_overview/zh/benchmark.md">RocksDB的限速</a>后，可以降低compaction负载，从而显著的降低毛刺现象。</p>
+<p>Pegasus底层采用RocksDB做存储引擎，当数据写入增多，会触发compaction操作，占用较多磁盘IO，出现较多的毛刺现象。该项测试展示了开启<a href="http://10.232.52.164:4000/overview/benchmark">RocksDB的限速</a>后，可以降低compaction负载，从而显著的降低毛刺现象。</p>
 
 <p>下图分别展示了无限速、500MB限速、500MB限速同时开启auto-tune功能，三种场景的IO使用率和写P99延迟(注意：测试场景为：3client*20thread，QPS≈44K)：</p>
 

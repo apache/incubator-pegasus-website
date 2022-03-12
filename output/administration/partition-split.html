@@ -19,11 +19,11 @@
 <meta property="og:description" content="功能简介 在pegasus中，表的partition个数是在创建时指定的，并且不会动态改变，但随着数据量不断增大，可能出现partition数据过大的情况，这样可能会导致读写效率下降，因此需要人工增大partition个数来保障服务质量。" />
 <meta property="og:site_name" content="Pegasus" />
 <meta property="og:type" content="article" />
-<meta property="article:published_time" content="2022-03-12T08:11:28+00:00" />
+<meta property="article:published_time" content="2022-03-12T09:31:56+00:00" />
 <meta name="twitter:card" content="summary" />
 <meta property="twitter:title" content="Partition Split" />
 <script type="application/ld+json">
-{"@context":"https://schema.org","@type":"BlogPosting","dateModified":"2022-03-12T08:11:28+00:00","datePublished":"2022-03-12T08:11:28+00:00","description":"功能简介 在pegasus中，表的partition个数是在创建时指定的，并且不会动态改变，但随着数据量不断增大，可能出现partition数据过大的情况，这样可能会导致读写效率下降，因此需要人工增大partition个数来保障服务质量。","headline":"Partition Split","mainEntityOfPage":{"@type":"WebPage","@id":"/administration/partition-split"},"url":"/administration/partition-split"}</script>
+{"@context":"https://schema.org","@type":"BlogPosting","dateModified":"2022-03-12T09:31:56+00:00","datePublished":"2022-03-12T09:31:56+00:00","description":"功能简介 在pegasus中，表的partition个数是在创建时指定的，并且不会动态改变，但随着数据量不断增大，可能出现partition数据过大的情况，这样可能会导致读写效率下降，因此需要人工增大partition个数来保障服务质量。","headline":"Partition Split","mainEntityOfPage":{"@type":"WebPage","@id":"/administration/partition-split"},"url":"/administration/partition-split"}</script>
 <!-- End Jekyll SEO tag -->
 </head>
 
@@ -846,7 +846,7 @@ list app split_table succeed
 <p>同样通过<code class="language-plaintext highlighter-rouge">app &lt;table_name&gt; -d</code>查看表详情，当发现所有ballot都大于0时表示所有partition都被注册，若当前流量不大可以将meta server设置为lively状态，进行负载均衡，并且通过<code class="language-plaintext highlighter-rouge">app_stat</code>命令查看表的大小，应该是split前的2倍左右</p>
 
 <h2 id="手动触发manual-compact">手动触发Manual-Compact</h2>
-<p>关于Manual compact详情可参见<a href="/_docs/zh/administration/manual-compact.md">Manual compact功能</a>，在集群CPU空闲时进行操作，建议命令示例如下：
+<p>关于Manual compact详情可参见<a href="manual-compact">Manual compact功能</a>，在集群CPU空闲时进行操作，建议命令示例如下：
 <code class="language-plaintext highlighter-rouge">./scripts/pegasus_manual_compact.sh -c &lt;meta_list&gt; -a &lt;table_name&gt;</code></p>
 
                 </div>

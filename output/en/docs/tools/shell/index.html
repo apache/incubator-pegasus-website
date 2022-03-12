@@ -19,11 +19,11 @@
 <meta property="og:description" content="Pegasus提供了Shell工具，用于查看集群相关信息，创建/删除表，操作数据等。" />
 <meta property="og:site_name" content="Pegasus" />
 <meta property="og:type" content="article" />
-<meta property="article:published_time" content="2022-03-12T08:11:28+00:00" />
+<meta property="article:published_time" content="2022-03-12T09:31:56+00:00" />
 <meta name="twitter:card" content="summary" />
 <meta property="twitter:title" content="Shell" />
 <script type="application/ld+json">
-{"@context":"https://schema.org","@type":"BlogPosting","dateModified":"2022-03-12T08:11:28+00:00","datePublished":"2022-03-12T08:11:28+00:00","description":"Pegasus提供了Shell工具，用于查看集群相关信息，创建/删除表，操作数据等。","headline":"Shell","mainEntityOfPage":{"@type":"WebPage","@id":"/docs/tools/shell/"},"url":"/docs/tools/shell/"}</script>
+{"@context":"https://schema.org","@type":"BlogPosting","dateModified":"2022-03-12T09:31:56+00:00","datePublished":"2022-03-12T09:31:56+00:00","description":"Pegasus提供了Shell工具，用于查看集群相关信息，创建/删除表，操作数据等。","headline":"Shell","mainEntityOfPage":{"@type":"WebPage","@id":"/docs/tools/shell/"},"url":"/docs/tools/shell/"}</script>
 <!-- End Jekyll SEO tag -->
 </head>
 
@@ -761,7 +761,7 @@
                     <p>Pegasus提供了Shell工具，用于查看集群相关信息，创建/删除表，操作数据等。</p>
 
 <h1 id="工具获取">工具获取</h1>
-<p>在成功<a href="/en/_docs/zh/build/compile-from-source.md">编译Pegasus</a> 后，在pegasus目录下启动Shell工具：</p>
+<p>在成功<a href="compilation">编译Pegasus</a>后，在pegasus目录下启动Shell工具：</p>
 <div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>./run.sh shell
 </code></pre></div></div>
 
@@ -1117,7 +1117,7 @@ Options for subcommand 'shell':
     <ul>
       <li>meta_server、zookeeper的节点信息。</li>
       <li>meta_function_level：负载均衡策略。</li>
-      <li>balance_operation_count：负载均衡操作统计，包括move_pri、move_pri、copy_sec、total。负载均衡信息参见<a href="/en/_docs/zh/administration/rebalance.md">负载均衡</a>。</li>
+      <li>balance_operation_count：负载均衡操作统计，包括move_pri、move_pri、copy_sec、total。负载均衡信息参见<a href="/en/administration/rebalance">负载均衡</a>。</li>
       <li>primary_replica_count_stddev：负载均衡衡量指标。</li>
       <li>total_replica_count_stddev：负载均衡衡量指标。</li>
     </ul>
@@ -1188,7 +1188,7 @@ Options for subcommand 'shell':
 <p>说明：</p>
 <ul>
   <li><code class="language-plaintext highlighter-rouge">-t</code>、<code class="language-plaintext highlighter-rouge">-l</code>选项：用于选择特定目标机器，参见<a href="#server_info">server_info</a>说明。</li>
-  <li>远程命令详细信息，参见<a href="/en/_docs/zh/administration/remote-commands.md">远程命令</a>。</li>
+  <li>远程命令详细信息，参见<a href="/en/administration/remote-commands">远程命令</a>。</li>
 </ul>
 
 <p>示例：</p>
@@ -1281,27 +1281,27 @@ Options for subcommand 'shell':
     </tr>
     <tr>
       <td>drop</td>
-      <td>删除表，参见<a href="/en/_docs/zh/administration/table-soft-delete.md#使用drop命令删除表">使用drop命令删除表</a></td>
+      <td>删除表，参见<a href="/en/administration/table-soft-delete#使用drop命令删除表">使用drop命令删除表</a></td>
     </tr>
     <tr>
       <td>recall</td>
-      <td>恢复已删除的表，参见<a href="/en/_docs/zh/administration/table-soft-delete.md#使用recall命令恢复表">使用recall命令恢复表</a></td>
+      <td>恢复已删除的表，参见<a href="/en/administration/table-soft-delete#使用recall命令恢复表">使用recall命令恢复表</a></td>
     </tr>
     <tr>
       <td>get_app_envs</td>
-      <td>获取表的环境变量，参见<a href="/en/_docs/zh/administration/table-env.md#get_app_envs">Table环境变量#get_app_envs</a></td>
+      <td>获取表的环境变量，参见<a href="/en/administration/table-env#get_app_envs">Table环境变量#get_app_envs</a></td>
     </tr>
     <tr>
       <td>set_app_envs</td>
-      <td>设置表的环境变量，参见<a href="/en/_docs/zh/administration/table-env.md#set_app_envs">Table环境变量#set_app_envs</a></td>
+      <td>设置表的环境变量，参见<a href="/en/administration/table-env#set_app_envs">Table环境变量#set_app_envs</a></td>
     </tr>
     <tr>
       <td>del_app_envs</td>
-      <td>删除表的环境变量，参见<a href="/en/_docs/zh/administration/table-env.md#del_app_envs">Table环境变量#del_app_envs</a></td>
+      <td>删除表的环境变量，参见<a href="/en/administration/table-env#del_app_envs">Table环境变量#del_app_envs</a></td>
     </tr>
     <tr>
       <td>clear_app_envs</td>
-      <td>清理表的环境变量，参见<a href="/en/_docs/zh/administration/table-env.md#clear_app_envs">Table环境变量#clear_app_envs</a></td>
+      <td>清理表的环境变量，参见<a href="/en/administration/table-env#clear_app_envs">Table环境变量#clear_app_envs</a></td>
     </tr>
   </tbody>
 </table>
@@ -1392,7 +1392,7 @@ Options for subcommand 'shell':
 <ul>
   <li><code class="language-plaintext highlighter-rouge">-p</code>选项：如果指定，则可以设置分片数，要求分片数是2的指数倍。</li>
   <li><code class="language-plaintext highlighter-rouge">-r</code>选项：如果指定，则可以指定副本数，推荐副本数为3。</li>
-  <li><code class="language-plaintext highlighter-rouge">-e</code>选项：如果指定，则可是设置环境变量，参见<a href="/en/_docs/zh/administration/table-env.md">Table环境变量</a>。</li>
+  <li><code class="language-plaintext highlighter-rouge">-e</code>选项：如果指定，则可是设置环境变量，参见<a href="/en/administration/table-env">Table环境变量</a>。</li>
 </ul>
 
 <p>示例：</p>
@@ -1408,7 +1408,7 @@ Options for subcommand 'shell':
 
 <p>说明：</p>
 <ul>
-  <li><code class="language-plaintext highlighter-rouge">-r</code>选项：如果指定，则设置数据的保留时间（删除时间开始计算，单位为秒）。如果不指定，则使用配置文件hold_seconds_for_dropped_app指定的值，默认为7天，参见<a href="/en/_docs/zh/administration/table-soft-delete.md#使用drop命令删除表">Table软删除#使用drop命令删除表</a>。</li>
+  <li><code class="language-plaintext highlighter-rouge">-r</code>选项：如果指定，则设置数据的保留时间（删除时间开始计算，单位为秒）。如果不指定，则使用配置文件hold_seconds_for_dropped_app指定的值，默认为7天，参见<a href="/en/administration/table-soft-delete#使用drop命令删除表">Table软删除#使用drop命令删除表</a>。</li>
 </ul>
 
 <p>示例：</p>
@@ -1426,7 +1426,7 @@ Options for subcommand 'shell':
 <ul>
   <li>注意该命令通过app_id进行表恢复。</li>
   <li><code class="language-plaintext highlighter-rouge">new_app_name</code>参数：如果不指定新表名，则会使用原表名，否则使用指定的新表名，如果原表名已存在（删表后新建了同名表），则必须指定另外一个不同的新表名，否则会失败。</li>
-  <li>详细信息参见<a href="/en/_docs/zh/administration/table-soft-delete.md#使用recall命令恢复表">Table软删除#使用recall命令恢复表</a>。</li>
+  <li>详细信息参见<a href="/en/administration/table-soft-delete#使用recall命令恢复表">Table软删除#使用recall命令恢复表</a>。</li>
 </ul>
 
 <p>示例：</p>
@@ -1434,7 +1434,7 @@ Options for subcommand 'shell':
 </code></pre></div></div>
 
 <h3 id="get_app_envs">get_app_envs</h3>
-<p>获取表的环境变量，关于环境变量请参见<a href="/en/_docs/zh/administration/table-env.md">Table环境变量</a>。</p>
+<p>获取表的环境变量，关于环境变量请参见<a href="/en/administration/table-env">Table环境变量</a>。</p>
 
 <p>用法：</p>
 <div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>USAGE: get_app_envs
@@ -1442,7 +1442,7 @@ Options for subcommand 'shell':
 
 <p>说明：</p>
 <ul>
-  <li>该命令输出当前表的环境变量，使用前请首先使用<code class="language-plaintext highlighter-rouge">use [app_name]</code>选定特定表，参见<a href="/en/_docs/zh/administration/table-env.md#get_app_envs">get_app_envs</a>。</li>
+  <li>该命令输出当前表的环境变量，使用前请首先使用<code class="language-plaintext highlighter-rouge">use [app_name]</code>选定特定表，参见<a href="/en/administration/table-env#get_app_envs">get_app_envs</a>。</li>
 </ul>
 
 <p>示例：</p>
@@ -1451,7 +1451,7 @@ Options for subcommand 'shell':
 </code></pre></div></div>
 
 <h3 id="set_app_envs">set_app_envs</h3>
-<p>设置表的环境变量，关于环境变量请参见<a href="/en/_docs/zh/administration/table-env.md">Table环境变量</a>。</p>
+<p>设置表的环境变量，关于环境变量请参见<a href="/en/administration/table-env">Table环境变量</a>。</p>
 
 <p>用法：</p>
 <div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>USAGE: set_app_envs              &lt;key&gt; &lt;value&gt; [key value...]
@@ -1459,7 +1459,7 @@ Options for subcommand 'shell':
 
 <p>说明：</p>
 <ul>
-  <li>该命令设置当前表的环境变量，使用前请首先使用<code class="language-plaintext highlighter-rouge">use [app_name]</code>选定特定表，参见<a href="/en/_docs/zh/administration/table-env.md#set_app_envs">set_app_envs</a>。</li>
+  <li>该命令设置当前表的环境变量，使用前请首先使用<code class="language-plaintext highlighter-rouge">use [app_name]</code>选定特定表，参见<a href="/en/administration/table-env#set_app_envs">set_app_envs</a>。</li>
 </ul>
 
 <p>示例：</p>
@@ -1468,7 +1468,7 @@ Options for subcommand 'shell':
 </code></pre></div></div>
 
 <h3 id="del_app_envs">del_app_envs</h3>
-<p>删除表的环境变量，关于环境变量请参见<a href="/en/_docs/zh/administration/table-env.md">Table环境变量</a>。</p>
+<p>删除表的环境变量，关于环境变量请参见<a href="/en/administration/table-env">Table环境变量</a>。</p>
 
 <p>用法：</p>
 <div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>USAGE: del_app_envs              &lt;key&gt; [key...]
@@ -1476,7 +1476,7 @@ Options for subcommand 'shell':
 
 <p>说明：</p>
 <ul>
-  <li>该命令删除当前表的环境变量，使用前请首先使用<code class="language-plaintext highlighter-rouge">use [app_name]</code>选定特定表，参见<a href="/en/_docs/zh/administration/table-env.md#del_app_envs">del_app_envs</a>。</li>
+  <li>该命令删除当前表的环境变量，使用前请首先使用<code class="language-plaintext highlighter-rouge">use [app_name]</code>选定特定表，参见<a href="/en/administration/table-env#del_app_envs">del_app_envs</a>。</li>
 </ul>
 
 <p>示例：</p>
@@ -1485,7 +1485,7 @@ Options for subcommand 'shell':
 </code></pre></div></div>
 
 <h3 id="clear_app_envs">clear_app_envs</h3>
-<p>清理表的环境变量，关于环境变量请参见<a href="/en/_docs/zh/administration/table-env.md">Table环境变量</a>。</p>
+<p>清理表的环境变量，关于环境变量请参见<a href="/en/administration/table-env">Table环境变量</a>。</p>
 
 <p>用法：</p>
 <div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>USAGE: clear_app_envs              [-a|--all] [-p|--prefix str]
@@ -1493,7 +1493,7 @@ Options for subcommand 'shell':
 
 <p>说明：</p>
 <ul>
-  <li>该命令删除当前表的环境变量，使用前请首先使用<code class="language-plaintext highlighter-rouge">use [app_name]</code>选定特定表，参见<a href="/en/_docs/zh/administration/table-env.md#clear_app_envs">clear_app_envs</a>。</li>
+  <li>该命令删除当前表的环境变量，使用前请首先使用<code class="language-plaintext highlighter-rouge">use [app_name]</code>选定特定表，参见<a href="/en/administration/table-env#clear_app_envs">clear_app_envs</a>。</li>
   <li><code class="language-plaintext highlighter-rouge">-a</code>选项：如果指定，则清理所有的环境变量。</li>
   <li><code class="language-plaintext highlighter-rouge">-p</code>选项：如果指定，则可以清理以特定字符串为前缀的环境变量。</li>
 </ul>
@@ -1551,15 +1551,15 @@ Options for subcommand 'shell':
     </tr>
     <tr>
       <td>incr</td>
-      <td><a href="/en/_docs/zh/api/single-atomic.md#原子增减">原子增减操作</a></td>
+      <td><a href="/en/api/single-atomic#原子增减">原子增减操作</a></td>
     </tr>
     <tr>
       <td>check_and_set</td>
-      <td><a href="/en/_docs/zh/api/single-atomic.md#CAS操作">原子CAS操作</a></td>
+      <td><a href="/en/api/single-atomic#cas操作">原子CAS操作</a></td>
     </tr>
     <tr>
       <td>check_and_mutate</td>
-      <td><a href="/en/_docs/zh/clients/java-client.md#checkandmutate">原子CAS扩展版本</a></td>
+      <td><a href="/en/clients/java-client#checkandmutate">原子CAS扩展版本</a></td>
     </tr>
     <tr>
       <td>exist</td>
@@ -1587,7 +1587,7 @@ Options for subcommand 'shell':
     </tr>
     <tr>
       <td>copy_data</td>
-      <td>将一个表的数据逐条插入到另外一个表，源表通过<code class="language-plaintext highlighter-rouge">use</code>命令指定，目标表通过<code class="language-plaintext highlighter-rouge">-c</code>和<code class="language-plaintext highlighter-rouge">-a</code>命令执行，目标表可以在另外一个集群，详细用法参见 <a href="/en/_docs/zh/administration/table-migration.md#copy_data迁移">Table迁移#copy_data迁移</a> ，可指定HashKey、SortKey和Value的过滤条件</td>
+      <td>将一个表的数据逐条插入到另外一个表，源表通过<code class="language-plaintext highlighter-rouge">use</code>命令指定，目标表通过<code class="language-plaintext highlighter-rouge">-c</code>和<code class="language-plaintext highlighter-rouge">-a</code>命令执行，目标表可以在另外一个集群，详细用法参见<a href="/en/administration/table-migration#copy_data迁移">Table迁移#copy_data迁移</a>，可指定HashKey、SortKey和Value的过滤条件</td>
     </tr>
     <tr>
       <td>clear_data</td>
@@ -1626,7 +1626,7 @@ Options for subcommand 'shell':
 
 <p>说明：</p>
 <ul>
-  <li>sort_key是pegasus定义的一种数据模型，详细信息参见<a href="/en/_overview/zh/data-model.md">数据模型</a>。</li>
+  <li>sort_key是pegasus定义的一种数据模型，详细信息参见<a href="/en/overview/data-model">数据模型</a>。</li>
   <li>不同的sort_key名字必须不同，否则会输出“ERROR: duplicate sort key <sort_key>”。</sort_key></li>
 </ul>
 
@@ -1745,7 +1745,7 @@ Options for subcommand 'shell':
 
 <p>说明：</p>
 <ul>
-  <li>操作数increment可以为正数也可以为负数，所以一个incr接口就可以实现原子增或者原子减，详情参照<a href="/en/_docs/zh/api/single-atomic.md#原子增减">原子增减</a>。</li>
+  <li>操作数increment可以为正数也可以为负数，所以一个incr接口就可以实现原子增或者原子减，详情参照<a href="/en/api/single-atomic#原子增减">原子增减</a>。</li>
 </ul>
 
 <p>示例：</p>
@@ -1767,7 +1767,7 @@ Options for subcommand 'shell':
 
 <p>说明：</p>
 <ul>
-  <li>对比交换，最初是表示一条CPU的原子指令，其作用是让CPU先进行比较两个值是否相等，然后原子地更新某个位置的值。参照<a href="/en/_docs/zh/api/single-atomic.md#CAS操作">CAS操作</a>。</li>
+  <li>对比交换，最初是表示一条CPU的原子指令，其作用是让CPU先进行比较两个值是否相等，然后原子地更新某个位置的值。参照<a href="/en/api/single-atomic#cas操作">CAS操作</a>。</li>
 </ul>
 
 <p>示例：
@@ -1776,7 +1776,7 @@ Options for subcommand 'shell':
 </code></pre></div></div>
 
 <h3 id="check_and_mutate">check_and_mutate</h3>
-<p>原子CAS扩展版本，参见<a href="/en/_docs/zh/clients/java-client.md#checkandmutate">原子CAS扩展版本</a>。</p>
+<p>原子CAS扩展版本，参见<a href="/en/clients/java-client#checkandmutate">原子CAS扩展版本</a>。</p>
 
 <p>用法：</p>
 <div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>USAGE:  check_and_mutate       &lt;hash_key&gt; [-c|--check_sort_key str]
@@ -1888,7 +1888,7 @@ Options for subcommand 'shell':
 </code></pre></div></div>
 <p>说明：</p>
 <ul>
-  <li>参数说明参见<a href="#hash_scan">hash_scan</a>。</li>
+  <li>参数说明参见<a href="#hashKey_scan">hash_scan</a>。</li>
 </ul>
 
 <p>实例：</p>
@@ -1916,7 +1916,7 @@ Options for subcommand 'shell':
 
 <p>说明：</p>
 <ul>
-  <li>源表通过use命令指定，目标表通过-c和-a命令执行，目标表可以在另外一个集群，详细用法参见<a href="/en/_docs/zh/administration/table-migration.md#copy_data迁移">Table迁移#copy_data迁移</a>，可指定HashKey、SortKey和Value的过滤条件。</li>
+  <li>源表通过use命令指定，目标表通过-c和-a命令执行，目标表可以在另外一个集群，详细用法参见<a href="/en/administration/table-migration#copy_data迁移">Table迁移#copy_data迁移</a>，可指定HashKey、SortKey和Value的过滤条件。</li>
 </ul>
 
 <p>示例：</p>
@@ -2009,7 +2009,7 @@ Options for subcommand 'shell':
   </tbody>
 </table>
 
-<p>关于负载均衡的详细文档，请参考<a href="/en/_docs/zh/administration/rebalance.md">负载均衡</a>。</p>
+<p>关于负载均衡的详细文档，请参考<a href="/en/administration/rebalance">负载均衡</a>。</p>
 
 <h2 id="数据恢复">数据恢复</h2>
 
@@ -2023,11 +2023,11 @@ Options for subcommand 'shell':
   <tbody>
     <tr>
       <td>recover</td>
-      <td>启动数据恢复流程，通过向ReplicaServer收集和学习，重新构建Zookeeper上的元数据信息，参见<a href="/en/_docs/zh/administration/meta-recovery.md">元数据恢复</a></td>
+      <td>启动数据恢复流程，通过向ReplicaServer收集和学习，重新构建Zookeeper上的元数据信息，参见<a href="/en/administration/meta-recovery">元数据恢复</a></td>
     </tr>
     <tr>
       <td>ddd_diagnose</td>
-      <td>DDD自动诊断工具，用于恢复所有备份全部不可用的partition，参见<a href="/en/_docs/zh/administration/replica-recovery.md">Replica数据恢复</a></td>
+      <td>DDD自动诊断工具，用于恢复所有备份全部不可用的partition，参见<a href="/en/administration/replica-recovery">Replica数据恢复</a></td>
     </tr>
   </tbody>
 </table>
@@ -2077,7 +2077,7 @@ Options for subcommand 'shell':
   </tbody>
 </table>
 
-<p>关于冷备份的详细文档，请参考<a href="/en/_docs/zh/administration/cold-backup.md">冷备份</a>。</p>
+<p>关于冷备份的详细文档，请参考<a href="/en/administration/cold-backup">冷备份</a>。</p>
 
 <h2 id="调试工具">调试工具</h2>
 
