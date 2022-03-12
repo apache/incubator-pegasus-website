@@ -12,18 +12,18 @@
     <script src="https://cdn.bootcdn.net/ajax/libs/font-awesome/5.13.0/js/all.min.js"></script>
     <!-- Begin Jekyll SEO tag v2.8.0 -->
 <title>Geo | Pegasus</title>
-<meta name="generator" content="Jekyll v4.2.1" />
+<meta name="generator" content="Jekyll v4.2.2" />
 <meta property="og:title" content="Geo" />
 <meta property="og:locale" content="en_US" />
 <meta name="description" content="Pegasus GEO支持" />
 <meta property="og:description" content="Pegasus GEO支持" />
 <meta property="og:site_name" content="Pegasus" />
 <meta property="og:type" content="article" />
-<meta property="article:published_time" content="2022-03-02T09:27:15+00:00" />
+<meta property="article:published_time" content="2022-03-12T08:11:28+00:00" />
 <meta name="twitter:card" content="summary" />
 <meta property="twitter:title" content="Geo" />
 <script type="application/ld+json">
-{"@context":"https://schema.org","@type":"BlogPosting","dateModified":"2022-03-02T09:27:15+00:00","datePublished":"2022-03-02T09:27:15+00:00","description":"Pegasus GEO支持","headline":"Geo","mainEntityOfPage":{"@type":"WebPage","@id":"/api/geo"},"url":"/api/geo"}</script>
+{"@context":"https://schema.org","@type":"BlogPosting","dateModified":"2022-03-12T08:11:28+00:00","datePublished":"2022-03-12T08:11:28+00:00","description":"Pegasus GEO支持","headline":"Geo","mainEntityOfPage":{"@type":"WebPage","@id":"/api/geo"},"url":"/api/geo"}</script>
 <!-- End Jekyll SEO tag -->
 </head>
 
@@ -1247,7 +1247,7 @@ min_level = 12
 
 <h2 id="配置文件">配置文件</h2>
 
-<p>redis proxy的使用请参考<a href="redis">Redis适配</a>。</p>
+<p>redis proxy的使用请参考<a href="/_docs/zh/api/redis.md">Redis适配</a>。</p>
 
 <p>GEO API添加的配置文件如下:</p>
 
@@ -1272,7 +1272,7 @@ longitude_index = 4
 
 <p>在进行<code class="language-plaintext highlighter-rouge">copy_data</code>操作之前，目标集群以及两个目标表都需要提前创建好。</p>
 
-<p>数据导入完成后就可以搭建<code class="language-plaintext highlighter-rouge">redis_proxy</code>了，具体的说明参考<a href="redis">redis适配</a>，需要注意的是配置项：</p>
+<p>数据导入完成后就可以搭建<code class="language-plaintext highlighter-rouge">redis_proxy</code>了，具体的说明参考<a href="/_docs/zh/api/redis.md">redis适配</a>，需要注意的是配置项：</p>
 
 <div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>[apps.proxy]
 ; if using GEO APIs, an extra table name which store geo index data should be appened, i.e.

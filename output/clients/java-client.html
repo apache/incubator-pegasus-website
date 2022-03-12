@@ -12,18 +12,18 @@
     <script src="https://cdn.bootcdn.net/ajax/libs/font-awesome/5.13.0/js/all.min.js"></script>
     <!-- Begin Jekyll SEO tag v2.8.0 -->
 <title>Java Client | Pegasus</title>
-<meta name="generator" content="Jekyll v4.2.1" />
+<meta name="generator" content="Jekyll v4.2.2" />
 <meta property="og:title" content="Java Client" />
 <meta property="og:locale" content="en_US" />
 <meta name="description" content="获取Java客户端" />
 <meta property="og:description" content="获取Java客户端" />
 <meta property="og:site_name" content="Pegasus" />
 <meta property="og:type" content="article" />
-<meta property="article:published_time" content="2022-03-02T09:27:15+00:00" />
+<meta property="article:published_time" content="2022-03-12T08:11:28+00:00" />
 <meta name="twitter:card" content="summary" />
 <meta property="twitter:title" content="Java Client" />
 <script type="application/ld+json">
-{"@context":"https://schema.org","@type":"BlogPosting","dateModified":"2022-03-02T09:27:15+00:00","datePublished":"2022-03-02T09:27:15+00:00","description":"获取Java客户端","headline":"Java Client","mainEntityOfPage":{"@type":"WebPage","@id":"/clients/java-client"},"url":"/clients/java-client"}</script>
+{"@context":"https://schema.org","@type":"BlogPosting","dateModified":"2022-03-12T08:11:28+00:00","datePublished":"2022-03-12T08:11:28+00:00","description":"获取Java客户端","headline":"Java Client","mainEntityOfPage":{"@type":"WebPage","@id":"/clients/java-client"},"url":"/clients/java-client"}</script>
 <!-- End Jekyll SEO tag -->
 </head>
 
@@ -764,7 +764,7 @@
 <span class="nb">cd </span>pegasus-java-client
 </code></pre></div></div>
 
-<p>选择所使用的版本并构建，建议使用<a href="https://github.com/xiaomi/pegasus-java-client/releases">最新的release版本</a>：</p>
+<p>选择所使用的版本并构建，建议使用 <a href="https://github.com/xiaomi/pegasus-java-client/releases">最新的release版本</a> ：</p>
 
 <div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>git checkout v2.0.0
 mvn clean package <span class="nt">-DskipTests</span>
@@ -814,7 +814,7 @@ mvn clean package <span class="nt">-DskipTests</span>
   <li>meta_servers: 必选项，表示Pegasus集群的MetaServer地址列表，用于定位集群的位置。</li>
   <li>operation_timeout: 可选项，表示各操作的默认超时时间，单位毫秒，默认值为1000。接口中每个操作一般都可以指定单独的超时时间，当指定为0时，使用该默认超时时间。</li>
   <li>async_workers：可选项，后台工作线程数，内部实际是Netty NIO处理客户端和replica_server之间RPC的线程，默认：4</li>
-  <li>enable_perf_counter：可选项，是否开启性能指标监控数据，如果开启则客户端会周期性的上报监控数据，目前仅支持<a href="http://open-falcon.org/">Falcon</a>，默认：true(2.0.0以前默认为false)</li>
+  <li>enable_perf_counter：可选项，是否开启性能指标监控数据，如果开启则客户端会周期性的上报监控数据，目前仅支持 <a href="http://open-falcon.org/">Falcon</a> ，默认：true(2.0.0以前默认为false)</li>
   <li>perf_counter_tags：可选项，falcon监控数据标签，如果开启监控，建议设置易于区分不同业务的标签名字。默认：空</li>
   <li>push_counter_interval_secs：可选值，falcon监控数据上报间隔，默认：10s</li>
   <li>meta_query_timeout： 可选项，与MetaServer建立连接的超时时间，一般首次建立连接将需要更多的时间，用户可以根据实际场景配置该参数，以降低服务首次启动后的请求超时问题。连接默认值：5000ms(2.0.0以前没有该参数，默认等于operation_timeout)</li>
@@ -857,7 +857,7 @@ mvn clean package <span class="nt">-DskipTests</span>
   <li>metaServers：必选项，meta_servers地址，默认：127.0.0.1:34601,127.0.0.1:34602,127.0.0.1:34603</li>
   <li>operationTimeout：可选项，客户端请求的超时阈值，默认：1000ms</li>
   <li>asyncWorkers：可选项，后台工作线程数，内部实际是Netty NIO处理客户端和replica_server之间RPC的线程，默认：4</li>
-  <li>enablePerfCounter：可选项，是否开启性能指标监控数据，如果开启则客户端会周期性的上报监控数据，目前仅支持<a href="http://open-falcon.org/">Falcon</a>，默认：false</li>
+  <li>enablePerfCounter：可选项，是否开启性能指标监控数据，如果开启则客户端会周期性的上报监控数据，目前仅支持 <a href="http://open-falcon.org/">Falcon</a> ，默认：false</li>
   <li>falconPerfCounterTags：可选项，falcon监控数据标签，如果开启监控，建议设置易于区分不同业务的标签名字。默认：空</li>
   <li>falconPushInterval：可选项，falcon监控数据上报间隔，默认：10s</li>
   <li>metaQueryTimeout: 可选项，与MetaServer建立连接的超时时间，一般首次建立连接将需要更多的时间，用户可以根据实际场景配置该参数，以降低服务首次启动后的请求超时问题。连接默认值：5000ms(2.0.0以前没有该参数，默认等于operation_timeout)</li>
@@ -910,7 +910,7 @@ mvn clean package <span class="nt">-DskipTests</span>
   <li>Client接口直接在参数中指定表名，省去了打开表的动作，使用更便捷。</li>
   <li>Table接口同时支持<strong>同步和异步API</strong>，而Client接口只支持<strong>同步API</strong>。</li>
   <li>Table接口可以为每个操作设置单独的超时，而Client接口无法单独指定超时，只能使用配置文件中的默认超时。</li>
-  <li>Table接口在2.0.0中增加了backupRequestDelayMs参数，可以开启backup-request功能，以提高读性能，详情参见：<a href="/administration/backup-request">Backup-Request</a></li>
+  <li>Table接口在2.0.0中增加了backupRequestDelayMs参数，可以开启backup-request功能，以提高读性能，详情参见：<a href="/_docs/zh/administration/backup-request.md">Backup-Request</a></li>
   <li>Table接口的超时更准确，而Client接口在首次读写请求时可能需要在内部初始化Table对象，所以首次读写的超时可能不太准确。</li>
   <li>推荐用户首选Table接口。</li>
 </ul>
@@ -1637,7 +1637,7 @@ mvn clean package <span class="nt">-DskipTests</span>
 </ul>
 
 <h3 id="incr">incr</h3>
-<p>单行原子增(减)操作。详细说明参见<a href="/api/single-atomic#原子增减">单行原子操作</a>。</p>
+<p>单行原子增(减)操作。详细说明参见<a href="/_docs/zh/api/single-atomic.md#原子增减">单行原子操作</a>。</p>
 
 <p>该操作先将key所指向的value的字节串转换为int64类型（实现上类似于Java的<a href="https://docs.oracle.com/javase/7/docs/api/java/lang/Long.html#parseLong(java.lang.String)">Long.parseLong()</a>函数），然后加上increment，将结果转换为字节串设置为新值。</p>
 
@@ -1708,7 +1708,7 @@ public long incr(String tableName, byte[] hashKey, byte[] sortKey, long incremen
 </ul>
 
 <h3 id="checkandset">checkAndSet</h3>
-<p>单HashKey数据的原子CAS操作（可以理解为<strong>单行原子操作</strong>）。详细说明参见<a href="/api/single-atomic#cas操作">单行原子操作</a>。</p>
+<p>单HashKey数据的原子CAS操作（可以理解为<strong>单行原子操作</strong>）。详细说明参见<a href="/_docs/zh/api/single-atomic.md#CAS操作">单行原子操作</a>。</p>
 
 <p>该操作先对某个SortKey（称之为CheckSortKey）的value做条件检查：</p>
 <ul>
@@ -1906,7 +1906,7 @@ public long incr(String tableName, byte[] hashKey, byte[] sortKey, long incremen
   <li>CheckType为CT_VALUE_BYTES_EQUAL。</li>
 </ul>
 
-<p>该方法语义就是：如果SortKey对应的value存在且等于期望的值，则将其设置为新值。详细说明参见<a href="/api/single-atomic#cas操作">单行原子操作</a>。</p>
+<p>该方法语义就是：如果SortKey对应的value存在且等于期望的值，则将其设置为新值。详细说明参见<a href="/_docs/zh/api/single-atomic.md#CAS操作">单行原子操作</a> 。</p>
 
 <p>该方法与C++库中常见的<a href="https://en.cppreference.com/w/cpp/atomic/atomic_compare_exchange">atomic_compare_exchange</a>语义基本保持一致。</p>
 
@@ -3038,7 +3038,7 @@ public Future&lt;Long&gt; asyncIncr(byte[] hashKey, byte[] sortKey, long increme
 <h3 id="err_busy">ERR_BUSY</h3>
 <p>服务端流控达到限制。原因是：</p>
 <ul>
-  <li>集群服务端对表设置了<a href="/administration/throttling#服务端流控">表级写流量控制</a>。</li>
+  <li>集群服务端对表设置了<a href="/_docs/zh/administration/throttling.md#服务端流控">表级写流量控制</a> 。</li>
   <li>此时该表的瞬时流量（在这1秒内的写入操作数）达到了阈值，触发了reject流控操作，返回<code class="language-plaintext highlighter-rouge">ERR_BUSY</code>错误码。</li>
 </ul>
 
@@ -3234,8 +3234,8 @@ public Future&lt;Long&gt; asyncIncr(byte[] hashKey, byte[] sortKey, long increme
 <ul>
   <li>业务集群：user_cluster，meta配置地址为<code class="language-plaintext highlighter-rouge">${user_cluster_meta_list}</code>，其中用户表为user_table。</li>
   <li>测试集群：test_cluster，meta配置地址为<code class="language-plaintext highlighter-rouge">${test_cluster_meta_list}</code>。</li>
-  <li><a href="/overview/shell">Shell工具</a>：使用1.11.3及以上版本；修改配置文件<code class="language-plaintext highlighter-rouge">src/shell/config.ini</code>，添加访问test_cluster集群的配置项。</li>
-  <li><a href="#java客户端工具">Java客户端工具</a>：使用1.11.4及以上版本；修改配置文件<code class="language-plaintext highlighter-rouge">pegasus.properties</code>，设置<code class="language-plaintext highlighter-rouge">meta_servers = ${test_cluster_meta_list}</code>。</li>
+  <li><a href="/_docs/zh/tools/shell.md">Shell工具</a> ：使用1.11.3及以上版本；修改配置文件<code class="language-plaintext highlighter-rouge">src/shell/config.ini</code>，添加访问test_cluster集群的配置项。</li>
+  <li>Java客户端：使用1.11.4及以上版本；修改配置文件<code class="language-plaintext highlighter-rouge">pegasus.properties</code>，设置<code class="language-plaintext highlighter-rouge">meta_servers = ${test_cluster_meta_list}</code>。</li>
 </ul>
 
 <p>步骤：</p>

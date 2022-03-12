@@ -12,18 +12,18 @@
     <script src="https://cdn.bootcdn.net/ajax/libs/font-awesome/5.13.0/js/all.min.js"></script>
     <!-- Begin Jekyll SEO tag v2.8.0 -->
 <title>Deployment | Pegasus</title>
-<meta name="generator" content="Jekyll v4.2.1" />
+<meta name="generator" content="Jekyll v4.2.2" />
 <meta property="og:title" content="Deployment" />
 <meta property="og:locale" content="en_US" />
 <meta name="description" content="准备机器 Pegasus分布式集群至少需要准备这些机器： MetaServer：2~3台机器，无需SSD盘。 ReplicaServer：至少3台机器，建议挂SSD盘。譬如一台服务器挂着8块或者12块SSD盘。这些机器要求是同构的，即具有相同的配置。 Collector：可选角色，1台机器，无需SSD盘。该进程主要用于收集和汇总集群的统计信息，负载很小，建议放在MetaServer的其中一台机器上。" />
 <meta property="og:description" content="准备机器 Pegasus分布式集群至少需要准备这些机器： MetaServer：2~3台机器，无需SSD盘。 ReplicaServer：至少3台机器，建议挂SSD盘。譬如一台服务器挂着8块或者12块SSD盘。这些机器要求是同构的，即具有相同的配置。 Collector：可选角色，1台机器，无需SSD盘。该进程主要用于收集和汇总集群的统计信息，负载很小，建议放在MetaServer的其中一台机器上。" />
 <meta property="og:site_name" content="Pegasus" />
 <meta property="og:type" content="article" />
-<meta property="article:published_time" content="2022-03-02T09:27:15+00:00" />
+<meta property="article:published_time" content="2022-03-12T08:11:28+00:00" />
 <meta name="twitter:card" content="summary" />
 <meta property="twitter:title" content="Deployment" />
 <script type="application/ld+json">
-{"@context":"https://schema.org","@type":"BlogPosting","dateModified":"2022-03-02T09:27:15+00:00","datePublished":"2022-03-02T09:27:15+00:00","description":"准备机器 Pegasus分布式集群至少需要准备这些机器： MetaServer：2~3台机器，无需SSD盘。 ReplicaServer：至少3台机器，建议挂SSD盘。譬如一台服务器挂着8块或者12块SSD盘。这些机器要求是同构的，即具有相同的配置。 Collector：可选角色，1台机器，无需SSD盘。该进程主要用于收集和汇总集群的统计信息，负载很小，建议放在MetaServer的其中一台机器上。","headline":"Deployment","mainEntityOfPage":{"@type":"WebPage","@id":"/administration/deployment"},"url":"/administration/deployment"}</script>
+{"@context":"https://schema.org","@type":"BlogPosting","dateModified":"2022-03-12T08:11:28+00:00","datePublished":"2022-03-12T08:11:28+00:00","description":"准备机器 Pegasus分布式集群至少需要准备这些机器： MetaServer：2~3台机器，无需SSD盘。 ReplicaServer：至少3台机器，建议挂SSD盘。譬如一台服务器挂着8块或者12块SSD盘。这些机器要求是同构的，即具有相同的配置。 Collector：可选角色，1台机器，无需SSD盘。该进程主要用于收集和汇总集群的统计信息，负载很小，建议放在MetaServer的其中一台机器上。","headline":"Deployment","mainEntityOfPage":{"@type":"WebPage","@id":"/administration/deployment"},"url":"/administration/deployment"}</script>
 <!-- End Jekyll SEO tag -->
 </head>
 
@@ -860,7 +860,7 @@
 <h2 id="准备部署包">准备部署包</h2>
 <p>ReplicaServer/MetaServer/Collector三种角色的Server共用一套server程序和配置文件。</p>
 
-<p>首先<a href="/overview/compilation">编译Pegasus</a>，编译完成后运行以下命令可以打包生产server端部署包：</p>
+<p>首先<a href="/_docs/zh/build">编译Pegasus</a>，编译完成后运行以下命令可以打包生产server端部署包：</p>
 <div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>./run.sh pack_server
 </code></pre></div></div>
 <p>运行成功后，会在本地文件夹下生产<code class="language-plaintext highlighter-rouge">pegasus-server-{version}-{platform}-{buildType}</code>的文件夹以及tar.gz包。在文件夹里面有个bin/文件夹，里面包含pegasus_server程序及依赖库，还包括<strong>刚刚修改好的config.ini文件</strong>。</p>
@@ -890,7 +890,7 @@
 
 <p>集群启动成功后，会默认创建一个<code class="language-plaintext highlighter-rouge">temp</code>表，该表也用于Collector的集群可用度检查，最好不要删除。</p>
 
-<p>你可以使用<a href="/overview/shell">Shell工具</a>查看集群的各种状态。如果启动失败，可以到<code class="language-plaintext highlighter-rouge">%{app.dir}/log</code>下面查看错误日志，排查问题。</p>
+<p>你可以使用<a href="/_docs/zh/tools/shell.md">Shell工具</a>查看集群的各种状态。如果启动失败，可以到<code class="language-plaintext highlighter-rouge">%{app.dir}/log</code>下面查看错误日志，排查问题。</p>
 
 <h1 id="分布式部署工具">分布式部署工具</h1>
 

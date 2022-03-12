@@ -12,18 +12,18 @@
     <script src="https://cdn.bootcdn.net/ajax/libs/font-awesome/5.13.0/js/all.min.js"></script>
     <!-- Begin Jekyll SEO tag v2.8.0 -->
 <title>Ttl | Pegasus</title>
-<meta name="generator" content="Jekyll v4.2.1" />
+<meta name="generator" content="Jekyll v4.2.2" />
 <meta property="og:title" content="Ttl" />
 <meta property="og:locale" content="en_US" />
 <meta name="description" content="原理 Pegasus支持TTL（Time-To-Live）功能，即在写入数据的时候，可以指定数据的过期时间。一旦过期，数据对用户就是不可见的，通过get/multiGet等查询接口获取不到数据，就跟数据没有写入一样。" />
 <meta property="og:description" content="原理 Pegasus支持TTL（Time-To-Live）功能，即在写入数据的时候，可以指定数据的过期时间。一旦过期，数据对用户就是不可见的，通过get/multiGet等查询接口获取不到数据，就跟数据没有写入一样。" />
 <meta property="og:site_name" content="Pegasus" />
 <meta property="og:type" content="article" />
-<meta property="article:published_time" content="2022-03-02T09:27:15+00:00" />
+<meta property="article:published_time" content="2022-03-12T08:11:28+00:00" />
 <meta name="twitter:card" content="summary" />
 <meta property="twitter:title" content="Ttl" />
 <script type="application/ld+json">
-{"@context":"https://schema.org","@type":"BlogPosting","dateModified":"2022-03-02T09:27:15+00:00","datePublished":"2022-03-02T09:27:15+00:00","description":"原理 Pegasus支持TTL（Time-To-Live）功能，即在写入数据的时候，可以指定数据的过期时间。一旦过期，数据对用户就是不可见的，通过get/multiGet等查询接口获取不到数据，就跟数据没有写入一样。","headline":"Ttl","mainEntityOfPage":{"@type":"WebPage","@id":"/api/ttl"},"url":"/api/ttl"}</script>
+{"@context":"https://schema.org","@type":"BlogPosting","dateModified":"2022-03-12T08:11:28+00:00","datePublished":"2022-03-12T08:11:28+00:00","description":"原理 Pegasus支持TTL（Time-To-Live）功能，即在写入数据的时候，可以指定数据的过期时间。一旦过期，数据对用户就是不可见的，通过get/multiGet等查询接口获取不到数据，就跟数据没有写入一样。","headline":"Ttl","mainEntityOfPage":{"@type":"WebPage","@id":"/api/ttl"},"url":"/api/ttl"}</script>
 <!-- End Jekyll SEO tag -->
 </head>
 
@@ -793,17 +793,17 @@
 
 <p>Pegasus Java Client中以下接口可以查询和设置TTL：</p>
 <ul>
-  <li><a href="/clients/java-client#ttl">ttl</a>：获取指定数据的TTL信息。</li>
-  <li><a href="/clients/java-client#set">set</a>和<a href="/clients/java-client#batchset">batchSet</a>：都提供了设置TTL的参数，其中batchSet是在SetItem中设置的。</li>
-  <li><a href="/clients/java-client#multiset">multiSet</a>和<a href="/clients/java-client#batchmultiset">batchMultiSet</a>：都提供了设置TTL的参数。</li>
-  <li><a href="/clients/java-client#batchmultiset">incr</a>：从v1.11.1版本开始，incr接口也提供了修改TTL的功能。</li>
-  <li><a href="/clients/java-client#checkandset">checkAndSet</a>：在CheckAndSetOptions中提供了设置TTL的参数。</li>
+  <li><a href="/_docs/zh/clients/java-client.md#ttl">ttl</a>：获取指定数据的TTL信息。</li>
+  <li><a href="/_docs/zh/clients/java-client.md#set">set</a>和<a href="/_docs/zh/clients/java-client.md#batchset">batchSet</a>：都提供了设置TTL的参数，其中batchSet是在SetItem中设置的。</li>
+  <li><a href="/_docs/zh/clients/java-client.md#multiset">multiSet</a>和<a href="/_docs/zh/clients/java-client.md#batchmultiset">batchMultiSet</a>：都提供了设置TTL的参数。</li>
+  <li><a href="/_docs/zh/clients/java-client.md#batchmultiset">incr</a>：从v1.11.1版本开始，incr接口也提供了修改TTL的功能。</li>
+  <li><a href="/_docs/zh/clients/java-client.md#checkandset">checkAndSet</a>：在CheckAndSetOptions中提供了设置TTL的参数。</li>
 </ul>
 
 <p>Shell工具中以下命令可以查询和设置TTL：</p>
 <ul>
-  <li><a href="/overview/shell#ttl">ttl</a>命令：获取指定数据的TTL信息。</li>
-  <li><a href="/overview/shell#set">set</a>和<a href="/overview/shell#multi_set">multi_set</a>命令：都提供了设置TTL的参数。</li>
+  <li><a href="/_docs/zh/tools/shell.md#ttl">ttl</a>命令：获取指定数据的TTL信息。</li>
+  <li><a href="/_docs/zh/tools/shell.md#set">set</a>和<a href="/_docs/zh/tools/shell.md#multi_set">multi_set</a>命令：都提供了设置TTL的参数。</li>
 </ul>
 
 <h1 id="表级ttl">表级TTL</h1>
@@ -811,13 +811,13 @@
 
 <p>实现原理：</p>
 <ul>
-  <li>用户在<a href="/administration/table-env">Table环境变量</a>中设置<code class="language-plaintext highlighter-rouge">default_ttl</code>环境变量。</li>
+  <li>用户在<a href="/_docs/zh/administration/table-env.md">Table环境变量</a>中设置<code class="language-plaintext highlighter-rouge">default_ttl</code>环境变量。</li>
   <li>MetaServer将环境变量异步地通知到各个ReplicaServer，使该表的每个replica都获取到该环境变量，这个过程大约有几秒到几十秒不等的延迟，但是不会超过一分钟。</li>
   <li>replica获得环境变量后，解析获得default_ttl配置，并立即开始生效。生效之后：
     <ul>
       <li>用户新写入的数据，如果TTL=0（使用默认TTL=0或者显式设置TTL=0），则将数据的实际TTL设置为default_ttl。</li>
       <li>RocksDB在进行compaction的时候，如果compact输入文件的原数据没有TTL，则将compact输出文件的新数据的TTL设置为default_ttl。这个过程依赖于compaction的触发时机，所以时间点是不确定的。</li>
-      <li>如果执行<a href="/administration/manual-compact">Manual Compact</a>，那么所有文件都会经过compaction处理，原来没有TTL的数据都会设置TTL为default_ttl。</li>
+      <li>如果执行<a href="/_docs/zh/administration/manual-compact.md">Manual Compact</a>，那么所有文件都会经过compaction处理，原来没有TTL的数据都会设置TTL为default_ttl。</li>
     </ul>
   </li>
 </ul>
@@ -834,7 +834,7 @@ InsertTime = now + TTLRemainingSeconds - TTLSeconds
 </code></pre></div></div>
 <p>其中：</p>
 <ul>
-  <li>TTLRemainingSeconds：通过<a href="/overview/shell#ttl">Shell的ttl命令</a>获取。</li>
+  <li>TTLRemainingSeconds：通过<a href="/_docs/zh/tools/shell.md#ttl">Shell的ttl命令</a>获取。</li>
   <li>now：执行Shell ttl命令的时间。</li>
   <li>TTLSeconds：用户知道数据写入时设置的TTL。</li>
 </ul>

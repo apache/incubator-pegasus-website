@@ -12,18 +12,18 @@
     <script src="https://cdn.bootcdn.net/ajax/libs/font-awesome/5.13.0/js/all.min.js"></script>
     <!-- Begin Jekyll SEO tag v2.8.0 -->
 <title>Whitelist | Pegasus</title>
-<meta name="generator" content="Jekyll v4.2.1" />
+<meta name="generator" content="Jekyll v4.2.2" />
 <meta property="og:title" content="Whitelist" />
 <meta property="og:locale" content="en_US" />
 <meta name="description" content="介绍" />
 <meta property="og:description" content="介绍" />
 <meta property="og:site_name" content="Pegasus" />
 <meta property="og:type" content="article" />
-<meta property="article:published_time" content="2022-03-02T09:27:15+00:00" />
+<meta property="article:published_time" content="2022-03-12T08:11:28+00:00" />
 <meta name="twitter:card" content="summary" />
 <meta property="twitter:title" content="Whitelist" />
 <script type="application/ld+json">
-{"@context":"https://schema.org","@type":"BlogPosting","dateModified":"2022-03-02T09:27:15+00:00","datePublished":"2022-03-02T09:27:15+00:00","description":"介绍","headline":"Whitelist","mainEntityOfPage":{"@type":"WebPage","@id":"/administration/whitelist"},"url":"/administration/whitelist"}</script>
+{"@context":"https://schema.org","@type":"BlogPosting","dateModified":"2022-03-12T08:11:28+00:00","datePublished":"2022-03-12T08:11:28+00:00","description":"介绍","headline":"Whitelist","mainEntityOfPage":{"@type":"WebPage","@id":"/administration/whitelist"},"url":"/administration/whitelist"}</script>
 <!-- End Jekyll SEO tag -->
 </head>
 
@@ -792,7 +792,7 @@
 
 <p>由于扩容需replica server先与meta server通信，如果此时白名单未更新，会导致meta server拒绝这个新replica server加入集群。</p>
 
-<p>所以，开启白名单的集群扩容步骤，需要在普通<a href="membership-change#扩容流程">扩容流程</a>前，进行一下步骤：</p>
+<p>所以，开启白名单的集群扩容步骤，需要在普通<a href="/_docs/zh/administration/scale-in-out.md#扩容流程">扩容流程</a>前，进行一下步骤：</p>
 <ol>
   <li>修改meta server白名单配置，加入新replica servers</li>
   <li>重启meta server</li>
@@ -800,7 +800,7 @@
 
 <h3 id="缩容">缩容</h3>
 
-<p><a href="membership-change#缩容流程">缩容流程</a>中，白名单不会造成任何影响。白名单的更新也可以在缩容完成之后任意时刻进行。</p>
+<p><a href="/_docs/zh/administration/scale-in-out.md#缩容流程">缩容流程</a>中，白名单不会造成任何影响。白名单的更新也可以在缩容完成之后任意时刻进行。</p>
 
 <p>但为了安全，建议及时更新白名单。只需在缩容流程的最后一步“重启meta server”前，修改meta server的白名单配置。</p>
 

@@ -12,18 +12,18 @@
     <script src="https://cdn.bootcdn.net/ajax/libs/font-awesome/5.13.0/js/all.min.js"></script>
     <!-- Begin Jekyll SEO tag v2.8.0 -->
 <title>Single Atomic | Pegasus</title>
-<meta name="generator" content="Jekyll v4.2.1" />
+<meta name="generator" content="Jekyll v4.2.2" />
 <meta property="og:title" content="Single Atomic" />
 <meta property="og:locale" content="en_US" />
 <meta name="description" content="从v1.10.0版本开始，Pegasus支持单行原子操作。这里的单行是指同一HashKey下的所有数据。" />
 <meta property="og:description" content="从v1.10.0版本开始，Pegasus支持单行原子操作。这里的单行是指同一HashKey下的所有数据。" />
 <meta property="og:site_name" content="Pegasus" />
 <meta property="og:type" content="article" />
-<meta property="article:published_time" content="2022-03-02T09:27:15+00:00" />
+<meta property="article:published_time" content="2022-03-12T08:11:28+00:00" />
 <meta name="twitter:card" content="summary" />
 <meta property="twitter:title" content="Single Atomic" />
 <script type="application/ld+json">
-{"@context":"https://schema.org","@type":"BlogPosting","dateModified":"2022-03-02T09:27:15+00:00","datePublished":"2022-03-02T09:27:15+00:00","description":"从v1.10.0版本开始，Pegasus支持单行原子操作。这里的单行是指同一HashKey下的所有数据。","headline":"Single Atomic","mainEntityOfPage":{"@type":"WebPage","@id":"/api/single-atomic"},"url":"/api/single-atomic"}</script>
+{"@context":"https://schema.org","@type":"BlogPosting","dateModified":"2022-03-12T08:11:28+00:00","datePublished":"2022-03-12T08:11:28+00:00","description":"从v1.10.0版本开始，Pegasus支持单行原子操作。这里的单行是指同一HashKey下的所有数据。","headline":"Single Atomic","mainEntityOfPage":{"@type":"WebPage","@id":"/api/single-atomic"},"url":"/api/single-atomic"}</script>
 <!-- End Jekyll SEO tag -->
 </head>
 
@@ -759,7 +759,7 @@
 <h1 id="原理">原理</h1>
 <p>Pegasus采用Hash分片，同一个HashKey的数据总是存储在同一个Partition中，即相同的Replica中。同时，Pegasus实现时，同一个Replica的写操作在server端总是串行执行的。因此对于同一HashKey下的数据操作，可以很方便地实现原子的语义。</p>
 
-<p>对于纯粹的写操作，譬如<a href="/clients/java-client#multiset">multiSet</a>和<a href="/clients/java-client#multidel">multiDel</a>，单个操作中对多个SortKey同时set或者del，原子语义很容易理解，要么同时成功，要么同时失败，所以这两个操作属于单行原子操作。</p>
+<p>对于纯粹的写操作，譬如<a href="/_docs/zh/clients/java-client.md#multiset">multiSet</a>和<a href="/_docs/zh/clients/java-client.md#multidel">multiDel</a>，单个操作中对多个SortKey同时set或者del，原子语义很容易理解，要么同时成功，要么同时失败，所以这两个操作属于单行原子操作。</p>
 
 <p>不过我们这里重点关注的是另一类操作：<strong>先读后写，并且写操作依赖读的结果</strong>。这类操作的特点就是：它们是<strong>非幂等</strong>的，即同一个操作如何多次重复执行，造成的结果（包括数据实际的更新情况、返回给用户的结果）可能是不同的。原子增减和CAS操作都属于这类。Pegasus能保证这类操作的原子性和一致性，因为：</p>
 <ul>
@@ -788,7 +788,7 @@
 <h1 id="cas操作">CAS操作</h1>
 <p>另一类很有用的原子操作就是CAS（Compare-And-Swap），直译就是对比交换，最初是表示一条CPU的原子指令，其作用是让CPU先进行比较两个值是否相等，然后原子地更新某个位置的值。基于CAS操作，可以实现很多高级的并发特性，譬如锁。因此很多编程语言也原生地提供CAS操作。</p>
 
-<p>Pegasus提供了check_and_set的CAS操作，其语义就是：根据HashKey的某一个SortKey的值是否满足某种条件，来决定是否修改另一个SortKey的值。我们将用于判断条件的SortKey称之为<code class="language-plaintext highlighter-rouge">CheckSortKey</code>，将用于设置值的SortKey称之为<code class="language-plaintext highlighter-rouge">SetSortKey</code>。对应地，CheckSortKey的value称之为<code class="language-plaintext highlighter-rouge">CheckValue</code>，SetSortKey要设置的value称之为<code class="language-plaintext highlighter-rouge">SetValue</code>。接口参见<a href="/clients/java-client#checkandset">checkAndSet</a>，以及其扩展版本<a href="/clients/java-client#checkandmutate">checkAndMutate</a>和<a href="/clients/java-client#compareexchange">compareExchange</a>。</p>
+<p>Pegasus提供了check_and_set的CAS操作，其语义就是：根据HashKey的某一个SortKey的值是否满足某种条件，来决定是否修改另一个SortKey的值。我们将用于判断条件的SortKey称之为<code class="language-plaintext highlighter-rouge">CheckSortKey</code>，将用于设置值的SortKey称之为<code class="language-plaintext highlighter-rouge">SetSortKey</code>。对应地，CheckSortKey的value称之为<code class="language-plaintext highlighter-rouge">CheckValue</code>，SetSortKey要设置的value称之为<code class="language-plaintext highlighter-rouge">SetValue</code>。接口参见<a href="/_docs/zh/clients/java-client.md#checkandset">checkAndSet</a>，以及其扩展版本<a href="/_docs/zh/clients/java-client.md#checkandmutate">checkAndMutate</a>和<a href="/_docs/zh/clients/java-client.md#compareexchange">compareExchange</a>。</p>
 
 <p>语义解释：</p>
 <ul>
@@ -805,7 +805,7 @@
   <li>可以通过选项<code class="language-plaintext highlighter-rouge">CheckAndSetOptions.setValueTTLSeconds</code>指定SetValue的TTL。</li>
 </ul>
 
-<p>为了方便使用，Pegasus Java Client还提供了compare_exchange接口：当HashKey的某个SortKey的value按照字节串比较<strong>等于</strong>用户指定的ExpectedValue时，就将其value更新为用户指定的DesiredValue。从语义上来看，compare_exchange更像是Compare-And-Swap的另外一种说法。接口参见<a href="/clients/java-client#compareexchange">compareExchange</a>。</p>
+<p>为了方便使用，Pegasus Java Client还提供了compare_exchange接口：当HashKey的某个SortKey的value按照字节串比较<strong>等于</strong>用户指定的ExpectedValue时，就将其value更新为用户指定的DesiredValue。从语义上来看，compare_exchange更像是Compare-And-Swap的另外一种说法。接口参见<a href="/_docs/zh/clients/java-client.md#compareexchange">compareExchange</a>。</p>
 
 <p>compare_exchange其实是check_and_set的特化版本：</p>
 <ul>
