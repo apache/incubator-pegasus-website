@@ -9,6 +9,6 @@ permalink: /docs/index.html
 
 文档分类：
 
-- [{{ site.data.translate['title_clients'] }}](/clients)
-- [{{ site.data.translate['title_api'] }}](/api)
-- [{{ site.data.translate['title_administration'] }}](/administration)
+- [{{ site.data.translate['title_clients'] }}](/_docs/zh/clients)
+- [{{ site.data.translate['title_api'] }}](/_docs/zh/api)
+- [{{ site.data.translate['title_administration'] }}](/_docs/zh/administration)

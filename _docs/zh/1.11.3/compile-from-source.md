@@ -12,15 +12,15 @@ Pegasus目前只支持Linux平台进行源码编译。编译过程中遇到问�
 
 ## Ubuntu环境配置
 
-你可以参考 [pegasus-build-dev/ubuntu16.04](https://github.com/pegasus-kv/pegasus-docker/blob/{{ page.version }}/pegasus-build-env/ubuntu16.04/Dockerfile) 的Docker镜像安装全部依赖。
+你可以参考 [pegasus-build-dev/ubuntu16.04](https://github.com/pegasus-kv/pegasus-docker/blob/{{page.version}}/pegasus-build-env/ubuntu16.04/Dockerfile) 的Docker镜像安装全部依赖。
 
 ## CentOS环境配置
 
-你可以参考 [pegasus-build-dev/centos7](https://github.com/pegasus-kv/pegasus-docker/blob/{{ page.version }}/pegasus-build-env/centos7/Dockerfile) 的Docker镜像安装全部依赖。
+你可以参考 [pegasus-build-dev/centos7](https://github.com/pegasus-kv/pegasus-docker/blob/{{page.version}}/pegasus-build-env/centos7/Dockerfile) 的Docker镜像安装全部依赖。
 
 ## 源码编译
 
-请先参考[下载文档](/_docs/zh/downloads.md)获取源码。
+请先参考 [下载文档](/_docs/zh/downloads.md) 获取源码。
 
 ```bash
 ./run.sh build -c
@@ -48,4 +48,4 @@ Pegasus目前只支持Linux平台进行源码编译。编译过程中遇到问�
 ./run.sh pack_tools
 ```
 
-编译成功后，推荐先[体验onebox集群](/_overview/zh/onebox.md)。
+编译成功后，推荐先 [体验onebox集群](/_overview/zh/onebox.md) 。

@@ -3,7 +3,7 @@ permalink: clients/cpp-client
 ---
 
 # 获取Cpp客户端
-首先需要[编译Pegasus](/_docs/zh/build)，编译完成后运行以下命令可以打包生产Cpp客户端库：
+首先需要[编译Pegasus](/_docs/zh/build/compile-from-source.md)，编译完成后运行以下命令可以打包生产Cpp客户端库：
 ```
 ./run.sh pack_client
 ```
@@ -87,7 +87,7 @@ rpc_timeout_milliseconds = 5000
 onebox = @LOCAL_IP@:34601,@LOCAL_IP@:34602,@LOCAL_IP@:34603
 another_cluster = @SOME_IP@:34601,@SOME_IP@:34601,@SOME_IP@:34601
 ```
-配置文件的具体解释，请移步[配置说明](/_docs/zh/administration/config.md)。
+配置文件的具体解释，请移步 [配置说明](/_docs/zh/administration/config.md) 。
 
 # 接口定义
 ## 创建Client实例

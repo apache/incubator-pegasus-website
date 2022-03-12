@@ -12,11 +12,11 @@ Pegasus目前只支持Linux平台进行源码编译。编译过程中遇到问�
 
 ## Ubuntu环境配置
 
-你可以参考 [pegasus-build-dev/ubuntu16.04](https://github.com/pegasus-kv/pegasus-docker/blob/{{ page.version }}/pegasus-build-env/ubuntu16.04/Dockerfile) 的Docker镜像安装全部依赖。
+你可以参考 [pegasus-build-dev/ubuntu16.04](https://github.com/pegasus-kv/pegasus-docker/blob/{{page.version}}/pegasus-build-env/ubuntu16.04/Dockerfile) 的Docker镜像安装全部依赖。
 
 ## CentOS环境配置
 
-你可以参考 [pegasus-build-dev/centos7](https://github.com/pegasus-kv/pegasus-docker/blob/{{ page.version }}/pegasus-build-env/centos7/Dockerfile) 的Docker镜像安装全部依赖。
+你可以参考 [pegasus-build-dev/centos7](https://github.com/pegasus-kv/pegasus-docker/blob/{{page.version}}/pegasus-build-env/centos7/Dockerfile) 的Docker镜像安装全部依赖。
 
 ## 源码编译
 

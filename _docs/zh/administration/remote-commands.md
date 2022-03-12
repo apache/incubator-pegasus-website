@@ -60,16 +60,16 @@ Pegasus不同角色的进程支持不同的远程命令。但是collector没有�
 
 ## replica-server
 
-| 命令                          | 功能                                                                                                           |
-|-----------------------------|--------------------------------------------------------------------------------------------------------------| 
-| replica.kill_partition      | 将指定的replica关闭，停止提供服务                                                                                         |
-| replica.deny-client         | 动态修改配置`deny_client_on_start`，控制是否拒绝客户端的读写请求                                                                  |
-| replica.verbose-client-log  | 动态修改配置`verbose_client_log_on_start`，控制回复客户端的请求时是否打印ERROR日志                                                   |
-| replica.verbose-commit-log  | 动态修改配置`verbose_commit_log_on_start`，控制在提交写请求时是否打印DEBUG日志                                                     |
-| replica.trigger-checkpoint  | 对指定的replica手动触发`async_checkpoint`操作                                                                          |
-| replica.query-compact       | 对指定的replica查询其执行[Manual-Compact](/_docs/zh/administration/manual-compact.md)操作的状态                            |
-| replica.query-app-envs      | 对指定的replica查询其当前的[Table环境变量](/_docs/zh/administration/table-env.md)                                          |
-| useless-dir-reserve-seconds | 动态修改无用文件夹的保留时间，方便快速释放存储空间，从1.11.3版本开始支持，参见[垃圾文件夹管理](/_docs/zh/administration/resource-management.md#垃圾文件夹管理) |
+| 命令                          | 功能                                                                                |
+|-----------------------------|-----------------------------------------------------------------------------------| 
+| replica.kill_partition      | 将指定的replica关闭，停止提供服务                                                              |
+| replica.deny-client         | 动态修改配置`deny_client_on_start`，控制是否拒绝客户端的读写请求                                       |
+| replica.verbose-client-log  | 动态修改配置`verbose_client_log_on_start`，控制回复客户端的请求时是否打印ERROR日志                        |
+| replica.verbose-commit-log  | 动态修改配置`verbose_commit_log_on_start`，控制在提交写请求时是否打印DEBUG日志                          |
+| replica.trigger-checkpoint  | 对指定的replica手动触发`async_checkpoint`操作                                               |
+| replica.query-compact       | 对指定的replica查询其执行[Manual-Compact](/_docs/zh/administration/manual-compact.md)操作的状态 |
+| replica.query-app-envs      | 对指定的replica查询其当前的[Table环境变量](/_docs/zh/administration/table-env.md)               |
+| useless-dir-reserve-seconds | 动态修改无用文件夹的保留时间，方便快速释放存储空间，从1.11.3版本开始支持，参见[垃圾文件夹管理](#resource-management#垃圾文件夹管理) |
 
 # 如何使用
 

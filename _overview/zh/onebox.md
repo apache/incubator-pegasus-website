@@ -17,7 +17,7 @@ onebox集群在启动时实际上做了这些事情：
 
 # 如何体验
 
-在启动onebox集群之前，你需要先编译Pegasus，请参考[编译构建](/_docs/zh/build/compile-from-source.md)。
+在启动onebox集群之前，你需要先编译Pegasus，请参考[编译构建](/_docs/zh/build/compile-from-source.md) 。
 
 启动onebox集群：
 ```bash
@@ -52,7 +52,7 @@ onebox集群在启动时实际上做了这些事情：
 ```bash
 ./run.sh shell
 ```
-关于shell工具的详细用法，请参考[Shell工具](shell)。
+关于shell工具的详细用法，请参考[Shell工具](/_docs/zh/tools/shell.md) 。
 
 用bench工具进行读写测试：
 ```bash

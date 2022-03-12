@@ -24,9 +24,9 @@ We recommend downloading the signed source release that follows [ASF Release Pol
 [2.3.0-sha]: https://downloads.apache.org/incubator/pegasus/2.3.0/apache-pegasus-2.3.0-incubating-src.zip.sha512
 [2.3.0-rn]: https://cwiki.apache.org/confluence/display/PEGASUS/Apache+Pegasus+2.3.0+Release+Notes
 
-Name | Package | Signature | Checksum | Release Notes |
----|---|---|---|---|
-Apache Pegasus 2.1.0 | [Source][2.1.0-src] | [asc][2.1.0-asc] | [sha512][2.1.0-sha] | [2020-11-30][2.1.0-rn]
-Apache Pegasus 2.2.0 | [Source][2.2.0-src] | [asc][2.2.0-asc] | [sha512][2.2.0-sha] | [2021-06-27][2.2.0-rn]
-Apache Pegasus 2.3.0 | [Source][2.3.0-src] | [asc][2.3.0-asc] | [sha512][2.3.0-sha] | [2021-11-26][2.3.0-rn]
+| Name                 | Package             | Signature        | Checksum            | Release Notes          |
+|----------------------|---------------------|------------------|---------------------|------------------------|
+| Apache Pegasus 2.1.0 | [Source][2.1.0-src] | [asc][2.1.0-asc] | [sha512][2.1.0-sha] | [2020-11-30][2.1.0-rn] |
+| Apache Pegasus 2.2.0 | [Source][2.2.0-src] | [asc][2.2.0-asc] | [sha512][2.2.0-sha] | [2021-06-27][2.2.0-rn] |
+| Apache Pegasus 2.3.0 | [Source][2.3.0-src] | [asc][2.3.0-asc] | [sha512][2.3.0-sha] | [2021-11-26][2.3.0-rn] |
 
