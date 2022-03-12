@@ -30,12 +30,12 @@ permalink: administration/rolling-update
 ## 高可用升级
 根据以上对高可用度的考虑，我们建议完善的升级流程如下：
 * 准备好新的Server程序包和配置文件
-* 使用shell工具将集群的meta level设置为steady，关闭[负载均衡功能](rebalance)，避免不必要的replica迁移
+* 使用shell工具将集群的meta level设置为steady，关闭[负载均衡功能](/_docs/zh/administration/rebalance.md)，避免不必要的replica迁移
   ```
   >>> set_meta_level steady
   ```
 * 升级replica server进程，采用逐个升级的策略。升级单个replica server：
-  * 通过shell向meta server发送[远程命令](remote-commands#meta-server)，禁掉`add_secondary`操作：
+  * 通过shell向meta server发送[远程命令](/_docs/zh/administration/remote-commands.md#meta-server)，禁掉`add_secondary`操作：
     ```
     >>> remote_command -t meta-server meta.lb.add_secondary_max_count_for_one_node 0
     ```

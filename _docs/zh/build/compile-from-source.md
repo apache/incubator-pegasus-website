@@ -79,7 +79,7 @@ pip3 install --no-cache-dir cmake
 
 ## 源码编译
 
-请先参考[下载文档](/docs/downloads)获取源码。
+请先参考[下载文档](/_docs/zh/downloads.md)获取源码。
 
 ```bash
 ./run.sh build -c
@@ -107,4 +107,4 @@ pip3 install --no-cache-dir cmake
 ./run.sh pack_tools
 ```
 
-编译成功后，推荐先[体验onebox集群](/overview/onebox)。
+编译成功后，推荐先[体验onebox集群](/_overview/zh/onebox.md)。

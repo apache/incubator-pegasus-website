@@ -22,7 +22,7 @@ redis proxy与pegasus集群之间使用pegasus的thrift协议，proxy在这里�
 
 ## 配置
 
-redis proxy的配置文件规则遵循[配置说明](/administration/config)，参考[示例](https://github.com/apache/incubator-pegasus/blob/master/src/geo/bench/config.ini)。
+redis proxy的配置文件规则遵循[配置说明](/_docs/zh/administration/config.md)，参考[示例](https://github.com/apache/incubator-pegasus/blob/master/src/geo/bench/config.ini)。
 
 在redis proxy中有几项特有的配置项需要注意：
 
@@ -131,7 +131,7 @@ DECRBY key decrement
 
 ### GEODIST
 
-[GEO接口的实现原理](geo)
+[GEO接口的实现原理](geo.md)
 
 ```
 GEODIST key member1 member2 [unit]

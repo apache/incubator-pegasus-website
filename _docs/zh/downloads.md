@@ -57,7 +57,7 @@ Apache Pegasus 1.11.3 | [Source][1.11.3-src] | [2019-2-27][1.11.3-rn]
 Apache Pegasus 1.10.0 | [Source][1.10.0-src] | [2018-6-19][1.10.0-rn]
 Apache Pegasus 1.9.0 | [Source][1.9.0-src] | [2018-6-20][1.9.0-rn]
 
-上述各版本均可找到对应编译环境的镜像：<https://hub.docker.com/r/apachepegasus/build-env/tags>，请参考 [{{site.data.translate['title_compile-by-docker'}}](/docs/build/compile-by-docker/) 完成编译。
+上述各版本均可找到对应编译环境的镜像：<https://hub.docker.com/r/apachepegasus/build-env/tags>，请参考 [{{site.data.translate['title_compile-by-docker'}}](/_docs/zh/build/compile-by-docker.md) 完成编译。
 
 ```
 docker pull apachepegasus/build-env:{VERSION}-{OS}

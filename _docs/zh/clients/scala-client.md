@@ -10,7 +10,7 @@ permalink: clients/scala-client
 git clone https://github.com/XiaoMi/pegasus-scala-client.git
 cd pegasus-scala-client
 ```
-选择所使用的版本并构建，建议使用master版本。同时注意，scala客户端构建依赖[Java客户端](https://github.com/XiaoMi/pegasus-java-client)，请参考[获取Java客户端](/clients/java-client#获取java客户端)在项目中添加Java依赖。你可以打包成Jar包进行使用：
+选择所使用的版本并构建，建议使用master版本。同时注意，scala客户端构建依赖[Java客户端](https://github.com/XiaoMi/pegasus-java-client)，请参考 [获取Java客户端](/_docs/zh/clients/java-client.md#获取Java客户端) 在项目中添加Java依赖。你可以打包成Jar包进行使用：
 ```bash
 sbt package
 ```
@@ -50,7 +50,7 @@ libraryDependencies ++= Seq(
 
 ## 获取实例
 通过指定server配置信息获取实例，Scala提供两种获取实例的接口：  
-**1、文件路径作为配置参数：**  参见[Java客户端文件配置](/clients/java-client#配置文件)  
+**1、文件路径作为配置参数：**  参见 [Java客户端文件配置](/_docs/zh/clients/java-client.md#文件配置)  
 ```scala
 def createClient(configPath: String): ScalaPegasusClient
 ```
@@ -83,12 +83,12 @@ pegasusClient.close
 # 接口定义
 scala的客户端类地址为：`com.xiaomi.infra.pegasus.scalaclient`，主要包括以下四个类：
 
-| 类名                      | 功能                                                   |
-| ------------------------- | ------------------------------------------------------ |
-| ScalaPegasusClientFactory | Client工厂类，用于创建Client实例                       |
+| 类名                        | 功能                                   |
+|---------------------------|--------------------------------------|
+| ScalaPegasusClientFactory | Client工厂类，用于创建Client实例               |
 | ScalaPegasusClient        | Client类，封装了各种**同步API**，也可用于创建Table实例 |
-| ScalaPegasusTable         | Table类，封装了操作单个Table数据的**同步API**          |
-| ScalaPegasusAsyncTable    | Table类，封装了操作单个Table数据的**异步API**          |
+| ScalaPegasusTable         | Table类，封装了操作单个Table数据的**同步API**      |
+| ScalaPegasusAsyncTable    | Table类，封装了操作单个Table数据的**异步API**      |
 
 用户可以选择使用Client类（ScalaPegasusClient）或者是Table类（ScalaPegasusTable或者ScalaPegasusAsyncTable）存取数据，区别如下：
   * Client类直接在参数中指定表名，省去了打开表的动作，使用更便捷。
@@ -117,7 +117,7 @@ import com.xiaomi.infra.pegasus.scalaclient.Serializers._
 导入依赖，目前接受的自动类型转换包括`String`、`Boolean`、`Int`、`Long`、`Short`、`Double`，这些类型可自动转换为`Array[Byte]`。
 ### API功能
 #### exists
-判断key是否存在，参见[Java客户端文档#exist](/clients/java-client#exist)
+判断key是否存在，参见 [Java客户端文档#exist](/_docs/zh/clients/java-client.md#exist)
 ```scala
 def exists[H, S](table: String, hashKey: H, sortKey: S)
 ```
@@ -126,7 +126,7 @@ hashKey：通常为`String`类型
 sortKey：通常为`String`类型  
 return： 返回是否存在，`boolean`类型
 #### sortKeyCount
-获取一个hashkey下的sortkey值，参见[Java客户端文档#sortKeyCount](/clients/java-client#sortkeycount)
+获取一个hashkey下的sortkey值，参见 [Java客户端文档#sortKeyCount](/_docs/zh/clients/java-client.md#sortkeycount)
 ```scala
 def sortKeyCount[H](table: String, hashKey: H)
 ```
@@ -134,7 +134,7 @@ table：表名，通常为`String`类型
 hashKey：通常为`String`类型  
 return：返回sortKeys个数，`long`类型
 #### get
-获取一条数据，参见[Java客户端文档#get](/clients/java-client#get)
+获取一条数据，参见[Java客户端文档#get](/_docs/zh/clients/java-client.md#get)
 ```scala
 def get[H, S](table: String, hashKey: H, sortKey: S)
 ```
@@ -143,7 +143,7 @@ hashKey：通常为`String`类型
 sortKey：通常为`String`类型  
 return：返回获取值，`Array[Byte]`类型，你可以使用`as[String]`转换为`String`类型  
 #### batchGet
-读取一批数据，对get函数的批量封装。该函数并发地向server发送异步请求，并等待结果。如果有任意一个请求失败，就提前终止并抛出异常。如果抛出了异常，则values中的结果是未定义的，参见[Java客户端文档#batchGet](/clients/java-client#batchget)
+读取一批数据，对get函数的批量封装。该函数并发地向server发送异步请求，并等待结果。如果有任意一个请求失败，就提前终止并抛出异常。如果抛出了异常，则values中的结果是未定义的，参见[Java客户端文档#batchGet](/_docs/zh/clients/java-client.md#batchget)
 ```scala
 def batchGet[H, S](table: String, keys: List[PegasusKey[H, S]])
 ```
@@ -151,7 +151,7 @@ table：表名，通常为`String`类型
 keys：PegasusKey列表，由hashKey和SortKey组成  
 return：返回获取值列表，`PegasusResultList`类型
 #### batchGet2
-读取一批数据，对get函数的批量封装。该函数并发地向server发送异步请求，但与上面batchGet不同的是，无论请求成功还是失败，它都会等待所有请求结束，参见[Java客户端文档#batchGet2](/clients/java-client#batchget)
+读取一批数据，对get函数的批量封装。该函数并发地向server发送异步请求，但与上面batchGet不同的是，无论请求成功还是失败，它都会等待所有请求结束，参见[Java客户端文档#batchGet2](/_docs/zh/clients/java-client.md#batchget)
 ```scala
 def batchGet2[H, S](table: String, keys: Seq[PegasusKey[H, S]])
 ```
@@ -165,7 +165,7 @@ public boolean multiGet(String tableName, byte[] hashKey,
                         List<byte[]> sortKeys, int maxFetchCount, 
                         int maxFetchSize, List<Pair<byte[], byte[]>> values) throws PException;
 ```
-支持最大数据量`maxFetchCount`和最大数据大小`maxFetchSize`的参数设置，参见[Java客户端文档#multiGet](/clients/java-client#multiget)
+支持最大数据量`maxFetchCount`和最大数据大小`maxFetchSize`的参数设置，参见[Java客户端文档#multiGet](/_docs/zh/clients/java-client.md#multiget)
 ```scala
 def multiGet[H, S](table: String, hashKey: H, sortKeys: Seq[S],
             maxFetchCount: Int = 100, maxFetchSize: Int = 1000000)
@@ -184,7 +184,7 @@ public boolean multiGet(String tableName, byte[] hashKey,
                     int maxFetchCount, int maxFetchSize,
                     List<Pair<byte[], byte[]>> values) throws PException;
 ```
-可以支持SortKey的范围查询和条件过滤，只读取满足特定条件的数据，参见[Java客户端文档#multiGet](/clients/java-client#multiget)
+可以支持SortKey的范围查询和条件过滤，只读取满足特定条件的数据，参见[Java客户端文档#multiGet](/_docs/zh/clients/java-client.md#multiget)
 ```scala
 def multiGetRange[H, S](hashKey: H, startSortKey: S, stopSortKey: S, 
                         options: Options.MultiGet,
@@ -201,7 +201,7 @@ maxFetchSize：最大数据值大小，默认为1000000字节
 timeout：获取数据超时时间，默认为0，表示使用配置文件中的数值  
 return：返回获取值列表，`convertMultiGetResult`类型
 #### batchMultiGet
-对multiGet函数的批量封装。该函数并发地向server发送异步请求，并等待结果。如果有任意一个请求失败，就提前终止并抛出异常。如果抛出了异常，则values中的结果是未定义的，参见[Java客户端文档#batchMultiGet](/clients/java-client#batchmultiget)
+对multiGet函数的批量封装。该函数并发地向server发送异步请求，并等待结果。如果有任意一个请求失败，就提前终止并抛出异常。如果抛出了异常，则values中的结果是未定义的，参见[Java客户端文档#batchMultiGet](/_docs/zh/clients/java-client.md#batchmultiget)
 ```scala
 def batchMultiGet[H, S](keys: Seq[(H, Seq[S])], timeout: Duration = 0 milli)
 ```
@@ -209,7 +209,7 @@ keys：hashKey-sortKeys列表，如：`Seq(("1",Seq("1","2")),("1",Seq("1","2"))
 timeout：获取数据超时时间，默认为0，表示使用配置文件中的数值  
 return：返回获取值列表，`List`类型  
 #### batchMultiGet2
-对multiGet函数的批量封装。该函数并发地向server发送异步请求，并等待结果。但与上面batchMultiGet不同的是，无论请求成功还是失败，它都会等待所有请求结束，参见[Java客户端文档#batchMultiGet2](/clients/java-client#batchmultiget2)
+对multiGet函数的批量封装。该函数并发地向server发送异步请求，并等待结果。但与上面batchMultiGet不同的是，无论请求成功还是失败，它都会等待所有请求结束，参见[Java客户端文档#batchMultiGet2](/_docs/zh/clients/java-client.md#batchmultiget2)
 ```scala
 def batchMultiGet2[H, S](keys: Seq[(H, Seq[S])], timeout: Duration = 0 milli)
 ```
@@ -228,7 +228,7 @@ ttl：写入值保留时间，默认为0，表示永久保留
 timeout：获取数据超时时间，默认为0，表示使用配置文件中的数值  
 return：无返回值  
 #### batchSet
-写一批数据，对set函数的批量封装。该函数并发地向server发送异步请求，并等待结果。如果有任意一个请求失败，就提前终止并抛出异常，参见[Java客户端文档#batchSet](/clients/java-client#batchset)
+写一批数据，对set函数的批量封装。该函数并发地向server发送异步请求，并等待结果。如果有任意一个请求失败，就提前终止并抛出异常，参见[Java客户端文档#batchSet](/_docs/zh/clients/java-client.md#batchset)
 ```scala
 def batchSet[H, S, V](table: String, items: Seq[SetItem[H, S, V]])
 ```
@@ -236,7 +236,7 @@ table：表名，通常为`String`类型
 items：写入值列表，由hashKey、sortKey、value组成  
 return：请求成功的个数（该方法不是原子的，有可能出现部分成功部分失败的情况，用户可以选择只使用成功的结果）
 #### batchSet2
-对set函数的批量封装。该函数并发地向server发送异步请求，并等待结果。但与上面batchSet不同的是，无论请求成功还是失败，它都会等待所有请求结束，参见[Java客户端文档#batchSet2](/clients/java-client#batchset2)
+对set函数的批量封装。该函数并发地向server发送异步请求，并等待结果。但与上面batchSet不同的是，无论请求成功还是失败，它都会等待所有请求结束，参见[Java客户端文档#batchSet2](/_docs/zh/clients/java-client.md#batchset2)
 #### multiSet
 Java client有两种接口，提供写同一HashKey下的多行数据，这里封装的是：
 ```java
@@ -254,7 +254,7 @@ value：写入值列表，由sortkey、value组成，如`Seq(("hashKey1","sortKe
 ttl：写入值保留时间，默认为0，表示永久保留  
 return：无返回值
 #### batchMultitSet
-对multiSet函数的批量封装。该函数并发地向server发送异步请求，并等待结果。如果有任意一个请求失败，就提前终止并抛出异常，参见[Java客户端文档#batchMultiSet](/clients/java-client#batchmultiset)
+对multiSet函数的批量封装。该函数并发地向server发送异步请求，并等待结果。如果有任意一个请求失败，就提前终止并抛出异常，参见[Java客户端文档#batchMultiSet](/_docs/zh/clients/java-client.md#batchmultiset)
 ```scala
 def batchMultitSet[H, S, V](table: String, items: Seq[HashKeyData[H, S, V]], ttl: Duration = 0 second)
 ```
@@ -263,7 +263,7 @@ items：批量写入数据列表
 ttl：写入值保留时间，默认为0，表示永久保留  
 return：请求成功的个数（该方法不是原子的，有可能出现部分成功部分失败的情况，用户可以选择只使用成功的结果）
 #### batchMultitSet2
-对multiSet函数的批量封装。该函数并发地向server发送异步请求，并等待结果。但与上面batchMultiSet不同的是，无论请求成功还是失败，它都会等待所有请求结束，参见[Java客户端文档#batchMultitSet2](/clients/java-client#batchmultiset2)
+对multiSet函数的批量封装。该函数并发地向server发送异步请求，并等待结果。但与上面batchMultiSet不同的是，无论请求成功还是失败，它都会等待所有请求结束，参见[Java客户端文档#batchMultitSet2](/_docs/zh/clients/java-client.md#batchmultiset2)
 ```scala
 def batchMultiSet2[H, S, V](table: String, items: Seq[HashKeyData[H, S, V]], ttl: Duration = 0 second)
 ```
@@ -272,7 +272,7 @@ items：批量写入数据列表
 ttl：写入值保留时间，默认为0，表示永久保留  
 return：请求成功的个数（该方法不是原子的，有可能出现部分成功部分失败的情况，用户可以选择只使用成功的结果）
 #### del
-删除单行数据，参见[Java客户端文档#del](/clients/java-client#del)
+删除单行数据，参见[Java客户端文档#del](/_docs/zh/clients/java-client.md#del)
 ```scala
 def del[H, S](table: String, hashKey: H, sortKey: S)
 ```
@@ -281,7 +281,7 @@ hashKey：通常为`String`类型
 sortkey：通常为`String`类型  
 return：无返回值  
 #### batchDel
-删除一批数据，对del函数的批量封装。该函数并发地向server发送异步请求，并等待结果。如果有任意一个请求失败，就提前终止并抛出异常，参见[Java客户端文档#batchDel](/clients/java-client#batchdel)
+删除一批数据，对del函数的批量封装。该函数并发地向server发送异步请求，并等待结果。如果有任意一个请求失败，就提前终止并抛出异常，参见[Java客户端文档#batchDel](/_docs/zh/clients/java-client.md#batchdel)
 ```scala
 batchDel[H, S](table: String, keys: Seq[PegasusKey[H, S]])
 ```
@@ -289,12 +289,12 @@ table：表名，通常为`String`类型
 keys：键值列表，由hashKey和sortKey组成  
 return：请求成功的个数（该方法不是原子的，有可能出现部分成功部分失败的情况，用户可以选择只使用成功的结果）
 #### batchDel2
-对del函数的批量封装。该函数并发地向server发送异步请求，并等待结果。但与上面batchDel不同的是，无论请求成功还是失败，它都会等待所有请求结束，参见[Java客户端文档#batchDel2](/clients/java-client#batchdel2)
+对del函数的批量封装。该函数并发地向server发送异步请求，并等待结果。但与上面batchDel不同的是，无论请求成功还是失败，它都会等待所有请求结束，参见[Java客户端文档#batchDel2](/_docs/zh/clients/java-client.md#batchdel2)
 ```scala
 def batchDel2[H, S](table: String, keys: Seq[PegasusKey[H, S]])
 ```
 #### multiDel
-删同一HashKey下的多行数据，参见[Java客户端文档#multiDel](/clients/java-client#multidel)
+删同一HashKey下的多行数据，参见[Java客户端文档#multiDel](/_docs/zh/clients/java-client.md#multidel)
 ```scala
 def multiDel[H, S](table: String, hashKey: H, sortKeys: Seq[S])
 ```
@@ -303,7 +303,7 @@ hashKey：通常为`String`类型
 sortKeys：sortKey列表  
 return：无返回值  
 #### batchMultiDel
-对multiDel函数的批量封装。该函数并发地向server发送异步请求，并等待结果。如果有任意一个请求失败，就提前终止并抛出异常，参见[Java客户端文档#batchMultiDel](/clients/java-client#batchmultidel)
+对multiDel函数的批量封装。该函数并发地向server发送异步请求，并等待结果。如果有任意一个请求失败，就提前终止并抛出异常，参见[Java客户端文档#batchMultiDel](/_docs/zh/clients/java-client.md#batchmultidel)
 ```scala
 def batchMultiDel[H, S](table: String, keys: Seq[(H, Seq[S])])
 ```
@@ -311,7 +311,7 @@ table：表名，通常为`String`类型
 keys：键列表，由hashKey、sortKeys组成，如`Seq(("hashKey1",(sortKey1,sortKey2),("hashKey2",(sortKey3,sortKey4))`  
 return：无返回值
 #### batchMultiDel2
-对del函数的批量封装。该函数并发地向server发送异步请求，并等待结果。但与上面batchMultiDel不同的是，无论请求成功还是失败，它都会等待所有请求结束，参见[Java客户端文档#batchMultiDel2](/clients/java-client#batchmultidel2)
+对del函数的批量封装。该函数并发地向server发送异步请求，并等待结果。但与上面batchMultiDel不同的是，无论请求成功还是失败，它都会等待所有请求结束，参见[Java客户端文档#batchMultiDel2](/_docs/zh/clients/java-client.md#batchmultidel2)
 ```scala
 def batchMultiDel2[H, S](table: String, keys: Seq[(H, Seq[S])])
 ```
@@ -319,7 +319,7 @@ table：表名，通常为`String`类型
 keys：键列表，由hashKey、sortKeys组成，如`Seq(("hashKey1",(sortKey1,sortKey2),("hashKey2",(sortKey3,sortKey4))`  
 return：无返回值
 #### ttl
-获取单行数据的TTL时间。TTL表示Time To Live，表示该数据还能存活多久。如果超过存活时间，数据就读不到了，参见[Java客户端文档#ttl](/clients/java-client#ttl)
+获取单行数据的TTL时间。TTL表示Time To Live，表示该数据还能存活多久。如果超过存活时间，数据就读不到了，参见[Java客户端文档#ttl](/_docs/zh/clients/java-client.md#ttl)
 ```scala
 def ttl[H, S](table: String, hashKey: H, sortKey: S)
 ```
@@ -328,7 +328,7 @@ hashKey：通常为`String`类型
 sortKeys：通常为`String`类型  
 return：TTL时间，单位为秒。如果该数据没有设置TTL，返回-1；如果该数据不存在，返回-2
 #### incr
-单行原子增(减)操作，详细说明参见[单行原子操作](/api/single-atomic)，该操作先将key所指向的value的字节串转换为int64类型（实现上类似于Java的Long.parseLong()函数），然后加上increment，将结果转换为字节串设置为新值。当参数increment为正数时，即原子加；当参数increment为负数时，即原子减，参见[Java客户端文档#incr](/clients/java-client#incr)。
+单行原子增(减)操作，详细说明参见[单行原子操作](/_docs/zh/api/single-atomic.md)，该操作先将key所指向的value的字节串转换为int64类型（实现上类似于Java的Long.parseLong()函数），然后加上increment，将结果转换为字节串设置为新值。当参数increment为正数时，即原子加；当参数increment为负数时，即原子减，参见[Java客户端文档#incr](/_docs/zh/clients/java-client.md#incr)。
 ```scala
 def incr[H, S](table: String, hashKey: H, sortKey: S, increment: Long, ttl: Duration = 0 milli)
 ```
@@ -339,9 +339,9 @@ increment：增加值
 ttl：值保留时间，默认为0，表示永久保留  
 return：操作成功后的新值
 ## ScalaPegasusTable接口
-ScalaPegasusTable接口提供的方法均为同步API，`ScalaPegasusClient`接口即默认封装该接口，详细API信息参见[ScalaPegasusClient接口](#scalapegasusclient接口)
+ScalaPegasusTable接口提供的方法均为同步API，`ScalaPegasusClient`接口即默认封装该接口，详细API信息参见[ScalaPegasusClient接口](#ScalaPegasusClient接口)
 ## ScalaPegasusAsyncTable
-ScalaPegasusAsyncTable接口提供的方法均为异步API，封装了java client的异步接口。对应API功能可参考[ScalaPegasusClient接口](#scalapegasusclient接口)和[Java客户端文档#PegasusTableInterface接口](/clients/java-client#pegasustableinterface接口)，接口封装形式如：
+ScalaPegasusAsyncTable接口提供的方法均为异步API，封装了java client的异步接口。对应API功能可参考[ScalaPegasusClient接口](#ScalaPegasusClient接口)和[Java客户端文档#PegasusTableInterface接口](/_docs/zh/clients/java-client.md#PegasusTableInterface接口)，接口封装形式如：
 ```scala
 @throws[PException]
     def multiGet[H, S](hashKey: H, sortKeys: Seq[S], maxFetchCount: Int = 100, maxFetchSize: Int = 1000000, timeout: Duration = 0 milli)

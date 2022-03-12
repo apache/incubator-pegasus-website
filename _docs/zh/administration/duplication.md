@@ -167,7 +167,7 @@ backup_infos:
 
 当 `start_dup` 时，热备份任务会从之前记录的确认点开始复制，这样我们就保证了写增量的完整性。
 
-另外需注意的是，由于写增量的长时间堆积，一时可能有大量日志复制，热备份流量会突增，从而导致服务不稳定。因此，我们需要在远端机房设置[限流（write throttling）](/administration/throttling)。
+另外需注意的是，由于写增量的长时间堆积，一时可能有大量日志复制，热备份流量会突增，从而导致服务不稳定。因此，我们需要在远端机房设置[限流（write throttling）](/_docs/zh/administration/throttling.md)。
 
 ```
 >>> get_app_envs

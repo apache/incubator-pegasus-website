@@ -17,7 +17,7 @@ onebox集群在启动时实际上做了这些事情：
 
 # 如何体验
 
-在启动onebox集群之前，你需要先编译Pegasus，请参考[编译构建](/docs/build/compile-from-source/)。
+在启动onebox集群之前，你需要先编译Pegasus，请参考[编译构建](/_docs/zh/build/compile-from-source.md)。
 
 启动onebox集群：
 ```bash

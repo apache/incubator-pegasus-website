@@ -18,15 +18,15 @@ Pegasus集群依赖Zookeeper进行元数据存储和MetaServer抢锁，因此需
 ## 准备配置文件
 我们提供了配置文件[src/server/config.ini](https://github.com/apache/incubator-pegasus/blob/master/src/server/config.ini)（从1.7.1版本开始支持），你需要修改该文件，替换所有``%{xxx}``形式的变量为合适的值，如下：
 
-| 变量  | 说明 | 示例 | 
-| ------------- | ------------- | ------------- |
-| %{cluster.name}  | 集群名称。  | my_cluster  |
-| %{home.dir}  | HOME路径。  | /home/work  |
-| %{app.dir}  | 程序工作路径，默认数据文件和日志文件都会放在这下面。  | /home/work/app/pegasus  |
-| %{slog.dir}  | 存放Shared Commit Log文件的路径，建议放在一个独享的SSD盘上。如果没有可用的SSD盘，可以设置为空字符串，表示默认使用%{app.dir}。  | /home/work/ssd1/pegasus  |
-| %{data.dirs}  | 存放各Replica数据的路径列表，可以用逗号分隔指定多个盘，每个路径需要指定一个名称，格式为``name1:path1,name2:path2``。如果没有可用的独立SSD盘，可以设置为空字符串，表示默认使用%{app.dir}。  | ssd2:/home/work/ssd2/pegasus |
-| %{meta.server.list}  | MetaServer地址列表，用逗号分隔，格式为``ip1:port1,ip2:port2``。**注意只能用IP地址，不能用hostname**。  | 1.2.3.4:34601,1.2.3.5:34601  |
-| %{zk.server.list}  | Zookeeper地址列表，用逗号分隔，格式为``ip1:port1,ip2:port2``。  | 1.2.3.4:2181,1.2.3.5:2181  |
+| 变量                  | 说明                                                                                                                   | 示例                           | 
+|---------------------|----------------------------------------------------------------------------------------------------------------------|------------------------------|
+| %{cluster.name}     | 集群名称。                                                                                                                | my_cluster                   |
+| %{home.dir}         | HOME路径。                                                                                                              | /home/work                   |
+| %{app.dir}          | 程序工作路径，默认数据文件和日志文件都会放在这下面。                                                                                           | /home/work/app/pegasus       |
+| %{slog.dir}         | 存放Shared Commit Log文件的路径，建议放在一个独享的SSD盘上。如果没有可用的SSD盘，可以设置为空字符串，表示默认使用%{app.dir}。                                      | /home/work/ssd1/pegasus      |
+| %{data.dirs}        | 存放各Replica数据的路径列表，可以用逗号分隔指定多个盘，每个路径需要指定一个名称，格式为``name1:path1,name2:path2``。如果没有可用的独立SSD盘，可以设置为空字符串，表示默认使用%{app.dir}。 | ssd2:/home/work/ssd2/pegasus |
+| %{meta.server.list} | MetaServer地址列表，用逗号分隔，格式为``ip1:port1,ip2:port2``。**注意只能用IP地址，不能用hostname**。                                           | 1.2.3.4:34601,1.2.3.5:34601  |
+| %{zk.server.list}   | Zookeeper地址列表，用逗号分隔，格式为``ip1:port1,ip2:port2``。                                                                      | 1.2.3.4:2181,1.2.3.5:2181    |
 
 注意：同一个变量可能出现在多个地方，要保证所有的``%{xxx}``变量都被替换掉。
 
@@ -69,7 +69,7 @@ Pegasus集群依赖Zookeeper进行元数据存储和MetaServer抢锁，因此需
 ## 准备部署包
 ReplicaServer/MetaServer/Collector三种角色的Server共用一套server程序和配置文件。
 
-首先[编译Pegasus](/overview/compilation)，编译完成后运行以下命令可以打包生产server端部署包：
+首先[编译Pegasus](/_docs/zh/build)，编译完成后运行以下命令可以打包生产server端部署包：
 ```
 ./run.sh pack_server
 ```
@@ -104,7 +104,7 @@ cd bin/
 
 集群启动成功后，会默认创建一个``temp``表，该表也用于Collector的集群可用度检查，最好不要删除。
 
-你可以使用[Shell工具](/overview/shell)查看集群的各种状态。如果启动失败，可以到``%{app.dir}/log``下面查看错误日志，排查问题。
+你可以使用[Shell工具](/_docs/zh/tools/shell.md)查看集群的各种状态。如果启动失败，可以到``%{app.dir}/log``下面查看错误日志，排查问题。
 
 # 分布式部署工具
 

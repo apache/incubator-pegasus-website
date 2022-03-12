@@ -34,42 +34,42 @@ Pegasus不同角色的进程支持不同的远程命令。但是collector没有�
 
 ## rdsn内建命令
 
-| 命令 | 功能 
-| ----- | ---- | 
-| engine | 获取rdsn框架引擎的信息，主要是包含哪些线程池、每个线程池有多少个线程
-| system.queue | 获取各线程池执行队列的排队长度
-| server-info | 获取进程的基本信息，包括版本号、启动时间，对应shell的`server_info`子命令
-| server-stat | 获取进程的简要统计信息，包括get/put等操作的QPS和延迟、机器的内存和存储使用情况，对应shell的`server_stat`子命令
-| task-code | 获取该进程注册的task code列表
-| flush_log | 将最近缓冲区中的日志数据刷出到日志文件中，对应shell的`flush_log`子命令
-| reset-log-start-level | 动态修改日志的级别
-| perf-counters | 获取最近一个统计周期内的perf counter数据
-| config-dump | 获取该进程启动时的配置文件的信息
+| 命令                    | 功能                                                                    |
+|-----------------------|-----------------------------------------------------------------------| 
+| engine                | 获取rdsn框架引擎的信息，主要是包含哪些线程池、每个线程池有多少个线程                                  |
+| system.queue          | 获取各线程池执行队列的排队长度                                                       |
+| server-info           | 获取进程的基本信息，包括版本号、启动时间，对应shell的`server_info`子命令                         |
+| server-stat           | 获取进程的简要统计信息，包括get/put等操作的QPS和延迟、机器的内存和存储使用情况，对应shell的`server_stat`子命令 |
+| task-code             | 获取该进程注册的task code列表                                                   |
+| flush_log             | 将最近缓冲区中的日志数据刷出到日志文件中，对应shell的`flush_log`子命令                           |
+| reset-log-start-level | 动态修改日志的级别                                                             |
+| perf-counters         | 获取最近一个统计周期内的perf counter数据                                            |
+| config-dump           | 获取该进程启动时的配置文件的信息                                                      |
 
 ## meta-server
 
-| 命令 | 功能 
-| ----- | ---- | 
-| meta.lb.assign_delay_ms | 动态修改配置`replica_assign_delay_ms_for_dropouts`
-| meta.lb.assign_secondary_black_list | 动态修改`add_secondary`操作的黑名单，名单中的节点在负载均衡中不再分派replica
-| meta.lb.balancer_in_turn | 动态修改配置`balancer_in_turn`，控制负载均衡app时是one-by-one执行还是并行执行
-| meta.lb.only_primary_balancer | 动态修改配置`only_primary_balancer`，控制负载均衡时是否只要求各机器的primary replica个数达到平衡
-| meta.lb.only_move_primary | 动态修改配置`only_move_primary`，控制负载均衡时是否只做primary replica迁移，不做replica数据拷贝
-| meta.lb.add_secondary_enable_flow_control | 动态修改配置`add_secondary_enable_flow_control`，控制负载均衡时是否对`add_secondary`操作进行流控
-| meta.lb.add_secondary_max_count_for_one_node | 动态修改配置`add_secondary_max_count_for_one_node`，控制负载均衡时如果进行流控，单个机器最多并发执行`add_secondary`操作的个数
+| 命令                                          | 功能                                                                                        
+|----------------------------------------------|-------------------------------------------------------------------------------------------| 
+| meta.lb.assign_delay_ms                      | 动态修改配置`replica_assign_delay_ms_for_dropouts`                                              
+| meta.lb.assign_secondary_black_list          | 动态修改`add_secondary`操作的黑名单，名单中的节点在负载均衡中不再分派replica                                         
+| meta.lb.balancer_in_turn                     | 动态修改配置`balancer_in_turn`，控制负载均衡app时是one-by-one执行还是并行执行                                    
+| meta.lb.only_primary_balancer                | 动态修改配置`only_primary_balancer`，控制负载均衡时是否只要求各机器的primary replica个数达到平衡                       
+| meta.lb.only_move_primary                    | 动态修改配置`only_move_primary`，控制负载均衡时是否只做primary replica迁移，不做replica数据拷贝                      
+| meta.lb.add_secondary_enable_flow_control    | 动态修改配置`add_secondary_enable_flow_control`，控制负载均衡时是否对`add_secondary`操作进行流控                 
+| meta.lb.add_secondary_max_count_for_one_node | 动态修改配置`add_secondary_max_count_for_one_node`，控制负载均衡时如果进行流控，单个机器最多并发执行`add_secondary`操作的个数 
 
 ## replica-server
 
-| 命令 | 功能 
-| ----- | ---- | 
-| replica.kill_partition | 将指定的replica关闭，停止提供服务
-| replica.deny-client | 动态修改配置`deny_client_on_start`，控制是否拒绝客户端的读写请求
-| replica.verbose-client-log | 动态修改配置`verbose_client_log_on_start`，控制回复客户端的请求时是否打印ERROR日志
-| replica.verbose-commit-log | 动态修改配置`verbose_commit_log_on_start`，控制在提交写请求时是否打印DEBUG日志
-| replica.trigger-checkpoint | 对指定的replica手动触发`async_checkpoint`操作
-| replica.query-compact | 对指定的replica查询其执行[Manual-Compact](manual-compact)操作的状态
-| replica.query-app-envs | 对指定的replica查询其当前的[Table环境变量](table-env)
-| useless-dir-reserve-seconds | 动态修改无用文件夹的保留时间，方便快速释放存储空间，从1.11.3版本开始支持，参见[垃圾文件夹管理](#resource-management#垃圾文件夹管理)
+| 命令                          | 功能                                                                                                           |
+|-----------------------------|--------------------------------------------------------------------------------------------------------------| 
+| replica.kill_partition      | 将指定的replica关闭，停止提供服务                                                                                         |
+| replica.deny-client         | 动态修改配置`deny_client_on_start`，控制是否拒绝客户端的读写请求                                                                  |
+| replica.verbose-client-log  | 动态修改配置`verbose_client_log_on_start`，控制回复客户端的请求时是否打印ERROR日志                                                   |
+| replica.verbose-commit-log  | 动态修改配置`verbose_commit_log_on_start`，控制在提交写请求时是否打印DEBUG日志                                                     |
+| replica.trigger-checkpoint  | 对指定的replica手动触发`async_checkpoint`操作                                                                          |
+| replica.query-compact       | 对指定的replica查询其执行[Manual-Compact](/_docs/zh/administration/manual-compact.md)操作的状态                            |
+| replica.query-app-envs      | 对指定的replica查询其当前的[Table环境变量](/_docs/zh/administration/table-env.md)                                          |
+| useless-dir-reserve-seconds | 动态修改无用文件夹的保留时间，方便快速释放存储空间，从1.11.3版本开始支持，参见[垃圾文件夹管理](/_docs/zh/administration/resource-management.md#垃圾文件夹管理) |
 
 # 如何使用
 

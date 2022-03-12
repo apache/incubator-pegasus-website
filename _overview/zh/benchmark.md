@@ -187,7 +187,7 @@ permalink: /overview/benchmark/
 
 ### RocksDB限速
 
-Pegasus底层采用RocksDB做存储引擎，当数据写入增多，会触发compaction操作，占用较多磁盘IO，出现较多的毛刺现象。该项测试展示了开启[RocksDB的限速](http://10.232.52.164:4000/overview/benchmark)后，可以降低compaction负载，从而显著的降低毛刺现象。
+Pegasus底层采用RocksDB做存储引擎，当数据写入增多，会触发compaction操作，占用较多磁盘IO，出现较多的毛刺现象。该项测试展示了开启[RocksDB的限速](/_overview/zh/benchmark.md)后，可以降低compaction负载，从而显著的降低毛刺现象。
 
 下图分别展示了无限速、500MB限速、500MB限速同时开启auto-tune功能，三种场景的IO使用率和写P99延迟(注意：测试场景为：3client*20thread，QPS≈44K)：
 

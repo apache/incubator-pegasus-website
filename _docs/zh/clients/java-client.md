@@ -123,18 +123,18 @@ ClientOptions clientOptions =
 
 Java客户端的类都在```com.xiaomi.infra.pegasus.client```包下面，主要提供了三个类：
 
-| 类名                   | 功能                                                       |
-| ---------------------- | ---------------------------------------------------------- |
-| PegasusClientFactory   | Client工厂类，用于创建Client实例                           |
+| 类名                     | 功能                                     |
+|------------------------|----------------------------------------|
+| PegasusClientFactory   | Client工厂类，用于创建Client实例                 |
 | PegasusClientInterface | Client接口类，封装了各种**同步API**，也可用于创建Table实例 |
-| PegasusTableInterface  | Table接口类，封装了存取单个Table数据的**同步和异步API**    |
+| PegasusTableInterface  | Table接口类，封装了存取单个Table数据的**同步和异步API**   |
 
 用户可以选择使用Client接口（PegasusClientInterface）或者是Table接（PegasusTableInterface）存取数据，区别如下：
 
 * Client接口直接在参数中指定表名，省去了打开表的动作，使用更便捷。
 * Table接口同时支持**同步和异步API**，而Client接口只支持**同步API**。
 * Table接口可以为每个操作设置单独的超时，而Client接口无法单独指定超时，只能使用配置文件中的默认超时。
-* Table接口在2.0.0中增加了backupRequestDelayMs参数，可以开启backup-request功能，以提高读性能，详情参见：[Backup-Request](/administration/backup-request)
+* Table接口在2.0.0中增加了backupRequestDelayMs参数，可以开启backup-request功能，以提高读性能，详情参见：[Backup-Request](/_docs/zh/administration/backup-request.md)
 * Table接口的超时更准确，而Client接口在首次读写请求时可能需要在内部初始化Table对象，所以首次读写的超时可能不太准确。
 * 推荐用户首选Table接口。
 
@@ -793,7 +793,7 @@ public int batchMultiDel2(String tableName, List<Pair<byte[], List<byte[]>>> key
 * 注意：该方法不是原子的，有可能出现部分成功部分失败的情况。
 
 ### incr
-单行原子增(减)操作。详细说明参见[单行原子操作](/api/single-atomic#原子增减)。
+单行原子增(减)操作。详细说明参见[单行原子操作](/_docs/zh/api/single-atomic.md#原子增减)。
 
 该操作先将key所指向的value的字节串转换为int64类型（实现上类似于Java的[Long.parseLong()](https://docs.oracle.com/javase/7/docs/api/java/lang/Long.html#parseLong(java.lang.String))函数），然后加上increment，将结果转换为字节串设置为新值。
 
@@ -853,7 +853,7 @@ public long incr(String tableName, byte[] hashKey, byte[] sortKey, long incremen
    * 如果参数ttlSeconds < -1，则抛出异常。
 
 ### checkAndSet
-单HashKey数据的原子CAS操作（可以理解为**单行原子操作**）。详细说明参见[单行原子操作](/api/single-atomic#cas操作)。
+单HashKey数据的原子CAS操作（可以理解为**单行原子操作**）。详细说明参见[单行原子操作](/_docs/zh/api/single-atomic.md#CAS操作)。
 
 该操作先对某个SortKey（称之为CheckSortKey）的value做条件检查：
   * 如果检查的条件满足，则将另一个SortKey（称之为SetSortKey）的value设置为新值。
@@ -2056,7 +2056,7 @@ public Future<Pair<Pair<byte[], byte[]>, byte[]>> asyncNext();
 
 ### ERR_BUSY
 服务端流控达到限制。原因是：
-* 集群服务端对表设置了[表级写流量控制](/administration/throttling#服务端流控)。
+* 集群服务端对表设置了[表级写流量控制](/_docs/zh/administration/throttling.md#服务端流控)。
 * 此时该表的瞬时流量（在这1秒内的写入操作数）达到了阈值，触发了reject流控操作，返回`ERR_BUSY`错误码。
 
 # 最佳实践
@@ -2241,8 +2241,8 @@ Pegasus的key和value都是原始的字节串（Java中就是byte[]），而用�
 原料：
 * 业务集群：user_cluster，meta配置地址为`${user_cluster_meta_list}`，其中用户表为user_table。
 * 测试集群：test_cluster，meta配置地址为`${test_cluster_meta_list}`。
-* [Shell工具](/overview/shell)：使用1.11.3及以上版本；修改配置文件`src/shell/config.ini`，添加访问test_cluster集群的配置项。
-* [Java客户端工具](#java客户端工具)：使用1.11.4及以上版本；修改配置文件`pegasus.properties`，设置`meta_servers = ${test_cluster_meta_list}`。
+* [Shell工具](/_docs/zh/tools/shell.md)：使用1.11.3及以上版本；修改配置文件`src/shell/config.ini`，添加访问test_cluster集群的配置项。
+* Java客户端：使用1.11.4及以上版本；修改配置文件`pegasus.properties`，设置`meta_servers = ${test_cluster_meta_list}`。
 
 步骤：
 * 使用Shell工具的create命令，在test_cluster集群中新建测试表user_table_no_compress和user_table_zstd_compress：

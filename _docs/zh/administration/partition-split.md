@@ -92,5 +92,5 @@ list app split_table succeed
 同样通过`app <table_name> -d`查看表详情，当发现所有ballot都大于0时表示所有partition都被注册，若当前流量不大可以将meta server设置为lively状态，进行负载均衡，并且通过`app_stat`命令查看表的大小，应该是split前的2倍左右
 
 ## 手动触发Manual-Compact
-关于Manual compact详情可参见[Manual compact功能](manual-compact)，在集群CPU空闲时进行操作，建议命令示例如下：
+关于Manual compact详情可参见[Manual compact功能](/_docs/zh/administration/manual-compact.md)，在集群CPU空闲时进行操作，建议命令示例如下：
 `./scripts/pegasus_manual_compact.sh -c <meta_list> -a <table_name>` 
