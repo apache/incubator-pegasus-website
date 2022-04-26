@@ -280,10 +280,10 @@ rocksdb_target_file_size_base = 67108864
 rocksdb_target_file_size_multiplier = 1
 ;level 1层中的所有文件的总大小
 rocksdb_max_bytes_for_level_base = 671088640
-;每一层其所有总文件大小是其上一层的rocksdb_target_file_size_multiplier倍。
-;默认情况下rocksdb_target_file_size_multiplier是１，
-;也就是说每层的文件大小相同。
-rocksdb_target_file_size_multiplier = 10 
+;每一层其所有总文件大小是其上一层的rocksdb_max_bytes_for_level_multiplier倍。
+;默认情况下rocksdb_max_bytes_for_level_multiplier是10，
+;也就是说每层总文件大小是上一层的10倍。
+rocksdb_max_bytes_for_level_multiplier = 10 
 ;如果level 0中的文件数量超过了该指定数值，L0->L1 compaction将会被触发
 rocksdb_level0_file_num_compaction_trigger = 4
 ;如果level 0中的文件数量超过了该指定数值，那么写入速度将会被降低
