@@ -19,11 +19,11 @@
 <meta property="og:description" content="配置组成部分" />
 <meta property="og:site_name" content="Pegasus" />
 <meta property="og:type" content="article" />
-<meta property="article:published_time" content="2022-03-12T09:31:56+00:00" />
+<meta property="article:published_time" content="2022-04-26T08:56:59+00:00" />
 <meta name="twitter:card" content="summary" />
 <meta property="twitter:title" content="Config" />
 <script type="application/ld+json">
-{"@context":"https://schema.org","@type":"BlogPosting","dateModified":"2022-03-12T09:31:56+00:00","datePublished":"2022-03-12T09:31:56+00:00","description":"配置组成部分","headline":"Config","mainEntityOfPage":{"@type":"WebPage","@id":"/administration/config"},"url":"/administration/config"}</script>
+{"@context":"https://schema.org","@type":"BlogPosting","dateModified":"2022-04-26T08:56:59+00:00","datePublished":"2022-04-26T08:56:59+00:00","description":"配置组成部分","headline":"Config","mainEntityOfPage":{"@type":"WebPage","@id":"/administration/config"},"url":"/administration/config"}</script>
 <!-- End Jekyll SEO tag -->
 </head>
 
@@ -1033,10 +1033,10 @@
 </span><span class="py">rocksdb_target_file_size_multiplier</span> <span class="p">=</span> <span class="s">1</span>
 <span class="c">;level 1层中的所有文件的总大小
 </span><span class="py">rocksdb_max_bytes_for_level_base</span> <span class="p">=</span> <span class="s">671088640</span>
-<span class="c">;每一层其所有总文件大小是其上一层的rocksdb_target_file_size_multiplier倍。
-;默认情况下rocksdb_target_file_size_multiplier是１，
-;也就是说每层的文件大小相同。
-</span><span class="py">rocksdb_target_file_size_multiplier</span> <span class="p">=</span> <span class="s">10 </span>
+<span class="c">;每一层其所有总文件大小是其上一层的rocksdb_max_bytes_for_level_multiplier倍。
+;默认情况下rocksdb_max_bytes_for_level_multiplier是10，
+;也就是说每层总文件大小是上一层的10倍。
+</span><span class="py">rocksdb_max_bytes_for_level_multiplier</span> <span class="p">=</span> <span class="s">10 </span>
 <span class="c">;如果level 0中的文件数量超过了该指定数值，L0-&gt;L1 compaction将会被触发
 </span><span class="py">rocksdb_level0_file_num_compaction_trigger</span> <span class="p">=</span> <span class="s">4</span>
 <span class="c">;如果level 0中的文件数量超过了该指定数值，那么写入速度将会被降低
