@@ -1,9 +1,9 @@
 ---
-permalink: docs/build/compile-by-docker/
+permalink: 2.4.0/docs/build/compile-by-docker/
 redirect_from:
-  - master/docs/build/compile-by-docker/
+  - 2.4.0/docs/build/compile-by-docker/
   - docs/installation
-version: master
+version: 2.4.0
 ---
 
 ## 下载Docker镜像

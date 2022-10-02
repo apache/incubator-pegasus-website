@@ -1,9 +1,9 @@
 ---
-permalink: docs/build/compile-from-source/
+permalink: 2.4.0/docs/build/compile-from-source/
 redirect_from:
-  - master/docs/build/compile-from-source/
+  - 2.4.0/docs/build/compile-from-source/
   - docs/installation
-version: master
+version: 2.4.0
 ---
 
 从2.4.0开始，Pegasus目前支持Linux和macOS平台进行源码编译。编译过程中遇到问题，可以通过[Github Issues]({{ site.pegasus_github_url }}/issues)向我们咨询。
@@ -15,7 +15,7 @@ version: master
 
 ## Ubuntu环境配置
 
-你可以参考 [pegasus-build-dev/ubuntu20.04](https://github.com/apache/incubator-pegasus/blob/master/docker/pegasus-build-env/ubuntu2004/Dockerfile) 的Docker镜像安装全部依赖。
+你可以参考 [pegasus-build-dev/ubuntu20.04](https://github.com/apache/incubator-pegasus/blob/v2.4/docker/pegasus-build-env/ubuntu2004/Dockerfile) 的Docker镜像安装全部依赖。
 
 ```bash
 apt-get update -y; \
@@ -54,7 +54,7 @@ pip3 install --no-cache-dir cmake
 
 ## CentOS环境配置
 
-你可以参考 [pegasus-build-dev/centos7](https://github.com/apache/incubator-pegasus/blob/master/docker/pegasus-build-env/centos7/Dockerfile) 的Docker镜像安装全部依赖。
+你可以参考 [pegasus-build-dev/centos7](https://github.com/apache/incubator-pegasus/blob/v2.4/docker/pegasus-build-env/centos7/Dockerfile) 的Docker镜像安装全部依赖。
 
 ```bash
 yum -y install centos-release-scl \

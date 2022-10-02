@@ -12,7 +12,7 @@
         <div class="dropdown-content">
             {% for ver in site.pegasus_versions %}
 
-            <!--URL of our latest verion always starts without version prefixed.-->
+            <!--URL of our latest version always starts without version prefixed.-->
             {% assign version_prefix = '/' | append: page.version %}
             {% assign no_version_link = page.permalink | remove_first: version_prefix %}
             {% if ver == site.latest_pegasus_version %}
@@ -23,9 +23,6 @@
 
             <a href="{{ version_url }}" class="dropdown-item {% if ver == page.version %}is-active{% endif %}">
                 {{ ver }}
-                {% if ver == site.latest_pegasus_version %}
-                <b> (latest)</b>
-                {% endif %}
             </a>
             {% endfor %}
         </div>

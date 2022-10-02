@@ -6,10 +6,10 @@
 
 <!--A simple language switch button that only supports zh and en.-->
 <!--IF its language is zh, then switches to en.-->
-{% if site.active_lang == "zh" %}
-<a class="button {{ lang_switch_button }}" href="{{ page.url | prepend: '/en' }}"><strong>En</strong></a>
-{% elsif site.active_lang == "en" %}
+{% if site.active_lang == "en" %}
+<a class="button {{ lang_switch_button }}" href="{{ page.url | prepend: '/zh' }}"><strong>中</strong></a>
+{% elsif site.active_lang == "zh" %}
 <!--If you don't want a url to be relativized, you can add a space explicitly into the href to 
     prevents a url from being relativized by polyglot.-->
-<a class="button {{ lang_switch_button }}" href=" {{ page.url }}"><strong>中</strong></a>
+<a class="button {{ lang_switch_button }}" href=" {{ page.url }}"><strong>En</strong></a>
 {% endif %}

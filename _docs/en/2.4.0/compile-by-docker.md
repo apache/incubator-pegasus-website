@@ -1,8 +1,8 @@
 ---
-permalink: docs/build/compile-by-docker/
+permalink: 2.4.0/docs/build/compile-by-docker/
 redirect_from:
-  - master/docs/build/compile-from-source/
-version: master
+  - 2.4.0/docs/build/compile-from-source/
+version: 2.4.0
 ---
 
 ## Download the docker image
