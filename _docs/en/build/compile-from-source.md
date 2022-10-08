@@ -1,11 +1,11 @@
 ---
 permalink: docs/build/compile-from-source/
 redirect_from:
-  - 2.1.0/docs/build/compile-from-source/
-version: 2.1.0
+  - master/docs/build/compile-from-source/
+version: master
 ---
 
-Pegasus supports Linux only. Please don't hesitate to contact us via [Github Issues]({{ site.pegasus_github_url }}/issues) when you encountered any problem.
+Since 2.4.0, Pegasus supports to build both on Linux and macOS. Please don't hesitate to contact us via [Github Issues]({{ site.pegasus_github_url }}/issues) when you encountered any problem.
 
 ## Requirements
 
@@ -14,69 +14,90 @@ Pegasus supports Linux only. Please don't hesitate to contact us via [Github Iss
 
 ## Ubuntu environment
 
-You can refer to the docker image [pegasus-build-dev/ubuntu16.04](https://github.com/pegasus-kv/pegasus-docker/blob/2.1.0/pegasus-build-env/ubuntu16.04/Dockerfile) to install all dependencies.
+You can refer to the docker image [pegasus-build-dev/ubuntu20.04](https://github.com/apache/incubator-pegasus/blob/master/docker/pegasus-build-env/ubuntu2004/Dockerfile) to install all dependencies.
 
 ```bash
 apt-get update -y; \
-apt-get -y install build-essential \
-                   python3-pip \
-                   libaio-dev \
-                   libsnappy-dev \
-                   libbz2-dev \
-                   libzstd-dev \
-                   liblz4-dev \
-                   zlib1g \
-                   zlib1g.dev \
-                   patch \
-                   git \
-                   curl \
-                   zip \
-                   automake \
-                   libtool \
-                   libssl-dev \
-                   bison \
-                   flex;
+apt-get install -y --no-install-recommends \
+                       build-essential \
+                       software-properties-common \
+                       clang-10 \
+                       openjdk-8-jdk \
+                       python3-pip \
+                       libaio-dev \
+                       libsnappy-dev \
+                       libbz2-dev \
+                       libzstd-dev \
+                       liblz4-dev \
+                       zlib1g \
+                       zlib1g.dev \
+                       patch \
+                       netcat \
+                       wget \
+                       ccache \
+                       git \
+                       curl \
+                       zip \
+                       unzip \
+                       gdb \
+                       vim \
+                       automake \
+                       libtool \
+                       libssl-dev \
+                       bison \
+                       maven \
+                       flex;
 
 pip3 install --no-cache-dir cmake
 ```
 
 ## CentOS environment
 
-You can refer to the docker image [pegasus-build-dev/centos7](https://github.com/pegasus-kv/pegasus-docker/blob/2.1.0/pegasus-build-env/centos7/Dockerfile) to install all dependencies.
+You can refer to the docker image [pegasus-build-dev/centos7](https://github.com/apache/incubator-pegasus/blob/master/docker/pegasus-build-env/centos7/Dockerfile) to install all dependencies.
 
 ```bash
 yum -y install centos-release-scl \
-               scl-utils \
-               epel-release;
-
-yum -y install devtoolset-7-gcc \
-               devtoolset-7-gcc-c++ \
-               python3 \
-               automake \
-               autoconf \
-               make \
-               libtool \
-               git \
-               file \
-               wget \
-               unzip \
-               which \
-               openssl-devel \
-               libaio-devel \
-               snappy-devel \
-               bzip2-devel \
-               zlib \
-               zlib-devel \
-               libzstd-devel \
-               lz4-devel \
-               bison \
-               flex \
-               patch;
+                   scl-utils \
+                   epel-release; \
+                   yum -y install devtoolset-7-gcc \
+                   devtoolset-7-gcc-c++ \
+                   java-1.8.0-openjdk-devel.x86_64 \
+                   python3 \
+                   automake \
+                   autoconf \
+                   make \
+                   libtool \
+                   git \
+                   file \
+                   wget \
+                   ccache \
+                   nmap-ncat \
+                   zip \
+                   gdb \
+                   vim \
+                   unzip \
+                   which \
+                   openssl-devel \
+                   libaio-devel \
+                   snappy-devel \
+                   bzip2-devel \
+                   zlib \
+                   zlib-devel \
+                   libzstd-devel \
+                   lz4-devel \
+                   bison \
+                   flex \
+                   patch;
 
 pip3 install --no-cache-dir cmake
 ```
 
 ## Compilation
+
+Firstly, make sure:
+- `maven` has been installed correctly and added to `PATH`
+- `devtoolset-7` has been added to `PATH`
+- `JAVA_HOME` has been set correctly
 
 Please refer to [Downloads](/docs/downloads) to fetch the sources。
 

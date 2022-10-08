@@ -1,21 +1,20 @@
 ---
-permalink: docs/build/compile-from-source/
+permalink: 2.4.0/docs/build/compile-from-source/
 redirect_from:
-  - master/docs/build/compile-from-source/
-  - docs/installation
-version: master
+  - 2.4.0/docs/build/compile-from-source/
+version: 2.4.0
 ---
 
-从2.4.0开始，Pegasus目前支持Linux和macOS平台进行源码编译。编译过程中遇到问题，可以通过[Github Issues]({{ site.pegasus_github_url }}/issues)向我们咨询。
+Since 2.4.0, Pegasus supports to build both on Linux and macOS. Please don't hesitate to contact us via [Github Issues]({{ site.pegasus_github_url }}/issues) when you encountered any problem.
 
-## 环境要求
+## Requirements
 
 - GCC 5+
 - CMake 3.11+
 
-## Ubuntu环境配置
+## Ubuntu environment
 
-你可以参考 [pegasus-build-dev/ubuntu20.04](https://github.com/apache/incubator-pegasus/blob/master/docker/pegasus-build-env/ubuntu2004/Dockerfile) 的Docker镜像安装全部依赖。
+You can refer to the docker image [pegasus-build-dev/ubuntu20.04](https://github.com/apache/incubator-pegasus/blob/v2.4/docker/pegasus-build-env/ubuntu2004/Dockerfile) to install all dependencies.
 
 ```bash
 apt-get update -y; \
@@ -52,9 +51,9 @@ apt-get install -y --no-install-recommends \
 pip3 install --no-cache-dir cmake
 ```
 
-## CentOS环境配置
+## CentOS environment
 
-你可以参考 [pegasus-build-dev/centos7](https://github.com/apache/incubator-pegasus/blob/master/docker/pegasus-build-env/centos7/Dockerfile) 的Docker镜像安装全部依赖。
+You can refer to the docker image [pegasus-build-dev/centos7](https://github.com/apache/incubator-pegasus/blob/v2.4/docker/pegasus-build-env/centos7/Dockerfile) to install all dependencies.
 
 ```bash
 yum -y install centos-release-scl \
@@ -93,39 +92,39 @@ yum -y install centos-release-scl \
 pip3 install --no-cache-dir cmake
 ```
 
-## 源码编译
+## Compilation
 
-在此之前，请确保：
-- `maven`已被正确安装且已添加到`PATH`
-- `devtoolset-7`已被添加到`PATH`
-- `JAVA_HOME`已被正确设置
+Firstly, make sure:
+- `maven` has been installed correctly and added to `PATH`
+- `devtoolset-7` has been added to `PATH`
+- `JAVA_HOME` has been set correctly
 
-请先参考[下载文档](/docs/downloads)获取源码。
+Please refer to [Downloads](/docs/downloads) to fetch the sources。
 
 ```bash
 ./run.sh build -c
 ```
 
-编译后输出会放在当前目录的`DSN_ROOT/`文件夹下，里面包含bin、include、lib目录。
+The output of compilation will be placed under `DSN_ROOT` of the source directory. It includes `bin`, `include` and `lib`.
 
-## 编译打包
+## Packaging
 
-打包server端程序包，用于服务部署：
+Package server binaries for deployment:
 
 ```bash
 ./run.sh pack_server
 ```
 
-打包client端库，用于C/C++端客户端开发：
+Package client libraries for C/C++ development:
 
 ```bash
 ./run.sh pack_client
 ```
 
-打包tools工具集，里面包含了各种工具（shell、bench）：
+Package toolset which includes various tools (shell, bench):
 
 ```bash
 ./run.sh pack_tools
 ```
 
-编译成功后，推荐先[体验onebox集群](/overview/onebox)。
+If this is your first time compiling Pegasus, it's recommended to try [onebox](/overview/onebox).
