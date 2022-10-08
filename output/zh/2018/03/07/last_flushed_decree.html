@@ -1,0 +1,261 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Pegasus | Pegasus 的 last_flushed_decree</title>
+    <link rel="stylesheet" href="/zh/assets/css/app.css">
+    <link rel="shortcut icon" href="/zh/assets/images/favicon.ico">
+    <link href="https://cdn.bootcdn.net/ajax/libs/tailwindcss/1.8.10/utilities.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/docsearch.js@2/dist/cdn/docsearch.min.css" />
+    <script src="https://cdn.bootcss.com/jquery/3.4.1/jquery.min.js"></script>
+    <script src="https://cdn.bootcdn.net/ajax/libs/font-awesome/5.13.0/js/all.min.js"></script>
+    <!-- Begin Jekyll SEO tag v2.8.0 -->
+<title>Pegasus 的 last_flushed_decree | Pegasus</title>
+<meta name="generator" content="Jekyll v4.2.2" />
+<meta property="og:title" content="Pegasus 的 last_flushed_decree" />
+<meta name="author" content="吴涛" />
+<meta property="og:locale" content="en_US" />
+<meta name="description" content="本文主要为大家梳理 last_flushed_decree 的原理。" />
+<meta property="og:description" content="本文主要为大家梳理 last_flushed_decree 的原理。" />
+<meta property="og:site_name" content="Pegasus" />
+<meta property="og:type" content="article" />
+<meta property="article:published_time" content="2018-03-07T00:00:00+00:00" />
+<meta name="twitter:card" content="summary" />
+<meta property="twitter:title" content="Pegasus 的 last_flushed_decree" />
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"BlogPosting","author":{"@type":"Person","name":"吴涛"},"dateModified":"2018-03-07T00:00:00+00:00","datePublished":"2018-03-07T00:00:00+00:00","description":"本文主要为大家梳理 last_flushed_decree 的原理。","headline":"Pegasus 的 last_flushed_decree","mainEntityOfPage":{"@type":"WebPage","@id":"/2018/03/07/last_flushed_decree.html"},"url":"/2018/03/07/last_flushed_decree.html"}</script>
+<!-- End Jekyll SEO tag -->
+</head>
+
+  <body>
+    
+
+
+
+<nav class="navbar is-info">
+    <div class="container">
+        <!--container will be unwrapped when it's in docs-->
+        <div class="navbar-brand">
+            <a href="/zh/" class="navbar-item ">
+                <!-- Pegasus Icon -->
+                <img src="/assets/images/pegasus-icon.png">
+            </a>
+            <div class="navbar-item">
+                <a href="/zh/docs" class="button is-primary is-outlined is-inverted">
+                    <span class="icon"><i class="fas fa-book"></i></span>
+                    <span>Docs</span>
+                </a>
+            </div>
+            <div class="navbar-item is-hidden-desktop">
+                  
+
+<!--A simple language switch button that only supports zh and en.-->
+<!--IF its language is zh, then switches to en.-->
+
+<!--If you don't want a url to be relativized, you can add a space explicitly into the href to 
+    prevents a url from being relativized by polyglot.-->
+<a class="button is-primary is-outlined is-inverted" href=" /2018/03/07/last_flushed_decree.html"><strong>En</strong></a>
+
+            </div>
+            <a role="button" class="navbar-burger burger" aria-label="menu" aria-expanded="false" data-target="navMenu">
+                <!-- Appears in mobile mode only -->
+                <span aria-hidden="true"></span>
+                <span aria-hidden="true"></span>
+                <span aria-hidden="true"></span>
+            </a>
+        </div>
+        <div class="navbar-menu" id="navMenu">
+            <div class="navbar-end">
+                
+                 <!--dropdown-->
+                <div class="navbar-item has-dropdown is-hoverable ">
+                    <a href="/zh/community"
+                        class="navbar-link ">
+                        
+                        <span class="icon" style="margin-right: .25em">
+                            <i class="fas fa-user-plus"></i>
+                        </span>
+                        
+                        <span>
+                            开源社区
+                        </span>
+                    </a>
+                    <div class="navbar-dropdown">
+                        
+                        <a href="/zh/community/#contact-us"
+                            class="navbar-item ">
+                            联系我们
+                        </a>
+                        
+                        <a href="/zh/community/#contribution"
+                            class="navbar-item ">
+                            参与贡献
+                        </a>
+                        
+                        <a href="https://cwiki.apache.org/confluence/display/PEGASUS/Coding+guides"
+                            class="navbar-item ">
+                            编码指引
+                        </a>
+                        
+                        <a href="https://github.com/apache/incubator-pegasus/issues?q=is%3Aissue+is%3Aopen+label%3Atype%2Fbug"
+                            class="navbar-item ">
+                            Bug追踪
+                        </a>
+                        
+                        <a href="https://cwiki.apache.org/confluence/display/INCUBATOR/PegasusProposal"
+                            class="navbar-item ">
+                            Apache提案
+                        </a>
+                        
+                    </div>
+                </div>
+                
+                
+                
+                <a href="/zh/blogs"
+                    class="navbar-item ">
+                    
+                    <span class="icon" style="margin-right: .25em">
+                        <i class="fas fa-rss"></i>
+                    </span>
+                    
+                    <span>Blog</span>
+                </a>
+                
+                
+                
+                <a href="/zh/docs/downloads"
+                    class="navbar-item ">
+                    
+                    <span class="icon" style="margin-right: .25em">
+                        <i class="fas fa-fire"></i>
+                    </span>
+                    
+                    <span>版本发布</span>
+                </a>
+                
+                
+            </div>
+            <div class="navbar-item is-hidden-mobile">
+                
+
+<!--A simple language switch button that only supports zh and en.-->
+<!--IF its language is zh, then switches to en.-->
+
+<!--If you don't want a url to be relativized, you can add a space explicitly into the href to 
+    prevents a url from being relativized by polyglot.-->
+<a class="button is-primary is-outlined is-inverted" href=" /2018/03/07/last_flushed_decree.html"><strong>En</strong></a>
+
+            </div>
+        </div>
+    </div>
+</nav>
+
+    <section class="section">
+        <div class="container">
+            <div class="columns is-multiline">
+                <div class="column is-one-fourth">
+                    
+                </div>
+                <div class="column is-half">
+                    
+                    <div class="content">
+
+    <ul class="blog-post-meta">
+        <li class="blog-post-meta-item">
+            <span class="icon" style="margin-right: .25em">
+                <i class="far fa-calendar-check" aria-hidden="true"></i>
+            </span>
+            March 7, 2018
+        </li>
+        <li class="blog-post-meta-item">
+            <span class="icon" style="margin-right: .25em">
+                <i class="fas fa-edit" aria-hidden="true"></i>
+            </span>
+            吴涛
+        </li>
+    </ul>
+
+    <p>本文主要为大家梳理 <code class="language-plaintext highlighter-rouge">last_flushed_decree</code> 的原理。</p>
+
+<hr />
+
+<p>一般的强一致性存储分为 <strong>replicated log</strong> 和 <strong>db storage</strong> 两层。replicated log 用于日志的复制，通过一致性协议（如 PacificA）进行组间复制同步，日志同步完成后，数据方可写入 db storage。通常来讲，在数据写入 db storage 之后，与其相对应的那一条日志即可被删除。因为 db storage 具备持久性，既然 db storage 中已经存有一份数据，在日志中就不需要再留一份。为了避免日志占用空间过大，我们需要定期删除日志，这一过程被称为 <strong>log compaction</strong>。</p>
+
+<p>这个简单的过程在 pegasus 中，问题稍微复杂了一些。</p>
+
+<p>首先 pegasus 在使用 rocksdb 时，关闭了其 write-ahead-log，这样写操作就只会直接落到不具备持久性的 memtable。显然，当数据尚未从 memtable 落至 sstable 时，日志是不可随便清理的。因此，pegasus 在 rocksdb 内部维护了一个 <code class="language-plaintext highlighter-rouge">last_flushed_decree</code>，当数据从 memtable 写落至 sstable 时，它就会更新，表示从〔0, last_flushed_decree〕之间的日志都可以被清除。</p>
+
+<p>故事到了这里还要再加一层复杂性：有一些日志只是心跳（<code class="language-plaintext highlighter-rouge">WRITE_EMPTY</code>），它们不含有任何数据。我们<strong>把心跳写入日志中</strong>，可以避免某个表
+长时间无数据写，日志无法被清理的情况，同时也可以起到坏节点检测的作用。许多一致性协议（如 Raft）都会将心跳写入日志，这里不做赘述。</p>
+
+<p><strong>但心跳是否需要写入 rocksdb 呢？</strong></p>
+
+<p>这里讲一下架构，每个 pegasus 的 replica server 上都有许多分片，每个分片拥有一个 rocksdb 实例，而每个 rocksdb 维护一个 <code class="language-plaintext highlighter-rouge">last_flushed_decree</code>。所有的实例都会写入同一个日志，这被称为 shared log。每个实例自己会单独写一个 WAL，被称为 private log。复杂点在 <strong>shared log</strong>。</p>
+
+<pre><code class="language-txt">&lt;r:1 d:1&gt; 表示 replica id 为 1 的实例所写入的 decree = 1 的日志
+
+   0         1         2         3         4         5
+&lt;r:1 d:1&gt; &lt;r:2 d:1&gt; &lt;r:2 d:2&gt; &lt;r:2 d:3&gt; &lt;r:2 d:4&gt; &lt;r:2 d:5&gt;
+</code></pre>
+
+<p>可以看到，r1 写入 1 条日志后，r2 不断地写入 5 条日志。假设 r2 的 <code class="language-plaintext highlighter-rouge">last_flushed_decree = 5</code>，那么当前 shared_log 应当将 [0, 5] 的日志全部删掉，即删掉从 <code class="language-plaintext highlighter-rouge">&lt;r:1 d:1&gt;</code> 到 <code class="language-plaintext highlighter-rouge">&lt;r:2 d:5&gt;</code>。</p>
+
+<p>这时候问题来了：如果 <code class="language-plaintext highlighter-rouge">&lt;r:1 d:1&gt;</code> 是一个心跳请求，且不写 rocksdb 的话，那就意味着 r1 的 last_flushed_decree = 0，也就意味着 <code class="language-plaintext highlighter-rouge">&lt;r:1 d:1&gt;</code> 不可被删。这就给我们带来了困扰，因为日志只能 “前缀删除”，即只能删除 [0, 5]，不能删除 [1, 5]。</p>
+
+<p>如果 r1 长时间没有数据写入，而 r2 长时间有较大吞吐，那么 shared log 可能会因为 r1 而无法清理，造成磁盘空间不足的情况。
+这个问题是 shared log 的一个弊端。因此我们在设计上选择将每次心跳都写入 <code class="language-plaintext highlighter-rouge">rocksdb</code>，这样就能及时更新 <code class="language-plaintext highlighter-rouge">last_flushed_decree</code>，
+shared log 也可以及时被删除。
+如何将一个没有任何数据的心跳 “写入” rocksdb 呢？实际上我们也仅仅只是写入一个 <code class="language-plaintext highlighter-rouge">key=""</code>，<code class="language-plaintext highlighter-rouge">value=""</code> 的记录，这对系统几乎没有开销。</p>
+
+<p>但如果我们没有 shared log 呢？假设我们仅使用 private log 作为唯一的 WAL 存储，那么 rocksdb 虽然仍需维护 <code class="language-plaintext highlighter-rouge">last_flushed_decree</code>，
+但并不需要处理心跳，这一定程度上可以减少写路径的复杂度。</p>
+
+</div>
+
+<div class="tags">
+    
+</div>
+
+                </div>
+                <div class="column is-one-fourth is-hidden-mobile" style="padding-left: 3rem">
+                    
+                    <p class="menu-label">
+    <span class="icon">
+        <i class="fa fa-bars" aria-hidden="true"></i>
+    </span>
+    本页导航
+</p>
+
+
+                    
+                </div>
+            </div>
+        </div>
+    </section>
+    <footer class="footer">
+    <div class="container">
+        <div class="content is-small has-text-centered">
+            <div style="margin-bottom: 20px;">
+                <a href="http://incubator.apache.org"><img src="/assets/images/egg-logo.png"
+                                                           alt="Apache Incubator"/></a>
+            </div>
+            Copyright &copy; 2020 <a href="http://www.apache.org">The Apache Software Foundation</a>.
+            Licensed under the <a href="http://www.apache.org/licenses/LICENSE-2.0">Apache License, Version
+            2.0</a>.
+            <br><br>
+            
+            Apache Pegasus is an effort undergoing incubation at The Apache Software Foundation (ASF),
+            sponsored by the Apache Incubator. Incubation is required of all newly accepted projects
+            until a further review indicates that the infrastructure, communications, and decision making process
+            have stabilized in a manner consistent with other successful ASF projects. While incubation status is
+            not necessarily a reflection of the completeness or stability of the code, it does indicate that the
+            project has yet to be fully endorsed by the ASF.
+            
+        </div>
+    </div>
+</footer>
+    <script src="/assets/js/app.js" type="text/javascript"></script>
+  </body>
+</html>

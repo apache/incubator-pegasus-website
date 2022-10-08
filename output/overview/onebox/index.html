@@ -15,15 +15,15 @@
 <meta name="generator" content="Jekyll v4.2.2" />
 <meta property="og:title" content="Onebox" />
 <meta property="og:locale" content="en_US" />
-<meta name="description" content="什么是onebox集群" />
-<meta property="og:description" content="什么是onebox集群" />
+<meta name="description" content="TRANSLATING" />
+<meta property="og:description" content="TRANSLATING" />
 <meta property="og:site_name" content="Pegasus" />
 <meta property="og:type" content="article" />
-<meta property="article:published_time" content="2022-04-26T08:56:59+00:00" />
+<meta property="article:published_time" content="2022-10-08T08:18:50+00:00" />
 <meta name="twitter:card" content="summary" />
 <meta property="twitter:title" content="Onebox" />
 <script type="application/ld+json">
-{"@context":"https://schema.org","@type":"BlogPosting","dateModified":"2022-04-26T08:56:59+00:00","datePublished":"2022-04-26T08:56:59+00:00","description":"什么是onebox集群","headline":"Onebox","mainEntityOfPage":{"@type":"WebPage","@id":"/overview/onebox/"},"url":"/overview/onebox/"}</script>
+{"@context":"https://schema.org","@type":"BlogPosting","dateModified":"2022-10-08T08:18:50+00:00","datePublished":"2022-10-08T08:18:50+00:00","description":"TRANSLATING","headline":"Onebox","mainEntityOfPage":{"@type":"WebPage","@id":"/overview/onebox/"},"url":"/overview/onebox/"}</script>
 <!-- End Jekyll SEO tag -->
 </head>
 
@@ -52,7 +52,7 @@
 <!--A simple language switch button that only supports zh and en.-->
 <!--IF its language is zh, then switches to en.-->
 
-<a class="button is-primary is-outlined is-inverted" href="/en/overview/onebox/"><strong>En</strong></a>
+<a class="button is-primary is-outlined is-inverted" href="/zh/overview/onebox/"><strong>中</strong></a>
 
             </div>
             <a role="button" class="navbar-burger burger" aria-label="menu" aria-expanded="false" data-target="navMenu">
@@ -75,34 +75,34 @@
                         </span>
                         
                         <span>
-                            开源社区
+                            Community
                         </span>
                     </a>
                     <div class="navbar-dropdown">
                         
                         <a href="/community/#contact-us"
                             class="navbar-item ">
-                            联系我们
+                            Contact Us
                         </a>
                         
                         <a href="/community/#contribution"
                             class="navbar-item ">
-                            参与贡献
+                            Contribution
                         </a>
                         
                         <a href="https://cwiki.apache.org/confluence/display/PEGASUS/Coding+guides"
                             class="navbar-item ">
-                            编码指引
+                            Coding Guides
                         </a>
                         
                         <a href="https://github.com/apache/incubator-pegasus/issues?q=is%3Aissue+is%3Aopen+label%3Atype%2Fbug"
                             class="navbar-item ">
-                            Bug追踪
+                            Bug Tracking
                         </a>
                         
                         <a href="https://cwiki.apache.org/confluence/display/INCUBATOR/PegasusProposal"
                             class="navbar-item ">
-                            Apache提案
+                            Apache Proposal
                         </a>
                         
                     </div>
@@ -129,7 +129,7 @@
                         <i class="fas fa-fire"></i>
                     </span>
                     
-                    <span>版本发布</span>
+                    <span>Releases</span>
                 </a>
                 
                 
@@ -140,7 +140,7 @@
 <!--A simple language switch button that only supports zh and en.-->
 <!--IF its language is zh, then switches to en.-->
 
-<a class="button is-primary is-outlined is-inverted" href="/en/overview/onebox/"><strong>En</strong></a>
+<a class="button is-primary is-outlined is-inverted" href="/zh/overview/onebox/"><strong>中</strong></a>
 
             </div>
         </div>
@@ -162,49 +162,49 @@
         <li>
             <a href="/overview"
                 class="">
-                概览
+                Overview
             </a>
         </li>
         
         <li>
             <a href="/overview/background"
                 class="">
-                项目背景
+                Background
             </a>
         </li>
         
         <li>
             <a href="/overview/architecture"
                 class="">
-                系统架构
+                Architecture
             </a>
         </li>
         
         <li>
             <a href="/overview/data-model"
                 class="">
-                数据模型
+                Data Model
             </a>
         </li>
         
         <li>
             <a href="/overview/benchmark"
                 class="">
-                性能测试
+                Benchmark
             </a>
         </li>
         
         <li>
             <a href="/docs/build/compile-by-docker"
                 class="">
-                安装构建
+                Installation
             </a>
         </li>
         
         <li>
             <a href="/overview/onebox"
                 class="">
-                体验Onebox集群
+                Onebox
             </a>
         </li>
         
@@ -218,58 +218,8 @@
                     
 
 <div class="content">
-    <h1 id="体验Onebox集群">体验Onebox集群</h1>
-    <h1 id="什么是onebox集群">什么是onebox集群</h1>
-
-<p>千言万语不如一个行动。</p>
-
-<p>初次接触Pegasus，你肯定最想了解这个集群运行起来是什么样子的。但是这是一个分布式系统，然而你手上未必有那么多机器。因此我们提供了onebox集群，让你在一台机器上就能体验Pegasus的集群式服务。</p>
-
-<p>onebox集群在启动时实际上做了这些事情：</p>
-<ul>
-  <li>启动Zookeeper：自动从远程下载zookeeper安装包，安装在本地的隐藏文件夹<code class="language-plaintext highlighter-rouge">.zk_install</code>下，然后启动本地Zookeeper服务，端口为22181。</li>
-  <li>启动3个MetaServer和3个ReplicaServer：MetaServer的端口分别为34601,34602,34603；ReplicaServer的端口分别为34801,34802,34803。</li>
-  <li>集群启动后会默认创建一个temp表。</li>
-</ul>
-
-<p>你可以用onebox集群感受下Pegasus如何工作的，用shell工具读写数据，用bench工具跑跑测试（当然别指望onebox的性能有多好），也可以通过看日志来了解实现上的一些细节，或者在集群上折腾各种实验。</p>
-
-<h1 id="如何体验">如何体验</h1>
-
-<p>在启动onebox集群之前，你需要先编译Pegasus，请参考<a href="/docs/build/compile-from-source/">编译构建</a>。</p>
-
-<p>启动onebox集群：</p>
-<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>./run.sh start_onebox
-</code></pre></div></div>
-
-<p>查看onebox集群：</p>
-<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>./run.sh list_onebox
-</code></pre></div></div>
-<p>如果你能看到3个MetaServer和3个ReplicaServer进程，那么恭喜你，启动成功了。否则就到<code class="language-plaintext highlighter-rouge">./onebox</code>文件夹下查看日志和core文件，然后给我们发pull request报告错误吧。譬如replica1进程不在了，那么就到<code class="language-plaintext highlighter-rouge">onebox/replica1</code>下面找core文件（前提是ulimit配置为允许产生core文件），到<code class="language-plaintext highlighter-rouge">onebox/replica1/data/log</code>下面找日志文件。</p>
-
-<p>停止onebox集群：</p>
-<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>./run.sh stop_onebox
-</code></pre></div></div>
-<p>停止之后你还可以使用start_onebox命令重启集群。</p>
-
-<p>清理onebox集群（包括数据）：</p>
-<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>./run.sh clear_onebox
-</code></pre></div></div>
-
-<p>停止/启动/重启其中的某一个进程：</p>
-<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>./run.sh start_onebox_instance <span class="nt">-h</span>
-./run.sh stop_onebox_instance <span class="nt">-h</span>
-./run.sh restart_onebox_instance <span class="nt">-h</span>
-</code></pre></div></div>
-
-<p>用shell工具来查看和管理集群：</p>
-<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>./run.sh shell
-</code></pre></div></div>
-<p>关于shell工具的详细用法，请参考<a href="shell">Shell工具</a>。</p>
-
-<p>用bench工具进行读写测试：</p>
-<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>./run.sh bench
-</code></pre></div></div>
+    <h1 id="Onebox">Onebox</h1>
+    <p>TRANSLATING</p>
 
 </div>
                 </div>
@@ -279,12 +229,10 @@
     <span class="icon">
         <i class="fa fa-bars" aria-hidden="true"></i>
     </span>
-    本页导航
+    Table of contents
 </p>
 <ul class="menu-list">
-  <li><a href="#体验Onebox集群">体验Onebox集群</a></li>
-  <li><a href="#什么是onebox集群">什么是onebox集群</a></li>
-  <li><a href="#如何体验">如何体验</a></li>
+  <li><a href="#Onebox">Onebox</a></li>
 </ul>
 
                     

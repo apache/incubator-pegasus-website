@@ -14,16 +14,14 @@
 <title>Overview | Pegasus</title>
 <meta name="generator" content="Jekyll v4.2.2" />
 <meta property="og:title" content="Overview" />
-<meta property="og:locale" content="en_US" />
-<meta name="description" content="Apache Pegasus是一个分布式Key-Value存储系统，它的设计目标是具备：" />
-<meta property="og:description" content="Apache Pegasus是一个分布式Key-Value存储系统，它的设计目标是具备：" />
+<meta property="og:locale" content="en" />
 <meta property="og:site_name" content="Pegasus" />
 <meta property="og:type" content="article" />
-<meta property="article:published_time" content="2022-04-26T08:56:59+00:00" />
+<meta property="article:published_time" content="2022-10-08T08:18:50+00:00" />
 <meta name="twitter:card" content="summary" />
 <meta property="twitter:title" content="Overview" />
 <script type="application/ld+json">
-{"@context":"https://schema.org","@type":"BlogPosting","dateModified":"2022-04-26T08:56:59+00:00","datePublished":"2022-04-26T08:56:59+00:00","description":"Apache Pegasus是一个分布式Key-Value存储系统，它的设计目标是具备：","headline":"Overview","mainEntityOfPage":{"@type":"WebPage","@id":"/overview/"},"url":"/overview/"}</script>
+{"@context":"https://schema.org","@type":"BlogPosting","dateModified":"2022-10-08T08:18:50+00:00","datePublished":"2022-10-08T08:18:50+00:00","headline":"Overview","mainEntityOfPage":{"@type":"WebPage","@id":"/overview/"},"url":"/overview/"}</script>
 <!-- End Jekyll SEO tag -->
 </head>
 
@@ -52,7 +50,7 @@
 <!--A simple language switch button that only supports zh and en.-->
 <!--IF its language is zh, then switches to en.-->
 
-<a class="button is-primary is-outlined is-inverted" href="/en/overview/index.html"><strong>En</strong></a>
+<a class="button is-primary is-outlined is-inverted" href="/zh/overview/index.html"><strong>中</strong></a>
 
             </div>
             <a role="button" class="navbar-burger burger" aria-label="menu" aria-expanded="false" data-target="navMenu">
@@ -75,34 +73,34 @@
                         </span>
                         
                         <span>
-                            开源社区
+                            Community
                         </span>
                     </a>
                     <div class="navbar-dropdown">
                         
                         <a href="/community/#contact-us"
                             class="navbar-item ">
-                            联系我们
+                            Contact Us
                         </a>
                         
                         <a href="/community/#contribution"
                             class="navbar-item ">
-                            参与贡献
+                            Contribution
                         </a>
                         
                         <a href="https://cwiki.apache.org/confluence/display/PEGASUS/Coding+guides"
                             class="navbar-item ">
-                            编码指引
+                            Coding Guides
                         </a>
                         
                         <a href="https://github.com/apache/incubator-pegasus/issues?q=is%3Aissue+is%3Aopen+label%3Atype%2Fbug"
                             class="navbar-item ">
-                            Bug追踪
+                            Bug Tracking
                         </a>
                         
                         <a href="https://cwiki.apache.org/confluence/display/INCUBATOR/PegasusProposal"
                             class="navbar-item ">
-                            Apache提案
+                            Apache Proposal
                         </a>
                         
                     </div>
@@ -129,7 +127,7 @@
                         <i class="fas fa-fire"></i>
                     </span>
                     
-                    <span>版本发布</span>
+                    <span>Releases</span>
                 </a>
                 
                 
@@ -140,7 +138,7 @@
 <!--A simple language switch button that only supports zh and en.-->
 <!--IF its language is zh, then switches to en.-->
 
-<a class="button is-primary is-outlined is-inverted" href="/en/overview/index.html"><strong>En</strong></a>
+<a class="button is-primary is-outlined is-inverted" href="/zh/overview/index.html"><strong>中</strong></a>
 
             </div>
         </div>
@@ -162,49 +160,49 @@
         <li>
             <a href="/overview"
                 class="">
-                概览
+                Overview
             </a>
         </li>
         
         <li>
             <a href="/overview/background"
                 class="">
-                项目背景
+                Background
             </a>
         </li>
         
         <li>
             <a href="/overview/architecture"
                 class="">
-                系统架构
+                Architecture
             </a>
         </li>
         
         <li>
             <a href="/overview/data-model"
                 class="">
-                数据模型
+                Data Model
             </a>
         </li>
         
         <li>
             <a href="/overview/benchmark"
                 class="">
-                性能测试
+                Benchmark
             </a>
         </li>
         
         <li>
             <a href="/docs/build/compile-by-docker"
                 class="">
-                安装构建
+                Installation
             </a>
         </li>
         
         <li>
             <a href="/overview/onebox"
                 class="">
-                体验Onebox集群
+                Onebox
             </a>
         </li>
         
@@ -218,59 +216,42 @@
                     
 
 <div class="content">
-    <h1 id="概览">概览</h1>
-    <p>Apache Pegasus是一个分布式Key-Value存储系统，它的设计目标是具备：</p>
+    <h1 id="Overview">Overview</h1>
+    
+<p>Apache Pegasus is a distributed key-value storage system which is designed to be:</p>
 
 <ul>
-  <li><strong>高扩展性</strong>：通过哈希分片实现分布式横向扩展。</li>
-  <li><strong>强一致性</strong>：通过<a href="https://www.microsoft.com/en-us/research/publication/pacifica-replication-in-log-based-distributed-storage-systems/">PacificA</a>一致性协议保证。</li>
-  <li><strong>高性能</strong>：底层使用<a href="https://github.com/xiaomi/pegasus-rocksdb">RocksDB</a>作为存储引擎。</li>
-  <li><strong>简单易用</strong>：基于Key-Value的良好接口。</li>
+  <li><strong>horizontally scalable</strong>: distributed using hash-based partitioning</li>
+  <li><strong>strongly consistent</strong>: ensured by <a href="https://www.microsoft.com/en-us/research/publication/pacifica-replication-in-log-based-distributed-storage-systems/">PacificA</a> consensus protocol</li>
+  <li><strong>high-performance</strong>: using <a href="https://github.com/xiaomi/pegasus-rocksdb">RocksDB</a> as underlying storage engine</li>
+  <li><strong>simple</strong>: well-defined, easy-to-use APIs</li>
 </ul>
 
-<h2 id="背景">背景</h2>
+<h2 id="background">Background</h2>
 
-<p>Pegasus项目的目标是弥补Redis与<a href="https://hbase.apache.org/">HBase</a>之间的空白。Redis作为一个纯内存存储，它提供了低延迟读写能力，但它不具备强一致性。而与HBase不同，我们需要Pegasus以C++进行编写，同时其写路径应当只依赖于本地文件系统，不依赖于其他分布式文件系统（如HDFS），由此才能保证延迟稳定。</p>
+<p>Pegasus targets to fill the gap between Redis and <a href="https://hbase.apache.org/">HBase</a>. As the former
+is in-memory, low latency, but does not provide a strong-consistency guarantee.
+And unlike the latter, Pegasus is entirely written in C++ and its write-path
+relies merely on the local filesystem.</p>
 
-<p>除了性能需求外，我们还需要一个存储系统，它应能够支持多级别数据安全保障，快速跨数据中心迁移，自动负载均衡，以及快速分片分裂等功能。这就是我们发起Pegasus项目的原因。</p>
+<p>Apart from the performance requirements, we also need a storage system
+to ensure multiple-level data safety and support fast data migration
+between data centers, automatic load balancing, and online partition split.</p>
 
-<h2 id="特性">特性</h2>
-
-<ul>
-  <li>
-    <p><strong>数据的持久性</strong>：每一份数据写入都将分别复制到3个不同ReplicaServer上，待全部完成后才响应客户端。通过PacificA协议，Pegasus具备强一致数复制的能力，同时也能够实现强一致的成员变更。</p>
-  </li>
-  <li>
-    <p><strong>ReplicaServer之间的自动负载均衡</strong>：自动负载均衡是MetaServer的内置功能，它能够让Replica在节点之间均匀分布。当集群处于不均衡状态时，管理员可以通过简单的命令让Replica在节点之间自动迁移，从而实现负载均衡。</p>
-  </li>
-  <li>
-    <p><strong>冷备份</strong>：Pegasus支持可扩展的备份和恢复策略，由此可实现数据安全性。数据的存储位置可以是在HDFS或本地存储上。在文件系统上存储的快照数据可以通过<a href="https://github.com/pegasus-kv/pegasus-spark">pegasus-spark</a>实现离线数据分析。</p>
-  </li>
-  <li>
-    <p><strong>满足最终一致性的跨数据中心复制</strong>：这一功能我们又称之为<em>duplication</em>，它能够让本地集群的数据写在短时间内到达远端集群。它可以帮助你实现业务的更高的可用性，同时也可以让你避免跨机房访问，从而降低访问延迟。</p>
-  </li>
-</ul>
-
-<h2 id="社区分享">社区分享</h2>
+<h2 id="features">Features</h2>
 
 <ul>
   <li>
-    <p><strong>2018 年</strong></p>
-
-    <p>《深入了解Pegasus》<a href="https://www.slideshare.net/ssuser0a3cdd/pegasus-in-depth">【Slides】</a></p>
-
-    <p>《Pegasus分布式KV系统：让用户专注于业务逻辑》<a href="https://www.slideshare.net/ssuser0a3cdd/pegasus-kv-storage-let-the-users-focus-on-their-work-201807">【Slides】</a></p>
+    <p><strong>Persistence of data</strong>: Each write is replicated three-way to different ReplicaServers before responding to the client. Using PacificA protocol, Pegasus has the ability for strong consistent replication and membership changes.</p>
   </li>
   <li>
-    <p><strong>2017 年</strong></p>
-
-    <p><a href="https://sz2017.archsummit.com/presentation/969">ArchSummit-深圳</a>
-  《分布式实现那些事儿：Pegasus背后的故事》 <a href="https://www.slideshare.net/ssuser0a3cdd/behind-pegasus-what-matters-in-a-distributed-system-arch-summit-shenzhen2017">【Slides】</a></p>
+    <p><strong>Automatic load balancing over ReplicaServers</strong>: Load balancing is a builtin function of MetaServer, which manages the distribution of replicas. When the cluster is in an inbalance state, the administrator can invoke a simple rebalance command that automatically schedules the replica migration.</p>
   </li>
   <li>
-    <p><strong>2016 年</strong></p>
-
-    <p><a href="http://bj2016.archsummit.com/presentation/3023">ArchSummit-北京</a>《从Pegasus看分布式系统的设计》<a href="https://www.slideshare.net/ssuser0a3cdd/pegasus-designing-a-distributed-key-value-system-arch-summit-beijing2016">【Slides】</a></p>
+    <p><strong>Cold Backup</strong>: Pegasus supports an extensible backup and restore mechanism to ensure data safety. The location of snapshot could be a distributed filesystem like HDFS or local filesystem. The snapshot storing in the filesystem can be further used for analysis based on <a href="https://github.com/pegasus-kv/pegasus-spark">pegasus-spark</a>.</p>
+  </li>
+  <li>
+    <p><strong>Eventually-consistent intra-datacenter replication</strong>: This is a feature we called <em>duplication</em>. It allows a change made in the local cluster accesible after a short time period by the remote cluster. It help achieving higher availability of your service and gaining better performance by accessing only local cluster.</p>
   </li>
 </ul>
 
@@ -282,14 +263,13 @@
     <span class="icon">
         <i class="fa fa-bars" aria-hidden="true"></i>
     </span>
-    本页导航
+    Table of contents
 </p>
 <ul class="menu-list">
-  <li><a href="#概览">概览</a>
+  <li><a href="#Overview">Overview</a>
     <ul>
-      <li><a href="#背景">背景</a></li>
-      <li><a href="#特性">特性</a></li>
-      <li><a href="#社区分享">社区分享</a></li>
+      <li><a href="#background">Background</a></li>
+      <li><a href="#features">Features</a></li>
     </ul>
   </li>
 </ul>
