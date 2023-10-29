@@ -11,6 +11,8 @@ collections:
     output: true
   docs:
     output: true
+  asf:
+    output: true
 
 plugins:
   - jekyll-sitemap
@@ -49,6 +51,16 @@ defaults:
       toc: true
       front: false
       layout: community
+      hero_style: is-white is-centered
+      header_style: is-black
+  - scope:
+      path: ""
+      type: asf
+    values:
+      show_sidebar: false
+      toc: true
+      front: false
+      layout: asf
       hero_style: is-white is-centered
       header_style: is-black
   - scope:
