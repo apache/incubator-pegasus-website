@@ -1,5 +1,5 @@
 - name: title_asf
-  icon: fas fa-user-plus
+  icon: fas fa-users
   items:
     - name: title_asf_foundation
       link: https://www.apache.org/
