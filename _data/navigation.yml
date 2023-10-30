@@ -1,3 +1,18 @@
+- name: title_asf
+  icon: fas fa-users
+  items:
+    - name: title_asf_foundation
+      link: https://www.apache.org/
+    - name: title_asf_license
+      link: https://www.apache.org/licenses/
+    - name: title_asf_events
+      link: https://www.apache.org/events/
+    - name: title_asf_sponsorship
+      link: https://www.apache.org/foundation/sponsorship.html
+    - name: title_asf_privacy
+      link: https://privacy.apache.org/policies/privacy-policy-public.html
+    - name: title_asf_thanks
+      link: https://www.apache.org/foundation/sponsors
 - name: title_community
   link: /community
   icon: fas fa-user-plus
