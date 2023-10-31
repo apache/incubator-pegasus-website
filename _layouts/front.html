@@ -1,7 +1,6 @@
 <!DOCTYPE html>
 <html>
 {% include head.html %}
-
 <body>
     {% include header.html %}
     <section class="hero is-large is-bold is-primary" {% if page.hero_image %}
@@ -9,7 +8,7 @@
         <div class="hero-body">
             <div class="container has-text-centered">
                 <p class="project-title title is-1 has-text-weight-medium"
-                    style="padding-bottom: 2rem; font-size: 70px;">
+                   style="padding-bottom: 2rem; font-size: 70px;">
                     Apache Pegasus
                 </p>
                 <p class="project-subtitle subtitle is-4 has-text-white-bis has-text-weight-light">
@@ -19,8 +18,7 @@
                     可水平扩展、高性能、强一致的分布式Key-Value数据库
                     {% endif %}
                 </p>
-                <br>
-                <div style="padding-top: 2rem" class="buttons is-centered">
+                <div style="padding-top: 1rem" class="buttons is-centered">
                     <a class="button is-light is-large front-start-button"
                        href="{{ site.baseurl }}/overview">
                         <span class="icon"><i class="fas fa-chevron-right"></i></span>
@@ -32,30 +30,8 @@
                 </div>
             </div>
         </div>
-        <footer class="footer">
-            <div class="container">
-                <div class="content is-small has-text-centered has-text-grey-dark">
-                    <div style="margin-bottom: 20px;">
-                        <a href="http://incubator.apache.org"><img src="{{ site.baseurl }}/assets/images/egg-logo.png"
-                                alt="Apache Incubator" /></a>
-                    </div>
-                    Copyright &copy; 2020 <a href="http://www.apache.org">The Apache Software Foundation</a>.
-                    Licensed under the <a href="http://www.apache.org/licenses/LICENSE-2.0">Apache License, Version
-                        2.0</a>.
-                    <br><br>
-                    {% if site.data.project.podling %}
-                    Apache Pegasus is an effort undergoing incubation at The Apache Software Foundation (ASF),
-                    sponsored by the Apache Incubator. Incubation is required of all newly accepted projects
-                    until a further review indicates that the infrastructure, communications, and decision making process
-                    have stabilized in a manner consistent with other successful ASF projects. While incubation status is
-                    not necessarily a reflection of the completeness or stability of the code, it does indicate that the
-                    project has yet to be fully endorsed by the ASF.
-                    {% endif %}
-                </div>
-            </div>
-        </footer>
     </section>
+    {% include footer.html %}
     <script src="{{ site.baseurl }}/assets/js/app.js" type="text/javascript"></script>
 </body>
-
 </html>
