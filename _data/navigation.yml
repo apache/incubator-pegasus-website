@@ -10,7 +10,9 @@
     - name: title_asf_sponsorship
       link: https://www.apache.org/foundation/sponsorship.html
     - name: title_asf_security
-      link: https://www.apache.org/security
+      link: https://www.apache.org/security/
+    - name: title_asf_privacy
+      link: https://privacy.apache.org/policies/privacy-policy-public.html
     - name: title_asf_thanks
       link: https://www.apache.org/foundation/thanks.html
 - name: title_community
