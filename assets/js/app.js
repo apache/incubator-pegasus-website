@@ -21,7 +21,6 @@ document.addEventListener('DOMContentLoaded', () => {
       });
     });
   }
-
 });
 
 $('.release-button').click(function () {
