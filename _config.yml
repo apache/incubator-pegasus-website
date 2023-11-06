@@ -77,11 +77,6 @@ defaults:
       menubar: overview_menu
       show_sidebar: false
 
-algolia:
-  index_name: apache_pegasus
-  search_only_api_key: 676624c2d6dc00808d3b7cf6724fc3c8
-  powered_by: true
-
 # multi-languages support
 languages: ["zh", "en"]
 # All sites missing their languages' counterparts will fallback to your `default_lang`.
