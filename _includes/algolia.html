@@ -2,9 +2,13 @@
 
 <script>
     docsearch({
-        indexName: '{{ site.algolia.index_name }}',
-        apiKey: '{{ site.algolia.search_only_api_key }}',
-        inputSelector: '.searchbox-input',
-        debug: true,
+        appId: QRN30RBW0S,
+        apiKey: d3a3252fa344359766707a106c4ed88f,
+        indexName: pegasus-apache,
+        insights: true, // Optional, automatically send insights when user interacts with search results
+        container: '.searchbox-input',
+        debug: false, // Set debug to true if you want to inspect the modal
+        placeholder: 'Search the docs (Press "/" to focus)',
+        searchParameters: {}
     });
 </script>
