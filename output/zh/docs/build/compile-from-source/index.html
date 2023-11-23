@@ -16,15 +16,15 @@
 <meta name="generator" content="Jekyll v4.3.2" />
 <meta property="og:title" content="Compile From Source" />
 <meta property="og:locale" content="en_US" />
-<meta name="description" content="从2.4.0开始，Pegasus目前支持Linux和macOS平台进行源码编译。编译过程中遇到问题，可以通过Github Issues向我们咨询。" />
-<meta property="og:description" content="从2.4.0开始，Pegasus目前支持Linux和macOS平台进行源码编译。编译过程中遇到问题，可以通过Github Issues向我们咨询。" />
+<meta name="description" content="从2.4.0开始，Pegasus支持Linux和macOS平台进行源码编译。编译过程中遇到问题，可以通过Github Issues向我们咨询。" />
+<meta property="og:description" content="从2.4.0开始，Pegasus支持Linux和macOS平台进行源码编译。编译过程中遇到问题，可以通过Github Issues向我们咨询。" />
 <meta property="og:site_name" content="Pegasus" />
 <meta property="og:type" content="article" />
-<meta property="article:published_time" content="2023-11-06T08:12:18+00:00" />
+<meta property="article:published_time" content="2023-11-23T05:28:47+00:00" />
 <meta name="twitter:card" content="summary" />
 <meta property="twitter:title" content="Compile From Source" />
 <script type="application/ld+json">
-{"@context":"https://schema.org","@type":"BlogPosting","dateModified":"2023-11-06T08:12:18+00:00","datePublished":"2023-11-06T08:12:18+00:00","description":"从2.4.0开始，Pegasus目前支持Linux和macOS平台进行源码编译。编译过程中遇到问题，可以通过Github Issues向我们咨询。","headline":"Compile From Source","mainEntityOfPage":{"@type":"WebPage","@id":"/docs/build/compile-from-source/"},"url":"/docs/build/compile-from-source/"}</script>
+{"@context":"https://schema.org","@type":"BlogPosting","dateModified":"2023-11-23T05:28:47+00:00","datePublished":"2023-11-23T05:28:47+00:00","description":"从2.4.0开始，Pegasus支持Linux和macOS平台进行源码编译。编译过程中遇到问题，可以通过Github Issues向我们咨询。","headline":"Compile From Source","mainEntityOfPage":{"@type":"WebPage","@id":"/docs/build/compile-from-source/"},"url":"/docs/build/compile-from-source/"}</script>
 <!-- End Jekyll SEO tag -->
 </head>
 
@@ -885,108 +885,34 @@
             </section>
             <section class="section" style="padding-top: 2rem;">
                 <div class="content">
-                    <p>从2.4.0开始，Pegasus目前支持Linux和macOS平台进行源码编译。编译过程中遇到问题，可以通过<a href="https://github.com/apache/incubator-pegasus/issues">Github Issues</a>向我们咨询。</p>
+                    <p>从2.4.0开始，Pegasus支持Linux和macOS平台进行源码编译。编译过程中遇到问题，可以通过<a href="https://github.com/apache/incubator-pegasus/issues">Github Issues</a>向我们咨询。</p>
 
 <h2 id="环境要求">环境要求</h2>
 
 <ul>
-  <li>GCC 5+</li>
-  <li>CMake 3.11+</li>
+  <li>GCC 5.4.0+</li>
+  <li>CMake 3.11.0+</li>
 </ul>
 
-<h2 id="ubuntu环境配置">Ubuntu环境配置</h2>
+<h2 id="linux环境配置">Linux环境配置</h2>
 
-<p>你可以参考 <a href="https://github.com/apache/incubator-pegasus/blob/master/docker/pegasus-build-env/ubuntu2004/Dockerfile">pegasus-build-dev/ubuntu20.04</a> 的Docker镜像安装全部依赖。</p>
+<p>你可以参考的Docker镜像来安装依赖并设置环境变量。例如：</p>
 
-<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>apt-get update <span class="nt">-y</span><span class="p">;</span> <span class="se">\</span>
-apt-get <span class="nb">install</span> <span class="nt">-y</span> <span class="nt">--no-install-recommends</span> <span class="se">\</span>
-                       build-essential <span class="se">\</span>
-                       software-properties-common <span class="se">\</span>
-                       clang-10 <span class="se">\</span>
-                       openjdk-8-jdk <span class="se">\</span>
-                       python3-pip <span class="se">\</span>
-                       libaio-dev <span class="se">\</span>
-                       libsnappy-dev <span class="se">\</span>
-                       libbz2-dev <span class="se">\</span>
-                       libzstd-dev <span class="se">\</span>
-                       liblz4-dev <span class="se">\</span>
-                       zlib1g <span class="se">\</span>
-                       zlib1g.dev <span class="se">\</span>
-                       patch <span class="se">\</span>
-                       netcat <span class="se">\</span>
-                       wget <span class="se">\</span>
-                       ccache <span class="se">\</span>
-                       git <span class="se">\</span>
-                       curl <span class="se">\</span>
-                       zip <span class="se">\</span>
-                       unzip <span class="se">\</span>
-                       gdb <span class="se">\</span>
-                       vim <span class="se">\</span>
-                       automake <span class="se">\</span>
-                       libtool <span class="se">\</span>
-                       libssl-dev <span class="se">\</span>
-                       bison <span class="se">\</span>
-                       maven <span class="se">\</span>
-                       flex<span class="p">;</span>
-
-pip3 <span class="nb">install</span> <span class="nt">--no-cache-dir</span> cmake
-</code></pre></div></div>
-
-<h2 id="centos环境配置">CentOS环境配置</h2>
-
-<p>你可以参考 <a href="https://github.com/apache/incubator-pegasus/blob/master/docker/pegasus-build-env/centos7/Dockerfile">pegasus-build-dev/centos7</a> 的Docker镜像安装全部依赖。</p>
-
-<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>yum <span class="nt">-y</span> <span class="nb">install </span>centos-release-scl <span class="se">\</span>
-                   scl-utils <span class="se">\</span>
-                   epel-release<span class="p">;</span> <span class="se">\</span>
-                   yum <span class="nt">-y</span> <span class="nb">install </span>devtoolset-7-gcc <span class="se">\</span>
-                   devtoolset-7-gcc-c++ <span class="se">\</span>
-                   java-1.8.0-openjdk-devel.x86_64 <span class="se">\</span>
-                   python3 <span class="se">\</span>
-                   automake <span class="se">\</span>
-                   autoconf <span class="se">\</span>
-                   make <span class="se">\</span>
-                   libtool <span class="se">\</span>
-                   git <span class="se">\</span>
-                   file <span class="se">\</span>
-                   wget <span class="se">\</span>
-                   ccache <span class="se">\</span>
-                   nmap-ncat <span class="se">\</span>
-                   zip <span class="se">\</span>
-                   gdb <span class="se">\</span>
-                   vim <span class="se">\</span>
-                   unzip <span class="se">\</span>
-                   which <span class="se">\</span>
-                   openssl-devel <span class="se">\</span>
-                   libaio-devel <span class="se">\</span>
-                   snappy-devel <span class="se">\</span>
-                   bzip2-devel <span class="se">\</span>
-                   zlib <span class="se">\</span>
-                   zlib-devel <span class="se">\</span>
-                   libzstd-devel <span class="se">\</span>
-                   lz4-devel <span class="se">\</span>
-                   bison <span class="se">\</span>
-                   flex <span class="se">\</span>
-                   patch<span class="p">;</span>
-
-pip3 <span class="nb">install</span> <span class="nt">--no-cache-dir</span> cmake
-</code></pre></div></div>
+<ul>
+  <li><a href="https://github.com/apache/incubator-pegasus/blob/master/docker/pegasus-build-env/centos7/Dockerfile">CentOS 7</a></li>
+  <li><a href="https://github.com/apache/incubator-pegasus/blob/master/docker/pegasus-build-env/ubuntu1804/Dockerfile">Ubuntu 18.04</a></li>
+  <li><a href="https://github.com/apache/incubator-pegasus/blob/master/docker/pegasus-build-env/ubuntu2004/Dockerfile">Ubuntu 20.04</a></li>
+  <li><a href="https://github.com/apache/incubator-pegasus/blob/master/docker/pegasus-build-env/ubuntu2204/Dockerfile">Ubuntu 22.04</a></li>
+</ul>
 
 <h2 id="源码编译">源码编译</h2>
 
-<p>在此之前，请确保：</p>
-<ul>
-  <li><code class="language-plaintext highlighter-rouge">maven</code>已被正确安装且已添加到<code class="language-plaintext highlighter-rouge">PATH</code></li>
-  <li><code class="language-plaintext highlighter-rouge">devtoolset-7</code>已被添加到<code class="language-plaintext highlighter-rouge">PATH</code></li>
-  <li><code class="language-plaintext highlighter-rouge">JAVA_HOME</code>已被正确设置</li>
-</ul>
-
 <p>请先参考<a href="/zh/docs/downloads">下载文档</a>获取源码。</p>
 
-<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>./run.sh build <span class="nt">-c</span>
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>./run.sh build <span class="nt">-c</span> <span class="nt">--clear_thirdparty</span> <span class="nt">-j</span> <span class="si">$(</span><span class="nb">nproc</span><span class="si">)</span>
 </code></pre></div></div>
 
-<p>编译后输出会放在当前目录的<code class="language-plaintext highlighter-rouge">DSN_ROOT/</code>文件夹下，里面包含bin、include、lib目录。</p>
+<p>编译后输出会放在当前目录的<code class="language-plaintext highlighter-rouge">build/latest/output/</code>目录下，里面包含<code class="language-plaintext highlighter-rouge">bin</code>、<code class="language-plaintext highlighter-rouge">include</code>以及<code class="language-plaintext highlighter-rouge">lib</code>目录。</p>
 
 <h2 id="编译打包">编译打包</h2>
 
@@ -1050,8 +976,7 @@ pip3 <span class="nb">install</span> <span class="nt">--no-cache-dir</span> cmak
 </p>
 <ul class="menu-list">
   <li><a href="#环境要求">环境要求</a></li>
-  <li><a href="#ubuntu环境配置">Ubuntu环境配置</a></li>
-  <li><a href="#centos环境配置">CentOS环境配置</a></li>
+  <li><a href="#linux环境配置">Linux环境配置</a></li>
   <li><a href="#源码编译">源码编译</a></li>
   <li><a href="#编译打包">编译打包</a></li>
 </ul>
