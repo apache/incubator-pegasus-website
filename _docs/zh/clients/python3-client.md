@@ -1,5 +1,5 @@
 ---
-permalink: clients/python3-client
+permalink: clients/python-client
 ---
 
 # pegasus python client
@@ -18,9 +18,7 @@ Python 3.7+
 
 ## 使用
 
-pegasus python3 client 从 python2-client 改动而来，对原有的接口参数做了破坏性改动，由`str`改为`bytes`，并不再支持 python2 环境。
-
-其他使用方法与 python2 客户端无差异
+pegasus python client使用了[twisted](https://github.com/twisted/twisted), 编写的代码会带有twisted的影子。
 
 ### 示例
 
