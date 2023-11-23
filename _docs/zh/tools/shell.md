@@ -746,7 +746,7 @@ USAGE:  multi_get_range        <hash_key> <start_sort_key> <stop_sort_key>
 * `-y|--sort_key_filter_pattern`参数：指定SortKey的过滤模式串，空串相当于无过滤。
 * `-n|--max_count`参数：指定最多读取的数据条数。
 * `-i|--no_value`参数：指定是否只返回HashKey和SortKey，不返回Value数据，默认为false。
-* `-r|--reverse`参数：是否逆向扫描数据库，从后往前查找数据，但是查找得到的结果在list中还是按照SortKey从小到大顺序存放。该参数从[v1.8.0版本](https://github.com/xiaomi/pegasus/releases/tag/v1.8.0)开始支持。
+* `-r|--reverse`参数：是否逆向扫描数据库，从后往前查找数据，但是查找得到的结果在list中还是按照SortKey从小到大顺序存放。该参数从[v1.8.0版本](https://github.com/apache/incubator-pegasus/releases/tag/v1.8.0)开始支持。
 
 示例：
 ```

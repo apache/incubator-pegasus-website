@@ -6,7 +6,7 @@ Apache Pegasus是一个分布式Key-Value存储系统，它的设计目标是具
 
 - **高扩展性**：通过哈希分片实现分布式横向扩展。
 - **强一致性**：通过[PacificA](https://www.microsoft.com/en-us/research/publication/pacifica-replication-in-log-based-distributed-storage-systems/)一致性协议保证。
-- **高性能**：底层使用[RocksDB](https://github.com/xiaomi/pegasus-rocksdb)作为存储引擎。
+- **高性能**：底层使用[RocksDB](https://rocksdb.org/)作为存储引擎。
 - **简单易用**：基于Key-Value的良好接口。
 
 ## 背景
