@@ -24,7 +24,7 @@ docker run -v /your/local/apache-pegasus-source:/root/pegasus \
            /bin/bash -c "cd /root/pegasus; ./run.sh build -c --clear_thirdparty -j $(nproc)"
 ```
 
-The output of compilation will be placed under `DSN_ROOT` of the source directory. It includes `bin`, `include` and `lib`.
+The output of compilation will be placed under `build/latest/output/` of the source directory. It includes `bin`, `include` and `lib`.
 
 ## Packaging
 
