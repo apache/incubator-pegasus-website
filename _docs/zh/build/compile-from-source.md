@@ -19,7 +19,7 @@ version: master
 
 - [CentOS 7](https://github.com/apache/incubator-pegasus/blob/master/docker/pegasus-build-env/centos7/Dockerfile)
 - [Ubuntu 18.04](https://github.com/apache/incubator-pegasus/blob/master/docker/pegasus-build-env/ubuntu1804/Dockerfile)
-- [Ubuntu 20.04](https://github.com/apache/incubator-pegasus/blob/master/docker/pegasus-build-env/ubuntu1804/Dockerfile)
+- [Ubuntu 20.04](https://github.com/apache/incubator-pegasus/blob/master/docker/pegasus-build-env/ubuntu2004/Dockerfile)
 - [Ubuntu 22.04](https://github.com/apache/incubator-pegasus/blob/master/docker/pegasus-build-env/ubuntu2204/Dockerfile)
 
 ## 源码编译

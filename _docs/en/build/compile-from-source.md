@@ -17,7 +17,7 @@ Since 2.4.0, Pegasus supports to build both on Linux and macOS. Please don't hes
 You can refer to the docker images to install dependencies and set environment variables. For example:
 - [CentOS 7](https://github.com/apache/incubator-pegasus/blob/master/docker/pegasus-build-env/centos7/Dockerfile)
 - [Ubuntu 18.04](https://github.com/apache/incubator-pegasus/blob/master/docker/pegasus-build-env/ubuntu1804/Dockerfile)
-- [Ubuntu 20.04](https://github.com/apache/incubator-pegasus/blob/master/docker/pegasus-build-env/ubuntu1804/Dockerfile)
+- [Ubuntu 20.04](https://github.com/apache/incubator-pegasus/blob/master/docker/pegasus-build-env/ubuntu2004/Dockerfile)
 - [Ubuntu 22.04](https://github.com/apache/incubator-pegasus/blob/master/docker/pegasus-build-env/ubuntu2204/Dockerfile)
 
 ## Compilation
