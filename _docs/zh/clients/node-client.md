@@ -3,7 +3,7 @@ permalink: clients/node-client
 ---
 
 # 安装NodeJs客户端
-项目地址：[Pegasus NodeJS Client](https://github.com/XiaoMi/pegasus-nodejs-client)  
+项目地址：[Pegasus NodeJS Client](https://github.com/apache/incubator-pegasus/tree/master/nodejs-client)
 下载并将客户端依赖添加到package.json中：  
 `npm install pegasus-nodejs-client --save`
 # 创建/关闭客户端

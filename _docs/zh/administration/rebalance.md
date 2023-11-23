@@ -242,7 +242,7 @@ Succeed count: 1
 Failed count: 0
 ```
 
-[remote_command](https://github.com/XiaoMi/rdsn/blob/a8c2d46568889902df820ac65e045a1e78aa84d4/include/dsn/tool-api/command_manager.h)是pegasus的一个特性, 允许一个server注册一些命令，然后命令行可以通过rpc调用这些命令。这里我们使用**help**来访问meta server leader，获取meta server端支持的所有命令。例子中已经略掉了所有不相关的行，只留下以"meta.lb"开头的所有和负载均衡相关的命令。
+[remote_command](https://github.com/apache/incubator-pegasus/blob/master/src/utils/command_manager.h)是pegasus的一个特性, 允许一个server注册一些命令，然后命令行可以通过rpc调用这些命令。这里我们使用**help**来访问meta server leader，获取meta server端支持的所有命令。例子中已经略掉了所有不相关的行，只留下以"meta.lb"开头的所有和负载均衡相关的命令。
 
 由于文档和代码的不一致问题，文档里不一定覆盖了当前meta所有的lb控制命令。如果想获取最新的命令列表，请用最新的代码手动执行一下help。
 

@@ -6,7 +6,7 @@ permalink: clients/python3-client
 
 ## 项目地址
 
-<https://github.com/XiaoMi/pegasus-python-client>
+<https://github.com/apache/incubator-pegasus/tree/master/python-client>
 
 ## 版本要求
 
@@ -24,7 +24,7 @@ pegasus python3 client 从 python2-client 改动而来，对原有的接口参�
 
 ### 示例
 
-完整的示例请参考[sample](https://github.com/XiaoMi/pegasus-python-client/blob/python3/sample.py)。以下是简单的示例：
+完整的示例请参考[sample](https://github.com/apache/incubator-pegasus/tree/master/python-client/sample.py)。以下是简单的示例：
 
 ```
 #!/usr/bin/env python

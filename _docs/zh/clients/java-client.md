@@ -4,12 +4,12 @@ permalink: clients/java-client
 
 # 获取Java客户端
 
-项目地址：[Pegasus Java Client](https://github.com/XiaoMi/pegasus-java-client)
+项目地址：[Pegasus Java Client](https://github.com/apache/incubator-pegasus/tree/master/java-client)
 
 下载：
 
 ```bash
-git clone https://github.com/XiaoMi/pegasus-java-client.git
+git clone https://github.com/apache/incubator-pegasus.git
 cd pegasus-java-client
 ```
 

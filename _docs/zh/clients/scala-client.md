@@ -4,13 +4,13 @@ permalink: clients/scala-client
 
 
 # 获取客户端  
-项目地址：[Pegasus scala client](https://github.com/xiaomi/pegasus-scala-client)  
+项目地址：[Pegasus scala client](https://github.com/apache/incubator-pegasus/tree/master/scala-client)
 下载：
 ```bash
-git clone https://github.com/XiaoMi/pegasus-scala-client.git
-cd pegasus-scala-client
+git clone git@github.com:apache/incubator-pegasus.git
+cd incubator-pegasus/scala-client
 ```
-选择所使用的版本并构建，建议使用master版本。同时注意，scala客户端构建依赖[Java客户端](https://github.com/XiaoMi/pegasus-java-client)，请参考[获取Java客户端](/clients/java-client#获取java客户端)在项目中添加Java依赖。你可以打包成Jar包进行使用：
+选择所使用的版本并构建，建议使用master版本。同时注意，scala客户端构建依赖[Java客户端](https://github.com/apache/incubator-pegasus/tree/master/java-client)，请参考[获取Java客户端](/clients/java-client#获取java客户端)在项目中添加Java依赖。你可以打包成Jar包进行使用：
 ```bash
 sbt package
 ```
