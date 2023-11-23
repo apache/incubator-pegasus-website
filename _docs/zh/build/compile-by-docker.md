@@ -26,7 +26,7 @@ docker run -v /your/local/apache-pegasus-source:/root/pegasus \
            /bin/bash -c "cd /root/pegasus; ./run.sh build -c --clear_thirdparty -j $(nproc)"
 ```
 
-编译的结果会被放在项目根目录的`DSN_ROOT/`文件夹下，其中包含bin、include、lib目录。
+编译的结果会被放在项目根目录的`build/latest/output/`文件夹下，其中包含`bin`、`include`以及`lib`目录。
 
 ## 编译打包
 
