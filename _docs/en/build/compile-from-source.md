@@ -24,8 +24,16 @@ You can refer to the docker images to install dependencies and set environment v
 
 Please refer to [Downloads](/docs/downloads) to fetch the sources。
 
+If you want to run tests, you should build Pegasus by the following command:
+
 ```bash
 ./run.sh build --test -c --clear_thirdparty -j $(nproc)
+```
+
+If you want to build Pegasus without runing tests, just execute the following command:
+
+```bash
+./run.sh build -c --clear_thirdparty -j $(nproc)
 ```
 
 The output of compilation will be placed under `build/latest/output/` of the source directory. It includes `bin`, `include` and `lib`.
