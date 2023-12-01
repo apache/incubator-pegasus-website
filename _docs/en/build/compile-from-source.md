@@ -25,10 +25,16 @@ You can refer to the docker images to install dependencies and set environment v
 Please refer to [Downloads](/docs/downloads) to fetch the sources。
 
 ```bash
-./run.sh build -c --clear_thirdparty -j $(nproc)
+./run.sh build --test -c --clear_thirdparty -j $(nproc)
 ```
 
 The output of compilation will be placed under `build/latest/output/` of the source directory. It includes `bin`, `include` and `lib`.
+
+## Run tests
+
+```bash
+./run.sh test
+```
 
 ## Packaging
 
