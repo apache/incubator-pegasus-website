@@ -26,11 +26,23 @@ version: master
 
 请先参考[下载文档](/docs/downloads)获取源码。
 
+如果你想要执行测试程序，需要用如下命令来编译Pegasus：
+```bash
+./run.sh build --test -c --clear_thirdparty -j $(nproc)
+```
+
+如果不需要执行测试程序，只是单纯想编译Pegasus，使用如下命令即可：
 ```bash
 ./run.sh build -c --clear_thirdparty -j $(nproc)
 ```
 
 编译后输出会放在当前目录的`build/latest/output/`目录下，里面包含`bin`、`include`以及`lib`目录。
+
+## 执行测试程序
+
+```bash
+./run.sh test
+```
 
 ## 编译打包
 

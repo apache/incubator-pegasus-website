@@ -12,7 +12,7 @@ Pegasus将编译环境封装至[Docker镜像](https://hub.docker.com/r/apache/pe
 
 比如，你可以使用基于`Ubuntu 20.04`的镜像：
 
-```sh
+```bash
 docker pull apache/pegasus:build-env-ubuntu2004
 ```
 
@@ -20,13 +20,31 @@ docker pull apache/pegasus:build-env-ubuntu2004
 
 请先参考[下载文档](/docs/downloads)获取源码到某目录（`/your/local/apache-pegasus-source`）下。随后运行以下命令：
 
-```sh
+如果你想要执行测试程序，需要用如下命令来编译Pegasus：
+
+```bash
+docker run -v /your/local/apache-pegasus-source:/root/pegasus \
+           apache/pegasus:build-env-ubuntu2004 \
+           /bin/bash -c "cd /root/pegasus; ./run.sh build --test -c --clear_thirdparty -j $(nproc)"
+```
+
+如果不需要执行测试程序，只是单纯想编译Pegasus，使用如下命令即可：
+
+```bash
 docker run -v /your/local/apache-pegasus-source:/root/pegasus \
            apache/pegasus:build-env-ubuntu2004 \
            /bin/bash -c "cd /root/pegasus; ./run.sh build -c --clear_thirdparty -j $(nproc)"
 ```
 
 编译的结果会被放在项目根目录的`build/latest/output/`文件夹下，其中包含`bin`、`include`以及`lib`目录。
+
+## 执行测试程序
+
+```bash
+docker run -v /your/local/apache-pegasus-source:/root/pegasus \
+           apache/pegasus:build-env-ubuntu2004 \
+           /bin/bash -c "cd /root/pegasus; ./run.sh test"
+```
 
 ## 编译打包
 
