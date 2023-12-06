@@ -18,7 +18,7 @@
             {% if ver == site.latest_pegasus_version %}
             {% assign version_url = no_version_link %}
             {% else %}
-            {% assign version_url = '/' | append: ver | append: no_version_link %}
+            {% assign version_url = '/' | append: ver | append: '/' | append: no_version_link %}
             {% endif %}
 
             <a href="{{ version_url }}" class="dropdown-item {% if ver == page.version %}is-active{% endif %}">
