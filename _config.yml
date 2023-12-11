@@ -94,6 +94,7 @@ sass:
 latest_pegasus_version: master
 pegasus_versions:
 - master
+- 2.5.0
 - 2.4.0
 - 2.3.0
 - 2.2.0

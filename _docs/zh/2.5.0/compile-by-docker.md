@@ -1,24 +1,26 @@
 ---
-permalink: docs/build/compile-by-docker/
+permalink: 2.5.0/docs/build/compile-by-docker/
 redirect_from:
-  - master/docs/build/compile-by-docker/
-version: master
+  - 2.5.0/docs/build/compile-by-docker/
+  - docs/installation
+version: 2.5.0
 ---
 
-## Download the docker image
+## 下载Docker镜像
 
-Pegasus encapsulates the building environments into [docker images](https://hub.docker.com/r/apache/pegasus/tags?page=1&name=env), you can build directly based on these environments.
+Pegasus将编译环境封装至[Docker镜像](https://hub.docker.com/r/apache/pegasus/tags?page=1&name=env)中，这里包含有多个Linux发行版，你可以直接基于这些环境编译代码。
 
-For example, you can use the image based on `Ubuntu 20.04`:
+比如，你可以使用基于`Ubuntu 20.04`的镜像：
+
 ```bash
 docker pull apache/pegasus:build-env-ubuntu2004
 ```
 
-## Compilation
+## 编译
 
-Please refer to [Downloads](/docs/downloads) to fetch the sources under a directory (`/your/local/apache-pegasus-source`). Then run the following command:
+请先参考[下载文档](/docs/downloads)获取源码到某目录（`/your/local/apache-pegasus-source`）下。随后运行以下命令：
 
-If you want to run tests, you should build Pegasus by the following command:
+如果你想要执行测试程序，需要用如下命令来编译Pegasus：
 
 ```bash
 docker run -v /your/local/apache-pegasus-source:/root/pegasus \
@@ -26,7 +28,7 @@ docker run -v /your/local/apache-pegasus-source:/root/pegasus \
            /bin/bash -c "cd /root/pegasus; ./run.sh build --test -c --clear_thirdparty -j $(nproc)"
 ```
 
-If you want to build Pegasus without runing tests, just execute the following command:
+如果不需要执行测试程序，只是单纯想编译Pegasus，使用如下命令即可：
 
 ```bash
 docker run -v /your/local/apache-pegasus-source:/root/pegasus \
@@ -34,9 +36,9 @@ docker run -v /your/local/apache-pegasus-source:/root/pegasus \
            /bin/bash -c "cd /root/pegasus; ./run.sh build -c --clear_thirdparty -j $(nproc)"
 ```
 
-The output of compilation will be placed under `build/latest/output/` of the source directory. It includes `bin`, `include` and `lib`.
+编译的结果会被放在项目根目录的`build/latest/output/`文件夹下，其中包含`bin`、`include`以及`lib`目录。
 
-## Run tests
+## 执行测试程序
 
 ```bash
 docker run -v /your/local/apache-pegasus-source:/root/pegasus \
@@ -44,9 +46,9 @@ docker run -v /your/local/apache-pegasus-source:/root/pegasus \
            /bin/bash -c "cd /root/pegasus; ./run.sh test"
 ```
 
-## Packaging
+## 编译打包
 
-Package server binaries for deployment:
+打包server端程序包，用于服务部署：
 
 ```bash
 docker run -v /your/local/apache-pegasus-source:/root/pegasus \
@@ -54,7 +56,7 @@ docker run -v /your/local/apache-pegasus-source:/root/pegasus \
            /bin/bash -c "./run.sh pack_server"
 ```
 
-Package client libraries for C/C++ development:
+打包client端库，用于C/C++端客户端开发：
 
 ```bash
 docker run -v /your/local/apache-pegasus-source:/root/pegasus \
@@ -62,7 +64,7 @@ docker run -v /your/local/apache-pegasus-source:/root/pegasus \
            /bin/bash -c "./run.sh pack_client"
 ```
 
-Package toolset which includes various tools (shell, bench):
+打包tools工具集，里面包含了各种工具（shell、bench）：
 
 ```bash
 docker run -v /your/local/apache-pegasus-source:/root/pegasus \
@@ -70,4 +72,4 @@ docker run -v /your/local/apache-pegasus-source:/root/pegasus \
            /bin/bash -c "./run.sh pack_tools"
 ```
 
-If this is your first time compiling Pegasus, it's recommended to try [onebox](/overview/onebox).
+编译成功后，推荐先[体验onebox集群](/overview/onebox)。
