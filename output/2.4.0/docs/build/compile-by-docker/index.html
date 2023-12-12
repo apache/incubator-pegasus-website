@@ -20,11 +20,11 @@
 <meta property="og:description" content="Download the docker image" />
 <meta property="og:site_name" content="Pegasus" />
 <meta property="og:type" content="article" />
-<meta property="article:published_time" content="2023-12-11T09:36:05+00:00" />
+<meta property="article:published_time" content="2023-12-12T13:18:16+00:00" />
 <meta name="twitter:card" content="summary" />
 <meta property="twitter:title" content="Compile By Docker" />
 <script type="application/ld+json">
-{"@context":"https://schema.org","@type":"BlogPosting","dateModified":"2023-12-11T09:36:05+00:00","datePublished":"2023-12-11T09:36:05+00:00","description":"Download the docker image","headline":"Compile By Docker","mainEntityOfPage":{"@type":"WebPage","@id":"/2.4.0/docs/build/compile-by-docker/"},"url":"/2.4.0/docs/build/compile-by-docker/"}</script>
+{"@context":"https://schema.org","@type":"BlogPosting","dateModified":"2023-12-12T13:18:16+00:00","datePublished":"2023-12-12T13:18:16+00:00","description":"Download the docker image","headline":"Compile By Docker","mainEntityOfPage":{"@type":"WebPage","@id":"/2.4.0/docs/build/compile-by-docker/"},"url":"/2.4.0/docs/build/compile-by-docker/"}</script>
 <!-- End Jekyll SEO tag -->
 </head>
 
@@ -58,6 +58,16 @@
 
             <a href="docs/build/compile-by-docker/" class="dropdown-item ">
                 master
+            </a>
+            
+
+            <!--URL of our latest version always starts without version prefixed.-->
+            
+            
+            
+
+            <a href="/2.5.0/docs/build/compile-by-docker/" class="dropdown-item ">
+                2.5.0
             </a>
             
 
@@ -874,7 +884,7 @@
 <p>Pegasus encapsulates the building environments into <a href="https://hub.docker.com/r/apache/pegasus/tags?page=1&amp;name=env">docker images</a>, you can build directly based on these environments.</p>
 
 <p>For example, you can use the image based on <code class="language-plaintext highlighter-rouge">Ubuntu 20.04</code>:</p>
-<div class="language-sh highlighter-rouge"><div class="highlight"><pre class="highlight"><code>docker pull apache/pegasus:build-env-ubuntu2004
+<div class="language-sh highlighter-rouge"><div class="highlight"><pre class="highlight"><code>docker pull apache/pegasus:build-env-ubuntu2004-v2.4
 </code></pre></div></div>
 
 <h2 id="compilation">Compilation</h2>
@@ -882,7 +892,7 @@
 <p>Please refer to <a href="/docs/downloads">Downloads</a> to fetch the sources under a directory (<code class="language-plaintext highlighter-rouge">/your/local/apache-pegasus-source</code>). Then run the following command:</p>
 
 <div class="language-sh highlighter-rouge"><div class="highlight"><pre class="highlight"><code>docker run <span class="nt">-v</span> /your/local/apache-pegasus-source:/root/pegasus <span class="se">\</span>
-           apache/pegasus:build-env-ubuntu2004 <span class="se">\</span>
+           apache/pegasus:build-env-ubuntu2004-v2.4 <span class="se">\</span>
            /bin/bash <span class="nt">-c</span> <span class="s2">"cd /root/pegasus; ./run.sh build -c --clear_thirdparty -j </span><span class="si">$(</span><span class="nb">nproc</span><span class="si">)</span><span class="s2">"</span>
 </code></pre></div></div>
 
@@ -893,21 +903,21 @@
 <p>Package server binaries for deployment:</p>
 
 <div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>docker run <span class="nt">-v</span> /your/local/apache-pegasus-source:/root/pegasus <span class="se">\</span>
-           apache/pegasus:build-env-ubuntu2004 <span class="se">\</span>
+           apache/pegasus:build-env-ubuntu2004-v2.4 <span class="se">\</span>
            /bin/bash <span class="nt">-c</span> <span class="s2">"./run.sh pack_server"</span>
 </code></pre></div></div>
 
 <p>Package client libraries for C/C++ development:</p>
 
 <div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>docker run <span class="nt">-v</span> /your/local/apache-pegasus-source:/root/pegasus <span class="se">\</span>
-           apache/pegasus:build-env-ubuntu2004 <span class="se">\</span>
+           apache/pegasus:build-env-ubuntu2004-v2.4 <span class="se">\</span>
            /bin/bash <span class="nt">-c</span> <span class="s2">"./run.sh pack_client"</span>
 </code></pre></div></div>
 
 <p>Package toolset which includes various tools (shell, bench):</p>
 
 <div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>docker run <span class="nt">-v</span> /your/local/apache-pegasus-source:/root/pegasus <span class="se">\</span>
-           apache/pegasus:build-env-ubuntu2004 <span class="se">\</span>
+           apache/pegasus:build-env-ubuntu2004-v2.4 <span class="se">\</span>
            /bin/bash <span class="nt">-c</span> <span class="s2">"./run.sh pack_tools"</span>
 </code></pre></div></div>
 
