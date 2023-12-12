@@ -1,7 +1,7 @@
 ---
 permalink: docs/build/compile-by-docker/
 redirect_from:
-  - master/docs/build/compile-from-source/
+  - master/docs/build/compile-by-docker/
 version: master
 ---
 
@@ -11,7 +11,7 @@ Pegasus encapsulates the building environments into [docker images](https://hub.
 
 For example, you can use the image based on `Ubuntu 20.04`:
 ```bash
-docker pull apache/pegasus:build-env-ubuntu2004
+docker pull apache/pegasus:build-env-ubuntu2004-master
 ```
 
 ## Compilation
@@ -22,7 +22,7 @@ If you want to run tests, you should build Pegasus by the following command:
 
 ```bash
 docker run -v /your/local/apache-pegasus-source:/root/pegasus \
-           apache/pegasus:build-env-ubuntu2004 \
+           apache/pegasus:build-env-ubuntu2004-master \
            /bin/bash -c "cd /root/pegasus; ./run.sh build --test -c --clear_thirdparty -j $(nproc)"
 ```
 
@@ -30,7 +30,7 @@ If you want to build Pegasus without runing tests, just execute the following co
 
 ```bash
 docker run -v /your/local/apache-pegasus-source:/root/pegasus \
-           apache/pegasus:build-env-ubuntu2004 \
+           apache/pegasus:build-env-ubuntu2004-master \
            /bin/bash -c "cd /root/pegasus; ./run.sh build -c --clear_thirdparty -j $(nproc)"
 ```
 
@@ -40,7 +40,7 @@ The output of compilation will be placed under `build/latest/output/` of the sou
 
 ```bash
 docker run -v /your/local/apache-pegasus-source:/root/pegasus \
-           apache/pegasus:build-env-ubuntu2004 \
+           apache/pegasus:build-env-ubuntu2004-master \
            /bin/bash -c "cd /root/pegasus; ./run.sh test"
 ```
 
@@ -50,7 +50,7 @@ Package server binaries for deployment:
 
 ```bash
 docker run -v /your/local/apache-pegasus-source:/root/pegasus \
-           apache/pegasus:build-env-ubuntu2004 \
+           apache/pegasus:build-env-ubuntu2004-master \
            /bin/bash -c "./run.sh pack_server"
 ```
 
@@ -58,7 +58,7 @@ Package client libraries for C/C++ development:
 
 ```bash
 docker run -v /your/local/apache-pegasus-source:/root/pegasus \
-           apache/pegasus:build-env-ubuntu2004 \
+           apache/pegasus:build-env-ubuntu2004-master \
            /bin/bash -c "./run.sh pack_client"
 ```
 
@@ -66,7 +66,7 @@ Package toolset which includes various tools (shell, bench):
 
 ```bash
 docker run -v /your/local/apache-pegasus-source:/root/pegasus \
-           apache/pegasus:build-env-ubuntu2004 \
+           apache/pegasus:build-env-ubuntu2004-master \
            /bin/bash -c "./run.sh pack_tools"
 ```
 

@@ -13,7 +13,7 @@ Pegasus将编译环境封装至[Docker镜像](https://hub.docker.com/r/apache/pe
 比如，你可以使用基于`Ubuntu 20.04`的镜像：
 
 ```sh
-docker pull apache/pegasus:build-env-ubuntu2004
+docker pull apache/pegasus:build-env-ubuntu2004-v2.4
 ```
 
 ## 编译
@@ -22,7 +22,7 @@ docker pull apache/pegasus:build-env-ubuntu2004
 
 ```sh
 docker run -v /your/local/apache-pegasus-source:/root/pegasus \
-           apache/pegasus:build-env-ubuntu2004 \
+           apache/pegasus:build-env-ubuntu2004-v2.4 \
            /bin/bash -c "cd /root/pegasus; ./run.sh build -c --clear_thirdparty -j $(nproc)"
 ```
 
@@ -34,7 +34,7 @@ docker run -v /your/local/apache-pegasus-source:/root/pegasus \
 
 ```bash
 docker run -v /your/local/apache-pegasus-source:/root/pegasus \
-           apache/pegasus:build-env-ubuntu2004 \
+           apache/pegasus:build-env-ubuntu2004-v2.4 \
            /bin/bash -c "./run.sh pack_server"
 ```
 
@@ -42,7 +42,7 @@ docker run -v /your/local/apache-pegasus-source:/root/pegasus \
 
 ```bash
 docker run -v /your/local/apache-pegasus-source:/root/pegasus \
-           apache/pegasus:build-env-ubuntu2004 \
+           apache/pegasus:build-env-ubuntu2004-v2.4 \
            /bin/bash -c "./run.sh pack_client"
 ```
 
@@ -50,7 +50,7 @@ docker run -v /your/local/apache-pegasus-source:/root/pegasus \
 
 ```bash
 docker run -v /your/local/apache-pegasus-source:/root/pegasus \
-           apache/pegasus:build-env-ubuntu2004 \
+           apache/pegasus:build-env-ubuntu2004-v2.4 \
            /bin/bash -c "./run.sh pack_tools"
 ```
 

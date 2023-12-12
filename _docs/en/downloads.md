@@ -27,6 +27,10 @@ We recommend downloading the signed source release that follows [ASF Release Pol
 [2.4.0-asc]: https://downloads.apache.org/incubator/pegasus/2.4.0/apache-pegasus-2.4.0-incubating-src.zip.asc
 [2.4.0-sha]: https://downloads.apache.org/incubator/pegasus/2.4.0/apache-pegasus-2.4.0-incubating-src.zip.sha512
 [2.4.0-rn]: https://cwiki.apache.org/confluence/display/PEGASUS/Apache+Pegasus+2.4.0+Release+Notes
+[2.5.0-src]: https://www.apache.org/dyn/closer.lua?path=/incubator/pegasus/2.5.0/apache-pegasus-2.5.0-incubating-src.zip
+[2.5.0-asc]: https://downloads.apache.org/incubator/pegasus/2.5.0/apache-pegasus-2.5.0-incubating-src.zip.asc
+[2.5.0-sha]: https://downloads.apache.org/incubator/pegasus/2.5.0/apache-pegasus-2.5.0-incubating-src.zip.sha512
+[2.5.0-rn]: https://cwiki.apache.org/confluence/display/PEGASUS/Apache+Pegasus+2.5.0+Release+Notes
 
 | Name                 | Package             | Signature        | Checksum            | Release Notes          |
 |----------------------|---------------------|------------------|---------------------|------------------------|
@@ -34,4 +38,5 @@ We recommend downloading the signed source release that follows [ASF Release Pol
 | Apache Pegasus 2.2.0 | [Source][2.2.0-src] | [asc][2.2.0-asc] | [sha512][2.2.0-sha] | [2021-06-27][2.2.0-rn] |
 | Apache Pegasus 2.3.0 | [Source][2.3.0-src] | [asc][2.3.0-asc] | [sha512][2.3.0-sha] | [2021-11-26][2.3.0-rn] |
 | Apache Pegasus 2.4.0 | [Source][2.4.0-src] | [asc][2.4.0-asc] | [sha512][2.4.0-sha] | [2022-10-22][2.4.0-rn] |
+| Apache Pegasus 2.5.0 | [Source][2.5.0-src] | [asc][2.5.0-asc] | [sha512][2.5.0-sha] | [2022-12-01][2.5.0-rn] |
 
