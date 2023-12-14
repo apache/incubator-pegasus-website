@@ -5,11 +5,11 @@ permalink: docs/downloads/
 We recommend downloading the signed source release that follows [ASF Release Policy](http://www.apache.org/legal/release-policy.html): 
 > To verify the integrity of the release, check the following:
 > - Verify the checksum by downloading the `Package` and the `Checksum` file, and running the following command:
->   - On Linux: `sha512sum -c apache-pegasus-2.4.0-incubating-src.zip.sha512`
->   - On MacOS: `shasum -a 512 -c apache-pegasus-2.4.0-incubating-src.zip.sha512`
+>   - On Linux: `sha512sum -c apache-pegasus-2.5.0-incubating-src.zip.sha512`
+>   - On MacOS: `shasum -a 512 -c apache-pegasus-2.5.0-incubating-src.zip.sha512`
 > - Verify the signature by downloading the `Package` and the `Signature` file, and doing the following:
 >   - Import the [KEYS file](https://downloads.apache.org/incubator/pegasus/KEYS) to the GPG keychain by running `gpg --import KEYS`
->   - Run `gpg --verify apache-pegasus-2.4.0-incubating-src.zip.asc apache-pegasus-2.4.0-incubating-src.zip`
+>   - Run `gpg --verify apache-pegasus-2.5.0-incubating-src.zip.asc apache-pegasus-2.5.0-incubating-src.zip`
 
 [2.1.0-src]: https://www.apache.org/dyn/closer.lua?path=/incubator/pegasus/2.1.0/apache-pegasus-2.1.0-incubating-src.zip
 [2.1.0-asc]: https://downloads.apache.org/incubator/pegasus/2.1.0/apache-pegasus-2.1.0-incubating-src.zip.asc
