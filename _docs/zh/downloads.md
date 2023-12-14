@@ -1,5 +1,5 @@
 ---
-permalink: zh/docs/downloads/
+permalink: docs/downloads/
 ---
 
 我们推荐下载遵循[ASF Release Policy](http://www.apache.org/legal/release-policy.html)发布的源码包：
