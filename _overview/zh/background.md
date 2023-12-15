@@ -32,6 +32,7 @@ Pegasus系统的最初目的就是弥补HBase的不足，这里从用户使用�
 # 与Redis比较
 
 如果仅从读写延迟和单机吞吐比较，Redis显然是优于Pegasus的。但如果从读写延迟、可用性、伸缩性、成本等方面综合比较，Pegasus也是有其自身的优势的。
+
 与Redis进行比较的主要区别如下：
 * 数据模型：两者都是Key-Value模型，但是Pegasus支持(HashKey + SortKey)的二级键。
 * 接口：Redis的接口更丰富，支持List、Set、Map等容器特性；Pegasus的接口相对简单，功能更单一。

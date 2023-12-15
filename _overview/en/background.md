@@ -32,6 +32,7 @@ The original purpose of the Pegasus system was to compensate for the shortcoming
 # Compare to Redis
 
 If only compare on read/write latency and single-machine throughput, Redis is clearly superior to Pegasus. But if compared comprehensively in terms of read/write latency, availability, scalability, cost, etc., Pegasus also has its own advantages.
+
 The main differences compared to Redis are as follows:
 * Data model: Both are Key Value models, but Pegasus supports secondary keys (HashKey + SortKey).
 * Interface: Redis has richer interfaces and supports container features such as List, Set, Map, etc. The interfaces of Pegasus are simple to understand and use, and its functions are more singular.
