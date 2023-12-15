@@ -20,7 +20,7 @@ permalink: administration/duplication
 
 我们能够做到**一主一备（single-master）**，也能提供**多机房多主（multi-master）**，用户可以根据需要进行配置。
 
-这里需要注意的是，跨机房同步是**异步**的数据复制，并非完全实时。与单机房不同，该功能不提供跨机房 *read-after-write* 的一致性保证。目前在跨机房网络健康的环境下，数据延时大概在 10s 左右，即 A 机房的写数据大概在 10s 后会写入 B 机房。
+这里需要注意的是，跨机房同步是**异步**的数据复制，并非完全实时。与单机房不同，该功能不提供跨机房 *read-after-write* 的一致性保证。目前在跨机房网络健康的环境下，对于备集群而言，数据延时大概在秒级左右，但具体表现与写入流量大小有关。经测试，写入小于1kb的数据的延时在1秒内，即 A 机房的写数据大概在1秒后会写入 B 机房。
 
 ## 操作上手
 
@@ -82,7 +82,7 @@ successfully add duplication [dupid: 1669972761]
 面对这个需求，我们的操作思路是：
 
 1. 首先源集群**保留从此刻开始的所有写增量**（即WAL日志）
-2. 将源集群的全量快照（冷备份）移动到指定路径下，等待备集群(目标集群)对这些数据进行学习learn。
+2. 将源集群的全量快照（存量数据）移动到指定路径下，等待备集群(目标集群)对这些数据进行学习learn。
 3. 目标集群将存量数据学习完成后，告知源集群进入WAL日志发送阶段。
 4. 此后源集群开启热备份，并复制此前堆积的写增量，发送到远端目标集群。         
 
@@ -238,7 +238,7 @@ set_dup_fail_mode <app_name> <dupid> <slow|skip>
 
 
 
-## 完整配置项列表
+## 热备相关配置项列表
 
 ```ini
 [replication]
@@ -265,7 +265,7 @@ cluster_id 的作用是：一旦出现写冲突，例如 tjsrv 和 bjsrv 同时�
 
 
 
-## 完整监控项列表
+## 监控项列表
 
 | 监控项 |
 |-------|
@@ -285,11 +285,7 @@ cluster_id 的作用是：一旦出现写冲突，例如 tjsrv 和 bjsrv 同时�
 | `collector*app.pegasus*app.stat.dup_shipped_ops#<app_name>` #520 |
 | `collector*app.pegasus*app.stat.dup_failed_shipping_ops#<app_name>` #520 |
 
-## 完整 HTTP 接口列表
 
-- `http://0.0.0.0:34602/meta/app/duplication?name=temp`
-
-- `http://0.0.0.0:34801/replica/duplication?appid=2`
 
 ## Known Limitations
 
