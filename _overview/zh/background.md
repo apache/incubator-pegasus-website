@@ -16,7 +16,7 @@ permalink: /overview/background/
 * 开发语言：基于性能考虑，我们选择了C++。
 * 数据模型：采用简单的Key-Value数据模型。这既简化了开发，也能满足大部分业务需求。进一步地，我们将Key拆分为了HashKey和SortKey两级，加强了其表达能力。
 * 数据分布：采用固定Hash分布。相比Range分布和一致性Hash分布，固定Hash分布实现更简单，数据倾斜和可伸缩性可以通过合理设计Hash键、预设更多的数据分片等措施来解决。我们也支持[Partition Split](https://pegasus.apache.org/zh/administration/partition-split)功能来扩展分片数量。
-* 存储介质：建议选择SSD。SSD的性能和成本都介于内存和磁盘之间，从业务需求和成本综合考虑，选择SSD是比较合适的。
+* 存储介质：建议选择SSD（固态硬盘）。SSD的性能和成本都介于内存和HDD（机械硬盘）之间，从业务需求和成本综合考虑，选择SSD是比较合适的。
 * 本地存储引擎：选择[RocksDB](https://github.com/facebook/rocksdb)。RocksDB在LevelDB基础上做了很多优化，能充分利用SSD的IOPS性能和多核服务器的计算性能。
 * 一致性协议：选择[PacificA](https://www.microsoft.com/en-us/research/publication/pacifica-replication-in-log-based-distributed-storage-systems/)。相比[Raft](https://raft.github.io/)，PacificA协议具有其自身的特点和优势。
 * 故障检测：和HBase不同，Pegasus没有使用Zookeeper来进行故障检测，而是在MetaServer和ReplicaServer之间实现了基于租约的故障检测机制。
@@ -27,15 +27,16 @@ Pegasus系统的最初目的就是弥补HBase的不足，这里从用户使用�
 * 数据模型：HBase是表格模型，采用Range分片；Pegasus是Key-Value模型，采用Hash分片。
 * 接口：HBase的API接口功能虽然很丰富，但是使用也更复杂；Pegasus的接口简单，对用户更友好。
 * 可靠性：由于架构和实现的原因（如Pegasus采用的本地存储、故障检测、使用C++语言实现等），Pegasus的可靠性通常优于HBase。
-* 性能：由于分层架构，HBase的读写性能不是太好，P99通常在几十甚至几百毫秒级别，而且GC问题会带来毛刺问题；Pegasus的P99可以在几毫秒，满足低延迟的在线业务需求。
+* 性能：由于分层架构，HBase的读写性能不是太好，P99延迟通常在几十甚至几百毫秒，而且GC问题会带来毛刺问题；Pegasus的P99可以在几毫秒，满足敏感在线业务的需求。
 
 # 与Redis比较
 
-如果仅从性能角度比较，Redis显然是优于Pegasus的。但如果从性能、可用性、伸缩性、成本等方面综合比较，Pegasus也是有其自身的优势的。
+如果仅从读写延迟和单机吞吐比较，Redis显然是优于Pegasus的。但如果从读写延迟、可用性、伸缩性、成本等方面综合比较，Pegasus也是有其自身的优势的。
+
 与Redis进行比较的主要区别如下：
 * 数据模型：两者都是Key-Value模型，但是Pegasus支持(HashKey + SortKey)的二级键。
 * 接口：Redis的接口更丰富，支持List、Set、Map等容器特性；Pegasus的接口相对简单，功能更单一。
-* 性能：Redis性能比Pegasus好。
+* 读写延迟：Redis性能比Pegasus好。
 * 伸缩性：Pegasus伸缩性更好，可以很方便地增减机器节点，并支持自动的负载均衡；Redis的分布式方案在增减机器的时候比较麻烦。
 * 可靠性：Pegasus数据总是持久化的，系统架构保证其较高的数据完整性；Redis在机器宕机后需要较长时间恢复，可用性不够好，还可能丢掉最后一段时间的数据。
 * 成本：Pegasus使用SSD存储全量数据，而Redis需要使用内存来存储全量数据，Pegasus成本更低。
