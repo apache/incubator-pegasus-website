@@ -16,15 +16,15 @@
 <meta name="generator" content="Jekyll v4.3.2" />
 <meta property="og:title" content="Architecture" />
 <meta property="og:locale" content="en_US" />
-<meta name="description" content="TRANSLATING" />
-<meta property="og:description" content="TRANSLATING" />
+<meta name="description" content="Overall architecture" />
+<meta property="og:description" content="Overall architecture" />
 <meta property="og:site_name" content="Pegasus" />
 <meta property="og:type" content="article" />
-<meta property="article:published_time" content="2023-12-18T06:57:20+00:00" />
+<meta property="article:published_time" content="2023-12-18T06:59:14+00:00" />
 <meta name="twitter:card" content="summary" />
 <meta property="twitter:title" content="Architecture" />
 <script type="application/ld+json">
-{"@context":"https://schema.org","@type":"BlogPosting","dateModified":"2023-12-18T06:57:20+00:00","datePublished":"2023-12-18T06:57:20+00:00","description":"TRANSLATING","headline":"Architecture","mainEntityOfPage":{"@type":"WebPage","@id":"/overview/architecture"},"url":"/overview/architecture"}</script>
+{"@context":"https://schema.org","@type":"BlogPosting","dateModified":"2023-12-18T06:59:14+00:00","datePublished":"2023-12-18T06:59:14+00:00","description":"Overall architecture","headline":"Architecture","mainEntityOfPage":{"@type":"WebPage","@id":"/overview/architecture"},"url":"/overview/architecture"}</script>
 <!-- End Jekyll SEO tag -->
 </head>
 
@@ -274,7 +274,54 @@
 
 <div class="content">
     <h1 id="Architecture">Architecture</h1>
-    <p>TRANSLATING</p>
+    <h2 id="overall-architecture">Overall architecture</h2>
+
+<p>The overall architecture of the Pegasus is shown in the following figure, which is divided into four parts:</p>
+<ul>
+  <li>Client Lib: Encapsulates the mapping rules of user data to the storage server (Replica Server), as well as the communication details with the storage server, and provides a concise Key-Value access interfaces for users to use</li>
+  <li>Replica Server: Responsible for data storage and responding to data access requests from Client Lib</li>
+  <li>Meta Server: Responsible for the Replica Server survival detection, data sharding management, load balancing, etc. Usually, a deployment mode of one-leader and multiple-backups is adopted</li>
+  <li>Zookeeper: Responsible for selecting the leader between the Meta Servers to achieve high availability, and store various metadata of the cluster</li>
+</ul>
+
+<p><img src="/assets/images/pegasus-architecture-components.png" alt="pegasus-architecture-components" class="img-responsive" /></p>
+
+<h2 id="replica-server">Replica Server</h2>
+
+<p>Replica Server is mainly responsible for data storage and access. Provide services using replica as the management unit:</p>
+<ul>
+  <li>The serving replica can be in the role of either primary replica or secondary replica</li>
+  <li>Using RocksDB as the storage engine at the underlying level</li>
+  <li>Manage commit logs and implement data replication protocols to ensure data consistency</li>
+</ul>
+
+<h2 id="meta-server">Meta Server</h2>
+
+<p>The Meta Servers usually adopted in the deployment mode of one-leader and multiple-backups, and all states are persisted to the Zookeeper and the leader is selected through the Zookeeper. When the leader fails, another backup immediately grabs the lock and restores its state from the Zookeeper, becoming the new leader. The functions that Meta Servers are responsible for include:</p>
+<ul>
+  <li>Cluster initialization</li>
+  <li>Management of Replica Servers</li>
+  <li>Assignment, management, and load balancing scheduling of replicas</li>
+  <li>Creating and deleting tables</li>
+  <li>Respond to client requests and provide the latest routing table (partition configuration) to the client</li>
+</ul>
+
+<h2 id="apache-zookeeper">Apache Zookeeper</h2>
+
+<p>In Pegasus, Zookeeper has two main functions:</p>
+<ul>
+  <li>Cluster metadata storage</li>
+  <li>Meta Server leader selection</li>
+</ul>
+
+<h2 id="client-lib">Client Lib</h2>
+
+<p>Client Lib provides users with data access interfaces, including features:</p>
+<ul>
+  <li>Concise interfaces: Provides simple interfaces for users, encapsulating details such as data locating and fault tolerance internally</li>
+  <li>Simple configuration: Users only need to specify the Meta Server addresses list through the configuration file to access the Pegasus cluster</li>
+  <li>Try to interact directly with Replica Servers and minimize access frequency to Meta Servers to avoid single-point issues, and don’t rely on Zookeeper</li>
+</ul>
 
 </div>
                 </div>
@@ -287,7 +334,15 @@
     Table of contents
 </p>
 <ul class="menu-list">
-  <li><a href="#Architecture">Architecture</a></li>
+  <li><a href="#Architecture">Architecture</a>
+    <ul>
+      <li><a href="#overall-architecture">Overall architecture</a></li>
+      <li><a href="#replica-server">Replica Server</a></li>
+      <li><a href="#meta-server">Meta Server</a></li>
+      <li><a href="#apache-zookeeper">Apache Zookeeper</a></li>
+      <li><a href="#client-lib">Client Lib</a></li>
+    </ul>
+  </li>
 </ul>
 
                     
