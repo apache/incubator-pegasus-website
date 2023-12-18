@@ -16,15 +16,15 @@
 <meta name="generator" content="Jekyll v4.3.2" />
 <meta property="og:title" content="Data Model" />
 <meta property="og:locale" content="en_US" />
-<meta name="description" content="数据模型介绍" />
-<meta property="og:description" content="数据模型介绍" />
+<meta name="description" content="介绍" />
+<meta property="og:description" content="介绍" />
 <meta property="og:site_name" content="Pegasus" />
 <meta property="og:type" content="article" />
-<meta property="article:published_time" content="2023-12-18T06:59:14+00:00" />
+<meta property="article:published_time" content="2023-12-18T13:11:22+00:00" />
 <meta name="twitter:card" content="summary" />
 <meta property="twitter:title" content="Data Model" />
 <script type="application/ld+json">
-{"@context":"https://schema.org","@type":"BlogPosting","dateModified":"2023-12-18T06:59:14+00:00","datePublished":"2023-12-18T06:59:14+00:00","description":"数据模型介绍","headline":"Data Model","mainEntityOfPage":{"@type":"WebPage","@id":"/overview/data-model/"},"url":"/overview/data-model/"}</script>
+{"@context":"https://schema.org","@type":"BlogPosting","dateModified":"2023-12-18T13:11:22+00:00","datePublished":"2023-12-18T13:11:22+00:00","description":"介绍","headline":"Data Model","mainEntityOfPage":{"@type":"WebPage","@id":"/overview/data-model/"},"url":"/overview/data-model/"}</script>
 <!-- End Jekyll SEO tag -->
 </head>
 
@@ -278,27 +278,23 @@
 
 <div class="content">
     <h1 id="数据模型">数据模型</h1>
-    <h2 id="数据模型介绍">数据模型介绍</h2>
+    <h2 id="介绍">介绍</h2>
 
-<p>Pegasus 的数据模型非常简单，就是 Key-Value 模型，不支持复杂的 Schema。但是为了增强其表达能力，Key被分裂为 <strong>HashKey</strong> 和 <strong>SortKey</strong>，即组合键（composite key， <code class="language-plaintext highlighter-rouge">[HashKey, SortKey] -&gt; Value</code>），这与 <a href="https://aws.amazon.com/dynamodb/">DynamoDB</a> 中提供的 <a href="http://docs.aws.amazon.com/amazondynamodb/latest/developerguide/HowItWorks.CoreComponents.html#HowItWorks.CoreComponents.PrimaryKey"><em>composite primary key</em></a>（partition key and sort key）是很类似的。</p>
-
-<p>这样设计的原因是：</p>
-<ul>
-  <li>Pegasus系统采用基于 Hash 的固定分片，必须通过一个方式计算数据的分片ID。最简单的办法就是让用户提供一个 HashKey，然后通过hash函数计算获得。</li>
-  <li>简单的 <code class="language-plaintext highlighter-rouge">HashKey -&gt; Value</code> 方式，在表达能力上又偏弱，不方便业务使用。</li>
-</ul>
+<p>Pegasus 的数据模型非常简单，就是 Key-Value 模型，不支持复杂的 Schema。但是为了增强其表达能力，Key被分裂为 <strong>HashKey</strong> 和 <strong>SortKey</strong>，即组合键（composite key， <code class="language-plaintext highlighter-rouge">[HashKey, SortKey] -&gt; Value</code>），这与 <a href="https://aws.amazon.com/dynamodb/">DynamoDB</a> 中的 <a href="http://docs.aws.amazon.com/amazondynamodb/latest/developerguide/HowItWorks.CoreComponents.html#HowItWorks.CoreComponents.PrimaryKey">composite primary key</a>（partition key and sort key）是类似的。</p>
 
 <h3 id="hashkey">HashKey</h3>
 
 <p>字节串。类似于 DynamoDB 中的 partition key，HashKey 用于计算数据属于哪个分片。Pegasus 使用一个特定的 hash 函数，对HashKey 计算出一个hash值，然后对分片个数取模，就得到该数据对应的 <strong>Partition ID</strong> 。因此，HashKey 相同的数据总是存储在同一个分片中。</p>
 <blockquote>
-  <p>注意：在C++客户端侧，HashKey长度限制为64KB。在Java客户侧，如果开启了<a href="https://github.com/apache/incubator-pegasus/blob/v2.5.0/java-client/src/main/java/org/apache/pegasus/client/ClientOptions.java#L360C12-L360C12">WriteLimiter</a>，则限制为1KB。
+  <p>注意：
+在C++客户端侧，HashKey长度限制为64KB。
+在Java客户侧，如果开启了<a href="https://github.com/apache/incubator-pegasus/blob/v2.5.0/java-client/src/main/java/org/apache/pegasus/client/ClientOptions.java#L360C12-L360C12">WriteLimiter</a>，则限制为1KB。
 在Server侧，从Pegasus 2.0.0开始，如果设置 <code class="language-plaintext highlighter-rouge">[replication]max_allowed_write_size</code> 为非0，则限制整个请求包的大小为该值，默认为1MB。</p>
 </blockquote>
 
 <h3 id="sortkey">SortKey</h3>
 
-<p>字节串。类似于 DynamoDB 中的 sort key，SortKey 用于数据在分片内的排序。HashKey 相同的数据放在一起，并且按照 SortKey 的字节序排序。实际上，在内部存储到RocksDB时，我们将 HashKey 和 SortKey 拼在一起作为 RocksDB 的 key。</p>
+<p>字节串。类似于 DynamoDB 中的 sort key，SortKey 用于数据在分片内的排序。实际上，在内部存储到RocksDB时，我们将 HashKey 和 SortKey 拼在一起作为 RocksDB 的 key。</p>
 <blockquote>
   <p>注意：在C++客户端侧，SortKey长度无限制。在Java客户侧，如果开启了<a href="https://github.com/apache/incubator-pegasus/blob/v2.5.0/java-client/src/main/java/org/apache/pegasus/client/ClientOptions.java#L360C12-L360C12">WriteLimiter</a>，则限制为1KB。
 在Server侧，从Pegasus 2.0.0开始，如果设置 <code class="language-plaintext highlighter-rouge">[replication]max_allowed_write_size</code> 为非0，则限制整个请求包的大小为该值，默认为1MB。</p>
@@ -341,7 +337,7 @@
 <ul class="menu-list">
   <li><a href="#数据模型">数据模型</a>
     <ul>
-      <li><a href="#数据模型介绍">数据模型介绍</a>
+      <li><a href="#介绍">介绍</a>
         <ul>
           <li><a href="#hashkey">HashKey</a></li>
           <li><a href="#sortkey">SortKey</a></li>
