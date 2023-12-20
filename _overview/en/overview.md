@@ -37,7 +37,7 @@ between data centers, automatic load balancing, and online partition split.
 
 ## Presentations
 
-(不完全统计,如果你有新的Pegasus相关分享,欢迎提交 [PR](https://github.com/apache/incubator-pegasus-website/pulls))
+(Incomplete statistics. If you have any new Pegasus related sharing, please feel free to submit a [PR](https://github.com/apache/incubator-pegasus-website/pulls))
 
 - 2023, Chengdu China, COSCon 2023, _How does Apache Pegasus used in SensorsData_, Guohao Li ([Intro](https://kaiyuanshe.cn/activity/recVnSz8ru/agenda/recAg8mw7f), [Slides](https://www.slideshare.net/acelyc1112009/how-does-apache-pegasusused-in-sensorsdata))
 - 2023, Beijing China, DataFunSummit 2023, _The Implementation and Future Planning of Apache Pegasus Application_, Yuchen He
