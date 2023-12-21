@@ -2,17 +2,22 @@
 permalink: /overview/benchmark/
 ---
 
-## 各版本的性能测试
+## 测试工具及配置
 
-> 测试结果说明：
-> - Case：分为只读测试`Read`、只写测试`Write`、读写混合测试`Read & Write`
-> - threads：写为 `a * b` 的形式，其中`a`表示client的实例数，即YCSB是运行在几个节点上的。`b`表示线程数，即YCSB中的`threadcount`配置项值
-> - RW Ratio：读写操作比，即YCSB配置中的`readproportion`与`updateproportion`或`insertproportion`的比值
-> - duration：测试总时长，单位小时
-> - R-QPS：每秒读操作数
-> - R-AVG|P99|P999-Lat：读操作的平均|P99|P999延迟，单位微秒
-> - W-QPS：每秒写操作数
-> - W-AVG|P99|P999-Lat：写操作的平均|P99|P999延迟，单位微秒
+* 使用[YCSB](https://github.com/xiaomi/pegasus-ycsb)中的Pegasus Java Client进行测试
+* 读写请求的数据分布特征：zipfian，可以理解为遵守80/20原则的数据分布，即80%的访问都集中在20%的内容上
+
+### 测试结果说明：
+- Case：分为只读测试`Read`、只写测试`Write`、读写混合测试`Read & Write`
+- threads：写为 `a * b` 的形式，其中`a`表示client的实例数，即YCSB是运行在几个节点上的。`b`表示线程数，即YCSB中的`threadcount`配置项的值
+- RW Ratio：读写操作比，即YCSB配置中的`readproportion`与`updateproportion`或`insertproportion`的比值
+- duration：测试总时长，单位小时
+- R-QPS：每秒读操作数
+- R-AVG|P99|P999-Lat：读操作的平均|P99|P999延迟，单位微秒
+- W-QPS：每秒写操作数
+- W-AVG|P99|P999-Lat：写操作的平均|P99|P999延迟，单位微秒
+
+## 各版本的性能测试
 
 ### Pegasus 2.4.0
 
@@ -20,9 +25,9 @@ permalink: /overview/benchmark/
 
 ##### 硬件配置
 
-* CPU：Intel® Xeon® Silver 4210 * 2 2.20 GHz / 3.20 GHz (20 cores)
-* 内存：DDR4 16G * 8
-* 磁盘：容量 SSD 480G SATA * 8
+* CPU：Intel® Xeon® Silver 4210 * 2 2.20 GHz / 3.20 GHz
+* 内存：128 GB
+* 磁盘：SSD 480 GB * 8
 * 网卡：带宽 10Gb
 
 ##### 集群规模
@@ -30,13 +35,9 @@ permalink: /overview/benchmark/
 * replica server节点数：5
 * 测试表的Partition数：64
 
-##### 测试工具及配置
-
-* [YCSB](https://github.com/xiaomi/pegasus-ycsb) (使用Pegasus Java Client)
-* 读写请求的数据分布特征：zipfian，可以理解为遵守80/20原则的数据分布，即80%的访问都集中在20%的内容上
-* 单条数据大小：1KB
-
 #### 测试结果
+
+- 单条数据大小：1KB
 
 | Case         | threads | Read/Write | R-QPS   | R-AVG-Lat | R-P99-Lat | W-QPS  | W-AVG-Lat | W-P99-Lat |
 |--------------|---------|------------|---------|-----------|-----------|--------|-----------|-----------|
@@ -72,9 +73,9 @@ permalink: /overview/benchmark/
 
 ##### 硬件配置
 
-* CPU：Intel® Xeon® CPU E5-2620 v3 @ 2.40 GHz (24 cores)
+* CPU：Intel® Xeon® CPU E5-2620 v3 @ 2.40 GHz
 * 内存：128 GB
-* 存储：容量 480 G RAID0 SSD * 8
+* 磁盘：SSD 480 GB * 8
 * 网卡：带宽 10 Gb
 
 其他测试环境同2.4.0
@@ -100,7 +101,11 @@ permalink: /overview/benchmark/
 
 ### 1.12.2
 
+#### 测试环境
+
 测试环境同 1.12.3
+
+#### 测试结果
 
 - 单条数据大小：320B
 
@@ -122,6 +127,8 @@ permalink: /overview/benchmark/
 - rocksdb_block_cache_capacity = 40G
 - 其他测试环境同 1.12.3
 
+#### 测试结果
+
 | Case         | threads | Read/Write | duration | Max cache hit rate | R-QPS | R-AVG-Lat | R-P99-Lat | R-P999-Lat | W-QPS | W-AVG-Lat | W-P99-Lat | W-P999-Lat |
 |--------------|---------|------------|----------|--------------------|-------|-----------|-----------|------------|-------|-----------|-----------|------------|
 | Read & Write | 3 * 15  | 20:1       | 1        | 10%                | 150K  | 263       | 808       | 12615      | 8k    | 1474      | 7071      | 26342      |
@@ -132,6 +139,8 @@ permalink: /overview/benchmark/
 #### 测试环境
 
 测试环境同 1.12.3
+
+#### 测试结果
 
 - 单条数据大小：20KB * 2备份
 
@@ -176,6 +185,8 @@ permalink: /overview/benchmark/
 
 测试环境同 1.12.3
 
+#### 测试结果
+
 - 单条数据大小：320B
 
 | Case         | threads  | Read/Write | duration | R-QPS     | R-AVG-Lat | R-P99-Lat | W-QPS  | W-AVG-Lat | W-P99-Lat |
@@ -192,14 +203,15 @@ permalink: /overview/benchmark/
 如无特殊说明：
 
 * 测试环境同 1.12.3
-* 延迟单位：微妙
 * 单条数据大小：1KB
 * 客户端：节点数：3，版本号：1.11.10-thrift-0.11.0-inlined-release
 * 服务端：节点数：5，版本号：1.12.3，表分片数：64，开启rocksdb限速：max_rate=500MB, auto_tune=true
 
 ### 不同的客户端线程数
 
-该项测试旨在观察在默认配置下（注意：未开启RocksDB限速），不同线程（仅读和仅写）对QPS和延迟的影响。
+该项测试旨在对比在默认配置下，不同线程（仅读和仅写）对QPS和延迟的影响。
+
+> 注意：未开启RocksDB限速
 
 ![5-node-write](/assets/images/benchmark/5-node-write.png)
 
@@ -209,9 +221,11 @@ permalink: /overview/benchmark/
 
 ### 是否开启RocksDB限速
 
-Pegasus底层采用RocksDB做存储引擎，当数据写入增多，会触发compaction操作，占用较多磁盘IO，出现较多的毛刺现象。该项测试展示了开启[RocksDB的限速](http://10.232.52.164:4000/overview/benchmark)后，可以降低compaction负载，从而显著的降低毛刺现象。
+> 测试场景为：测试`threads`配置为：3 * 20，QPS大约为44K
 
-下图分别展示了无限速、500MB限速、500MB限速同时开启auto-tune功能，三种场景的IO使用率和写P99延迟(注意：测试场景为：3client*20thread，QPS≈44K)：
+Pegasus底层采用RocksDB做存储引擎，当数据写入增多，会触发更多的compaction操作，占用更多的磁盘IO，出现更多的毛刺现象。该项测试展示了开启RocksDB的限速后，可以降低compaction负载，从而显著的降低毛刺现象。
+
+下图分别展示了无限速、500MB/s限速、500MB/s限速同时开启auto-tune功能，三种场景的IO使用率和写P99延迟情况：
 
 - 磁盘IO占用：
 ![io-no-limit](/assets/images/benchmark/io-no-limit.png)
@@ -223,27 +237,30 @@ Pegasus底层采用RocksDB做存储引擎，当数据写入增多，会触发com
 ![500-limit-set](/assets/images/benchmark/500-limit-set.png)
 ![500-limit-auto-set](/assets/images/benchmark/500-limit-auto-set.png)
 
-可以发现，磁盘IO使用率被降低，相应的写延迟的毛刺现象也被大大缓解。
+可以发现，磁盘IO使用率得到降低，相应的写延迟的毛刺现象也被大大缓解。
 
 我们从YCSB的测试结果：
 ![limit](/assets/images/benchmark/limit.png)
 也可以看到：
 
-* 开启限速、开启限速并开启auto-tune后，QPS吞吐分别约提升了5%，20%
+* 开启限速，开启限速并开启auto-tune后，QPS吞吐分别约提升了5%，20%
 * 开启限速后，仅对极端情况下的延迟(P999/P9999)有显著改善作用，对于大部分请求来说，改善并不明显
 
 但是**需要注意**的是：
 
-auto-tune功能在单条数据较大的场景下可能会引发[write stall](https://github.com/facebook/rocksdb/wiki/Write-Stalls)（在我们的测试中，当单条value=10KB，QPS=10K时，发生write stall，关闭Auto-Tune后不会产生write stall），所以请合理评估是否开启auto-tune
+auto-tune功能在单条数据较大的场景下可能会引发[write stall](https://github.com/facebook/rocksdb/wiki/Write-Stalls)，请合理评估是否开启auto-tune。
 
 ### 不同的replica server数量
 
-该项测试旨在观察，不同机器数量对读写性能(只读和只写场景)的影响。
+该项测试旨在观察，不同机器数量对读写性能的影响。
+
+> 测试场景为：测试`Case`为只读和只写
+
 ![node-write](/assets/images/benchmark/node-qps-write.png)
 
 ![node-read](/assets/images/benchmark/node-qps-read.png)
 
-由图中可以看到
+由图中可以看到：
 
 * 扩容对写性能的提升要优于读性能的提升
 * 扩容带来的性能提升并不是线性增加的
@@ -252,12 +269,13 @@ auto-tune功能在单条数据较大的场景下可能会引发[write stall](htt
 
 ### 不同的表分片数
 
-该项测试旨在观察，表的不同分片对性能的影响。测试场景为：
+该项测试旨在观察，表的不同分片对性能的影响。
 
-仅读：3client*50thread
-
-仅写：3client*40thread
+> 测试场景为：
+> 仅读：`threads`配置为：3 * 50
+> 仅写：`threads`配置为：3 * 40
 
 ![partition](/assets/images/benchmark/partition.png)
 
-由图中可以看到，增加分片可以提高读性能，但是降低了写性能，所以请合理评估你的业务需求。除此之外，若分片数过小，可能会导致单分片过大，磁盘分布不均的问题，在实际的线上业务中，如无特别需求，我们建议单分片维持在10GB以内是合理的
+由图中可以看到，增加分片可以提高读性能，但是降低了写性能，所以请合理评估你的业务需求。
+除此之外，若分片数过小，可能会导致单分片过大，磁盘分布不均的问题，在实际的线上业务中，如无特别需求，建议单分片维持在10GB以内。
