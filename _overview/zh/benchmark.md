@@ -7,19 +7,19 @@ permalink: /overview/benchmark/
 * 使用[YCSB](https://github.com/xiaomi/pegasus-ycsb)中的Pegasus Java Client进行测试
 * 读写请求的数据分布特征：zipfian，可以理解为遵守80/20原则的数据分布，即80%的访问都集中在20%的内容上
 
-### 测试结果说明：
+### 测试结果说明
 - Case：分为只读测试`Read`、只写测试`Write`、读写混合测试`Read & Write`
 - threads：写为 `a * b` 的形式，其中`a`表示client的实例数，即YCSB是运行在几个节点上的。`b`表示线程数，即YCSB中的`threadcount`配置项的值
 - RW Ratio：读写操作比，即YCSB配置中的`readproportion`与`updateproportion`或`insertproportion`的比值
 - duration：测试总时长，单位小时
 - R-QPS：每秒读操作数
-- R-AVG|P99|P999-Lat：读操作的平均|P99|P999延迟，单位微秒
+- R-AVG-Lat,R-P99-Lat,R-P999-Lat：读操作的平均，P99，P999延迟，单位微秒
 - W-QPS：每秒写操作数
-- W-AVG|P99|P999-Lat：写操作的平均|P99|P999延迟，单位微秒
+- W-AVG-Lat,W-P99-Lat,W-P999-Lat：写操作的平均，P99，P999延迟，单位微秒
 
 ## 各版本的性能测试
 
-### Pegasus 2.4.0
+### 2.4.0
 
 #### 测试环境
 
@@ -49,7 +49,7 @@ permalink: /overview/benchmark/
 | Read & Write | 3 * 30  | 3:1        | 140,484 | 351       | 3,277     | 46,822 | 856       | 2,044     |
 | Read & Write | 3 * 50  | 30:1       | 336,106 | 419       | 1,221     | 11,203 | 763       | 1,276     |
 
-### Pegasus 2.3.0
+### 2.3.0
 
 #### 测试环境
 
