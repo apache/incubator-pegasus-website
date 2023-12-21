@@ -16,15 +16,15 @@
 <meta name="generator" content="Jekyll v4.3.2" />
 <meta property="og:title" content="Benchmark" />
 <meta property="og:locale" content="en_US" />
-<meta name="description" content="测试环境" />
-<meta property="og:description" content="测试环境" />
+<meta name="description" content="测试工具及配置" />
+<meta property="og:description" content="测试工具及配置" />
 <meta property="og:site_name" content="Pegasus" />
 <meta property="og:type" content="article" />
-<meta property="article:published_time" content="2023-12-20T13:27:00+00:00" />
+<meta property="article:published_time" content="2023-12-21T12:21:17+00:00" />
 <meta name="twitter:card" content="summary" />
 <meta property="twitter:title" content="Benchmark" />
 <script type="application/ld+json">
-{"@context":"https://schema.org","@type":"BlogPosting","dateModified":"2023-12-20T13:27:00+00:00","datePublished":"2023-12-20T13:27:00+00:00","description":"测试环境","headline":"Benchmark","mainEntityOfPage":{"@type":"WebPage","@id":"/overview/benchmark/"},"url":"/overview/benchmark/"}</script>
+{"@context":"https://schema.org","@type":"BlogPosting","dateModified":"2023-12-21T12:21:17+00:00","datePublished":"2023-12-21T12:21:17+00:00","description":"测试工具及配置","headline":"Benchmark","mainEntityOfPage":{"@type":"WebPage","@id":"/overview/benchmark/"},"url":"/overview/benchmark/"}</script>
 <!-- End Jekyll SEO tag -->
 </head>
 
@@ -278,171 +278,278 @@
 
 <div class="content">
     <h1 id="性能测试">性能测试</h1>
-    <h2 id="测试环境">测试环境</h2>
-
-<p><strong>机器配置：</strong></p>
+    <h2 id="测试工具及配置">测试工具及配置</h2>
 
 <ul>
-  <li>CPU：Intel(R) Xeon(R) CPU E5-2620 v3 @ 2.40GHz （24 cores）</li>
-  <li>内存​：128GB</li>
-  <li>存储：480G RAID0 SSD *8</li>
-  <li>网卡：10Gb</li>
+  <li>使用<a href="https://github.com/xiaomi/pegasus-ycsb">YCSB</a>中的Pegasus Java Client进行测试</li>
+  <li>读写请求的数据分布特征：zipfian，可以理解为遵守80/20原则的数据分布，即80%的访问都集中在20%的内容上</li>
 </ul>
 
-<p><strong>集群配置：</strong></p>
+<h3 id="测试结果说明">测试结果说明</h3>
+<ul>
+  <li>Case：分为只读测试<code class="language-plaintext highlighter-rouge">Read</code>、只写测试<code class="language-plaintext highlighter-rouge">Write</code>、读写混合测试<code class="language-plaintext highlighter-rouge">Read &amp; Write</code></li>
+  <li>threads：写为 <code class="language-plaintext highlighter-rouge">a * b</code> 的形式，其中<code class="language-plaintext highlighter-rouge">a</code>表示client的实例数，即YCSB是运行在几个节点上的。<code class="language-plaintext highlighter-rouge">b</code>表示线程数，即YCSB中的<code class="language-plaintext highlighter-rouge">threadcount</code>配置项的值</li>
+  <li>RW Ratio：读写操作比，即YCSB配置中的<code class="language-plaintext highlighter-rouge">readproportion</code>与<code class="language-plaintext highlighter-rouge">updateproportion</code>或<code class="language-plaintext highlighter-rouge">insertproportion</code>的比值</li>
+  <li>duration：测试总时长，单位小时</li>
+  <li>R-QPS：每秒读操作数</li>
+  <li>R-AVG-Lat,R-P99-Lat,R-P999-Lat：读操作的平均，P99，P999延迟，单位微秒</li>
+  <li>W-QPS：每秒写操作数</li>
+  <li>W-AVG-Lat,W-P99-Lat,W-P999-Lat：写操作的平均，P99，P999延迟，单位微秒</li>
+</ul>
+
+<h2 id="各版本的性能测试">各版本的性能测试</h2>
+
+<h3 id="240">2.4.0</h3>
+
+<h4 id="测试环境">测试环境</h4>
+
+<h5 id="硬件配置">硬件配置</h5>
 
 <ul>
-  <li>节点数：5个replica server节点</li>
-  <li>测试表的Partition数：64个</li>
+  <li>CPU：Intel® Xeon® Silver 4210 * 2 2.20 GHz / 3.20 GHz</li>
+  <li>内存：128 GB</li>
+  <li>磁盘：SSD 480 GB * 8</li>
+  <li>网卡：带宽 10Gb</li>
 </ul>
 
-<p><strong>测试工具：</strong></p>
+<h5 id="集群规模">集群规模</h5>
 
 <ul>
-  <li><a href="https://github.com/xiaomi/pegasus-ycsb">YCSB</a> (使用Pegasus Java Client)</li>
-  <li>读写请求的数据分布特征：zipfian，可以理解为遵守80/20原则的数据分布，即80%的访问都集中在20%的内容上。</li>
+  <li>replica server节点数：5</li>
+  <li>测试表的Partition数：64</li>
 </ul>
 
-<p><strong>备注：</strong></p>
+<h4 id="测试结果">测试结果</h4>
 
 <ul>
-  <li>运行时长单位：小时。</li>
-  <li>QPS单位：条/秒。</li>
-  <li>延迟单位：微秒。</li>
+  <li>单条数据大小：1KB</li>
 </ul>
 
-<h2 id="测试结果">测试结果</h2>
+<table>
+  <thead>
+    <tr>
+      <th>Case</th>
+      <th>threads</th>
+      <th>Read/Write</th>
+      <th>R-QPS</th>
+      <th>R-AVG-Lat</th>
+      <th>R-P99-Lat</th>
+      <th>W-QPS</th>
+      <th>W-AVG-Lat</th>
+      <th>W-P99-Lat</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>Write</td>
+      <td>3 * 15</td>
+      <td>0:1</td>
+      <td>-</td>
+      <td>-</td>
+      <td>-</td>
+      <td>56,953</td>
+      <td>787</td>
+      <td>1,786</td>
+    </tr>
+    <tr>
+      <td>Read</td>
+      <td>3 * 50</td>
+      <td>1:0</td>
+      <td>360,642</td>
+      <td>413</td>
+      <td>984</td>
+      <td>-</td>
+      <td>-</td>
+      <td>-</td>
+    </tr>
+    <tr>
+      <td>Read &amp; Write</td>
+      <td>3 * 30</td>
+      <td>1:1</td>
+      <td>62,572</td>
+      <td>464</td>
+      <td>5,274</td>
+      <td>62,561</td>
+      <td>985</td>
+      <td>3,764</td>
+    </tr>
+    <tr>
+      <td>Read &amp; Write</td>
+      <td>3 * 15</td>
+      <td>1:3</td>
+      <td>16,844</td>
+      <td>372</td>
+      <td>3,980</td>
+      <td>50,527</td>
+      <td>762</td>
+      <td>1,551</td>
+    </tr>
+    <tr>
+      <td>Read &amp; Write</td>
+      <td>3 * 15</td>
+      <td>1:30</td>
+      <td>1,861</td>
+      <td>381</td>
+      <td>3,557</td>
+      <td>55,816</td>
+      <td>790</td>
+      <td>1,688</td>
+    </tr>
+    <tr>
+      <td>Read &amp; Write</td>
+      <td>3 * 30</td>
+      <td>3:1</td>
+      <td>140,484</td>
+      <td>351</td>
+      <td>3,277</td>
+      <td>46,822</td>
+      <td>856</td>
+      <td>2,044</td>
+    </tr>
+    <tr>
+      <td>Read &amp; Write</td>
+      <td>3 * 50</td>
+      <td>30:1</td>
+      <td>336,106</td>
+      <td>419</td>
+      <td>1,221</td>
+      <td>11,203</td>
+      <td>763</td>
+      <td>1,276</td>
+    </tr>
+  </tbody>
+</table>
+
+<h3 id="230">2.3.0</h3>
+
+<h4 id="测试环境-1">测试环境</h4>
+
+<p>同2.4.0</p>
+
+<h4 id="测试结果-1">测试结果</h4>
+
+<table>
+  <thead>
+    <tr>
+      <th>Case</th>
+      <th>threads</th>
+      <th>Read/Write</th>
+      <th>R-QPS</th>
+      <th>R-AVG-Lat</th>
+      <th>R-P99-Lat</th>
+      <th>W-QPS</th>
+      <th>W-AVG-Lat</th>
+      <th>W-P99-Lat</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>Write</td>
+      <td>3 * 15</td>
+      <td>0:1</td>
+      <td>-</td>
+      <td>-</td>
+      <td>-</td>
+      <td>42,386</td>
+      <td>1,060</td>
+      <td>6,628</td>
+    </tr>
+    <tr>
+      <td>Read</td>
+      <td>3 * 50</td>
+      <td>1:0</td>
+      <td>331,623</td>
+      <td>585</td>
+      <td>2,611</td>
+      <td>-</td>
+      <td>-</td>
+      <td>-</td>
+    </tr>
+    <tr>
+      <td>Read &amp; Write</td>
+      <td>3 * 30</td>
+      <td>1:1</td>
+      <td>38,766</td>
+      <td>1,067</td>
+      <td>15,521</td>
+      <td>38,774</td>
+      <td>1,246</td>
+      <td>7,791</td>
+    </tr>
+    <tr>
+      <td>Read &amp; Write</td>
+      <td>3 * 15</td>
+      <td>1:3</td>
+      <td>13,140</td>
+      <td>819</td>
+      <td>11,460</td>
+      <td>39,428</td>
+      <td>863</td>
+      <td>4,884</td>
+    </tr>
+    <tr>
+      <td>Read &amp; Write</td>
+      <td>3 * 15</td>
+      <td>1:30</td>
+      <td>1,552</td>
+      <td>937</td>
+      <td>9,524</td>
+      <td>46,570</td>
+      <td>930</td>
+      <td>5,315</td>
+    </tr>
+    <tr>
+      <td>Read &amp; Write</td>
+      <td>3 * 30</td>
+      <td>3:1</td>
+      <td>93,746</td>
+      <td>623</td>
+      <td>6,389</td>
+      <td>31,246</td>
+      <td>996</td>
+      <td>5,543</td>
+    </tr>
+    <tr>
+      <td>Read &amp; Write</td>
+      <td>3 * 50</td>
+      <td>30:1</td>
+      <td>254,534</td>
+      <td>560</td>
+      <td>2,627</td>
+      <td>8,481</td>
+      <td>901</td>
+      <td>3,269</td>
+    </tr>
+  </tbody>
+</table>
 
 <h3 id="1123">1.12.3</h3>
 
+<h4 id="测试环境-2">测试环境</h4>
+
+<h5 id="硬件配置-1">硬件配置</h5>
+
 <ul>
-  <li>延迟单位: 微秒</li>
-  <li>pegasu-client: 1.11.10-thrift-0.11.0-inlined-release</li>
-  <li>客户端节点数: 3</li>
+  <li>CPU：Intel® Xeon® CPU E5-2620 v3 @ 2.40 GHz</li>
+  <li>内存：128 GB</li>
+  <li>磁盘：SSD 480 GB * 8</li>
+  <li>网卡：带宽 10 Gb</li>
 </ul>
 
-<h4 id="单条数据大小320b">单条数据大小：320B</h4>
+<p>其他测试环境同2.4.0</p>
 
-<table>
-  <thead>
-    <tr>
-      <th>测试case</th>
-      <th>RW Ratio</th>
-      <th>R-QPS</th>
-      <th>R-AVG-Lat</th>
-      <th>R-P99-Lat</th>
-      <th>W-QPS</th>
-      <th>W-AVG-Lat</th>
-      <th>W-P99-Lat</th>
-    </tr>
-  </thead>
-  <tbody>
-    <tr>
-      <td>读写同时: 3客户端*15线程</td>
-      <td>0:1</td>
-      <td> </td>
-      <td> </td>
-      <td> </td>
-      <td>41068</td>
-      <td>728</td>
-      <td>3439</td>
-    </tr>
-    <tr>
-      <td>读写同时: 3客户端*15线程</td>
-      <td>1:3</td>
-      <td>16011</td>
-      <td>242</td>
-      <td>686</td>
-      <td>48036</td>
-      <td>851</td>
-      <td>4027</td>
-    </tr>
-    <tr>
-      <td>读写同时: 3客户端*30线程</td>
-      <td>30:1</td>
-      <td>279818</td>
-      <td>295</td>
-      <td>873</td>
-      <td>9326</td>
-      <td>720</td>
-      <td>3355</td>
-    </tr>
-  </tbody>
-</table>
-
-<h4 id="单条数据大小1kb">单条数据大小：1KB</h4>
-
-<table>
-  <thead>
-    <tr>
-      <th>测试case</th>
-      <th>RW Ratio</th>
-      <th>R-QPS</th>
-      <th>R-AVG-Lat</th>
-      <th>R-P99-Lat</th>
-      <th>W-QPS</th>
-      <th>W-AVG-Lat</th>
-      <th>W-P99-Lat</th>
-    </tr>
-  </thead>
-  <tbody>
-    <tr>
-      <td>读写同时: 3客户端*15线程</td>
-      <td>0:1</td>
-      <td> </td>
-      <td> </td>
-      <td> </td>
-      <td>40732</td>
-      <td>1102</td>
-      <td>4216</td>
-    </tr>
-    <tr>
-      <td>读写同时: 3客户端*15线程</td>
-      <td>1:3</td>
-      <td>14355</td>
-      <td>476</td>
-      <td>2855</td>
-      <td>38547</td>
-      <td>1016</td>
-      <td>4135</td>
-    </tr>
-    <tr>
-      <td>读写同时: 3客户端*20线程</td>
-      <td>3:1</td>
-      <td>87480</td>
-      <td>368</td>
-      <td>4170</td>
-      <td>29159</td>
-      <td>940</td>
-      <td>4170</td>
-    </tr>
-    <tr>
-      <td>读写同时: 3客户端*50线程</td>
-      <td>1:0</td>
-      <td>312244</td>
-      <td>479</td>
-      <td>1178</td>
-      <td> </td>
-      <td> </td>
-      <td> </td>
-    </tr>
-  </tbody>
-</table>
-
-<h3 id="1122">1.12.2</h3>
+<h4 id="测试结果-2">测试结果</h4>
 
 <ul>
-  <li>延迟单位: 微秒</li>
-  <li>pegasu-client: 1.11.10-thrift-0.11.0-inlined-release</li>
-  <li>客户端节点数: 3</li>
   <li>单条数据大小：320B</li>
 </ul>
 
 <table>
   <thead>
     <tr>
-      <th>测试case</th>
-      <th>RW Ratio</th>
+      <th>Case</th>
+      <th>threads</th>
+      <th>Read/Write</th>
       <th>R-QPS</th>
       <th>R-AVG-Lat</th>
       <th>R-P99-Lat</th>
@@ -453,162 +560,310 @@
   </thead>
   <tbody>
     <tr>
-      <td>读写同时: 3客户端*15线程</td>
+      <td>Read &amp; Write</td>
+      <td>3 * 15</td>
       <td>0:1</td>
-      <td> </td>
-      <td> </td>
-      <td> </td>
-      <td>40439</td>
-      <td>739</td>
-      <td>2995</td>
+      <td>-</td>
+      <td>-</td>
+      <td>-</td>
+      <td>41,068</td>
+      <td>728</td>
+      <td>3,439</td>
     </tr>
     <tr>
-      <td>读写同时: 3客户端*15线程</td>
+      <td>Read &amp; Write</td>
+      <td>3 * 15</td>
       <td>1:3</td>
-      <td>16022</td>
-      <td>309</td>
-      <td>759</td>
-      <td>48078</td>
-      <td>830</td>
-      <td>3995</td>
+      <td>16,011</td>
+      <td>242</td>
+      <td>686</td>
+      <td>48,036</td>
+      <td>851</td>
+      <td>4,027</td>
     </tr>
     <tr>
-      <td>读写同时: 3客户端*30线程</td>
+      <td>Read &amp; Write</td>
+      <td>3 * 30</td>
       <td>30:1</td>
-      <td>244392</td>
-      <td>346</td>
-      <td>652</td>
-      <td>8137</td>
-      <td>731</td>
-      <td>2995</td>
+      <td>279,818</td>
+      <td>295</td>
+      <td>873</td>
+      <td>9,326</td>
+      <td>720</td>
+      <td>3,355</td>
     </tr>
   </tbody>
 </table>
 
-<h3 id="1116multi_getbatch_set">1.11.6(multi_get/batch_set)</h3>
-
-<p>特别注意：测试环境和参数以此为准</p>
-
 <ul>
-  <li>测试case：读使用multi_get，写使用batch_set，1QPS的batch_set等于3QPS的set操作</li>
-  <li>数据大小：单条数据3KB，sort_key数量为3</li>
-  <li>测试表的Partition数：128个</li>
-  <li>rocksdb_block_cache_capacity = 40G</li>
-  <li>pegasu-client = 1.11.7-thrift-0.11.0-inlined-release</li>
+  <li>单条数据大小：1KB</li>
 </ul>
 
 <table>
   <thead>
     <tr>
-      <th>测试Case</th>
-      <th>读写比</th>
-      <th>运行时长</th>
-      <th>Max缓存命中率</th>
-      <th>读QPS</th>
-      <th>读Avg延迟</th>
-      <th>读P99延迟</th>
-      <th>读P999延迟</th>
-      <th>写QPS</th>
-      <th>写Avg延迟</th>
-      <th>写P99延迟</th>
-      <th>写P999延迟</th>
+      <th>Case</th>
+      <th>threads</th>
+      <th>Read/Write</th>
+      <th>R-QPS</th>
+      <th>R-AVG-Lat</th>
+      <th>R-P99-Lat</th>
+      <th>W-QPS</th>
+      <th>W-AVG-Lat</th>
+      <th>W-P99-Lat</th>
     </tr>
   </thead>
   <tbody>
     <tr>
-      <td>3客户端*15线程</td>
-      <td>​20:1</td>
-      <td>1h</td>
+      <td>Read &amp; Write</td>
+      <td>3 * 15</td>
+      <td>0:1</td>
+      <td>-</td>
+      <td>-</td>
+      <td>-</td>
+      <td>40,732</td>
+      <td>1,102</td>
+      <td>4,216</td>
+    </tr>
+    <tr>
+      <td>Read &amp; Write</td>
+      <td>3 * 15</td>
+      <td>1:3</td>
+      <td>14,355</td>
+      <td>476</td>
+      <td>2,855</td>
+      <td>38,547</td>
+      <td>1,016</td>
+      <td>4,135</td>
+    </tr>
+    <tr>
+      <td>Read &amp; Write</td>
+      <td>3 * 20</td>
+      <td>3:1</td>
+      <td>87,480</td>
+      <td>368</td>
+      <td>4,170</td>
+      <td>29,159</td>
+      <td>940</td>
+      <td>4,170</td>
+    </tr>
+    <tr>
+      <td>Read &amp; Write</td>
+      <td>3 * 50</td>
+      <td>1:0</td>
+      <td>312,244</td>
+      <td>479</td>
+      <td>1,178</td>
+      <td>-</td>
+      <td>-</td>
+      <td>-</td>
+    </tr>
+  </tbody>
+</table>
+
+<h3 id="1122">1.12.2</h3>
+
+<h4 id="测试环境-3">测试环境</h4>
+
+<p>测试环境同 1.12.3</p>
+
+<h4 id="测试结果-3">测试结果</h4>
+
+<ul>
+  <li>单条数据大小：320B</li>
+</ul>
+
+<table>
+  <thead>
+    <tr>
+      <th>Case</th>
+      <th>threads</th>
+      <th>Read/Write</th>
+      <th>R-QPS</th>
+      <th>R-AVG-Lat</th>
+      <th>R-P99-Lat</th>
+      <th>W-QPS</th>
+      <th>W-AVG-Lat</th>
+      <th>W-P99-Lat</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>Read &amp; Write</td>
+      <td>3 * 15</td>
+      <td>0:1</td>
+      <td>-</td>
+      <td>-</td>
+      <td>-</td>
+      <td>40,439</td>
+      <td>739</td>
+      <td>2,995</td>
+    </tr>
+    <tr>
+      <td>Read &amp; Write</td>
+      <td>3 * 15</td>
+      <td>1:3</td>
+      <td>16,022</td>
+      <td>309</td>
+      <td>759</td>
+      <td>48,078</td>
+      <td>830</td>
+      <td>3,995</td>
+    </tr>
+    <tr>
+      <td>Read &amp; Write</td>
+      <td>3 * 30</td>
+      <td>30:1</td>
+      <td>244,392</td>
+      <td>346</td>
+      <td>652</td>
+      <td>8,137</td>
+      <td>731</td>
+      <td>2,995</td>
+    </tr>
+  </tbody>
+</table>
+
+<h3 id="1116">1.11.6</h3>
+
+<h4 id="测试环境-4">测试环境</h4>
+
+<ul>
+  <li>测试接口：multi_get() 和 batch_set()</li>
+  <li>一个hashkey下包含3条sortkey数据</li>
+  <li>单次batch_set()调用设置3个hashkey</li>
+  <li>单条数据大小：3KB</li>
+  <li>测试表的Partition数：128</li>
+  <li>rocksdb_block_cache_capacity = 40G</li>
+  <li>其他测试环境同 1.12.3</li>
+</ul>
+
+<h4 id="测试结果-4">测试结果</h4>
+
+<table>
+  <thead>
+    <tr>
+      <th>Case</th>
+      <th>threads</th>
+      <th>Read/Write</th>
+      <th>duration</th>
+      <th>Max cache hit rate</th>
+      <th>R-QPS</th>
+      <th>R-AVG-Lat</th>
+      <th>R-P99-Lat</th>
+      <th>R-P999-Lat</th>
+      <th>W-QPS</th>
+      <th>W-AVG-Lat</th>
+      <th>W-P99-Lat</th>
+      <th>W-P999-Lat</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>Read &amp; Write</td>
+      <td>3 * 15</td>
+      <td>20:1</td>
+      <td>1</td>
       <td>10%</td>
       <td>150K</td>
       <td>263</td>
       <td>808</td>
-      <td>12615</td>
+      <td>12,615</td>
       <td>8k</td>
-      <td>1474</td>
-      <td>7071</td>
-      <td>26342</td>
+      <td>1,474</td>
+      <td>7,071</td>
+      <td>26,342</td>
     </tr>
     <tr>
-      <td>​3客户端*7线程</td>
-      <td>​20:1</td>
-      <td>2h</td>
+      <td>Read &amp; Write</td>
+      <td>3 * 7</td>
+      <td>20:1</td>
+      <td>2</td>
       <td>17%</td>
       <td>75K</td>
       <td>226</td>
       <td>641</td>
-      <td>5331</td>
+      <td>5,331</td>
       <td>4K</td>
-      <td>1017</td>
-      <td>4583</td>
-      <td>14983</td>
+      <td>1,017</td>
+      <td>4,583</td>
+      <td>14,983</td>
     </tr>
   </tbody>
 </table>
 
 <h3 id="1111">1.11.1</h3>
 
-<h4 id="单条数据大小20kb">单条数据大小：20KB</h4>
+<h4 id="测试环境-5">测试环境</h4>
 
-<p>测试时间：2018/11/9</p>
+<p>测试环境同 1.12.3</p>
 
-<h5 id="2备份">2备份</h5>
+<h4 id="测试结果-5">测试结果</h4>
+
+<ul>
+  <li>单条数据大小：20KB * 2备份</li>
+</ul>
 
 <table>
   <thead>
     <tr>
-      <th>测试Case</th>
-      <th>读写比</th>
-      <th>运行时长</th>
-      <th>读QPS</th>
-      <th>读Avg延迟</th>
-      <th>读P99延迟</th>
-      <th>写QPS</th>
-      <th>写Avg延迟</th>
-      <th>写P99延迟</th>
+      <th>Case</th>
+      <th>threads</th>
+      <th>Read/Write</th>
+      <th>duration</th>
+      <th>R-QPS</th>
+      <th>R-AVG-Lat</th>
+      <th>R-P99-Lat</th>
+      <th>W-QPS</th>
+      <th>W-AVG-Lat</th>
+      <th>W-P99-Lat</th>
     </tr>
   </thead>
   <tbody>
     <tr>
-      <td>(1)数据加载: 3客户端*10线程</td>
+      <td>Write</td>
+      <td>3 * 10</td>
       <td>0:1</td>
       <td>0.98</td>
       <td>-</td>
       <td>-</td>
       <td>-</td>
-      <td>8439</td>
-      <td>3557</td>
-      <td>32223</td>
+      <td>8,439</td>
+      <td>3,557</td>
+      <td>32,223</td>
     </tr>
     <tr>
-      <td>(2)​读写同时: 3客户端*15线程</td>
-      <td>​1:3</td>
+      <td>Read &amp; Write</td>
+      <td>3 * 15</td>
+      <td>1:3</td>
       <td>0.66</td>
-      <td>3159</td>
-      <td>4428</td>
-      <td>34495</td>
-      <td>9472</td>
-      <td>3251</td>
-      <td>25071</td>
+      <td>3,159</td>
+      <td>4,428</td>
+      <td>34,495</td>
+      <td>9,472</td>
+      <td>3,251</td>
+      <td>25,071</td>
     </tr>
     <tr>
-      <td>​(3)读写同时: 3客户端*30线程</td>
-      <td>​30:1</td>
+      <td>Read &amp; Write</td>
+      <td>3 * 30</td>
+      <td>30:1</td>
       <td>1.25</td>
-      <td>64358</td>
-      <td>1330</td>
-      <td>13975</td>
-      <td>2145</td>
-      <td>1699</td>
-      <td>6467</td>
+      <td>64,358</td>
+      <td>1,330</td>
+      <td>13,975</td>
+      <td>2,145</td>
+      <td>1,699</td>
+      <td>6,467</td>
     </tr>
     <tr>
-      <td>(4)数据只读: 6客户端*100线程</td>
-      <td>1:0​</td>
-      <td>​0.91</td>
-      <td>30491</td>
-      <td>3274</td>
-      <td>12167</td>
+      <td>Read</td>
+      <td>6 * 100</td>
+      <td>1:0</td>
+      <td>0.91</td>
+      <td>30,491</td>
+      <td>3,274</td>
+      <td>12,167</td>
       <td>-</td>
       <td>-</td>
       <td>-</td>
@@ -616,63 +871,70 @@
   </tbody>
 </table>
 
-<h5 id="3备份">3备份</h5>
+<ul>
+  <li>单条数据大小：20KB * 3备份</li>
+</ul>
 
 <table>
   <thead>
     <tr>
-      <th>测试Case</th>
-      <th>读写比</th>
-      <th>运行时长</th>
-      <th>读QPS</th>
-      <th>读Avg延迟</th>
-      <th>读P99延迟</th>
-      <th>写QPS</th>
-      <th>写Avg延迟</th>
-      <th>写P99延迟</th>
+      <th>Case</th>
+      <th>threads</th>
+      <th>Read/Write</th>
+      <th>duration</th>
+      <th>R-QPS</th>
+      <th>R-AVG-Lat</th>
+      <th>R-P99-Lat</th>
+      <th>W-QPS</th>
+      <th>W-AVG-Lat</th>
+      <th>W-P99-Lat</th>
     </tr>
   </thead>
   <tbody>
     <tr>
-      <td>(1)数据加载: 3客户端*10线程</td>
+      <td>Write</td>
+      <td>3 * 10</td>
       <td>0:1</td>
       <td>1.40</td>
       <td>-</td>
       <td>-</td>
       <td>-</td>
-      <td>5919</td>
-      <td>5063</td>
-      <td>40639</td>
+      <td>5,919</td>
+      <td>5,063</td>
+      <td>40,639</td>
     </tr>
     <tr>
-      <td>(2)​读写同时: 3客户端*15线程</td>
-      <td>​1:3</td>
+      <td>Read &amp; Write</td>
+      <td>3 * 15</td>
+      <td>1:3</td>
       <td>1.11</td>
-      <td>1876</td>
-      <td>6927</td>
-      <td>44639</td>
-      <td>5632</td>
-      <td>5612</td>
-      <td>76095</td>
+      <td>1,876</td>
+      <td>6,927</td>
+      <td>44,639</td>
+      <td>5,632</td>
+      <td>5,612</td>
+      <td>76,095</td>
     </tr>
     <tr>
-      <td>​(3)读写同时: 3客户端*30线程</td>
-      <td>​30:1</td>
+      <td>Read &amp; Write</td>
+      <td>3 * 30</td>
+      <td>30:1</td>
       <td>1.63</td>
-      <td>49341</td>
-      <td>1751</td>
-      <td>21615</td>
-      <td>1644</td>
-      <td>1935</td>
-      <td>11159</td>
+      <td>49,341</td>
+      <td>1,751</td>
+      <td>21,615</td>
+      <td>1,644</td>
+      <td>1,935</td>
+      <td>11,159</td>
     </tr>
     <tr>
-      <td>(4)数据只读: 6客户端*100线程</td>
-      <td>1:0​</td>
-      <td>​0.91</td>
-      <td>25456</td>
-      <td>3923</td>
-      <td>15679</td>
+      <td>Read</td>
+      <td>6 * 100</td>
+      <td>1:0</td>
+      <td>0.91</td>
+      <td>25,456</td>
+      <td>3,923</td>
+      <td>15,679</td>
       <td>-</td>
       <td>-</td>
       <td>-</td>
@@ -680,66 +942,69 @@
   </tbody>
 </table>
 
-<h4 id="单条数据大小10kb">单条数据大小：10KB</h4>
-
-<p>测试时间：2018/11/5</p>
-
-<h5 id="2备份-1">2备份</h5>
+<ul>
+  <li>单条数据大小：10KB * 2备份</li>
+</ul>
 
 <table>
   <thead>
     <tr>
-      <th>测试Case</th>
-      <th>读写比</th>
-      <th>运行时长</th>
-      <th>读QPS</th>
-      <th>读Avg延迟</th>
-      <th>读P99延迟</th>
-      <th>写QPS</th>
-      <th>写Avg延迟</th>
-      <th>写P99延迟</th>
+      <th>Case</th>
+      <th>threads</th>
+      <th>Read/Write</th>
+      <th>duration</th>
+      <th>R-QPS</th>
+      <th>R-AVG-Lat</th>
+      <th>R-P99-Lat</th>
+      <th>W-QPS</th>
+      <th>W-AVG-Lat</th>
+      <th>W-P99-Lat</th>
     </tr>
   </thead>
   <tbody>
     <tr>
-      <td>(1)数据加载: 3客户端*10线程</td>
+      <td>Write</td>
+      <td>3 * 10</td>
       <td>0:1</td>
       <td>0.78</td>
       <td>-</td>
       <td>-</td>
       <td>-</td>
-      <td>14181</td>
-      <td>2110</td>
-      <td>15468</td>
+      <td>14,181</td>
+      <td>2,110</td>
+      <td>15,468</td>
     </tr>
     <tr>
-      <td>(2)​读写同时: 3客户端*15线程</td>
-      <td>​1:3</td>
+      <td>Read &amp; Write</td>
+      <td>3 * 15</td>
+      <td>1:3</td>
       <td>0.52</td>
-      <td>4024</td>
-      <td>5209</td>
+      <td>4,024</td>
+      <td>5,209</td>
       <td>41247</td>
-      <td>12069</td>
-      <td>1780</td>
-      <td>14495</td>
+      <td>12,069</td>
+      <td>1,780</td>
+      <td>14,495</td>
     </tr>
     <tr>
-      <td>​(3)读写同时: 3客户端*30线程</td>
-      <td>​30:1</td>
+      <td>Read &amp; Write</td>
+      <td>3 * 30</td>
+      <td>30:1</td>
       <td>0.76</td>
-      <td>105841</td>
+      <td>105,841</td>
       <td>816</td>
       <td>9613</td>
-      <td>3527</td>
-      <td>1107</td>
-      <td>4155</td>
+      <td>3,527</td>
+      <td>1,107</td>
+      <td>4,155</td>
     </tr>
     <tr>
-      <td>(4)数据只读: 6客户端*100线程</td>
-      <td>1:0​</td>
-      <td>​​1.04</td>
-      <td>162150</td>
-      <td>1868</td>
+      <td>Read</td>
+      <td>6 * 100</td>
+      <td>1:0</td>
+      <td>1.04</td>
+      <td>162,150</td>
+      <td>1,868</td>
       <td>6733</td>
       <td>-</td>
       <td>-</td>
@@ -748,63 +1013,70 @@
   </tbody>
 </table>
 
-<h5 id="3备份-1">3备份</h5>
+<ul>
+  <li>单条数据大小：10KB * 3备份</li>
+</ul>
 
 <table>
   <thead>
     <tr>
-      <th>测试Case</th>
-      <th>读写比</th>
-      <th>运行时长</th>
-      <th>读QPS</th>
-      <th>读Avg延迟</th>
-      <th>读P99延迟</th>
-      <th>写QPS</th>
-      <th>写Avg延迟</th>
-      <th>写P99延迟</th>
+      <th>Case</th>
+      <th>threads</th>
+      <th>Read/Write</th>
+      <th>duration</th>
+      <th>R-QPS</th>
+      <th>R-AVG-Lat</th>
+      <th>R-P99-Lat</th>
+      <th>W-QPS</th>
+      <th>W-AVG-Lat</th>
+      <th>W-P99-Lat</th>
     </tr>
   </thead>
   <tbody>
     <tr>
-      <td>(1)数据加载: 3客户端*10线程</td>
+      <td>Write</td>
+      <td>3 * 10</td>
       <td>0:1</td>
       <td>1.16</td>
       <td>-</td>
       <td>-</td>
       <td>-</td>
-      <td>9603</td>
-      <td>3115</td>
-      <td>20468</td>
+      <td>9,603</td>
+      <td>3,115</td>
+      <td>20,468</td>
     </tr>
     <tr>
-      <td>(2)​读写同时: 3客户端*15线程</td>
-      <td>​1:3</td>
+      <td>Read &amp; Write</td>
+      <td>3 * 15</td>
+      <td>1:3</td>
       <td>0.69</td>
-      <td>3043</td>
-      <td>5657</td>
-      <td>38783</td>
-      <td>9126</td>
-      <td>3140</td>
-      <td>27956</td>
+      <td>3,043</td>
+      <td>5,657</td>
+      <td>38,783</td>
+      <td>9,126</td>
+      <td>3,140</td>
+      <td>27,956</td>
     </tr>
     <tr>
-      <td>​(3)读写同时: 3客户端*30线程</td>
-      <td>​30:1</td>
+      <td>Read &amp; Write</td>
+      <td>3 * 30</td>
+      <td>30:1</td>
       <td>0.89</td>
-      <td>90135</td>
+      <td>90,135</td>
       <td>937</td>
-      <td>13324</td>
-      <td>3002</td>
-      <td>1185</td>
-      <td>4816</td>
+      <td>13,324</td>
+      <td>3,002</td>
+      <td>1,185</td>
+      <td>4,816</td>
     </tr>
     <tr>
-      <td>(4)数据只读: 6客户端*100线程</td>
-      <td>1:0​</td>
+      <td>Read</td>
+      <td>6 * 100</td>
+      <td>1:0</td>
       <td>1.08</td>
-      <td>154869</td>
-      <td>1945</td>
-      <td>7757</td>
+      <td>154,869</td>
+      <td>1,945</td>
+      <td>7,757</td>
       <td>-</td>
       <td>-</td>
       <td>-</td>
@@ -812,103 +1084,90 @@
   </tbody>
 </table>
 
-<p><strong>RocsDB配置：</strong></p>
-
-<div class="language-ini highlighter-rouge"><div class="highlight"><pre class="highlight"><code>    <span class="py">rocksdb_abnormal_get_time_threshold_ns</span> <span class="p">=</span> <span class="s">10000000</span>
-    <span class="py">rocksdb_abnormal_get_size_threshold</span> <span class="p">=</span> <span class="s">1000000</span>
-    <span class="py">rocksdb_abnormal_multi_get_time_threshold_ns</span> <span class="p">=</span> <span class="s">100000000</span>
-    <span class="py">rocksdb_abnormal_multi_get_size_threshold</span> <span class="p">=</span> <span class="s">10000000</span>
-    <span class="py">rocksdb_abnormal_multi_get_iterate_count_threshold</span> <span class="p">=</span> <span class="s">1000</span>
-
-    <span class="py">rocksdb_write_buffer_size</span> <span class="p">=</span> <span class="s">67108864</span>
-    <span class="py">rocksdb_max_write_buffer_number</span> <span class="p">=</span> <span class="s">6</span>
-    <span class="py">rocksdb_max_background_flushes</span> <span class="p">=</span> <span class="s">4</span>
-    <span class="py">rocksdb_max_background_compactions</span> <span class="p">=</span> <span class="s">12</span>
-    <span class="py">rocksdb_num_levels</span> <span class="p">=</span> <span class="s">6</span>
-    <span class="py">rocksdb_target_file_size_base</span> <span class="p">=</span> <span class="s">67108864</span>
-    <span class="py">rocksdb_target_file_size_multiplier</span> <span class="p">=</span> <span class="s">1</span>
-    <span class="py">rocksdb_max_bytes_for_level_base</span> <span class="p">=</span> <span class="s">671088640</span>
-    <span class="py">rocksdb_max_bytes_for_level_multiplier</span> <span class="p">=</span> <span class="s">10</span>
-    <span class="py">rocksdb_level0_file_num_compaction_trigger</span> <span class="p">=</span> <span class="s">4</span>
-    <span class="py">rocksdb_level0_slowdown_writes_trigger</span> <span class="p">=</span> <span class="s">30</span>
-    <span class="py">rocksdb_level0_stop_writes_trigger</span> <span class="p">=</span> <span class="s">60</span>
-    <span class="py">rocksdb_disable_table_block_cache</span> <span class="p">=</span> <span class="s">false</span>
-    <span class="py">rocksdb_compression_type</span> <span class="p">=</span> <span class="s">snappy none</span>
-</code></pre></div></div>
-
 <h3 id="1110">1.11.0</h3>
 
+<h4 id="测试环境-6">测试环境</h4>
+
+<p>测试环境同 1.12.3</p>
+
+<h4 id="测试结果-6">测试结果</h4>
+
 <ul>
-  <li>单条数据大小：320字节</li>
-  <li>测试时间：2018/07/27</li>
+  <li>单条数据大小：320B</li>
 </ul>
 
 <table>
   <thead>
     <tr>
-      <th>测试Case</th>
-      <th>读写比</th>
-      <th>运行时长</th>
-      <th>读QPS</th>
-      <th>读Avg延迟</th>
-      <th>读P99延迟</th>
-      <th>写QPS</th>
-      <th>写Avg延迟</th>
-      <th>写P99延迟</th>
+      <th>Case</th>
+      <th>threads</th>
+      <th>Read/Write</th>
+      <th>duration</th>
+      <th>R-QPS</th>
+      <th>R-AVG-Lat</th>
+      <th>R-P99-Lat</th>
+      <th>W-QPS</th>
+      <th>W-AVG-Lat</th>
+      <th>W-P99-Lat</th>
     </tr>
   </thead>
   <tbody>
     <tr>
-      <td>(1)数据加载: 3客户端*10线程</td>
+      <td>Write</td>
+      <td>3 * 10</td>
       <td>0:1</td>
       <td>1.89</td>
       <td>-</td>
       <td>-</td>
       <td>-</td>
-      <td>44039</td>
+      <td>44,039</td>
       <td>679</td>
-      <td>3346</td>
+      <td>3,346</td>
     </tr>
     <tr>
-      <td>(2)​读写同时: 3客户端*15线程</td>
-      <td>​1:3</td>
+      <td>Read &amp; Write</td>
+      <td>3 * 15</td>
+      <td>1:3</td>
       <td>1.24</td>
-      <td>16690</td>
+      <td>16,690</td>
       <td>311</td>
       <td>892</td>
-      <td>50076</td>
+      <td>50,076</td>
       <td>791</td>
-      <td>4396</td>
+      <td>4,396</td>
     </tr>
     <tr>
-      <td>​(3)读写同时: 3客户端*30线程</td>
-      <td>​30:1</td>
+      <td>Read &amp; Write</td>
+      <td>3 * 30</td>
+      <td>30:1</td>
       <td>1.04</td>
-      <td>311633</td>
+      <td>311,633</td>
       <td>264</td>
       <td>511</td>
-      <td>10388</td>
+      <td>10,388</td>
       <td>619</td>
-      <td>2468</td>
+      <td>2,468</td>
     </tr>
     <tr>
-      <td>(4)数据只读: 6客户端*100线程</td>
-      <td>1:0​</td>
-      <td>​0.17</td>
-      <td>​978884</td>
+      <td>Read</td>
+      <td>6 * 100</td>
+      <td>1:0</td>
+      <td>0.17</td>
+      <td>978,884</td>
       <td>623</td>
-      <td>​1671</td>
+      <td>1,671</td>
       <td>-</td>
       <td>-</td>
       <td>-</td>
     </tr>
     <tr>
-      <td>(5)数据只读: 12客户端*100线程</td>
-      <td>1:0​</td>
-      <td>​0.28</td>
-      <td>​1194394</td>
-      <td>1003</td>
-      <td>​2933</td>
+      <td>Read</td>
+      <td>12 * 100</td>
+      <td>1:0</td>
+      <td>0.28</td>
+      <td>1,194,394</td>
+      <td>1,003</td>
+      <td>2,933</td>
       <td>-</td>
       <td>-</td>
       <td>-</td>
@@ -916,20 +1175,24 @@
   </tbody>
 </table>
 
-<h2 id="不同参数下的性能">不同参数下的性能</h2>
+<h2 id="不同场景下的性能测试">不同场景下的性能测试</h2>
 
 <p>如无特殊说明：</p>
 
 <ul>
-  <li>延迟单位：微妙</li>
+  <li>测试环境同 1.12.3</li>
   <li>单条数据大小：1KB</li>
-  <li>客户端节点数：3，版本号：1.11.10-thrift-0.11.0-inlined-release</li>
-  <li>服务端节点数：5，版本号：1.12.3，表分片数：64，开启rocksdb限速：max_rate=500MB, auto_tune=true</li>
+  <li>客户端：节点数：3，版本号：1.11.10-thrift-0.11.0-inlined-release</li>
+  <li>服务端：节点数：5，版本号：1.12.3，表分片数：64，开启rocksdb限速：max_rate=500MB, auto_tune=true</li>
 </ul>
 
-<h3 id="客户端线程数">客户端线程数</h3>
+<h3 id="不同的客户端线程数">不同的客户端线程数</h3>
 
-<p>该项测试旨在观察在默认配置下（注意：未开启RocksDB限速），不同线程（仅读和仅写）对QPS和延迟的影响。</p>
+<p>该项测试旨在对比在默认配置下，不同线程（仅读和仅写）对QPS和延迟的影响。</p>
+
+<blockquote>
+  <p>注意：未开启RocksDB限速</p>
+</blockquote>
 
 <p><img src="/assets/images/benchmark/5-node-write.png" alt="5-node-write" /></p>
 
@@ -937,44 +1200,59 @@
 
 <p>由上图可以看到，在该测试场景下，写最大QPS≈43K，读最大QPS≈370K，你也可以根据QPS的大小合理估算对应的延迟。</p>
 
-<h3 id="rocksdb限速">RocksDB限速</h3>
+<h3 id="是否开启rocksdb限速">是否开启RocksDB限速</h3>
 
-<p>Pegasus底层采用RocksDB做存储引擎，当数据写入增多，会触发compaction操作，占用较多磁盘IO，出现较多的毛刺现象。该项测试展示了开启<a href="http://10.232.52.164:4000/overview/benchmark">RocksDB的限速</a>后，可以降低compaction负载，从而显著的降低毛刺现象。</p>
+<blockquote>
+  <p>测试场景为：测试<code class="language-plaintext highlighter-rouge">threads</code>配置为：3 * 20，QPS大约为44K</p>
+</blockquote>
 
-<p>下图分别展示了无限速、500MB限速、500MB限速同时开启auto-tune功能，三种场景的IO使用率和写P99延迟(注意：测试场景为：3client*20thread，QPS≈44K)：</p>
+<p>Pegasus底层采用RocksDB做存储引擎，当数据写入增多，会触发更多的compaction操作，占用更多的磁盘IO，出现更多的毛刺现象。该项测试展示了开启RocksDB的限速后，可以降低compaction负载，从而显著的降低毛刺现象。</p>
 
-<p>磁盘IO占用：
+<p>下图分别展示了无限速、500MB/s限速、500MB/s限速同时开启auto-tune功能，三种场景的IO使用率和写P99延迟情况：</p>
+
+<ul>
+  <li>
+    <p>磁盘IO占用：
 <img src="/assets/images/benchmark/io-no-limit.png" alt="io-no-limit" />
 <img src="/assets/images/benchmark/io-limit-500MB.png" alt="io-limit-500MB" />
 <img src="/assets/images/benchmark/io-limit-500MB-auto.png" alt="io-limit-500MB-auto" /></p>
-
-<p>P99延迟：
+  </li>
+  <li>
+    <p>P99延迟：
 <img src="/assets/images/benchmark/no-limit-set.png" alt="no-limit-set" />
 <img src="/assets/images/benchmark/500-limit-set.png" alt="500-limit-set" />
 <img src="/assets/images/benchmark/500-limit-auto-set.png" alt="500-limit-auto-set" /></p>
+  </li>
+</ul>
 
-<p>可以发现，磁盘IO使用率被降低，相应的写延迟的毛刺现象也被大大缓解。</p>
+<p>可以发现，磁盘IO使用率得到降低，相应的写延迟的毛刺现象也被大大缓解。</p>
 
 <p>我们从YCSB的测试结果：
 <img src="/assets/images/benchmark/limit.png" alt="limit" />
 也可以看到：</p>
 
 <ul>
-  <li>开启限速、开启限速并开启auto-tune后，QPS吞吐分别约提升了5%，20%</li>
+  <li>开启限速，开启限速并开启auto-tune后，QPS吞吐分别约提升了5%，20%</li>
   <li>开启限速后，仅对极端情况下的延迟(P999/P9999)有显著改善作用，对于大部分请求来说，改善并不明显</li>
 </ul>
 
 <p>但是<strong>需要注意</strong>的是：</p>
 
-<p>auto-tune功能在单条数据较大的场景下可能会引发<a href="https://github.com/facebook/rocksdb/wiki/Write-Stalls">write stall</a>（在我们的测试中，当单条value=10KB，QPS=10K时，发生write stall，关闭Auto-Tune后不会产生write stall），所以请合理评估是否开启auto-tune</p>
+<p>auto-tune功能在单条数据较大的场景下可能会引发<a href="https://github.com/facebook/rocksdb/wiki/Write-Stalls">write stall</a>，请合理评估是否开启auto-tune。</p>
 
-<h3 id="服务端机器数">服务端机器数</h3>
-<p>该项测试旨在观察，不同机器数量对读写性能(只读和只写场景)的影响。
-<img src="/assets/images/benchmark/node-qps-write.png" alt="node-write" /></p>
+<h3 id="不同的replica-server数量">不同的replica server数量</h3>
+
+<p>该项测试旨在观察，不同机器数量对读写性能的影响。</p>
+
+<blockquote>
+  <p>测试场景为：测试<code class="language-plaintext highlighter-rouge">Case</code>为只读和只写</p>
+</blockquote>
+
+<p><img src="/assets/images/benchmark/node-qps-write.png" alt="node-write" /></p>
 
 <p><img src="/assets/images/benchmark/node-qps-read.png" alt="node-read" /></p>
 
-<p>由图中可以看到</p>
+<p>由图中可以看到：</p>
 
 <ul>
   <li>扩容对写性能的提升要优于读性能的提升</li>
@@ -983,17 +1261,20 @@
 
 <p>你可以根据该项测试合理估计不同机器下所能承载的请求负载</p>
 
-<h3 id="表分片数">表分片数</h3>
+<h3 id="不同的表分片数">不同的表分片数</h3>
 
-<p>该项测试旨在观察，表的不同分片对性能的影响。测试场景为：</p>
+<p>该项测试旨在观察，表的不同分片对性能的影响。</p>
 
-<p>仅读：3client*50thread</p>
-
-<p>仅写：3client*40thread</p>
+<blockquote>
+  <p>测试场景为：
+仅读：<code class="language-plaintext highlighter-rouge">threads</code>配置为：3 * 50
+仅写：<code class="language-plaintext highlighter-rouge">threads</code>配置为：3 * 40</p>
+</blockquote>
 
 <p><img src="/assets/images/benchmark/partition.png" alt="partition" /></p>
 
-<p>由图中可以看到，增加分片可以提高读性能，但是降低了写性能，所以请合理评估你的业务需求。除此之外，若分片数过小，可能会导致单分片过大，磁盘分布不均的问题，在实际的线上业务中，如无特别需求，我们建议单分片维持在10GB以内是合理的</p>
+<p>由图中可以看到，增加分片可以提高读性能，但是降低了写性能，所以请合理评估你的业务需求。
+除此之外，若分片数过小，可能会导致单分片过大，磁盘分布不均的问题，在实际的线上业务中，如无特别需求，建议单分片维持在10GB以内。</p>
 
 </div>
                 </div>
@@ -1008,42 +1289,72 @@
 <ul class="menu-list">
   <li><a href="#性能测试">性能测试</a>
     <ul>
-      <li><a href="#测试环境">测试环境</a></li>
-      <li><a href="#测试结果">测试结果</a>
+      <li><a href="#测试工具及配置">测试工具及配置</a>
         <ul>
-          <li><a href="#1123">1.12.3</a>
-            <ul>
-              <li><a href="#单条数据大小320b">单条数据大小：320B</a></li>
-              <li><a href="#单条数据大小1kb">单条数据大小：1KB</a></li>
-            </ul>
-          </li>
-          <li><a href="#1122">1.12.2</a></li>
-          <li><a href="#1116multi_getbatch_set">1.11.6(multi_get/batch_set)</a></li>
-          <li><a href="#1111">1.11.1</a>
-            <ul>
-              <li><a href="#单条数据大小20kb">单条数据大小：20KB</a>
-                <ul>
-                  <li><a href="#2备份">2备份</a></li>
-                  <li><a href="#3备份">3备份</a></li>
-                </ul>
-              </li>
-              <li><a href="#单条数据大小10kb">单条数据大小：10KB</a>
-                <ul>
-                  <li><a href="#2备份-1">2备份</a></li>
-                  <li><a href="#3备份-1">3备份</a></li>
-                </ul>
-              </li>
-            </ul>
-          </li>
-          <li><a href="#1110">1.11.0</a></li>
+          <li><a href="#测试结果说明">测试结果说明</a></li>
         </ul>
       </li>
-      <li><a href="#不同参数下的性能">不同参数下的性能</a>
+      <li><a href="#各版本的性能测试">各版本的性能测试</a>
         <ul>
-          <li><a href="#客户端线程数">客户端线程数</a></li>
-          <li><a href="#rocksdb限速">RocksDB限速</a></li>
-          <li><a href="#服务端机器数">服务端机器数</a></li>
-          <li><a href="#表分片数">表分片数</a></li>
+          <li><a href="#240">2.4.0</a>
+            <ul>
+              <li><a href="#测试环境">测试环境</a>
+                <ul>
+                  <li><a href="#硬件配置">硬件配置</a></li>
+                  <li><a href="#集群规模">集群规模</a></li>
+                </ul>
+              </li>
+              <li><a href="#测试结果">测试结果</a></li>
+            </ul>
+          </li>
+          <li><a href="#230">2.3.0</a>
+            <ul>
+              <li><a href="#测试环境-1">测试环境</a></li>
+              <li><a href="#测试结果-1">测试结果</a></li>
+            </ul>
+          </li>
+          <li><a href="#1123">1.12.3</a>
+            <ul>
+              <li><a href="#测试环境-2">测试环境</a>
+                <ul>
+                  <li><a href="#硬件配置-1">硬件配置</a></li>
+                </ul>
+              </li>
+              <li><a href="#测试结果-2">测试结果</a></li>
+            </ul>
+          </li>
+          <li><a href="#1122">1.12.2</a>
+            <ul>
+              <li><a href="#测试环境-3">测试环境</a></li>
+              <li><a href="#测试结果-3">测试结果</a></li>
+            </ul>
+          </li>
+          <li><a href="#1116">1.11.6</a>
+            <ul>
+              <li><a href="#测试环境-4">测试环境</a></li>
+              <li><a href="#测试结果-4">测试结果</a></li>
+            </ul>
+          </li>
+          <li><a href="#1111">1.11.1</a>
+            <ul>
+              <li><a href="#测试环境-5">测试环境</a></li>
+              <li><a href="#测试结果-5">测试结果</a></li>
+            </ul>
+          </li>
+          <li><a href="#1110">1.11.0</a>
+            <ul>
+              <li><a href="#测试环境-6">测试环境</a></li>
+              <li><a href="#测试结果-6">测试结果</a></li>
+            </ul>
+          </li>
+        </ul>
+      </li>
+      <li><a href="#不同场景下的性能测试">不同场景下的性能测试</a>
+        <ul>
+          <li><a href="#不同的客户端线程数">不同的客户端线程数</a></li>
+          <li><a href="#是否开启rocksdb限速">是否开启RocksDB限速</a></li>
+          <li><a href="#不同的replica-server数量">不同的replica server数量</a></li>
+          <li><a href="#不同的表分片数">不同的表分片数</a></li>
         </ul>
       </li>
     </ul>
