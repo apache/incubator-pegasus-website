@@ -4,19 +4,19 @@ permalink: /overview/benchmark/
 
 ## Benchmark tools and configurations
 
-* Testing by Pegasus Java client plugin in [YCSB](https://github.com/xiaomi/pegasus-ycsb)
+* Testing by Pegasus Java client drive in [YCSB](https://github.com/xiaomi/pegasus-ycsb)
 * Set `requestdistribution=zipfian`, which means the discrete probability distribution whose rank-frequency distribution is an inverse power law relation, see [Zipfian distribution](https://en.wiktionary.org/wiki/Zipfian_distribution#English).
 
 ### Benchmark result explanation
 
-- Case: The cases are read-only testing `Read`, write only testing `Write`, and read and write combined testing `Read & Write``
-- Threads: written in the form of `a * b`, where `a` represents the number of client instances, that is the number of instances YCSB runs on, and `b` represents the number of threads, which is the value of the `threadcount` configuration in YCSB
-- RW Ratio: Read write operation ratio, which is the ratio of `readpromotion` to `updatepromotion` or `insertpromotion` in YCSB configuration
-- Duration: Total testing time, in hours
+- Case: The cases are read-only testing `Read`, write only testing `Write`, and read and write combined testing `Read & Write`
+- Threads: written in the form of `a * b`, where `a` represents the number of client instances (i.e., the number of instances YCSB runs on), and `b` represents the number of threads (i.e., the value of the `threadcount` options in YCSB)
+- RW Ratio: Read / write operation ratio, which is the ratio of `readpromotion` to `updatepromotion` or `insertpromotion` in YCSB options
+- Duration: Total testing time in hours
 - R-QPS: Read operations per second
-- R-AVG-Lat,R-P99-Lat,R-P999-Lat: average read operation delay, P99, P999 delay, in microseconds
+- R-AVG-Lat, R-P99-Lat, R-P999-Lat: average, P99, P999 latency of read operations, in microseconds
 - W-QPS: Write operations per second
-- W-AVG-Lat,W-P99-Lat,W-P999-Lat: average write operation delay, P99, P999 delay, in microseconds
+- W-AVG-Lat, W-P99-Lat, W-P999-Lat: average, P99, P999 latency of write operations, in microseconds
 
 ## Benchmark on different versions
 
@@ -26,7 +26,7 @@ permalink: /overview/benchmark/
 
 ##### Hardware
 
-* CPU：Intel® Xeon® Silver 4210 * 2 2.20 GHz / 3.20 GHz
+* CPU: Intel® Xeon® Silver 4210 * 2 2.20 GHz / 3.20 GHz
 * Memory: 128 GB
 * Disk: SSD 480 GB * 8
 * Network card: Bandwidth 10 Gb
@@ -74,7 +74,7 @@ Same as 2.4.0
 
 ##### Hardware
 
-* CPU：Intel® Xeon® CPU E5-2620 v3 @ 2.40 GHz
+* CPU: Intel® Xeon® CPU E5-2620 v3 @ 2.40 GHz
 * Memory: 128 GB
 * Disk: SSD 480 GB * 8
 * Network card: Bandwidth 10 Gb
@@ -122,7 +122,7 @@ The testing environment is the same as 1.12.3
 
 - Test interfaces: `multi_get()` and `batch_set()`
 - A hashkey contains 3 sortkeys
-- Single `batch_set()` call to set 3 hashkeys
+- Single `batch_set()` call will set 3 hashkeys
 - Single data size: 3KB
 - The partitions count of the test table: 128
 - rocksdb_block_cache_capacity = 40G
@@ -208,12 +208,12 @@ Unless otherwise specified, the testing environment is as follows:
 * Server:
   * Number of nodes: 5
   * Version: 1.12.3
-  * Number of table partitions: 64
-  * 配置：`rocksdb_limiter_max_write_megabytes_per_sec = 500`, `rocksdb_limiter_enable_auto_tune = false`
+  * The partitions count of the test table: 64
+  * 配置: `rocksdb_limiter_max_write_megabytes_per_sec = 500`, `rocksdb_limiter_enable_auto_tune = false`
 
-### Different threads count of client
+### Cluster throughput capability
 
-This test aims to compare the impact of different client thread counts on QPS and latency.
+This test aims to compare the latency changes in the same cluster under different client request throughput.
 
 > NOTE: RocksDB rate-limiter is not enabled
 
@@ -221,15 +221,15 @@ This test aims to compare the impact of different client thread counts on QPS an
 
 ![5-node-read](/assets/images/benchmark/5-node-read.png)
 
-From the above figure, it can be seen that the maximum QPS for writing is about 43K, and the maximum QPS for reading is about 370K.
-You can also estimate the corresponding latency based on QPS.
+From the above figure, it can be seen that the maximum writing throughput is about 43K, and the maximum reading throughput is about 370K.
+You can estimate the corresponding latency based on reading/writing throughput.
 
-### Whether enable RocksDB rate-limiter
+### Whether to enable RocksDB rate-limiter
 
-> The testing scenario: set `threads` as 3 * 20, with a QPS of approximately 44K
+> The testing scenario: set `threads` as 3 * 20, with IPS of approximately 44K
 
-Pegasus uses RocksDB as the storage engine, when there are more data writes, it will trigger more compaction operations, occupy more disk IO, and cause more jitter.
-This test demonstrates that after enabling the RocksDB rate-limiter, the compaction load can be reduced, significantly reducing the occurrence of jitter.
+Pegasus uses RocksDB as the storage engine, when write data accumulated, it will trigger more compaction operations, occupy more disk IO, and cause more long tails.
+This test demonstrates that after enabling the RocksDB rate-limiter, the compaction load can be reduced, significantly reducing the occurrence of long tails.
 
 The following figures show the IO usage and P99 write latency for three scenarios:
 - `rocksdb_limiter_max_write_megabytes_per_sec = 0`
@@ -246,19 +246,20 @@ The following figures show the IO usage and P99 write latency for three scenario
 ![500-limit-set](/assets/images/benchmark/500-limit-set.png)
 ![500-limit-auto-set](/assets/images/benchmark/500-limit-auto-set.png)
 
-It can be observed that when RocksDB rate-limiter enabled, the disk IO utilization rate has been reduced, and write latency jitters have also been greatly alleviated.
+It can be observed that when RocksDB rate-limiter enabled, the disk IO utilization rate has been reduced, and write latency has also been greatly alleviated.
 
 ![limit](/assets/images/benchmark/limit.png)
-We have obtained the results from YCSB benchmark:
+We obtained the results from YCSB benchmark:
 
 * When rate-limiter enabled, the throughput increased by about 5%
 * When both rate-limiter and auto-tune enabled, the throughput increased by about 20%
-* When rate-limiter enabled, only the latency in extreme situations (P999/P9999) has a significant improvement effect, but the improvement is not significant for most requests
+* When rate-limiter enabled, only the latency in extreme situations (P999/P9999) has a significant improvement, but the improvement is not significant for most requests
 
 However, it should be noted that:
-The auto-tune function may trigger [write stall](https://github.com/facebook/rocksdb/wiki/Write-Stalls) in scenarios where a single piece of data is large, please evaluate whether to enable auto-tune reasonably.
 
-### Different number of replica servers
+The auto-tune function may trigger [write stall](https://github.com/facebook/rocksdb/wiki/Write-Stalls) issues in scenarios which a single piece of data is larger, please evaluate whether to enable auto-tune reasonably in your environment.
+
+### Cluster scale
 
 This test aims to observe the impact of different number of replica servers on read and write throughput.
 
@@ -269,10 +270,10 @@ This test aims to observe the impact of different number of replica servers on r
 ![node-read](/assets/images/benchmark/node-qps-read.png)
 
 As can be seen from the figure:
-* Write throughput improves better than read throughput when the cluster scales out
+* Write throughput improves more than read throughput when the cluster scales out
 * The throughput is not improved linearly when the cluster scales out
 
-You can reasonably estimate the number of requests that a cluster with different numbers of nodes can carry based on this test.
+You can reasonably estimate the throughput of a cluster in different scales based on this test.
 
 ### Different partition count of table
 
@@ -284,7 +285,10 @@ This test aims to observe the impact of different partition count of a table on 
 
 ![partition](/assets/images/benchmark/partition.png)
 
-As can be seen from the figure, increasing partition count can improve read throughput, but it reduces write throughput.
-Therefore, please evaluate your application requirements reasonably.
+As can be seen from the figure:
+* Increasing partition count can improve read throughput
+* But it also reduces write throughput
 
-In addition, if the partition count is too small, it may lead to problems such as large single partition and uneven disk distribution. In actual online business, if there are no special requirements, it is recommended to maintain single shards within 10GB.
+Therefore, please evaluate the partition count according to your application requirements reasonably.
+
+In addition, if the partition count is too small, it may cause issues such as large single partition and data skew between disks. In production environment, it is recommended to keep the size of a single partition less than 10GB if there are no special requirements.

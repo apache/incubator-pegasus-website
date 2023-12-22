@@ -13,9 +13,9 @@ permalink: /overview/benchmark/
 - RW Ratio：读写操作比，即YCSB配置中的`readproportion`与`updateproportion`或`insertproportion`的比值
 - duration：测试总时长，单位小时
 - R-QPS：每秒读操作数
-- R-AVG-Lat,R-P99-Lat,R-P999-Lat：读操作的平均，P99，P999延迟，单位微秒
+- R-AVG-Lat, R-P99-Lat, R-P999-Lat：读操作的平均，P99，P999延迟，单位微秒
 - W-QPS：每秒写操作数
-- W-AVG-Lat,W-P99-Lat,W-P999-Lat：写操作的平均，P99，P999延迟，单位微秒
+- W-AVG-Lat, W-P99-Lat, W-P999-Lat：写操作的平均，P99，P999延迟，单位微秒
 
 ## 各版本的性能测试
 
@@ -213,9 +213,9 @@ permalink: /overview/benchmark/
   * 表分片数：64
   * 配置：`rocksdb_limiter_max_write_megabytes_per_sec = 500`, `rocksdb_limiter_enable_auto_tune = false`
 
-### 不同的客户端线程数
+### 集群吞吐能力
 
-该项测试旨在对比不同client线程数对QPS和延迟的影响。
+该项测试旨在对比在同一集群在不同client请求吞吐下的延迟变化。
 
 > 注意：未开启RocksDB限速
 
@@ -223,11 +223,11 @@ permalink: /overview/benchmark/
 
 ![5-node-read](/assets/images/benchmark/5-node-read.png)
 
-由上图可知，写最大QPS大约为43K，读最大QPS大约370K，你也可以根据QPS估算对应的延迟。
+由上图可知，写最大QPS大约为43K，读最大QPS大约370K，你可以根据吞吐估算对应的延迟。
 
 ### 是否开启RocksDB限速
 
-> 测试场景为：测试`threads`配置为：3 * 20，QPS大约为44K
+> 测试场景为：测试`threads`配置为：3 * 20，IPS大约为44K
 
 Pegasus底层采用RocksDB做存储引擎，当数据写入增多，会触发更多的compaction操作，占用更多的磁盘IO，出现更多的毛刺现象。该项测试展示了开启RocksDB的限速后，可以降低compaction负载，从而显著的降低毛刺现象。
 
@@ -257,9 +257,9 @@ Pegasus底层采用RocksDB做存储引擎，当数据写入增多，会触发更
 
 但是**需要注意**的是：
 
-auto-tune功能在单条数据较大的场景下可能会引发[write stall](https://github.com/facebook/rocksdb/wiki/Write-Stalls)，请合理评估是否开启auto-tune。
+auto-tune功能在单条数据较大的场景下可能会引发[write stall](https://github.com/facebook/rocksdb/wiki/Write-Stalls)，请合理评估是否在你的环境中开启auto-tune。
 
-### 不同的replica server数量
+### 集群规模
 
 该项测试旨在观察，不同replica server数量对读写吞吐的影响。
 
@@ -274,7 +274,7 @@ auto-tune功能在单条数据较大的场景下可能会引发[write stall](htt
 * 扩容对写吞吐的提升要优于读吞吐的提升
 * 扩容带来的吞吐提升并不是线性的
 
-你可以根据该项测试合理估计不同节点数量的集群所能承载的请求数
+你可以根据该项测试估计不同集群规模所能承载的吞吐量
 
 ### 不同的表分片数
 
@@ -286,5 +286,10 @@ auto-tune功能在单条数据较大的场景下可能会引发[write stall](htt
 
 ![partition](/assets/images/benchmark/partition.png)
 
-由图中可以看到，增加分片可以提高读性能，但是降低了写性能，所以请合理评估你的业务需求。
-除此之外，若分片数过小，可能会导致单分片过大，磁盘分布不均的问题，在实际的线上业务中，如无特别需求，建议单分片维持在10GB以内。
+由图中可以看到：
+* 增加分片可以提高读吞吐
+* 但是降低了写吞吐
+
+所以请根据你的业务需求评估表分片数。
+
+除此之外，若分片数过小，可能会导致单分片过大，磁盘分布倾斜等问题。在生产环境中，如无特别需求，建议单分片大小保持在10GB以内。
