@@ -20,29 +20,23 @@ permalink: administration/duplication
 
 我们能够做到**一主一备（single-master）**，也能提供**多机房多主（multi-master）**，用户可以根据需要进行配置。
 
-这里需要注意的是，跨机房同步是**异步**的数据复制，并非完全实时。与单机房不同，该功能不提供跨机房 *read-after-write* 的一致性保证。目前在跨机房网络健康的环境下，对于备集群而言，数据延时大概在秒级左右，但具体表现与写入流量大小有关。经测试，写入小于1kb的数据的延时在1秒内，即 A 机房的写数据大概在1秒后会写入 B 机房。
+这里需要注意的是，跨机房同步是**异步**的数据复制，并非完全实时。与单机房不同，该功能不提供跨机房 *read-after-write* 的一致性保证。目前在跨机房网络健康的环境下，对于备集群而言，数据延时大概在秒级左右，但具体表现与写入流量大小有关。经测试，写入小于1KB的数据的延时在1秒内，即 A 机房的写数据大概在1秒后会写入 B 机房。
 
 ## 操作上手
 
-假设我们有两个 pegasus 集群 _bjsrv-account_ (源集群)和 _tjsrv-account_(目标集群)，分别位于北京与天津的两个机房内，表 `my_source_app` 由于存储了极其关键的用户帐号数据，需要能够在双集群保证可用，所以我们为它实施热备份：
+假设我们有两个 pegasus 集群 `bjsrv-account` (源集群)和 `tjsrv-account`(目标集群)，分别位于北京与天津的两个机房内，表 `my_source_app` 由于存储了极其关键的用户帐号数据，需要能够在双集群保证可用，所以我们为它实施热备份：
 
 ```
-> ./run.sh shell -n bjsrv-account
+#The cluster name is: bjsrv-account
+#The cluster meta list is: ******
 
-Type "help" for more information.
-Type "Ctrl-D" or "Ctrl-C" to exit the shell.
-
-The cluster name is: bjsrv-account
-The cluster meta list is: ******
-
-(use meta list to connect cluster)
->./admin-cli -m ******
+>./admin-cli -m ****** //use meta list to connect cluster
 
 >>> ls
 app_id    status              app_name
 12        AVAILABLE           my_source_app
 
->>>use my_source_app
+>>> use my_source_app
 >>> dup add -c my_target_cluster -p
 successfully add duplication [dupid: 1669972761]
 
@@ -60,7 +54,7 @@ successfully add duplication [dupid: 1669972761]
 
 通过 `dup add` 命令，bjsrv-account 集群的表 my_source_app 将会近实时地把数据复制到 tjsrv-account 上，这意味着，每一条在北京机房的写入，最终都一定会复制到天津机房。
 
-热备份使用日志异步复制的方式来实现跨集群的同步，可与 mysql 的 binlog 复制和 hbase replication 类比。
+热备份使用日志异步复制的方式来实现跨集群的同步，可与 MySQL 的 binlog 复制和 HBase replication 类比。
 
 热备份功能**以表为粒度**，你可以只对集群内一部分表实施热备份。热备份的两集群的表名需要保持一致，但 partition 的个数不需要相同。例如用户可以建表如下：
 
@@ -83,7 +77,7 @@ successfully add duplication [dupid: 1669972761]
 
 1. 首先源集群**保留从此刻开始的所有写增量**（即WAL日志）
 2. 将源集群的全量快照（存量数据）移动到指定路径下，等待备集群(目标集群)对这些数据进行学习learn。
-3. 目标集群将存量数据学习完成后，告知源集群进入WAL日志发送阶段。
+3. 目标集群将存量数据学习完成后，利用学来的存量数据构建表。构建完成后，告知源集群进入WAL日志发送阶段。
 4. 此后源集群开启热备份，并复制此前堆积的写增量，发送到远端目标集群。         
 
 | master cluster                                               |                                                              | follower cluster                                             |                                                              |
@@ -108,7 +102,7 @@ successfully add duplication [dupid: 1669972761]
 
 ### 执行步骤1 集群热备参数设置
 
-主备集群两边的replication与duplication-group项下**相关参数须保持一致。**其中，主集群指同步数据的发送方，备集群指接收方。
+主备集群两边的replication与duplication-group项下**相关参数须保持一致**。其中，主集群指同步数据的发送方，备集群指接收方。
 
 主集群配置示例：
 
@@ -118,7 +112,7 @@ successfully add duplication [dupid: 1669972761]
   duplicate_log_batch_bytes = 4096 # 0意味着不做batch处理，一般设置为4096即可，该配置可以通过admin-cli的server-config动态修改
 
 [pegasus.clusters]
-  # 开启热备份的主集群必须配置备集群的具体meta地址：
+  # 开启热备份的主集群必须配置备集群的具体meta server地址：
   tjsrv-account = xxxxxxxxx
 
 # 热备份的两个集群需要登记源集群和目的集群的“cluster_id”：
@@ -147,7 +141,7 @@ successfully add duplication [dupid: 1669972761]
 
 
 
-### 执行步骤2 按需接入域名proxy系统
+### 执行步骤2 按需接入域名proxy系统 (可选)
 
 跨机房热备的主要目的是提供机房级容灾，为了提供跨机房切换流量的能力，在内部使用中需要热备的业务必须接入meta-proxy。
 
@@ -161,7 +155,7 @@ meta-proxy的逻辑是客户端访问proxy，proxy去zookeeper上找对应表的
 
 在开启热备前，需要考虑好本次热备是同步表的全部数据(全量数据同步)还是只需要同步此刻开始(增量同步)。
 
-1. 如果进行全量拷贝，则需要拷贝checkpoint，则备集群不能存在同名表，由该命令创建新表并开启主备任务
+1. 如果进行表的全量数据拷贝，则需要拷贝的数据分为两部分，存量数据的checkpoint+增量写入的数据。在admin-cli中，使用dup add命令时增加`-p`参数，pegasus duplication即可生成checkpoint同步到备集群。需要注意的是，在这种情况下备集群不能存在同名表，在duplication逻辑中，备集群会使用主集群同步过来的checkpoint创建与主集群表名一致的新表，随后接收主集群同步过来的增量数据。
 
 2. 如果增量同步，不需要拷贝checkpoint（即仅同步增量数据），则需要确保备集群已经创建好同名表
 
@@ -178,7 +172,7 @@ successfully add duplication [dupid: 1669972761]
 
 ### 执行步骤4 暂停/重启/删除一个热备任务
 
-```C#
+```
 # 注意：仅在DS_LOG 阶段可以暂停
 >> dup pause/start/remove -d {dup的id，使用dup list 可以查看}
 ```
@@ -259,34 +253,12 @@ set_dup_fail_mode <app_name> <dupid> <slow|skip>
   
 ```
 
-我们在每条数据前都会加上 `timestamp+cluster_id` 的前缀，timestamp 即数据写到 pegasus 的时间戳，cluster_id 即上面 duplication-group 中所配置的，bjsrv 的 cluster_id 为 1，tjsrv 的 cluster_id 为 2。
+我们在每条数据前都会加上 `timestamp+cluster_id` 的前缀，timestamp 即数据写到 pegasus 的时间戳，cluster_id 即上面 duplication-group 中所配置的，bjsrv-account集群的cluster_id 为 1，tjsrv-account集群的 cluster_id 为 2。
 
-cluster_id 的作用是：一旦出现写冲突，例如 tjsrv 和 bjsrv 同时写 key `"user_1"`，系统首先会检查两次写的时间戳，以时间戳大的为最终值。当极罕见地遇到时间戳相同的情况时，以 cluster_id 大的为最终值。使用这种机制我们可以保证两集群的最终值一定相同。
-
-
-
-## 监控项列表
-
-| 监控项 |
-|-------|
-| `replica*eon.replica_stub*dup.log_read_bytes_rate` (XiaoMi/rdsn#393) |
-| `replica*eon.replica_stub*dup.log_read_mutations_rate` (XiaoMi/rdsn#393) |
-| `replica*eon.replica_stub*dup.shipped_bytes_rate` (XiaoMi/rdsn#393) |
-| `replica*eon.replica_stub*dup.confirmed_rate` (XiaoMi/rdsn#393) |
-| `replica*eon.replica_stub*dup.pending_mutations_count` (XiaoMi/rdsn#393) | 
-| `replica*eon.replica_stub*dup.time_lag(ms)` (XiaoMi/rdsn#393) |
-| `replica*eon.replica_stub*dup.load_file_failed_count` (XiaoMi/rdsn#425) |
-| `replica*eon.replica*dup.disabled_non_idempotent_write_count@<app_name>` (XiaoMi/rdsn#411) |
-| `replica*app.pegasus*dup_shipped_ops@<gpid>` (#399) |
-| `replica*app.pegasus*dup_failed_shipping_ops@<gpid>` (#399) |
-| `replica*app.pegasus*dup.time_lag_ms@<app_name>` #526 |
-| `replica*app.pegasus*dup.lagging_writes@<app_name>` #526 |
-| `collector*app.pegasus*app.stat.duplicate_qps#<app_name>` #520 |
-| `collector*app.pegasus*app.stat.dup_shipped_ops#<app_name>` #520 |
-| `collector*app.pegasus*app.stat.dup_failed_shipping_ops#<app_name>` #520 |
+cluster_id 的作用是：一旦出现写冲突，例如 bjsrv-account 和 tjsrv-account 同时写 key `"user_1"`，系统首先会检查两次写的时间戳，以时间戳大的为最终值。当极罕见地遇到时间戳相同的情况时，以 cluster_id 大的为最终值。使用这种机制我们可以保证两集群的最终值一定相同。
 
 
 
 ## Known Limitations
 
-- 热备份暂时不建议两机房同时写一份数据。在我们的业务经验看来，通常这是可以接受的。用户可以将数据均分在 tjsrv 和 bjsrv 两机房内，热备份能保证当任一机房宕机，只有数秒的数据丢失（假设机房之间网络稳定）。
+- 热备份暂时不建议两机房同时写一份数据。在我们的业务经验看来，通常这是可以接受的。用户可以将数据均分在两个不同的机房内，热备份能保证当任一机房宕机，只有数秒的数据丢失（假设机房之间网络稳定）。
