@@ -2,12 +2,6 @@
 permalink: /overview/onebox/
 ---
 
-TRANSLATING
----
-permalink: /overview/onebox/
----
-
-TRANSLATING
 # Understanding the Onebox Cluster
 Actions speak louder than words.
 
