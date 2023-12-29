@@ -28,7 +28,8 @@ To view the onebox cluster:
 ./run.sh list_onebox
 ```
 
-If you see 3 MetaServer and 3 ReplicaServer processes, congratulations, you've successfully launched it. Otherwise, check the logs and core files in the```./onebox```folder and report any errors to us via a pull request. For example, if the replica1 process is missing, find the core file in```onebox/replica1```(assuming ulimit allows core file generation) and the log files in```onebox/replica1/data/log```.
+If you see 3 MetaServer and 3 ReplicaServer processes, congratulations, you've successfully launched it. Otherwise, check the logs and core files in the `./onebox` 
+ folder and report any errors to us via a pull request. For example, if the replica1 process is missing, find the core file in `onebox/replica1` (assuming ulimit allows core file generation), the log files in `onebox/replica1/data/log` and the standard error output in `onebox/replica1/result`.
 
 To stop the onebox cluster:
 ```bash
