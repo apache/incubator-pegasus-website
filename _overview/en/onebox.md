@@ -9,7 +9,7 @@ When you first delve into Pegasus, you're probably most eager to understand how 
 
 Here's what the onebox cluster does when it starts up:
 
-- Initiates Zookeeper: Automatically downloads the Zookeeper installation package from a remote source, installs it in the local hidden folder```.zk_install```, and then launches the local Zookeeper service on port 22181.
+- Initiates Zookeeper: Automatically downloads the Zookeeper installation package from a remote source, installs it in the local hidden folder `.zk_install`, and then launches the local Zookeeper service on port 22181.
 - Launches 3 MetaServers and 3 ReplicaServers: The ports for the MetaServers are 34601, 34602, and 34603; for the ReplicaServers, they are 34801, 34802, and 34803.
 - After the cluster starts, it automatically creates a temporary table.
 
