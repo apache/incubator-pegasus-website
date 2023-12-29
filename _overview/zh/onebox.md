@@ -28,7 +28,7 @@ onebox 集群在启动时实际上做了这些事情:
 ```bash
 ./run.sh list_onebox
 ```
-如果你能看到 3 个 MetaServer 和 3 个 ReplicaServer 进程, 那么恭喜你, 启动成功了。否则就到```./onebox```文件夹下查看日志和core文件, 然后给我们发 pull request 报告错误吧。譬如 replica1 进程不在了，那么就到```onebox/replica1```下面找 core 文件 (前提是 ulimit 配置为允许产生 core 文件), 到```onebox/replica1/data/log```下面找日志文件。
+如果你能看到 3 个 MetaServer 和 3 个 ReplicaServer 进程, 那么恭喜你, 启动成功了。否则就到`./onebox`文件夹下查看`result`文件（标准错误输出）、日志、core文件等, 然后给我们发 pull request 报告错误吧。譬如 replica1 进程不在了，那么就到`onebox/replica1`下面找 core 文件 (前提是 ulimit 配置为允许产生 core 文件), 到`onebox/replica1/data/log`下面找日志文件, 在`onebox/replica1/result`查看标准错误输出。
 
 停止 onebox 集群:
 ```bash
@@ -36,12 +36,12 @@ onebox 集群在启动时实际上做了这些事情:
 ```
 停止之后你还可以使用 start_onebox 命令重启集群。
 
-清理 onebox 集群 (包括数据):
+清理 onebox 集群 (**数据也会被清理**):
 ```bash
 ./run.sh clear_onebox
 ```
 
-停止/启动/重启其中的某一个进程:
+停止/启动/重启其中的某一个进程：
 ```bash
 ./run.sh start_onebox_instance -h
 ./run.sh stop_onebox_instance -h
