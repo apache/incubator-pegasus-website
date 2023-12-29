@@ -37,7 +37,7 @@ To stop the onebox cluster:
 
 After stopping, you can restart the cluster using the start_onebox command.
 
-To clean the onebox cluster (including data):
+To clean the onebox cluster (**All the data will be clean up as well!**):
 ```bash
 ./run.sh clear_onebox
 ```
