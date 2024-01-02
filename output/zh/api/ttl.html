@@ -16,15 +16,15 @@
 <meta name="generator" content="Jekyll v4.3.3" />
 <meta property="og:title" content="Ttl" />
 <meta property="og:locale" content="en_US" />
-<meta name="description" content="原理 Pegasus支持TTL（Time-To-Live）功能，即在写入数据的时候，可以指定数据的过期时间。一旦过期，数据对用户就是不可见的，通过get/multiGet等查询接口获取不到数据，就跟数据没有写入一样。" />
-<meta property="og:description" content="原理 Pegasus支持TTL（Time-To-Live）功能，即在写入数据的时候，可以指定数据的过期时间。一旦过期，数据对用户就是不可见的，通过get/multiGet等查询接口获取不到数据，就跟数据没有写入一样。" />
+<meta name="description" content="原理 Pegasus支持TTL（Time-To-Live）功能，即在写入数据的时候，可以指定数据的过期时间。一旦过期，数据对用户就是不可见的，通过get/multiGet等接口都不再能访问到数据。" />
+<meta property="og:description" content="原理 Pegasus支持TTL（Time-To-Live）功能，即在写入数据的时候，可以指定数据的过期时间。一旦过期，数据对用户就是不可见的，通过get/multiGet等接口都不再能访问到数据。" />
 <meta property="og:site_name" content="Pegasus" />
 <meta property="og:type" content="article" />
-<meta property="article:published_time" content="2024-01-02T06:19:42+00:00" />
+<meta property="article:published_time" content="2024-01-02T06:50:43+00:00" />
 <meta name="twitter:card" content="summary" />
 <meta property="twitter:title" content="Ttl" />
 <script type="application/ld+json">
-{"@context":"https://schema.org","@type":"BlogPosting","dateModified":"2024-01-02T06:19:42+00:00","datePublished":"2024-01-02T06:19:42+00:00","description":"原理 Pegasus支持TTL（Time-To-Live）功能，即在写入数据的时候，可以指定数据的过期时间。一旦过期，数据对用户就是不可见的，通过get/multiGet等查询接口获取不到数据，就跟数据没有写入一样。","headline":"Ttl","mainEntityOfPage":{"@type":"WebPage","@id":"/api/ttl"},"url":"/api/ttl"}</script>
+{"@context":"https://schema.org","@type":"BlogPosting","dateModified":"2024-01-02T06:50:43+00:00","datePublished":"2024-01-02T06:50:43+00:00","description":"原理 Pegasus支持TTL（Time-To-Live）功能，即在写入数据的时候，可以指定数据的过期时间。一旦过期，数据对用户就是不可见的，通过get/multiGet等接口都不再能访问到数据。","headline":"Ttl","mainEntityOfPage":{"@type":"WebPage","@id":"/api/ttl"},"url":"/api/ttl"}</script>
 <!-- End Jekyll SEO tag -->
 </head>
 
@@ -738,37 +738,44 @@
             <section class="section" style="padding-top: 2rem;">
                 <div class="content">
                     <h1 id="原理">原理</h1>
-<p>Pegasus支持TTL（Time-To-Live）功能，即在写入数据的时候，可以指定数据的过期时间。一旦过期，数据对用户就是不可见的，通过get/multiGet等查询接口获取不到数据，就跟数据没有写入一样。</p>
+<p>Pegasus支持TTL（Time-To-Live）功能，即在写入数据的时候，可以指定数据的过期时间。一旦过期，数据对用户就是不可见的，通过get/multiGet等接口都不再能访问到数据。</p>
 
-<p>设置的时候，用户通常都是提供<code class="language-plaintext highlighter-rouge">ttl_seconds</code>参数，表示从当前时间开始计算，多少秒之后为过期时间。如果为0，表示不设置TTL，即数据用不过期。</p>
+<p>设置的时候，用户通常都是提供<code class="language-plaintext highlighter-rouge">ttl_seconds</code>参数，表示从当前时间开始计算，多少秒之后数据过期。如果为0，则表示不设置TTL，即数据永不过期。</p>
 
-<p>用户通常有疑问，数据过期后对用户不可见是怎么做到的呢？数据会被立即删除吗？实际上不是这样的，这要从TTL的实现原理说起。</p>
+<p>用户通常有疑问，数据过期后对用户不可见是怎么实现的呢？数据会被立即删除吗？下面来讲讲TTL的实现原理。</p>
 
-<p>Pegasus的TTL是通过在RocksDB中存储数据时记录数据的过期时间，然后在查询时对过期时间进行检查和过滤来实现的。如下图：</p>
+<p>简单来说，Pegasus的TTL是通过在写数据时记录数据的过期时间，在查询时对过期时间进行检查来实现的。如下图：</p>
 
 <p><img src="/assets/images/pegasus-ttl.png" alt="pegasus-ttl.png" class="img-responsive" /></p>
 
 <p><strong>写入过程：</strong></p>
 <ul>
-  <li>在写入数据时，用户在客户端通过<code class="language-plaintext highlighter-rouge">ttl_seconds</code>参数设置TTL时间，客户端先计算数据的过期时间<code class="language-plaintext highlighter-rouge">ExpireTime = CurrentTime + ttl_seconds</code>，然后通过RPC将数据和ExpireTime一起传给ReplicaServer端执行。</li>
-  <li>ReplicaServer收到写请求后，经过各种处理（包括写日志、replication复制等），最后将数据存储到RocksDB中。在存储value的时候，会将ExpireTime放在value头部固定的4个字节中。</li>
+  <li>在写入数据时，用户在客户端通过<code class="language-plaintext highlighter-rouge">ttl_seconds</code>参数设置TTL时间，客户端先计算数据的过期时间<code class="language-plaintext highlighter-rouge">ExpireTime = CurrentTime + ttl_seconds</code>，然后通过RPC将数据和<code class="language-plaintext highlighter-rouge">ExpireTime</code>一起传给ReplicaServer端执行。</li>
+  <li>ReplicaServer收到写请求后，经过各种处理（包括写WAL、replication复制等），最后将数据存储到RocksDB中。在存储value的时候，会将<code class="language-plaintext highlighter-rouge">ExpireTime</code>放在value头部。</li>
 </ul>
 
 <p><strong>读取过程：</strong></p>
 <ul>
-  <li>用户通过客户端查询指定key对应的value数据。</li>
-  <li>ReplicaServer收到读请求后，先从RocksDB获取到key对应的value，然后从value头部提取出ExpireTime：
+  <li>用户通过客户端查询指定key对应的value数据</li>
+  <li>ReplicaServer收到读请求后，先从RocksDB获取到key对应的value，然后从value头部提取出<code class="language-plaintext highlighter-rouge">ExpireTime</code>：
     <ul>
       <li>如果ExpireTime == 0，表示数据没有设置TTL，是有效的。</li>
-      <li>如果ExpireTime &gt; 0，表示数据设置了TTL，则将ExpireTime与当前时间进行对比：如果没有过期，则数据是有效的；如果已经过期，则数据是无效的，返回NotFound。</li>
+      <li>如果ExpireTime &gt; 0，表示数据设置了TTL，则进一步比较：
+        <ul>
+          <li>如果ExpireTime &gt; CurrentTime，则数据没有过期，返回value中的用户数据</li>
+          <li>如果ExpireTime &lt;= CurrentTime，则数据已经过期，返回<code class="language-plaintext highlighter-rouge">NotFound</code></li>
+        </ul>
+      </li>
     </ul>
   </li>
 </ul>
 
 <p><strong>数据删除：</strong></p>
 <ul>
-  <li>数据过期后，并不能立即从RocksDB中消失，而是通过compaction来进行删除的。我们定制了RocksDB的CompactionFilter，使其在compaction过程中检查数据value头部的ExpireTime，如果已经过期，则数据会被扔掉，不会出现在新生成的文件中。</li>
-  <li>因为删除过程是异步的，与compaction的执行时机和频率有关，所以数据过期与数据删除通常不是同时发生的，唯一能保证的是数据删除肯定发生在数据过期之后。未删除的过期数据会占据磁盘空间，这点是需要考虑到的。</li>
+  <li>数据过期后，并不是立即从RocksDB中消失，而是通过<a href="https://github.com/facebook/rocksdb/wiki/Compaction">compaction</a>来进行过期数据清理的。</li>
+  <li>Pegasus使用了自定义的RocksDB<a href="https://github.com/facebook/rocksdb/wiki/Compaction-Filter">CompactionFilter</a>，使其在compaction过程中检查数据value头部的<code class="language-plaintext highlighter-rouge">ExpireTime</code>，如果已经过期，则将数据丢弃，它将不会出现在新生成的文件中。</li>
+  <li>因为过期数据的删除过程是异步的，与compaction的执行时机和频率有关，所以数据过期与数据删除通常不是同时发生的，唯一能保证的是数据删除肯定发生在数据过期之后。</li>
+  <li>已过期但未删除的数据依然会占用据磁盘空间。</li>
 </ul>
 
 <h1 id="接口">接口</h1>
@@ -785,41 +792,48 @@
 
 <p>Shell工具中以下命令可以查询和设置TTL：</p>
 <ul>
-  <li><a href="/zh/overview/shell#ttl">ttl</a>命令：获取指定数据的TTL信息。</li>
-  <li><a href="/zh/overview/shell#set">set</a>和<a href="/zh/overview/shell#multi_set">multi_set</a>命令：都提供了设置TTL的参数。</li>
+  <li><a href="/zh/docs/tools/shell/#ttl">ttl</a>命令：获取指定数据的TTL信息。</li>
+  <li><a href="/zh/docs/tools/shell/#set">set</a>和<a href="/zh/docs/tools/shell/#multi_set">multi_set</a>命令：都提供了设置TTL的参数。</li>
 </ul>
 
 <h1 id="表级ttl">表级TTL</h1>
 <p>从v1.11.2版本开始，Pegasus支持表级TTL功能。</p>
 
-<p>实现原理：</p>
+<h2 id="实现原理">实现原理</h2>
 <ul>
   <li>用户在<a href="/zh/administration/table-env">Table环境变量</a>中设置<code class="language-plaintext highlighter-rouge">default_ttl</code>环境变量。</li>
-  <li>MetaServer将环境变量异步地通知到各个ReplicaServer，使该表的每个replica都获取到该环境变量，这个过程大约有几秒到几十秒不等的延迟，但是不会超过一分钟。</li>
-  <li>replica获得环境变量后，解析获得default_ttl配置，并立即开始生效。生效之后：
+  <li>MetaServer将环境变量异步地同步到到各个ReplicaServer，使该表的每个replica都获取到该环境变量</li>
+  <li>replica获得环境变量后，解析获得<code class="language-plaintext highlighter-rouge">default_ttl</code>配置，并立即生效。此后：
     <ul>
-      <li>用户新写入的数据，如果TTL=0（使用默认TTL=0或者显式设置TTL=0），则将数据的实际TTL设置为default_ttl。</li>
-      <li>RocksDB在进行compaction的时候，如果compact输入文件的原数据没有TTL，则将compact输出文件的新数据的TTL设置为default_ttl。这个过程依赖于compaction的触发时机，所以时间点是不确定的。</li>
-      <li>如果执行<a href="/zh/administration/manual-compact">Manual Compact</a>，那么所有文件都会经过compaction处理，原来没有TTL的数据都会设置TTL为default_ttl。</li>
+      <li>用户新写入的数据，如果<code class="language-plaintext highlighter-rouge">ExpireTime</code> = 0，则将数据的实际<code class="language-plaintext highlighter-rouge">ExpireTime</code>设置为<code class="language-plaintext highlighter-rouge">default_ttl</code></li>
+      <li>RocksDB在进行compaction的时候，如果compact输入文件的原数据<strong>没有</strong><code class="language-plaintext highlighter-rouge">ExpireTime</code>，则将compact输出文件的新数据的<code class="language-plaintext highlighter-rouge">ExpireTime</code>设置为<code class="language-plaintext highlighter-rouge">default_ttl</code></li>
+      <li>由于后台compaction执行时机的不确定性，未设置TTL的数据被设置TTL为<code class="language-plaintext highlighter-rouge">default_ttl</code>的时机也是是不确定的</li>
+      <li>如果想快速设置所有数据的TTL，则可以执行<a href="/zh/administration/manual-compact">Manual Compact</a>。那么所有数据都会被compaction处理，未设置TTL的数据都会被被设置TTL为<code class="language-plaintext highlighter-rouge">default_ttl</code></li>
     </ul>
   </li>
 </ul>
 
-<p>考虑这样的场景：业务方在初期写入数据时没有设置TTL，后来改变需求，希望所有数据都加TTL，并且以前没有设置TTL的数据从现在开始计算TTL，那么就可以通过<code class="language-plaintext highlighter-rouge">表级TTL</code>加上<code class="language-plaintext highlighter-rouge">Manual Compact</code>的功能实现这个目的。</p>
+<h2 id="应用场景">应用场景</h2>
+<ul>
+  <li>数据表占用的磁盘空间越来越大。想降低磁盘空间占用，或通过清理数据来提升查询速度，降低磁盘、CPU等资源消耗</li>
+  <li>数据表中的所有数据或部分数据没有设置TTL</li>
+  <li>未设置TTL的数据的有效性跟写入时间相关，比如写入时间超过一个月的数据就不再会有查询需求了，可以丢弃
+同时满足以上3个条件的场景，就可以通过<code class="language-plaintext highlighter-rouge">表级TTL</code>和<code class="language-plaintext highlighter-rouge">Manual Compact</code>的功能实现清理磁盘释放资源的目的。</li>
+</ul>
 
 <h1 id="通过ttl计算数据写入时间">通过TTL计算数据写入时间</h1>
-<p>如果数据写入时设置了TTL，就可以通过TTL计算出数据写入时间。依据的公式是：</p>
-<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>TTLExpireTime = InsertTime + TTLSeconds = now + TTLRemainingSeconds
-
-  ==&gt;
-
-InsertTime = now + TTLRemainingSeconds - TTLSeconds
+<p>如果数据写入时设置了TTL，则可以通过TTL计算出数据写入的时间。
+由于：</p>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>ExpireTime = InsertTime + TTLSeconds = now + TTLRemainingSeconds
+</code></pre></div></div>
+<p>因此：</p>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>InsertTime = now + TTLRemainingSeconds - TTLSeconds
 </code></pre></div></div>
 <p>其中：</p>
 <ul>
+  <li>now：执行Shell ttl命令时的时间。</li>
   <li>TTLRemainingSeconds：通过<a href="/zh/overview/shell#ttl">Shell的ttl命令</a>获取。</li>
-  <li>now：执行Shell ttl命令的时间。</li>
-  <li>TTLSeconds：用户知道数据写入时设置的TTL。</li>
+  <li>TTLSeconds：用户写入数据时设置的TTL。</li>
 </ul>
 
                 </div>
@@ -866,7 +880,12 @@ InsertTime = now + TTLRemainingSeconds - TTLSeconds
 <ul class="menu-list">
   <li><a href="#原理">原理</a></li>
   <li><a href="#接口">接口</a></li>
-  <li><a href="#表级ttl">表级TTL</a></li>
+  <li><a href="#表级ttl">表级TTL</a>
+    <ul>
+      <li><a href="#实现原理">实现原理</a></li>
+      <li><a href="#应用场景">应用场景</a></li>
+    </ul>
+  </li>
   <li><a href="#通过ttl计算数据写入时间">通过TTL计算数据写入时间</a></li>
 </ul>
 
