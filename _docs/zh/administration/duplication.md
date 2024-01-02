@@ -20,46 +20,50 @@ permalink: administration/duplication
 
 我们能够做到**一主一备（single-master）**，也能提供**多机房多主（multi-master）**，用户可以根据需要进行配置。
 
-这里需要注意的是，跨机房同步是**异步**的数据复制，并非完全实时。与单机房不同，该功能不提供跨机房 *read-after-write* 的一致性保证。目前在跨机房网络健康的环境下，数据延时大概在 10s 左右，即 A 机房的写数据大概在 10s 后会写入 B 机房。
+这里需要注意的是，跨机房同步是**异步**的数据复制，并非完全实时。与单机房不同，该功能不提供跨机房 *read-after-write* 的一致性保证。目前在跨机房网络健康的环境下，对于备集群而言，数据延时大概在秒级左右，但具体表现与写入流量大小有关。经测试，写入小于1KB的数据的延时在1秒内，即 A 机房的写数据大概在1秒后会写入 B 机房。
 
 ## 操作上手
 
-假设我们有两个 pegasus 集群 _bjsrv-account_ 和 _tjsrv-account_，分别位于北京与天津的两个机房内，表 `account_xiaomi` 由于存储了极其关键的用户帐号数据，需要能够在双集群保证可用，所以我们为它实施热备份：
+假设我们有两个 pegasus 集群 `bjsrv-account` (源集群)和 `tjsrv-account`(目标集群)，分别位于北京与天津的两个机房内，表 `my_source_app` 由于存储了极其关键的用户帐号数据，需要能够在双集群保证可用，所以我们为它实施热备份：
 
 ```
-> ./run.sh shell -n bjsrv-account
+#The cluster name is: bjsrv-account
+#The cluster meta list is: ******
 
-Type "help" for more information.
-Type "Ctrl-D" or "Ctrl-C" to exit the shell.
-
-The cluster name is: bjsrv-account
-The cluster meta list is: ***
+>./admin-cli -m ****** //use meta list to connect cluster
 
 >>> ls
 app_id    status              app_name
-12        AVAILABLE           account_xiaomi
+12        AVAILABLE           my_source_app
 
->>> add_dup account_xiaomi tjsrv-account
-Success for adding duplication [appid: 12, dupid: 1535008534]
+>>> use my_source_app
+>>> dup add -c my_target_cluster -p
+successfully add duplication [dupid: 1669972761]
 
->>> query_dup account_xiaomi
-duplications of app [account_xiaomi] are listed as below:
-|     dup_id     |   status   |     remote cluster     |       create time       |
-|   1535008534   |  DS_START  |      tjsrv-account     |   2018-08-23 15:15:34   |
+>>> dup list 
+[
+  {
+    "dupid": 1692240106,
+    "status": "DS_LOG",
+    "remote": "tjsrv-account",
+    "create_ts": 1692240106066,
+    "fail_mode": "FAIL_SLOW"
+  }
+]
 ```
 
-通过 `add_dup` 命令，bjsrv-account 集群的表 account_xiaomi 将会近实时地把数据复制到 tjsrv-account 上，这意味着，每一条在北京机房的写入，最终都一定会复制到天津机房。
+通过 `dup add` 命令，bjsrv-account 集群的表 my_source_app 将会近实时地把数据复制到 tjsrv-account 上，这意味着，每一条在北京机房的写入，最终都一定会复制到天津机房。
 
-热备份使用日志异步复制的方式来实现跨集群的同步，可与 mysql 的 binlog 复制和 hbase replication 类比。
+热备份使用日志异步复制的方式来实现跨集群的同步，可与 MySQL 的 binlog 复制和 HBase replication 类比。
 
 热备份功能**以表为粒度**，你可以只对集群内一部分表实施热备份。热备份的两集群的表名需要保持一致，但 partition 的个数不需要相同。例如用户可以建表如下：
 
 ```sh
 ## bjsrv-account
->>> create account_xiaomi -p 128
+>>> create my_source_app -p 128
 
 ## tjsrv-account
->>> create account_xiaomi -p 32
+>>> create my_source_app -p 32
 ```
 
 ## 线上表开启热备份
@@ -72,110 +76,110 @@ duplications of app [account_xiaomi] are listed as below:
 面对这个需求，我们的操作思路是：
 
 1. 首先源集群**保留从此刻开始的所有写增量**（即WAL日志）
-2. 将源集群的全量快照（冷备份）上传至 HDFS / xiaomi-FDS 等备份存储上。
-3. 然后恢复到目标集群。
-4. 此后源集群开启热备份，并复制此前堆积的写增量，复制到远端目标集群。
+2. 将源集群的全量快照（存量数据）移动到指定路径下，等待备集群(目标集群)对这些数据进行学习learn。
+3. 目标集群将存量数据学习完成后，利用学来的存量数据构建表。构建完成后，告知源集群进入WAL日志发送阶段。
+4. 此后源集群开启热备份，并复制此前堆积的写增量，发送到远端目标集群。         
 
-```
-                +-----Source Table------+
-                |                       |
-                |  +---------+          |
-   2. Backup    |  |         |          |
-+----------+    |  |         |          |
-|          |    |  | RocksDB | +-----+  |
-| snapshot +<------+  Store  | |     |  |
-|          |    |  |         | | WAL +<-------+ 1. No GC
-+------+---+    |  |         | |     |  |
-       |        |  +---------+ +---+-+  |
-       |        |                  |    |
-       |        +-----------------------+
-       |                           |
-       |                           | 4. Start duplication
-       |                           |
-       |         +-----------------v----+
-       |         |                      |
-       +-------->+                      |
-      3. Restore |                      |
-                 +------Dest Table------+
-```
+| master cluster                                               |                                                              | follower cluster                                             |                                                              |
+| ------------------------------------------------------------ | ------------------------------------------------------------ | ------------------------------------------------------------ | ------------------------------------------------------------ |
+| meta                                                         | primary                                                      | primary                                                      | meta                                                         |
+|                                                              | 0.replica server在初始化时会进行周期性RPC的任务创建，进行replica server与meta之间的热备信息通信 |                                                              |                                                              |
+| 0.收到replica server发送的RPC，汇总热备任务和进度，回复replica server |                                                              |                                                              |                                                              |
+| 1.发起添加表的热备任务的请求add_duplication，增加相关dup_info |                                                              |                                                              |                                                              |
+| 2.**进入状态 DS_PREPARE**，同步checkpoint点                  | 3.得知meta上的新dup_info，创建replica_duplicator类，调用**trigger_manual_emergency_checkpoint**生成checkpoint。 |                                                              |                                                              |
+| 4.得到replica server报告全部checkpoint生成完毕，开始创建备用集群的表create_follower_app_for_duplication | --> -->--> RPC_CM_CREATE_APP->-->                            | --> -->--> --> 携带主表信息--> --> --> -->                   | 5.接到RPC_CM_CREATE_APP请求，开始创建表。duplicate_checkpoint |
+|                                                              | <-- <-- <-- <-- <-- <-- <-- <-- <-- <-- <-- <-- <-           | <-- <-- <-- <--建表成功 返回ERR_OK <-- <-                    | 6.使用主表checkpoint初始化。发送拉取checkpoint的请求。底层调用nfs copy的方法async_duplicate_checkpoint_from_master_replica |
+| 7.接收到ERR_OK的返回，**进入DS_APP状态**                     |                                                              |                                                              |                                                              |
+| 8.下一轮通讯中，在DS_APP状态下检查创建完成的表。无误后，**进入DS_LOG状态**check_follower_app_if_create_completed |                                                              |                                                              |                                                              |
+|                                                              | 9.replica server首次得知status已经切换到DS_LOG，开始热备plog部分数据start_dup_log |                                                              |                                                              |
+|                                                              | 10.load重放加载日志  ship打包发送                            | 11.作为服务端接收ship的包，解包并根据具体包含的RPC类型处理pegasus_write_service::duplicate |                                                              |
 
-### 执行步骤1
 
-如何保留从此刻开始的所有写增量？我们可以如此进行操作：
 
-首先使用 `add_dup [--freezed/-f]` 表示不进行日志复制，它的原理就是阻止当前日志 GC（log compaction）。该操作 **必须最先执行**，否则无法保证数据完整性。
 
-```sh
-## bjsrv-account
->>> add_dup account_xiaomi tjsrv-account --freezed
-```
 
-接着每个分片都会记录**当前确认点（confirmed_decree）**，并持久化到 MetaServer 上。
-注意需等待所有的分片都将当前确认点更新至MetaServer后，才可进行下一步操作，这是该功能正确性的前提。
+下面介绍给一张线上表开启具体的热备所需的步骤
 
-`confirme_decree` 值为 -1 即表示该分片的确认点尚未同步。
+### 执行步骤1 集群热备参数设置
 
-```
->>> query_dup -d account_xiaomi 1535008534
->>> {"dupid":1548442533,"status":"DS_START","remote":"c4srv-feedhistory","create_ts":1548442533763,"progress":[{"pid":0,"confirmed":-1},{"pid":1,"confirmed":276444333},{"pid":2,"confirmed":-1},{"pid":3,"confirmed":-1},{"pid":4,"confirmed":-1},{"pid":5,"confirmed":-1},{"pid":6,"confirmed":-1},{"pid":7,"confirmed":279069949},{"pid":8,"confirmed":-1}}
+主备集群两边的replication与duplication-group项下**相关参数须保持一致**。其中，主集群指同步数据的发送方，备集群指接收方。
 
->>> query_dup -d account_xiaomi 1535008534
->>> {"dupid":1548442533,"status":"DS_START","remote":"c4srv-feedhistory","create_ts":1548442533763,"progress":[{"pid":0,"confirmed":276444111},{"pid":1,"confirmed":276444333},{"pid":2,"confirmed":276444332},{"pid":3,"confirmed":276444222},{"pid":4,"confirmed":276444111},{"pid":5,"confirmed":276444377},{"pid":6,"confirmed":276444388},{"pid":7,"confirmed":279069949},{"pid":8,"confirmed":276444399}}
+主集群配置示例：
+
+```Shell
+[replication]
+  duplication_enabled = true
+  duplicate_log_batch_bytes = 4096 # 0意味着不做batch处理，一般设置为4096即可，该配置可以通过admin-cli的server-config动态修改
+
+[pegasus.clusters]
+  # 开启热备份的主集群必须配置备集群的具体meta server地址：
+  tjsrv-account = xxxxxxxxx
+
+# 热备份的两个集群需要登记源集群和目的集群的“cluster_id”：
+  [[duplication-group]]
+  bjsrv-account = 1
+  tjsrv-account = 2
 ```
 
-### 执行步骤2,3
 
-使用冷备份功能将数据快照上传至远端存储，再使用恢复功能在目标集群（tjsrv-account）恢复该表。示例命令如下：
 
-```
-# 立刻对表（app_id = 12）进行冷备
-./run.sh shell -n bjsrv-account
->>> add_backup_policy -p dup_transfer -b fds_wq -a 12 -i 86400 -s 12:01 -c 1
+备集群配置示例：
 
-# 耐心等待备份生成
->>> query_backup_policy -p dup_transfer
-policy_info:
-    name                 : dup_transfer
-    backup_provider_type : fds_wq
-    backup_interval      : 86400s
-    app_ids              : {12}
-    start_time           : 12:01
-    status               : enabled
-    backup_history_count : 1
-backup_infos:
-[1]
-    id         : 1541649698875
-    start_time : 2018-11-08 12:01:38
-    end_time   : 2018-11-08 12:03:51
-    app_ids    : {60}
+```Shell
+[replication]
+  duplication_enabled = true
+  duplicate_log_batch_bytes = 4096 # 0意味着不做batch处理，一般设置为4096即可，该配置可以通过admin-cli的server-config动态修改
 
-# 在天津机房恢复表
-./run.sh shell -n tjsrv-account
->>> restore_app -c bjsrv-account -p dup_transfer -a account_xiaomi -i 12 -t 1541649698875 -b fds_wq
+[pegasus.clusters]
+  # 备集群的这一项可以不额外增加配置
+  
+# 热备份的两个集群需要登记源集群和目的集群的“cluster_id”：
+  [[duplication-group]]
+  bjsrv-account = 1
+  tjsrv-account = 2
 ```
 
-### 执行步骤4
 
-现在我们启动热备份。
+
+### 执行步骤2 按需接入域名proxy系统 (可选)
+
+跨机房热备的主要目的是提供机房级容灾，为了提供跨机房切换流量的能力，在内部使用中需要热备的业务必须接入meta-proxy。
+
+meta-proxy的逻辑是客户端访问proxy，proxy去zookeeper上找对应表的路径，获得一个真实的集群meta地址，然后再访问这个meta。meta-proxy在ZK上的路径配置是表级别的，所以要注意一个region内最好不要有不同业务的同名表。
+
+当然如果业务侧可以自己修改meta地址，是可以不接入域名proxy系统的。
+
+
+
+### 执行步骤3 开启热备
+
+在开启热备前，需要考虑好本次热备是同步表的全部数据(全量数据同步)还是只需要同步此刻开始(增量同步)。
+
+1. 如果进行表的全量数据拷贝，则需要拷贝的数据分为两部分，存量数据的checkpoint+增量写入的数据。在admin-cli中，使用dup add命令时增加`-p`参数，pegasus duplication即可生成checkpoint同步到备集群。需要注意的是，在这种情况下备集群不能存在同名表，在duplication逻辑中，备集群会使用主集群同步过来的checkpoint创建与主集群表名一致的新表，随后接收主集群同步过来的增量数据。
+
+2. 如果增量同步，不需要拷贝checkpoint（即仅同步增量数据），则需要确保备集群已经创建好同名表
 
 ```
-# 开启日志复制
->>> start_dup account_xiaomi <dupid>
+# 以admin-cli命令为例
+# dup add -c {集群名} -p {出现-p是全量同步，不带-p参数是增量同步}
 
-# 至此热备份已经完全可用。
+>> use my_source_app
+>> dup add -c tjsrv-account -p
+successfully add duplication [dupid: 1669972761]
 ```
 
-当 `start_dup` 时，热备份任务会从之前记录的确认点开始复制，这样我们就保证了写增量的完整性。
 
-另外需注意的是，由于写增量的长时间堆积，一时可能有大量日志复制，热备份流量会突增，从而导致服务不稳定。因此，我们需要在远端机房设置[限流（write throttling）](/administration/throttling)。
+
+### 执行步骤4 暂停/重启/删除一个热备任务
 
 ```
->>> get_app_envs
-get app envs succeed, count = 7
-=================================
-replica.write_throttling = 30000*delay*100,40000*reject*200
-=================================
+# 注意：仅在DS_LOG 阶段可以暂停
+>> dup pause/start/remove -d {dup的id，使用dup list 可以查看}
 ```
+
+**注：pause后，没有发送的日志持续堆积。remove后，没有发送的日志直接被清零**。
+
+
 
 ## 热备份的可靠性
 
@@ -226,7 +230,9 @@ set_dup_fail_mode <app_name> <dupid> <slow|skip>
 {"remote":"tjsrv-account","status":"DS_START","create_timestamp_ms":1537336970483}
 ```
 
-## 完整配置项列表
+
+
+## 热备相关配置项列表
 
 ```ini
 [replication]
@@ -242,40 +248,17 @@ set_dup_fail_mode <app_name> <dupid> <slow|skip>
 
 # 热备份的两个集群需要登记源集群和目的集群的“cluster_id”：
 [duplication-group]
-  tjsrv-account = 1
-  bjsrv-account = 2
+  bjsrv-account = 1
+  tjsrv-account = 2
+  
 ```
 
-我们在每条数据前都会加上 `timestamp+cluster_id` 的前缀，timestamp 即数据写到 pegasus 的时间戳，cluster_id 即上面 duplication-group 中所配置的，tjsrv 的 cluster_id 为 1，bjsrv 的 cluster_id 为 2。
+我们在每条数据前都会加上 `timestamp+cluster_id` 的前缀，timestamp 即数据写到 pegasus 的时间戳，cluster_id 即上面 duplication-group 中所配置的，bjsrv-account集群的cluster_id 为 1，tjsrv-account集群的 cluster_id 为 2。
 
-cluster_id 的作用是：一旦出现写冲突，例如 tjsrv 和 bjsrv 同时写 key `"user_1"`，系统首先会检查两次写的时间戳，以时间戳大的为最终值。当极罕见地遇到时间戳相同的情况时，以 cluster_id 大的为最终值。使用这种机制我们可以保证两集群的最终值一定相同。
+cluster_id 的作用是：一旦出现写冲突，例如 bjsrv-account 和 tjsrv-account 同时写 key `"user_1"`，系统首先会检查两次写的时间戳，以时间戳大的为最终值。当极罕见地遇到时间戳相同的情况时，以 cluster_id 大的为最终值。使用这种机制我们可以保证两集群的最终值一定相同。
 
-## 完整监控项列表
 
-| 监控项 |
-|-------|
-| `replica*eon.replica_stub*dup.log_read_bytes_rate` (XiaoMi/rdsn#393) |
-| `replica*eon.replica_stub*dup.log_read_mutations_rate` (XiaoMi/rdsn#393) |
-| `replica*eon.replica_stub*dup.shipped_bytes_rate` (XiaoMi/rdsn#393) |
-| `replica*eon.replica_stub*dup.confirmed_rate` (XiaoMi/rdsn#393) |
-| `replica*eon.replica_stub*dup.pending_mutations_count` (XiaoMi/rdsn#393) | 
-| `replica*eon.replica_stub*dup.time_lag(ms)` (XiaoMi/rdsn#393) |
-| `replica*eon.replica_stub*dup.load_file_failed_count` (XiaoMi/rdsn#425) |
-| `replica*eon.replica*dup.disabled_non_idempotent_write_count@<app_name>` (XiaoMi/rdsn#411) |
-| `replica*app.pegasus*dup_shipped_ops@<gpid>` (#399) |
-| `replica*app.pegasus*dup_failed_shipping_ops@<gpid>` (#399) |
-| `replica*app.pegasus*dup.time_lag_ms@<app_name>` #526 |
-| `replica*app.pegasus*dup.lagging_writes@<app_name>` #526 |
-| `collector*app.pegasus*app.stat.duplicate_qps#<app_name>` #520 |
-| `collector*app.pegasus*app.stat.dup_shipped_ops#<app_name>` #520 |
-| `collector*app.pegasus*app.stat.dup_failed_shipping_ops#<app_name>` #520 |
-
-## 完整 HTTP 接口列表
-
-- `http://0.0.0.0:34602/meta/app/duplication?name=temp`
-
-- `http://0.0.0.0:34801/replica/duplication?appid=2`
 
 ## Known Limitations
 
-- 热备份暂时不建议两机房同时写一份数据。在我们的业务经验看来，通常这是可以接受的。用户可以将数据均分在 tjsrv 和 bjsrv 两机房内，热备份能保证当任一机房宕机，只有数秒的数据丢失（假设机房之间网络稳定）。
+- 热备份暂时不建议两机房同时写一份数据。在我们的业务经验看来，通常这是可以接受的。用户可以将数据均分在两个不同的机房内，热备份能保证当任一机房宕机，只有数秒的数据丢失（假设机房之间网络稳定）。
