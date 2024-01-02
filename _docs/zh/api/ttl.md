@@ -64,12 +64,13 @@ Shell工具中以下命令可以查询和设置TTL：
 同时满足以上3个条件的场景，就可以通过`表级TTL`和`Manual Compact`的功能实现清理磁盘释放资源的目的。
 
 # 通过TTL计算数据写入时间
-如果数据写入时设置了TTL，则可以通过TTL计算出数据写入的时间，公式是：
+如果数据写入时设置了TTL，则可以通过TTL计算出数据写入的时间。
+由于：
 ```
 ExpireTime = InsertTime + TTLSeconds = now + TTLRemainingSeconds
-
-  ==>
-
+```
+因此：
+```
 InsertTime = now + TTLRemainingSeconds - TTLSeconds
 ```
 其中：
