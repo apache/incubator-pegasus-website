@@ -16,15 +16,15 @@
 <meta name="generator" content="Jekyll v4.3.3" />
 <meta property="og:title" content="Ttl" />
 <meta property="og:locale" content="en_US" />
-<meta name="description" content="TRANSLATING" />
-<meta property="og:description" content="TRANSLATING" />
+<meta name="description" content="Principle" />
+<meta property="og:description" content="Principle" />
 <meta property="og:site_name" content="Pegasus" />
 <meta property="og:type" content="article" />
-<meta property="article:published_time" content="2024-01-02T06:50:43+00:00" />
+<meta property="article:published_time" content="2024-01-03T12:45:48+00:00" />
 <meta name="twitter:card" content="summary" />
 <meta property="twitter:title" content="Ttl" />
 <script type="application/ld+json">
-{"@context":"https://schema.org","@type":"BlogPosting","dateModified":"2024-01-02T06:50:43+00:00","datePublished":"2024-01-02T06:50:43+00:00","description":"TRANSLATING","headline":"Ttl","mainEntityOfPage":{"@type":"WebPage","@id":"/api/ttl"},"url":"/api/ttl"}</script>
+{"@context":"https://schema.org","@type":"BlogPosting","dateModified":"2024-01-03T12:45:48+00:00","datePublished":"2024-01-03T12:45:48+00:00","description":"Principle","headline":"Ttl","mainEntityOfPage":{"@type":"WebPage","@id":"/api/ttl"},"url":"/api/ttl"}</script>
 <!-- End Jekyll SEO tag -->
 </head>
 
@@ -733,7 +733,121 @@
             </section>
             <section class="section" style="padding-top: 2rem;">
                 <div class="content">
-                    <p>TRANSLATING</p>
+                    <h1 id="principle">Principle</h1>
+
+<p>Pegasus supports TTL (Time To Live) function, which means the expiration time of the data can be specified when writing data. Once data expired, it is invisible to the user and can no longer be accessed through interfaces such as get/multiGet.</p>
+
+<p>Users set TTL via the <code class="language-plaintext highlighter-rouge">ttl_seconds</code> parameter which represents the number of seconds after which the data will expire, starting from the current time. Zero means that TTL is not set, that is, the data will never expire.</p>
+
+<p>How does TTL implement? Will the data be deleted from the disk immediately? Next, let’s talk about the implementation principle of TTL.</p>
+
+<p>Simply speaking, Pegasus TTL is achieved by recording the expiration time of data when writing and checking the expiration time during queries. As shown in the following figure:</p>
+
+<p><img src="/assets/images/pegasus-ttl.png" alt="pegasus-ttl.png" class="img-responsive" /></p>
+
+<p><strong>Writing process</strong></p>
+
+<ul>
+  <li>When writing data, the user uses <code class="language-plaintext highlighter-rouge">ttl_seconds</code> parameter on the client side as the TTL, the client first calculates the expiration time of the data through <code class="language-plaintext highlighter-rouge">ExpireTime = CurrentTime + ttl_seconds</code>, and then pass the data and <code class="language-plaintext highlighter-rouge">ExpireTime</code> together to the ReplicaServer through RPC.</li>
+  <li>After receiving a write request, ReplicaServer undergoes various processes (including writing WAL, replication, etc.) and finally stores the data in RocksDB. When storing values, <code class="language-plaintext highlighter-rouge">ExpireTime</code> will be placed in the value header.</li>
+</ul>
+
+<p><strong>Reading process</strong></p>
+
+<ul>
+  <li>Users query the value data corresponding to the specified key through the client</li>
+  <li>After receiving a read request, ReplicaServer first retrieves the value corresponding to the key from RocksDB, and then extracts the <code class="language-plaintext highlighter-rouge">ExpireTime</code> from the value header:
+    <ul>
+      <li>If ExpireTime == 0, it indicates that the data has not been set TTL, it’s always valid.</li>
+      <li>If ExpireTime &gt; 0, it indicates that TTL has been set for the data, and further comparison is made:
+        <ul>
+          <li>If ExpireTime &gt; now, the data has not expired and the user data in value is returned</li>
+          <li>If ExpireTime &lt;= now, then the data has expired and returns <code class="language-plaintext highlighter-rouge">NotFound</code></li>
+        </ul>
+      </li>
+    </ul>
+  </li>
+</ul>
+
+<p><strong>Data deletion</strong></p>
+
+<ul>
+  <li>After the data expires, it does not immediately remove from RocksDB, but rather garbage collect through <a href="https://github.com/facebook/rocksdb/wiki/Compaction">compaction</a>.</li>
+  <li>Pegasus uses a custom RocksDB <a href="https://github.com/facebook/rocksdb/wiki/Compaction-Filter">CompactionFilter</a> during the compaction process, check the <code class="language-plaintext highlighter-rouge">ExpireTime</code> in the value header of the data. If it has expired, discard the data, and it will not appear in the newly generated file.</li>
+  <li>Because the GC process of expired data is asynchronous and depends on the timing and frequency of compaction execution, data expiration and deletion usually do not occur simultaneously. The only guarantee is that data deletion will definitely occur after data expiration.</li>
+  <li>Expired but undeleted data will still occupy disk space.</li>
+</ul>
+
+<h1 id="interface">Interface</h1>
+
+<p>We provide interfaces for setting and querying TTL on both the client drivers and shell tools.</p>
+
+<p>Taking Pegasus Java Client as an example, the interfaces for obtaining TTL include:</p>
+<ul>
+  <li><a href="/clients/java-client#ttl">ttl</a></li>
+</ul>
+
+<p>The interfaces for setting TTL include:</p>
+<ul>
+  <li><a href="/clients/java-client#set">set</a></li>
+  <li><a href="/clients/java-client#batchset">batchSet</a></li>
+  <li><a href="/clients/java-client#multiset">multiSet</a></li>
+  <li><a href="/clients/java-client#batchmultiset">batchMultiSet</a></li>
+  <li><a href="/clients/java-client#incr">incr</a> (Since Pegasus v1.11.1)</li>
+  <li><a href="/clients/java-client#checkandset">checkAndSet</a></li>
+</ul>
+
+<p>The following commands in Shell tools can query/set TTL:</p>
+<ul>
+  <li><a href="/docs/tools/shell/#ttl">ttl</a></li>
+  <li><a href="/docs/tools/shell/#set">set</a></li>
+  <li><a href="/docs/tools/shell/#multi_set">multi_set</a></li>
+</ul>
+
+<h1 id="table-level-ttl">Table level TTL</h1>
+
+<p>Since Pegasus v1.11.2, Pegasus supports table level TTL functionality.</p>
+
+<h2 id="implementation-principle">Implementation principle</h2>
+
+<ul>
+  <li>Users set <code class="language-plaintext highlighter-rouge">default_ttl</code> environment variable in the <a href="/administration/table-env">Table environment variable</a></li>
+  <li>MetaServer synchronizes environment variables to each ReplicaServer asynchronously, so that each replica of the table obtains the environment variable</li>
+  <li>After obtaining the environment variable in replica, parse to obtain the <code class="language-plaintext highlighter-rouge">default_ttl</code> parameter, and take effect immediately. Afterward:
+    <ul>
+      <li>If the user’s newly written data’s <code class="language-plaintext highlighter-rouge">ExpireTime</code> = 0, the actual <code class="language-plaintext highlighter-rouge">ExpireTime</code> of the data will be set to <code class="language-plaintext highlighter-rouge">default_ttl</code></li>
+      <li>When RocksDB performs compaction, if the original data in the compact input file <strong>does not have</strong> <code class="language-plaintext highlighter-rouge">ExpireTime</code>, then the <code class="language-plaintext highlighter-rouge">ExpireTime</code> of the new data in the compact output file will be set to <code class="language-plaintext highlighter-rouge">default_ttl</code></li>
+      <li>Due to the uncertainty of the execution timing of the background compaction, the time of data without TTL set <code class="language-plaintext highlighter-rouge">default_ttl</code> as TTL is also uncertain</li>
+      <li>If you want to set the TTL for all data quickly, you can use <a href="/administration/manual-compact">Manual Compact</a>. So all data will be processed by compaction, and data without TTL will be set TTL as <code class="language-plaintext highlighter-rouge">default_ttl</code></li>
+    </ul>
+  </li>
+</ul>
+
+<h2 id="application-scenarios">Application scenarios</h2>
+
+<ul>
+  <li>The disk space occupied by data tables is increasing. Users want to reduce disk space usage, improve query performance by garbage-collecting data, or reduce disk and CPU consumption</li>
+  <li>All or part of the data in the table has no TTL set</li>
+  <li>The validity of data without TTL is related to the write time. For example, data written for more than a month will no longer have a query requirement and can be discarded
+In scenarios where all three conditions are met, the purpose of cleaning up disks and releasing resources can be achieved through the functions of table level TTL and Manual Compact.</li>
+</ul>
+
+<h1 id="calculate-data-write-time-through-ttl">Calculate data write time through TTL</h1>
+
+<p>If TTL is set during data writing, the time of data writing can be calculated using TTL.</p>
+
+<p>Due to:</p>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>ExpireTime = InsertTime + TTLSeconds = now + TTLRemainingSeconds
+</code></pre></div></div>
+<p>Therefore:</p>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>InsertTime = now + TTLRemainingSeconds - TTLSeconds
+</code></pre></div></div>
+<p>Among them:</p>
+<ul>
+  <li>Now: The time when executing the Shell ttl command.</li>
+  <li>TTLRemainingSeconds: Obtained through <a href="/overview/shell#ttl">Shell’s ttl command</a>.</li>
+  <li>TTL seconds: The TTL set by the user when writing data.</li>
+</ul>
 
                 </div>
             </section>
@@ -776,7 +890,17 @@
     </span>
     Table of contents
 </p>
-
+<ul class="menu-list">
+  <li><a href="#principle">Principle</a></li>
+  <li><a href="#interface">Interface</a></li>
+  <li><a href="#table-level-ttl">Table level TTL</a>
+    <ul>
+      <li><a href="#implementation-principle">Implementation principle</a></li>
+      <li><a href="#application-scenarios">Application scenarios</a></li>
+    </ul>
+  </li>
+  <li><a href="#calculate-data-write-time-through-ttl">Calculate data write time through TTL</a></li>
+</ul>
 
         </div>
     </div>
