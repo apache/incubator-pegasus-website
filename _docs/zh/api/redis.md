@@ -12,23 +12,23 @@ permalink: api/redis
 
 ![redis_proxy_arch.png](/assets/images/redis_proxy_arch.png){:class="img-responsive"}
 
-Redis 客户端与 Redis Proxy 之间使用[redis协议](https://redis.io/topics/protocol)，目前 proxy 已支持所有的 RESP2 [协议](https://redis.io/docs/reference/protocol-spec/)数据类型（即：Simple Strings、Errors、Integers、Bulk Strings、Arrays）。
+Redis 客户端与 Redis Proxy 之间使用[redis协议](https://redis.io/topics/protocol)，目前 Proxy 已支持所有的 RESP2 [协议](https://redis.io/docs/reference/protocol-spec/)数据类型（即：Simple Strings、Errors、Integers、Bulk Strings、Arrays）。
 
-Redis Proxy 与 Pegasus 集群之间使用 Pegasus 的协议，proxy 在这里就类似一个普通的 Pegasus client，从 Meta Server 查询路由信息、与 Replica Server 进行用户数据的读写。
+Redis Proxy 与 Pegasus 集群之间使用 Pegasus 的协议，Proxy 在这里就类似一个普通的 Pegasus Client，从 Meta Server 查询路由信息、与 Replica Server 进行用户数据的读写。
 
 ## 提供服务的形式
 
-跟 Redis 服务一样，proxy 实例以 `host:port` 形式提供。如果服务压力大，可以提供多个 proxy 实例，通过水平扩展的方式来提升服务吞吐量。
+跟 Redis 服务一样，Proxy 实例以 `host:port` 形式提供。如果服务压力大，可以提供多个 Proxy 实例，通过水平扩展的方式来提升服务吞吐量。
 
-Proxy 是无状态的，多个 proxy 实例共享同一个后端 Pegasus 服务。可以采用round robin, hash等方式进行负载均衡。
+Proxy 是无状态的，多个 Proxy 实例共享同一个后端 Pegasus 服务。可以采用round robin, hash等方式进行负载均衡。
 
-> proxy 的可执行文件为 `pegasus_rproxy`, 由 `./run.sh pack_tools` [打包](/docs/build/compile-by-docker/#packaging)生成。
+> Proxy 的可执行文件为 `pegasus_rproxy`, 由 `./run.sh pack_tools` [打包](/docs/build/compile-by-docker/#packaging)生成。
 
 ## 配置
 
 Redis Proxy 的配置文件规则遵循[配置说明](/administration/config)，参考[示例](https://github.com/apache/incubator-pegasus/blob/master/src/redis_protocol/proxy/config.ini)。
 
-在 proxy 中有几项特有的配置项需要注意：
+在 Proxy 中有几项特有的配置项需要注意：
 
 ```
 [apps.proxy]
