@@ -122,7 +122,7 @@ Although the area of the cell is already small enough ( < 1cm^2) at the 30th lev
 
 ### value
 
-When using the Pegasus GEO feature, the value must be able to extract longitude and latitude, and the extract method can be found in [Value Extractor](/api/geo#value_extrator).
+When using the Pegasus GEO feature, the value must be able to extract longitude and latitude, and the extract method can be found in [Value Extractor](/api/geo#value-extrator).
 
 The value of the GEO index table is exactly the same as the value of the original table, so there will be redundant data. Here, trades space for time to avoid secondary indexing.
 
@@ -160,7 +160,7 @@ So, in the current Pegasus implementation, only two levels of cells, the `minimu
 
 ![s2_cap_2.png](/assets/images/s2_cap_2.png){:class="img-responsive"}
 
-### 查询流程
+### Query process
 
 Taking `search_radial` as an example, it queries all POI data within the circular area according to the given center point and radius.
 
@@ -173,7 +173,7 @@ Use the S2 API to query the CellId set that covers the given region:
 S2CellUnion GetCovering(const S2Region& region);
 ```
 
-> `search_radial` API 有两个重载函数，一个是输入经纬度，一个是输入 hashky + sortkey，后者是通过 key 取到 value 中的经纬度再转调前者。
+> `search_radial` has two overloaded functions, one is to input longitude and latitude, and the other is to input hashky and sortkey. The latter query the value from the raw data table through the keys, extracts the longitude and latitude from the value, and then invoke the former.
 
 Query process:
 
@@ -185,7 +185,8 @@ Query process:
         1. Overlay/Intersection: Take all the POI data in the sub_CellId
         2. Disjoint: Discard
 
-> `The configuration of the `minimum search level` and the `maximum search level` is referred to in the following documents
+> The configuration of the `minimum search level` and the `maximum search level` is referred to in the following documents
+>
 > The CellId length of the `minimum search level` determines the hashkey length of the data in GEO index table.
 
 When querying all the POI data of a CellId, a pair of `start_sortkey` and `stop_sortkey` will be constructed which contain all the POI data of the CellId according to the key construction rules in the previous documents, then use Pegasus' `scan` interface to query data.

@@ -174,7 +174,7 @@ GEO 索引表的 value 跟原始表的 value 完全相同，因此会存在一�
 S2CellUnion GetCovering(const S2Region& region);
 ```
 
-> `search_radial` API 有两个重载函数，一个是输入经纬度，一个是输入 hashky + sortkey，后者是通过 key 取到 value 中的经纬度再转调前者。
+> `search_radial` API 有两个重载函数，一个是输入经纬度，一个是输入 hashky 和 sortkey，后者是通过 key 从原始表中取到 value，解析出 value 中的经纬度，再转调前者。
 
 查询流程如下:
 
