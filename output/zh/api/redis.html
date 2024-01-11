@@ -20,11 +20,11 @@
 <meta property="og:description" content="Redis 适配" />
 <meta property="og:site_name" content="Pegasus" />
 <meta property="og:type" content="article" />
-<meta property="article:published_time" content="2024-01-11T07:35:08+00:00" />
+<meta property="article:published_time" content="2024-01-11T12:49:10+00:00" />
 <meta name="twitter:card" content="summary" />
 <meta property="twitter:title" content="Redis" />
 <script type="application/ld+json">
-{"@context":"https://schema.org","@type":"BlogPosting","dateModified":"2024-01-11T07:35:08+00:00","datePublished":"2024-01-11T07:35:08+00:00","description":"Redis 适配","headline":"Redis","mainEntityOfPage":{"@type":"WebPage","@id":"/api/redis"},"url":"/api/redis"}</script>
+{"@context":"https://schema.org","@type":"BlogPosting","dateModified":"2024-01-11T12:49:10+00:00","datePublished":"2024-01-11T12:49:10+00:00","description":"Redis 适配","headline":"Redis","mainEntityOfPage":{"@type":"WebPage","@id":"/api/redis"},"url":"/api/redis"}</script>
 <!-- End Jekyll SEO tag -->
 </head>
 
@@ -755,10 +755,10 @@
 
 <p>跟 Redis 服务一样，Proxy 实例以 <code class="language-plaintext highlighter-rouge">host:port</code> 形式提供。如果服务压力大，可以提供多个 Proxy 实例，通过水平扩展的方式来提升服务吞吐量。</p>
 
-<p>Proxy 是无状态的，多个 Proxy 实例共享同一个后端 Pegasus 服务。可以采用round robin, hash等方式进行负载均衡。</p>
+<p>Proxy 是无状态的，多个 Proxy 实例共享同一个后端 Pegasus 服务。可以采用round-robin, hash等方式进行负载均衡。</p>
 
 <blockquote>
-  <p>Proxy 的可执行文件为 <code class="language-plaintext highlighter-rouge">pegasus_rproxy</code>, 由 <code class="language-plaintext highlighter-rouge">./run.sh pack_tools</code> <a href="/zh/docs/build/compile-by-docker/#packaging">打包</a>生成。</p>
+  <p>Proxy 的可执行文件为 <code class="language-plaintext highlighter-rouge">pegasus_rproxy</code>，由 <code class="language-plaintext highlighter-rouge">./run.sh pack_tools</code> <a href="/zh/docs/build/compile-by-docker/#编译打包">打包</a>生成。</p>
 </blockquote>
 
 <h2 id="配置">配置</h2>
@@ -793,7 +793,7 @@ onebox = 127.0.0.1:34601,127.0.0.1:34602,127.0.0.1:34603
 
 <p>Redis 的原生命令请见<a href="https://redis.io/commands">这里</a> 。</p>
 
-<p>以下接口都兼容 Redis 原生命令，但支持的参数可能少于 Redis。</p>
+<p>以下命令都兼容 Redis 原生命令，但支持的参数可能少于 Redis。</p>
 
 <blockquote>
   <p>以下文档中都给出了目前 Pegasus Redis Proxy 所支持的所有参数，未给出的目前不支持。</p>
@@ -809,13 +809,15 @@ onebox = 127.0.0.1:34601,127.0.0.1:34602,127.0.0.1:34603
 
 <h4 id="geo-api">GEO API</h4>
 
-<p>在 Redis 中，<a href="https://redis.io/docs/data-types/geospatial/">GEO</a> 接口操作的数据是通过 <a href="https://redis.io/commands/geoadd/">GEOADD</a>，即 <code class="language-plaintext highlighter-rouge">GEOADD key longitude latitude member</code>，添加到数据库中的。此处的 <code class="language-plaintext highlighter-rouge">key</code> 是一个 namespace 的概念，而不是 <code class="language-plaintext highlighter-rouge">SET</code> 操作时的 key。</p>
+<p><a href="geo">GEO命令的实现原理</a></p>
 
-<p>而在 Pegasus Proxy 中，由于底层的实现原理不同，他的 <code class="language-plaintext highlighter-rouge">GEO*</code> 接口操作的数据是通过 <code class="language-plaintext highlighter-rouge">SET</code> 接口添加到数据库中的，<code class="language-plaintext highlighter-rouge">SET</code> 的 key 对应于 <code class="language-plaintext highlighter-rouge">GEO*</code> 接口的 member，而 <code class="language-plaintext highlighter-rouge">GEO*</code> 接口的 key 则只能是空串 <code class="language-plaintext highlighter-rouge">""</code>。</p>
+<p>在 Redis 中，<a href="https://redis.io/docs/data-types/geospatial/">GEO</a> 命令操作的数据是通过 <a href="https://redis.io/commands/geoadd/">GEOADD</a>，即 <code class="language-plaintext highlighter-rouge">GEOADD key longitude latitude member</code>，添加到数据库中的。此处的 <code class="language-plaintext highlighter-rouge">key</code> 是一个 namespace 的概念，而不是 <code class="language-plaintext highlighter-rouge">SET</code> 操作时的 key。</p>
 
-<p>也就是说，在 Pegasus 的 Redis GEO 数据中，不再有 namespace 的概念，全部数据在同一空间 <code class="language-plaintext highlighter-rouge">""</code> 下。若要区分 namespace，可以在 Pegasus 层创建新的表来实现。</p>
+<p>而在 Pegasus Proxy 中，由于底层的实现原理不同，他的 <code class="language-plaintext highlighter-rouge">GEO*</code> 命令操作的数据是通过 <code class="language-plaintext highlighter-rouge">SET</code> 命令添加到数据库中的，<code class="language-plaintext highlighter-rouge">SET</code> 的 key 对应于 <code class="language-plaintext highlighter-rouge">GEO*</code> 命令的 member，而 <code class="language-plaintext highlighter-rouge">GEO*</code> 命令的 key 则只能是空串 <code class="language-plaintext highlighter-rouge">""</code>。</p>
 
-<p><code class="language-plaintext highlighter-rouge">SET</code> 的 value 格式参考<a href="https://pegasus.apache.org/zh/api/geo#%E8%87%AA%E5%AE%9A%E4%B9%89extrator">这里</a>。</p>
+<p>也就是说，在 Pegasus 的 Redis GEO 数据中，不再有 namespace 的概念，全部数据在同一空间 <code class="language-plaintext highlighter-rouge">""</code> 下。若要区分 namespace，可以在 Pegasus 中创建新的表来实现。</p>
+
+<p><code class="language-plaintext highlighter-rouge">SET</code> 的 value 格式参考<a href="/zh/api/geo#value-extrator">Value Extrator</a>。</p>
 
 <h3 id="set">SET</h3>
 
@@ -834,10 +836,10 @@ onebox = 127.0.0.1:34601,127.0.0.1:34602,127.0.0.1:34603
 
 <p><strong>注意：</strong></p>
 
-<p>这里的接口返回值和 Redis 的定义略有不同：</p>
+<p>当一条 key 不存在时，Pegasus Proxy 的返回值和 Redis 略有不同：</p>
 <ul>
-  <li>当 key 不存在时，Redis 接口返回 0，表示本次没有删除有效数据</li>
-  <li>Pegasus Proxy 由于没有对不存在和删除成功做区别，都统一返回的 1</li>
+  <li>Redis：返回 0，表示本次没有删除有效数据</li>
+  <li>Pegasus Proxy：由于没有对不存在和删除成功做区别，都统一返回的 1</li>
 </ul>
 
 <h3 id="setex">SETEX</h3>
@@ -877,8 +879,6 @@ onebox = 127.0.0.1:34601,127.0.0.1:34602,127.0.0.1:34603
 
 <h3 id="geodist">GEODIST</h3>
 
-<p><a href="geo">GEO接口的实现原理</a></p>
-
 <div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>GEODIST key member1 member2 [unit]
 </code></pre></div></div>
 
@@ -895,7 +895,7 @@ onebox = 127.0.0.1:34601,127.0.0.1:34602,127.0.0.1:34603
 
 <p><strong>注意：</strong></p>
 <ul>
-  <li>key 规则遵循 GEO API 的 key 规则，即 key 只能是空串 <code class="language-plaintext highlighter-rouge">""</code>，而这里 member 对应于 <code class="language-plaintext highlighter-rouge">SET</code> 操作时的 key</li>
+  <li>key 规则遵循上述 Pegasus Proxy 的 GEO 命令的 key 规则，即 key 只能是空串 <code class="language-plaintext highlighter-rouge">""</code>，而这里 member 对应于 <code class="language-plaintext highlighter-rouge">SET</code> 操作时的 key</li>
   <li>Pegasus 对 Redis 的 <code class="language-plaintext highlighter-rouge">WITHHASH</code> 参数进行了修改，使用它将会返回该 member 的 value 值</li>
 </ul>
 
