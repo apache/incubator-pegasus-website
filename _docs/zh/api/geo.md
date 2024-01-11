@@ -235,7 +235,7 @@ max_level = 16
 min_level = 12
 ```
 
-## 自定义extrator
+## Value Extrator
 
 目前 Pegasus 支持从固定格式的 value 中解析出经纬度。经纬度以字符串形式嵌入在 value 中，以`|`分割。
 

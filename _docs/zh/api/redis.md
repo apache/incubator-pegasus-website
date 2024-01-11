@@ -20,9 +20,9 @@ Redis Proxy 与 Pegasus 集群之间使用 Pegasus 的协议，Proxy 在这里�
 
 跟 Redis 服务一样，Proxy 实例以 `host:port` 形式提供。如果服务压力大，可以提供多个 Proxy 实例，通过水平扩展的方式来提升服务吞吐量。
 
-Proxy 是无状态的，多个 Proxy 实例共享同一个后端 Pegasus 服务。可以采用round robin, hash等方式进行负载均衡。
+Proxy 是无状态的，多个 Proxy 实例共享同一个后端 Pegasus 服务。可以采用round-robin, hash等方式进行负载均衡。
 
-> Proxy 的可执行文件为 `pegasus_rproxy`, 由 `./run.sh pack_tools` [打包](/docs/build/compile-by-docker/#packaging)生成。
+> Proxy 的可执行文件为 `pegasus_rproxy`，由 `./run.sh pack_tools` [打包](/docs/build/compile-by-docker/#编译打包)生成。
 
 ## 配置
 
@@ -57,7 +57,7 @@ onebox = 127.0.0.1:34601,127.0.0.1:34602,127.0.0.1:34603
 
 Redis 的原生命令请见[这里](https://redis.io/commands) 。
 
-以下接口都兼容 Redis 原生命令，但支持的参数可能少于 Redis。
+以下命令都兼容 Redis 原生命令，但支持的参数可能少于 Redis。
 
 > 以下文档中都给出了目前 Pegasus Redis Proxy 所支持的所有参数，未给出的目前不支持。
 
@@ -71,13 +71,15 @@ Redis 的原生命令请见[这里](https://redis.io/commands) 。
 
 #### GEO API
 
-在 Redis 中，[GEO](https://redis.io/docs/data-types/geospatial/) 接口操作的数据是通过 [GEOADD](https://redis.io/commands/geoadd/)，即 `GEOADD key longitude latitude member`，添加到数据库中的。此处的 `key` 是一个 namespace 的概念，而不是 `SET` 操作时的 key。
+[GEO命令的实现原理](geo)
 
-而在 Pegasus Proxy 中，由于底层的实现原理不同，他的 `GEO*` 接口操作的数据是通过 `SET` 接口添加到数据库中的，`SET` 的 key 对应于 `GEO*` 接口的 member，而 `GEO*` 接口的 key 则只能是空串 `""`。
+在 Redis 中，[GEO](https://redis.io/docs/data-types/geospatial/) 命令操作的数据是通过 [GEOADD](https://redis.io/commands/geoadd/)，即 `GEOADD key longitude latitude member`，添加到数据库中的。此处的 `key` 是一个 namespace 的概念，而不是 `SET` 操作时的 key。
 
-也就是说，在 Pegasus 的 Redis GEO 数据中，不再有 namespace 的概念，全部数据在同一空间 `""` 下。若要区分 namespace，可以在 Pegasus 层创建新的表来实现。
+而在 Pegasus Proxy 中，由于底层的实现原理不同，他的 `GEO*` 命令操作的数据是通过 `SET` 命令添加到数据库中的，`SET` 的 key 对应于 `GEO*` 命令的 member，而 `GEO*` 命令的 key 则只能是空串 `""`。
 
-`SET` 的 value 格式参考[这里](https://pegasus.apache.org/zh/api/geo#%E8%87%AA%E5%AE%9A%E4%B9%89extrator)。
+也就是说，在 Pegasus 的 Redis GEO 数据中，不再有 namespace 的概念，全部数据在同一空间 `""` 下。若要区分 namespace，可以在 Pegasus 中创建新的表来实现。
+
+`SET` 的 value 格式参考[Value Extrator](/api/geo#value-extrator)。
 
 ### SET
 
@@ -99,9 +101,9 @@ DEL key
 
 **注意：**  
 
-这里的接口返回值和 Redis 的定义略有不同：
-- 当 key 不存在时，Redis 接口返回 0，表示本次没有删除有效数据
-- Pegasus Proxy 由于没有对不存在和删除成功做区别，都统一返回的 1
+当一条 key 不存在时，Pegasus Proxy 的返回值和 Redis 略有不同：
+- Redis：返回 0，表示本次没有删除有效数据
+- Pegasus Proxy：由于没有对不存在和删除成功做区别，都统一返回的 1
 
 ### SETEX
 
@@ -147,8 +149,6 @@ DECRBY key decrement
 
 ### GEODIST
 
-[GEO接口的实现原理](geo)
-
 ```
 GEODIST key member1 member2 [unit]
 ```
@@ -164,7 +164,7 @@ GEORADIUS key longitude latitude radius m|km|ft|mi [WITHCOORD][WITHDIST] [WITHHA
 ```
 
 **注意：**
-- key 规则遵循 GEO API 的 key 规则，即 key 只能是空串 `""`，而这里 member 对应于 `SET` 操作时的 key
+- key 规则遵循上述 Pegasus Proxy 的 GEO 命令的 key 规则，即 key 只能是空串 `""`，而这里 member 对应于 `SET` 操作时的 key
 - Pegasus 对 Redis 的 `WITHHASH` 参数进行了修改，使用它将会返回该 member 的 value 值
 
 ### GEORADIUSBYMEMBER
