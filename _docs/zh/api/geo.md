@@ -109,7 +109,7 @@ hashkey 直接由一维编码的前缀构成。比如在一个用户场景中，
 
 > 查询相同地理区域内（例如一个圆形区域）的数据时，使用短 CellId 查询数据查询的范围更大，查询的次数更少，但得到的在区域外的无用数据更多。而使用长 CellId 查询数据查询的范围更小，得到的在区域外的无用数据更少，但查询的次数更多
 > 
-> 参考：http://s2geometry.io/devguide/examples/coverings
+> 参考：[S2 coverings](http://s2geometry.io/devguide/examples/coverings)
 
 尽管在第30层时，cell 的面积已经足够小（<1cm^2），但仍有可能两条数据落在同一个 cell 里，所以需要在 CellId 编码的基础上，解决 key 冲突问题。Pegasus 将**原始表**的 hashkey 和 sortkey 联合起来，追加在 GEO 表的 sortkey 之后。
 
