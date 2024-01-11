@@ -24,7 +24,7 @@ Proxy is stateless, and multiple proxy instances share the same backend Pegasus 
 
 ## Configuration
 
-The configuration file rules for Redis Proxy follow [Configurations](/administration/config), refer to the [example](https://github.com/apache/incubator-pegasus/blob/master/src/redis_protocol/proxy/config.ini).
+The configuration file rules for Redis Proxy follow [Configurations](/administration/config), referring to the [example](https://github.com/apache/incubator-pegasus/blob/master/src/redis_protocol/proxy/config.ini).
 
 There are several unique configuration items in Proxy that need to be noted:
 
