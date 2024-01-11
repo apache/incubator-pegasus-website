@@ -2,11 +2,11 @@
 permalink: api/geo
 ---
 
-# Pegasus GEO 支持
+# Pegasus GEO
 
 ## 背景
 
-用户数据存储在 Pegasus 中，由 hashkey、sortkey、value 组成。但用户数据中含有地理信息，比如 value 中包含有经纬度，需要 Pegasus 提供 API 进行 GEO 特性的支持。比如给定一个中心点坐标和一个半径，查找这个范围内的所有数据；给定两条数据的 hashkey 和 sortkey，求这两条数据地理上的距离等。
+在 Pegasus 中，当用户数据属于 POI (Points of Interest) 数据，其中含有地理信息，比如 value 中包含有经纬度，需要 Pegasus 提供接口进行 GEO 特性的支持。比如给定一个中心点坐标和一个半径，查找这个范围内的所有数据；给定两条 POI 数据的 hashkey 和 sortkey，求这两条数据地理上的距离等。
 
 Pegasus 的 GEO (Geographic) 支持使用了 [S2](https://github.com/google/s2geometry) 库, 主要用于将二维地理坐标（经度 + 纬度）与一维编码的相互转换、基于圆形的范围查询、Hilbert 曲线规则等特性。
 
@@ -30,15 +30,15 @@ Pegasus 的 GEO (Geographic) 支持使用了 [S2](https://github.com/google/s2ge
 ![hilbert.png](/assets/images/hilbert.png){:class="img-responsive"}
 
 S2 中的 Hilbert 曲线编码：
-- 编码可以看作是一个4进制的数值编码
-- 编码由左往右按层进行，最多30层
+- 编码可以看作是一个 4 进制的数值编码
+- 编码由左往右按层进行，最多 30 层
 - 一个编码代表地理上的一个方块区域，编码越长，区域越小
 - 完整编码是前缀编码的子区域，每个父区域由4个子区域组成，比如`00`,`01`,`02`,`03`是`0`的子区域，且前者的区域范围的并集就是后者的区域范围
 - 在数值上连续的值，在地理位置上也是连续的，比如`00`和`01`的区域范围是相邻的，`0122`和`0123`的区域范围也是相邻的
 
 ## 编码精度
 
-S2 中的 Hilbert 曲线编码由30位组成，每一位代表一层划分。下表是各层单个 cell 的面积和 cell 个数。
+S2 中的 Hilbert 曲线编码由 30 位组成，每一位代表一层划分。下表是各层单个 cell 的面积和 cell 个数。
 
 | **level** | **min area** | **max area** | **average area** | **units** | **Number of cells** |
 |-----------|--------------|--------------|------------------|-----------|---------------------|
@@ -87,7 +87,7 @@ GEO 索引数据独立于原始数据，两类数据存储在不同的 Pegasus �
 
 ### hashkey
 
-hashkey 直接由一维编码的前缀构成。比如在一个用户场景中，范围查询都是集中在 10km 半径内的圆形范围，实际测试结果是将 hashkey 长度定为`14`（1位face，1位分隔符`/`，12位Hilbert编码）能取得更好的性能。
+hashkey 由一维编码的前缀构成。比如在一个用户场景中，将 hashkey 长度定为`14`（1位face，1位分隔符`/`，12位Hilbert编码）能取得更好的性能。
 
 > 那么，最小搜索层就为12
 
@@ -102,8 +102,8 @@ hashkey 直接由一维编码的前缀构成。比如在一个用户场景中，
 ### sortkey
 
 为了满足不同半径范围、不同精度的查询，我们把 CellId 剩下的 18 位全部放到 sortkey 中。
-- 在进行较大范围的临近查询时，取更少的 sortkey 位数（对应的 CellId 更短）作为前缀，进行数据 scan 查询，这样可以减少数据 scan 的次数
-- 在进行较小范围的临近查询或点查询时，取更多的 sortkey 位数（对应的 CellId 更长）作为前缀，进行数据 scan 查询，这样可以减少数据 scan 的范围
+- 在进行较大半径的范围的查询时，取更少的 sortkey 位数（对应的 CellId 更短）作为前缀，进行数据 scan 查询，这样可以减少数据 scan 的次数
+- 在进行较小半径的范围的查询或点查询时，取更多的 sortkey 位数（对应的 CellId 更长）作为前缀，进行数据 scan 查询，这样可以减少数据 scan 的范围
 
 这可以在不修改底层存储数据的前提下，让应用层保持比较高的灵活性。
 
@@ -111,7 +111,7 @@ hashkey 直接由一维编码的前缀构成。比如在一个用户场景中，
 > 
 > 参考：[S2 coverings](http://s2geometry.io/devguide/examples/coverings)
 
-尽管在第30层时，cell 的面积已经足够小（<1cm^2），但仍有可能两条数据落在同一个 cell 里，所以需要在 CellId 编码的基础上，解决 key 冲突问题。Pegasus 将**原始表**的 hashkey 和 sortkey 联合起来，追加在 GEO 表的 sortkey 之后。
+尽管在第30层时，cell 的面积已经足够小（ < 1cm^2），但仍有可能两条数据落在同一个 cell 里，所以需要在 CellId 编码的基础上，解决 key 冲突问题。Pegasus 将**原始表**的 hashkey 和 sortkey 联合起来，追加在 GEO 索引表的 sortkey 之后。
 
 ```
                CellId
@@ -123,11 +123,11 @@ hashkey 直接由一维编码的前缀构成。比如在一个用户场景中，
 
 ### value
 
-使用 GEO 特性所存储的 value 必须能够解析出经纬度，具体的解析方式参考[自定义extrator](/api/geo#%E8%87%AA%E5%AE%9A%E4%B9%89extrator)。
+使用 Pegasus GEO 特性时，所存储的 value 必须能够解析出经纬度，具体的解析方式参考[Value Extrator](/api/geo#value_extrator)。
 
-GEO 索引表的 value 跟原始表的 value 完全相同。这里会存在一份冗余数据，使用空间换时间的方式避免二次索引。
+GEO 索引表的 value 跟原始表的 value 完全相同，因此会存在一份冗余数据，使用空间换时间的方式避免二次索引。
 
-> 如果确实有在 GEO 的单条 value 中存储较大数据的需求，又想节省磁盘空间，可以手动实现二次索引，即在 GEO value 中存储二级索引的 key，再在另外的表中存储真实的大 value。
+> 如果确实有在单条 POI 中存储较大数据的需求，又想节省磁盘空间，可以手动实现二次索引，即在 GEO value 中存储二级索引的 key，再在另外的表中存储实际的大 value。
 
 ## 数据更新
 
@@ -135,11 +135,11 @@ GEO 索引表的 value 跟原始表的 value 完全相同。这里会存在一�
 
 `set` 操作会同时更新上述两个表的数据，即 Pegasus 原始表数据和 GEO 索引表数据，数据构造方式也如上所述。
 
-`set`操作的 hashkey，sortkey 是用户自己的格式，使用 GEO API 时并不做约束。两个表的数据转储对用户是透明的，由 GEO Client 自动完成。
+`set`操作的 hashkey，sortkey 是用户自己的格式，使用 GEO API 时并不做约束。两个表的数据同步对用户是透明的，由 GEO Client 自动完成。
 
 使用 Redis GEO API 时， 参考 [GEO API](/api/redis#geo-api)。
 
-在 Pegasus 实现中，`set`操作会首先尝试读取出已有的数据，如果数据不存在，则直接向两个表中写入数据。如果数据已存在，会先将老的 GEO 索引数据清理掉后，再写入新数据。因为新老数据的索引数据 <hashkey, sortkey> 可能是不一样的（即新老 value 根据 extractor 解析得到的经纬度不一样），若不清理，GEO 索引表中将存在垃圾数据，造成磁盘空间的浪费，也会在进行地理范围查询时（即`GEORADIUS`）查到脏数据。
+在 Pegasus 实现中，`set`操作会首先尝试读取出已有的数据，如果数据不存在，则直接向两个表中写入数据。如果数据已存在，会先将老的 GEO 索引数据清理掉后，再写入新数据。因为新老数据的索引数据 `<hashkey, sortkey>` 可能是不一样的（即新老 value 根据 extractor 解析得到的经纬度不一样），若不清理，GEO 索引表中将存在垃圾数据，造成磁盘空间的浪费，也会在进行地理范围查询时（即`GEORADIUS`）查到脏数据。
 
 ### del
 
@@ -147,7 +147,7 @@ GEO 索引表的 value 跟原始表的 value 完全相同。这里会存在一�
 
 ## 数据查询
 
-### 思路
+### 设计
 
 地理范围查询会转换成 Pegasus 的多次 scan 操作，一次 scan 对应为一个 CellId 范围内的所有数据扫描。 要想获得更高的性能，就需要减少 scan 的总次数和单次 scan 的数据量，也就是需要减少总的 CellId 数量和单个 CellId 的面积。
 
