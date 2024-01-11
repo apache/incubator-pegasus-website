@@ -16,15 +16,15 @@
 <meta name="generator" content="Jekyll v4.3.3" />
 <meta property="og:title" content="Geo" />
 <meta property="og:locale" content="en_US" />
-<meta name="description" content="Pegasus GEO支持" />
-<meta property="og:description" content="Pegasus GEO支持" />
+<meta name="description" content="Pegasus GEO 支持" />
+<meta property="og:description" content="Pegasus GEO 支持" />
 <meta property="og:site_name" content="Pegasus" />
 <meta property="og:type" content="article" />
-<meta property="article:published_time" content="2024-01-10T11:55:24+00:00" />
+<meta property="article:published_time" content="2024-01-11T07:35:08+00:00" />
 <meta name="twitter:card" content="summary" />
 <meta property="twitter:title" content="Geo" />
 <script type="application/ld+json">
-{"@context":"https://schema.org","@type":"BlogPosting","dateModified":"2024-01-10T11:55:24+00:00","datePublished":"2024-01-10T11:55:24+00:00","description":"Pegasus GEO支持","headline":"Geo","mainEntityOfPage":{"@type":"WebPage","@id":"/api/geo"},"url":"/api/geo"}</script>
+{"@context":"https://schema.org","@type":"BlogPosting","dateModified":"2024-01-11T07:35:08+00:00","datePublished":"2024-01-11T07:35:08+00:00","description":"Pegasus GEO 支持","headline":"Geo","mainEntityOfPage":{"@type":"WebPage","@id":"/api/geo"},"url":"/api/geo"}</script>
 <!-- End Jekyll SEO tag -->
 </head>
 
@@ -737,39 +737,49 @@
             </section>
             <section class="section" style="padding-top: 2rem;">
                 <div class="content">
-                    <h1 id="pegasus-geo支持">Pegasus GEO支持</h1>
+                    <h1 id="pegasus-geo-支持">Pegasus GEO 支持</h1>
 
 <h2 id="背景">背景</h2>
 
-<p>业务数据跟Pegasus的普通数据类似，由hashkey、sortkey、value组成。但业务数据隐含有地理信息，比如value中包含有经纬度(latitude,longitude)，需要提供API进行GEO特性的支持，比如给定一个中心点坐标和一个半径，查找这个范围内的所有数据；给定两条数据的hashkey和sortkey，求这两条数据地理上的距离。</p>
+<p>用户数据存储在 Pegasus 中，由 hashkey、sortkey、value 组成。但用户数据中含有地理信息，比如 value 中包含有经纬度，需要 Pegasus 提供 API 进行 GEO 特性的支持。比如给定一个中心点坐标和一个半径，查找这个范围内的所有数据；给定两条数据的 hashkey 和 sortkey，求这两条数据地理上的距离等。</p>
 
-<p>pegasus的GEO(Geographic)支持使用了<a href="https://github.com/google/s2geometry">S2</a>库, 主要利用其中将二维地理坐标（经纬度）与一维编码的相互转换、基于圆形的范围查询、Hilbert曲线规则等特性。在Pegasus中如何充分利用S2的这些特性，并结合Pegasus的数据分布、数据存储特性，是本文的阐述重点。</p>
+<p>Pegasus 的 GEO (Geographic) 支持使用了 <a href="https://github.com/google/s2geometry">S2</a> 库, 主要用于将二维地理坐标（经度 + 纬度）与一维编码的相互转换、基于圆形的范围查询、Hilbert 曲线规则等特性。</p>
 
-<p>关于S2的实现原理细节请参考<a href="http://s2geometry.io/">S2官网</a></p>
+<p>本文将说明在 Pegasus 中是如何充分利用 S2 的特性，并结合 Pegasus 的数据分布与数据存储特性，来支持 GEO 特性的。</p>
+
+<p>关于 S2 的实现原理请参考 <a href="http://s2geometry.io/">S2官网</a>。</p>
 
 <h2 id="坐标转换">坐标转换</h2>
 
-<p>在S2中，可以把二维经纬度编码成一维编码，一维编码由两部分组成：立方体面、平面坐标编码，比如：</p>
+<p>在 S2 中，可以把二维经纬度编码成一维编码，一维编码由两部分组成：立方体面、平面坐标编码，比如：</p>
 
-<p>经纬度(116.334441,40.030202)的编码是：<code class="language-plaintext highlighter-rouge">1/223320022232200331010110113301</code>（32位），在S2中称为cellid。</p>
+<p>经纬度(116.334441, 40.030202)的编码是：<code class="language-plaintext highlighter-rouge">1/223320022232200331010110113301</code>（总共32位），这个编码在 S2 中称为 <strong>CellId</strong>。</p>
 
-<p>其中，首位的<code class="language-plaintext highlighter-rouge">1</code>代表地球立方体投影的面索引，索引范围是0~5，如下图所示：</p>
+<p>其中：</p>
+<ul>
+  <li>首位的<code class="language-plaintext highlighter-rouge">1</code>代表地球立方体投影的面索引，索引范围是0~5，如下图所示：</li>
+</ul>
 
 <p><img src="/assets/images/geo_faces.png" alt="geo_faces.png" class="img-responsive" /></p>
-
-<p><code class="language-plaintext highlighter-rouge">/</code>是分隔符</p>
-
-<p><code class="language-plaintext highlighter-rouge">223320022232200331010110113301</code>(30位)是经纬度坐标经过一系列转换得到的编码，具体转换过程这里不详细描述。需要指出的是，这是一个名为Hilbert曲线编码，它最大的特点是具有稳定性、连续性。</p>
+<ul>
+  <li><code class="language-plaintext highlighter-rouge">/</code>是分隔符</li>
+  <li><code class="language-plaintext highlighter-rouge">223320022232200331010110113301</code>(30位)，是经纬度坐标经过一系列转换得到的编码，具体转换过程这里不详细描述。需要指出的是，这是一个名为 Hilbert 曲线编码，它最大的特点是具有稳定性、连续性。</li>
+</ul>
 
 <p><img src="/assets/images/hilbert.png" alt="hilbert.png" class="img-responsive" /></p>
 
-<p>编码由前往后按层进行，完整编码是前缀编码的子区域，每个父区域由4个子区域组成，比如<code class="language-plaintext highlighter-rouge">00</code>,<code class="language-plaintext highlighter-rouge">01</code>,<code class="language-plaintext highlighter-rouge">02</code>,<code class="language-plaintext highlighter-rouge">03</code>是<code class="language-plaintext highlighter-rouge">0</code>的子区域，且前者的区域范围的并集就是后者的区域范围。最多有30层，每层都有相应的cellid集合，高层cell是底层cell的父区域，高层cellid是底层cellid的前缀。</p>
-
-<p>编码可以看作是一个4进制的数值编码，同时<strong>在数值上连续的值，在地理位置上也是连续的</strong>。</p>
+<p>S2 中的 Hilbert 曲线编码：</p>
+<ul>
+  <li>编码可以看作是一个4进制的数值编码</li>
+  <li>编码由左往右按层进行，最多30层</li>
+  <li>一个编码代表地理上的一个方块区域，编码越长，区域越小</li>
+  <li>完整编码是前缀编码的子区域，每个父区域由4个子区域组成，比如<code class="language-plaintext highlighter-rouge">00</code>,<code class="language-plaintext highlighter-rouge">01</code>,<code class="language-plaintext highlighter-rouge">02</code>,<code class="language-plaintext highlighter-rouge">03</code>是<code class="language-plaintext highlighter-rouge">0</code>的子区域，且前者的区域范围的并集就是后者的区域范围</li>
+  <li>在数值上连续的值，在地理位置上也是连续的，比如<code class="language-plaintext highlighter-rouge">00</code>和<code class="language-plaintext highlighter-rouge">01</code>的区域范围是相邻的，<code class="language-plaintext highlighter-rouge">0122</code>和<code class="language-plaintext highlighter-rouge">0123</code>的区域范围也是相邻的</li>
+</ul>
 
 <h2 id="编码精度">编码精度</h2>
 
-<p>S2中的Hilbert曲线编码由30位组成，每一位代表一层划分。下表是各层单个cell的面积和cell个数。</p>
+<p>S2 中的 Hilbert 曲线编码由30位组成，每一位代表一层划分。下表是各层单个 cell 的面积和 cell 个数。</p>
 
 <table>
   <thead>
@@ -1036,120 +1046,126 @@
 
 <h2 id="数据存储">数据存储</h2>
 
-<p>在Pegasus中，数据存储的key是hashkey+sortkey: hashkey用于数据partition，同一hashkey的数据存储在同一replica server下的一块或多块（由rocksdb实际存储的状态决定：数据随机写入后，同一hashkey下连续的sortkey空间可能分布在多个不连续的sst文件中，进行full compact后，会分布在连续sst的内）连续区域; sortkey用于在这块（或多块）区域中做数据排序的依据。</p>
+<p>在 Pegasus 中，数据存储的 key 是 hashkey + sortkey：hashkey 用于确定数据所处的 partition，同一 hashkey 的数据存储在同一 Replica Server 的一块逻辑连续的区域中，sortkey 用于在这块区域中做数据排序。</p>
 
-<p>经纬度经过坐标转换得到一维编码(字符串)后，就可以把这个一维编码作为key存储起来做<strong>GEO索引数据</strong>了，这里需要将这个一维编码拆分成hashkey和sortkey两部分，可以根据实际的业务场景采取不同的划分策略。</p>
+<p>经纬度经过坐标转换得到一维编码 CellId 后，就可以把这个一维编码作为 key 存储起来做<strong>GEO索引数据</strong>了，Pegasus 将这个一维编码拆分成 hashkey 和 sortkey 两部分，可以根据实际的用户场景采取不同的位数划分策略。</p>
 
-<p>GEO索引数据独立于原始数据，两类数据存储在不同的table内，通过<a href="https://github.com/apache/incubator-pegasus/blob/master/src/geo/lib/geo_client.h">geo_client</a>做数据同步，同时支持原生Pegasus API和GEO API访问。</p>
+<p>GEO 索引数据独立于原始数据，两类数据存储在不同的 Pegasus 表中，通过 <a href="https://github.com/apache/incubator-pegasus/blob/master/src/geo/lib/geo_client.h">GEO Client</a> 做数据同步，同时支持原生 Pegasus API 和 GEO API 的访问。</p>
 
-<p>下面讨论GEO索引数据的构造方式。</p>
+<p>所以，在使用 Pegasus GEO 特性时，需要创建两个 Pegasus 表，一个是原始表，用于存储用户写入的原始数据，一个是 GEO 索引表，用于存储 GEO Client 自动转换原始数据生成的 GEO 索引数据。</p>
 
 <h3 id="hashkey">hashkey</h3>
 
-<p>hashkey直接由一维编码的前缀构成。比如在我们的LBS业务场景中，范围查询都是集中在10km半径内的圆形范围，实际测试结果是将hashkey长度定为<code class="language-plaintext highlighter-rouge">14</code>（1位face，1位分隔符<code class="language-plaintext highlighter-rouge">/</code>，12位Hilbert编码）能取得更好的性能。</p>
+<p>hashkey 直接由一维编码的前缀构成。比如在一个用户场景中，范围查询都是集中在 10km 半径内的圆形范围，实际测试结果是将 hashkey 长度定为<code class="language-plaintext highlighter-rouge">14</code>（1位face，1位分隔符<code class="language-plaintext highlighter-rouge">/</code>，12位Hilbert编码）能取得更好的性能。</p>
 
 <blockquote>
-  <p><code class="language-plaintext highlighter-rouge">最小搜索层</code>为12</p>
+  <p>那么，最小搜索层就为12</p>
 </blockquote>
 
-<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>               cellid
-|--------------32 bytes-------------|
-|---14 bytes----|
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>              CellId
+|1/223320022232..................|
+|-------------32 bytes-----------|
+|---14 bytes--|
     hashkey
 </code></pre></div></div>
 
 <h3 id="sortkey">sortkey</h3>
 
-<p>为了满足不同半径范围、不同精度的查询，我们把cellid剩下的18位全部放到sortkey中（这并不会给底层存储带来多少压力），这可以在应用层保持比较高的灵活性，而不用修改底层的数据。在进行较大范围的临近查询时，取更少的sortkey位数（对应的cellid更短）进行数据查询；进行较小范围的临近查询或点查询时，取更多的sortkey位数（对应的cellid更长）进行数据查询。</p>
+<p>为了满足不同半径范围、不同精度的查询，我们把 CellId 剩下的 18 位全部放到 sortkey 中。</p>
+<ul>
+  <li>在进行较大范围的临近查询时，取更少的 sortkey 位数（对应的 CellId 更短）作为前缀，进行数据 scan 查询，这样可以减少数据 scan 的次数</li>
+  <li>在进行较小范围的临近查询或点查询时，取更多的 sortkey 位数（对应的 CellId 更长）作为前缀，进行数据 scan 查询，这样可以减少数据 scan 的范围</li>
+</ul>
 
-<p>尽管在30层时，cell的面积已经足够小（&lt;1cm^2），但仍有可能两条数据落在同一个cell里，所以需要区分不同的数据。这里，将原始数据的hashkey和sortkey联合起来，并追加在上述sortkey之后。</p>
-
-<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>               cellid
-|--------------32 bytes-------------|
-|---14 bytes---||-----18 bytes------||--原始hashkey--||--原始sortkey--|
-|--GEO hashkey-||----------------------GEO sortkey-------------------|
-</code></pre></div></div>
+<p>这可以在不修改底层存储数据的前提下，让应用层保持比较高的灵活性。</p>
 
 <blockquote>
-  <p>在相同地理范围内进行数据查询时，使用短cellid查询数据查询的范围大，查询的次数更少，但得到的在区域外的无用数据更多，反之亦然—这需要在查询次数与查询到的有用数据之间做权衡。</p>
+  <p>查询相同地理区域内（例如一个圆形区域）的数据时，使用短 CellId 查询数据查询的范围更大，查询的次数更少，但得到的在区域外的无用数据更多。而使用长 CellId 查询数据查询的范围更小，得到的在区域外的无用数据更少，但查询的次数更多</p>
+
+  <p>参考：<a href="http://s2geometry.io/devguide/examples/coverings">S2 coverings</a></p>
 </blockquote>
+
+<p>尽管在第30层时，cell 的面积已经足够小（&lt;1cm^2），但仍有可能两条数据落在同一个 cell 里，所以需要在 CellId 编码的基础上，解决 key 冲突问题。Pegasus 将<strong>原始表</strong>的 hashkey 和 sortkey 联合起来，追加在 GEO 表的 sortkey 之后。</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>               CellId
+|1/223320022232200331010110113301|
+|-------------32 bytes-----------|
+|---14 bytes--||-----18 bytes----||--原始hashkey--||--原始sortkey--|
+|-GEO hashkey-||-------------------GEO sortkey-------------------|
+</code></pre></div></div>
 
 <h3 id="value">value</h3>
 
-<p>GEO API的value必须能够解析出经纬度，具体的解析方式参考<a href="https://pegasus.apache.org/api/geo#%E8%87%AA%E5%AE%9A%E4%B9%89extrator">自定义extrator</a>。</p>
+<p>使用 GEO 特性所存储的 value 必须能够解析出经纬度，具体的解析方式参考<a href="/zh/api/geo#%E8%87%AA%E5%AE%9A%E4%B9%89extrator">自定义extrator</a>。</p>
 
-<p>GEO索引数据的value跟原始数据的value完全相同。这里会存在一份冗余，但通常在相对廉价的磁盘存储介质上，这是可以接受的。</p>
+<p>GEO 索引表的 value 跟原始表的 value 完全相同。这里会存在一份冗余数据，使用空间换时间的方式避免二次索引。</p>
 
 <blockquote>
-  <p>我们建议业务层在使用GEO API时value只存储小数据，大数据建议采用二次索引的方式。</p>
+  <p>如果确实有在 GEO 的单条 value 中存储较大数据的需求，又想节省磁盘空间，可以手动实现二次索引，即在 GEO value 中存储二级索引的 key，再在另外的表中存储真实的大 value。</p>
 </blockquote>
 
 <h2 id="数据更新">数据更新</h2>
 
 <h3 id="set">set</h3>
 
-<p><code class="language-plaintext highlighter-rouge">set</code>操作会同时更新两个table的数据: Pegasus原始数据和GEO索引数据（数据构造方式如上所述）。</p>
+<p><code class="language-plaintext highlighter-rouge">set</code> 操作会同时更新上述两个表的数据，即 Pegasus 原始表数据和 GEO 索引表数据，数据构造方式也如上所述。</p>
 
-<blockquote>
-  <p><code class="language-plaintext highlighter-rouge">set</code>操作的hashkey, sortkey是业务自己的格式，使用GEO API时并不做约束， 只是在geo client转存GEO索引数据时，会自动做如上所述的编码转换。</p>
-</blockquote>
+<p><code class="language-plaintext highlighter-rouge">set</code>操作的 hashkey，sortkey 是用户自己的格式，使用 GEO API 时并不做约束。两个表的数据转储对用户是透明的，由 GEO Client 自动完成。</p>
 
-<blockquote>
-  <p>使用Redis API时， 参考 <a href="https://pegasus.apache.org/api/redis#geo-api">GEO API</a>。</p>
-</blockquote>
+<p>使用 Redis GEO API 时， 参考 <a href="/zh/api/redis#geo-api">GEO API</a>。</p>
 
-<blockquote>
-  <p>实现上，<code class="language-plaintext highlighter-rouge">set</code>会首先尝试<code class="language-plaintext highlighter-rouge">get</code>出已有的数据，并将已有数据的GEO索引数据清理掉后，再写入新数据。因为新老数据的索引数据hashkey+sortkey可能不一样（即新老value根据extractor解析得到的经纬度不一样），若不清理，在进行地理搜索时将会搜索到脏数据。</p>
-</blockquote>
+<p>在 Pegasus 实现中，<code class="language-plaintext highlighter-rouge">set</code>操作会首先尝试读取出已有的数据，如果数据不存在，则直接向两个表中写入数据。如果数据已存在，会先将老的 GEO 索引数据清理掉后，再写入新数据。因为新老数据的索引数据 &lt;hashkey, sortkey&gt; 可能是不一样的（即新老 value 根据 extractor 解析得到的经纬度不一样），若不清理，GEO 索引表中将存在垃圾数据，造成磁盘空间的浪费，也会在进行地理范围查询时（即<code class="language-plaintext highlighter-rouge">GEORADIUS</code>）查到脏数据。</p>
 
 <h3 id="del">del</h3>
 
-<p><code class="language-plaintext highlighter-rouge">del</code>操作也会同时删除两个table的数据，原理同上。</p>
+<p><code class="language-plaintext highlighter-rouge">del</code>操作会同时删除两个表的数据，原理同上。</p>
 
 <h2 id="数据查询">数据查询</h2>
 
 <h3 id="思路">思路</h3>
 
-<p>直观地，集合中总的cell数量尽可能少，但同时单个cell面积尽可能小。比如：</p>
+<p>地理范围查询会转换成 Pegasus 的多次 scan 操作，一次 scan 对应为一个 CellId 范围内的所有数据扫描。 要想获得更高的性能，就需要减少 scan 的总次数和单次 scan 的数据量，也就是需要减少总的 CellId 数量和单个 CellId 的面积。</p>
+
+<p>比如，在做如下红色圆圈的范围查询时，可以采取蓝色方框的 CellId 查询集合：</p>
 
 <p><img src="/assets/images/s2_cap_1.png" alt="s2_cap_1.png" class="img-responsive" /></p>
 
-<p>虽然这样的结果更精确，但在实际测试中发现当参与计算的cell层级越大时，cellid的数量就越多，带来的client-server RPC次数更多，整个API消耗更大、延迟就越高。同时，在真实的应用场景中，太小的cell意义不大（没有数据）。</p>
+<p>虽然这样的结果更精确，但参与计算的 CellId 的数量更多，带来的 client-server RPC 次数更多，网络开销更大，延迟更高。此外，在真实的应用场景中，太小的 CellId 可能并没有数据，但依然会消耗一次 RPC。</p>
 
-<p>所以，在当前的Pegasus实现中，只联合使用两层cell,<code class="language-plaintext highlighter-rouge">最大搜索层</code>和<code class="language-plaintext highlighter-rouge">最小搜索层</code>， 以12层和16层为例：</p>
+<p>所以，在当前的 Pegasus 实现中，只联合使用两层 cell，<code class="language-plaintext highlighter-rouge">最小搜索层</code>和<code class="language-plaintext highlighter-rouge">最大搜索层</code>， 以 12 层和 16 层为例，得到的 CellId 查询集合如蓝色方框所示：</p>
 
 <p><img src="/assets/images/s2_cap_2.png" alt="s2_cap_2.png" class="img-responsive" /></p>
 
 <h3 id="查询流程">查询流程</h3>
 
-<p>以search_radial为例，此API的意义是给定点和半径，求出该圆形区域内的所有数据。</p>
+<p>以<code class="language-plaintext highlighter-rouge">search_radial</code>为例，此 API 的意义是给定点和半径，查询出该圆形区域内的所有数据。</p>
 
 <blockquote>
   <p>这里我们只讨论圆形区域的数据查询，其他的比如多边形区域的思想是类似的。</p>
 </blockquote>
 
-<p>需利用S2提供的查询覆盖指定区域的cellid集合的API：</p>
+<p>需利用 S2 提供的查询覆盖指定区域的 CellId 集合的 API：</p>
 
 <div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>// Returns an S2CellUnion that covers the given region and satisfies the current options.
 S2CellUnion GetCovering(const S2Region&amp; region);
 </code></pre></div></div>
 
 <blockquote>
-  <p><code class="language-plaintext highlighter-rouge">search_radial</code>API有两个重载函数，一个是输入经纬度，一个是输入hashky+sortkey，后者是通过key取到经纬度再转调前者。</p>
+  <p><code class="language-plaintext highlighter-rouge">search_radial</code> API 有两个重载函数，一个是输入经纬度，一个是输入 hashky + sortkey，后者是通过 key 取到 value 中的经纬度再转调前者。</p>
 </blockquote>
 
 <p>查询流程如下:</p>
 
 <ol>
-  <li>根据经纬度、半径，求出S2Cap圆形区域<code class="language-plaintext highlighter-rouge">C</code></li>
-  <li>根据圆形区域、指定的<code class="language-plaintext highlighter-rouge">最小搜索层</code>，通过<code class="language-plaintext highlighter-rouge">GetCovering</code>，求出在<code class="language-plaintext highlighter-rouge">最小搜索层</code>上的cellid集合</li>
-  <li>遍历这些cellid，判断cellid区域跟圆形区域<code class="language-plaintext highlighter-rouge">C</code>的关系
+  <li>根据经纬度、半径，求出 S2Cap 圆形区域<code class="language-plaintext highlighter-rouge">C</code></li>
+  <li>根据圆形区域、指定的<code class="language-plaintext highlighter-rouge">最小搜索层</code>，通过<code class="language-plaintext highlighter-rouge">GetCovering</code>，求出在<code class="language-plaintext highlighter-rouge">最小搜索层</code>上的 CellId 集合</li>
+  <li>遍历这些 CellId，判断 CellId 区域跟圆形区域<code class="language-plaintext highlighter-rouge">C</code>的关系
     <ol>
-      <li>全覆盖：取该cellid的所有数据</li>
-      <li>半覆盖：将该cellid按<code class="language-plaintext highlighter-rouge">最大搜索层</code>继续拆份， 判断拆分后的sub_cellid区域与圆形区域<code class="language-plaintext highlighter-rouge">C</code>的关系
+      <li>全覆盖：取该 CellId 内的所有数据</li>
+      <li>半覆盖：将该 CellId 按<code class="language-plaintext highlighter-rouge">最大搜索层</code>继续拆分，判断拆分后的 sub_CellId 区域与圆形区域<code class="language-plaintext highlighter-rouge">C</code>的关系
         <ol>
-          <li>相交：取该sub_cellid的所有数据</li>
-          <li>不相交：排除</li>
+          <li>覆盖/相交：取该 sub_CellId 的所有数据</li>
+          <li>不相交：丢弃</li>
         </ol>
       </li>
     </ol>
@@ -1157,41 +1173,39 @@ S2CellUnion GetCovering(const S2Region&amp; region);
 </ol>
 
 <blockquote>
-  <p><code class="language-plaintext highlighter-rouge">最小搜索层</code>，<code class="language-plaintext highlighter-rouge">最大搜索层</code>的配置参考后文。</p>
+  <p><code class="language-plaintext highlighter-rouge">最小搜索层</code>，<code class="language-plaintext highlighter-rouge">最大搜索层</code>的配置参考后文。
+<code class="language-plaintext highlighter-rouge">最小搜索层</code>的 CellId 长度确定 GEO 索引表的 hashkey 长度。</p>
 </blockquote>
 
-<p>取一个cellid的所有数据时，会根据上文的key构造规则，构造一对包含这个cellid所有数据的<code class="language-plaintext highlighter-rouge">start_sortkey</code>，<code class="language-plaintext highlighter-rouge">stop_sortkey</code>，再使用Pegasus的<code class="language-plaintext highlighter-rouge">scan</code>接口进行数据搜索。</p>
+<p>取一个 CellId 的所有数据时，会根据上文的 key 构造规则，构造一对包含这个 CellId 所有数据的<code class="language-plaintext highlighter-rouge">start_sortkey</code>，<code class="language-plaintext highlighter-rouge">stop_sortkey</code>，再使用Pegasus的<code class="language-plaintext highlighter-rouge">scan</code>接口进行数据搜索。</p>
 
 <ul>
-  <li>对于<code class="language-plaintext highlighter-rouge">3.1</code>步取到的cellid，它的长度即是hashkey的长度，它也就是hashkey，调用<code class="language-plaintext highlighter-rouge">scan(cellid, '"', "")</code>搜索数据
+  <li>对于<code class="language-plaintext highlighter-rouge">3.1</code>步取到的<code class="language-plaintext highlighter-rouge">最小搜索层</code> CellId 的编码，它也就是 GEO 索引表中的 hashkey，调用<code class="language-plaintext highlighter-rouge">scan(CellId, "", "")</code>查询所有数据
     <ul>
-      <li>比如，一个12层cell <code class="language-plaintext highlighter-rouge">1/223320022232</code>被区域完全覆盖，则我们<code class="language-plaintext highlighter-rouge">scan("1/223320022232", "", "")</code>。</li>
+      <li>比如，一个 12 层的 cell <code class="language-plaintext highlighter-rouge">1/223320022232</code>被区域完全覆盖，则调用<code class="language-plaintext highlighter-rouge">scan("1/223320022232", "", "")</code>查询所有数据</li>
     </ul>
   </li>
-  <li>对于<code class="language-plaintext highlighter-rouge">3.2.1</code>步取到的sub_cellid，hashkey是它的前缀，调用<code class="language-plaintext highlighter-rouge">scan(sub_cellid[0:hashkey_len], sub_cellid[hashkey_len:], sub_cellid[hashkey_len:])</code>搜索数据
+  <li>对于<code class="language-plaintext highlighter-rouge">3.2.1</code>步取到的 sub_CellId 集合，hashkey 是它的前缀，调用<code class="language-plaintext highlighter-rouge">scan(sub_CellId_common_prefix, sub_CellId1, sub_CellId2)</code>搜索数据
     <ul>
-      <li>比如，一个12层cell <code class="language-plaintext highlighter-rouge">1/223320022232</code>的子区域<code class="language-plaintext highlighter-rouge">0001</code>,<code class="language-plaintext highlighter-rouge">0002</code>,<code class="language-plaintext highlighter-rouge">0003</code>,<code class="language-plaintext highlighter-rouge">0100</code>才跟目标区域相交时，则我们<code class="language-plaintext highlighter-rouge">scan("1/223320022232", "0001", "0003")</code>、<code class="language-plaintext highlighter-rouge">scan("1/223320022232", "0100", "0100")</code>。</li>
+      <li>其中，sub_CellId_common_prefix 是 sub_CellId 集合的公共前缀，长度是 hashkey 的长度。sub_CellId1 和 sub_CellId2 之间连续的所有 sub_CellId 都在集合中，字符串长度是<code class="language-plaintext highlighter-rouge">最大搜索层</code>减<code class="language-plaintext highlighter-rouge">最小搜索层</code>的长度</li>
+      <li>比如，一个12层的 cell <code class="language-plaintext highlighter-rouge">1/223320022232</code>的子区域<code class="language-plaintext highlighter-rouge">0001</code>,<code class="language-plaintext highlighter-rouge">0002</code>,<code class="language-plaintext highlighter-rouge">0003</code>,<code class="language-plaintext highlighter-rouge">0100</code>才跟目标区域相交时，则调用<code class="language-plaintext highlighter-rouge">scan("1/223320022232", "0001", "0003")</code>、<code class="language-plaintext highlighter-rouge">scan("1/223320022232", "0100", "0100")</code></li>
     </ul>
   </li>
 </ul>
 
-<blockquote>
-  <p>此处还有一个根据Hilbert曲线实现的一个优化，具体参见<a href="https://github.com/apache/incubator-pegasus/blob/master/src/geo/lib/geo_client.cpp">代码</a></p>
-</blockquote>
-
 <p>得到<code class="language-plaintext highlighter-rouge">scan</code>的结果后，还需处理：</p>
 
 <ul>
-  <li>计算距离：因为cellid可能只与输入区域部分重合，该点若在区域外， 需去除</li>
+  <li>计算距离：因为 CellId 可能只与输入区域部分重合，该点若在区域外，需丢弃</li>
   <li>排序：当有升序/降序要求时</li>
 </ul>
 
 <h3 id="灵活性">灵活性</h3>
 
-<p>由于我们存储了完整的30层cellid，所以在实际使用中，可以按照自己的地理数据密度、延迟要求等情况调整API的的<code class="language-plaintext highlighter-rouge">最大搜索层</code>。</p>
+<p>由于我们存储了完整的 30 层 CellId，所以在实际使用中，可以按照自己的地理数据密度、网络 IO、磁盘 IO等情况调整 API 的<code class="language-plaintext highlighter-rouge">最大搜索层</code>。</p>
 
 <blockquote>
-  <p>默认为<code class="language-plaintext highlighter-rouge">16</code>。</p>
+  <p><code class="language-plaintext highlighter-rouge">最大搜索层</code>默认为<code class="language-plaintext highlighter-rouge">16</code>。</p>
 </blockquote>
 
 <h4 id="api方式">API方式</h4>
@@ -1207,7 +1221,9 @@ max_level = 16
 
 <h3 id="不变性">不变性</h3>
 
-<p>修改hashkey长度需要修改配置文件，但需注意：hashkey一旦确定，数据写入后改配置便不可修改，因为数据已按这个hashkey长度规则固化下来。</p>
+<p>由于<code class="language-plaintext highlighter-rouge">最小搜索层</code>确定了 hashkey 的长度，数据一旦写入 Pegasus 后，<code class="language-plaintext highlighter-rouge">最小搜索层</code>便不可修改了，因为数据已按这个 hashkey 长度规则固化下来。</p>
+
+<p>若要修改，需要重建数据。</p>
 
 <blockquote>
   <p>默认为<code class="language-plaintext highlighter-rouge">12</code>。</p>
@@ -1220,19 +1236,21 @@ min_level = 12
 
 <h2 id="自定义extrator">自定义extrator</h2>
 
-<p>目前Pegasus支持从固定格式的value中解析经纬度。经纬度以字符串形式嵌入在value中，以<code class="language-plaintext highlighter-rouge">|</code>分割， 比如:<code class="language-plaintext highlighter-rouge">.*|115.886447|41.269031|.*</code>，他们的索引由配置文件中的<code class="language-plaintext highlighter-rouge">latitude_index</code>和<code class="language-plaintext highlighter-rouge">longitude_index</code>确定。</p>
+<p>目前 Pegasus 支持从固定格式的 value 中解析出经纬度。经纬度以字符串形式嵌入在 value 中，以<code class="language-plaintext highlighter-rouge">|</code>分割。</p>
 
-<h2 id="api--redis-proxy">API &amp; redis proxy</h2>
+<p>比如:<code class="language-plaintext highlighter-rouge">.*|115.886447|41.269031|.*</code>，经纬在 value 中的索引由配置文件中的<code class="language-plaintext highlighter-rouge">latitude_index</code>和<code class="language-plaintext highlighter-rouge">longitude_index</code>确定。</p>
 
-<p>Pegasus GEO特性的使用有两种方式，一是直接使用C++ geo client；二是使用redis proxy。</p>
+<h2 id="api--redis-proxy">API &amp; Redis Proxy</h2>
 
-<p><a href="https://github.com/apache/incubator-pegasus/blob/master/src/geo/lib/geo_client.h">C++ geo client代码</a>中有详细的API说明，这里不再赘述。</p>
+<p>Pegasus GEO 特性的使用有两种方式，一是直接使用 C++ GEO Client，二是使用 Redis Proxy。</p>
+
+<p><a href="https://github.com/apache/incubator-pegasus/blob/master/src/geo/lib/geo_client.h">C++ GEO client代码</a>中有详细的 API 说明，这里不再赘述。</p>
 
 <h2 id="配置文件">配置文件</h2>
 
-<p>redis proxy的使用请参考<a href="redis">Redis适配</a>。</p>
+<p>Redis Proxy 的使用请参考<a href="redis">Redis适配</a>。</p>
 
-<p>GEO API添加的配置文件如下:</p>
+<p>GEO API 添加的配置文件如下:</p>
 
 <div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>[geo_client.lib]
 ;NOTE: 'min_level' is immutable after some data has been inserted into DB by geo_client.
@@ -1246,27 +1264,25 @@ longitude_index = 4
 
 <h2 id="数据导入">数据导入</h2>
 
-<p>有的使用场景是业务已经有普通的KV数据，需要根据这份已有的KV数据转换成如上述的数据格式，我们可以使用shell工具里的<code class="language-plaintext highlighter-rouge">copy_data</code>功能来实现。比如：</p>
+<p>有的使用场景是用户已经有普通的 KV 数据，需要根据这份已有的 KV 数据转换成如上述的数据格式，我们可以使用 shell 工具里的<a href="/zh/docs/tools/shell/#copy_data">copy_data</a>功能来实现。比如：</p>
+
+<p>在进行<code class="language-plaintext highlighter-rouge">copy_data</code>操作之前，目标集群以及两个目标表（例如，原始数据表<code class="language-plaintext highlighter-rouge">temp</code>，GEO 索引数据表 <code class="language-plaintext highlighter-rouge">temp_geo</code>）都需要提前创建好。</p>
 
 <div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>copy_data -c target_cluster -a temp -g
 </code></pre></div></div>
 
-<p>此时目标集群是<code class="language-plaintext highlighter-rouge">target_cluster</code>，目标表是<code class="language-plaintext highlighter-rouge">temp</code>，他存储上述的普通数据，目标GEO索引数据表是<code class="language-plaintext highlighter-rouge">temp_geo</code>，他存储上述的GEO索引数据。</p>
-
-<p>在进行<code class="language-plaintext highlighter-rouge">copy_data</code>操作之前，目标集群以及两个目标表都需要提前创建好。</p>
-
-<p>数据导入完成后就可以搭建<code class="language-plaintext highlighter-rouge">redis_proxy</code>了，具体的说明参考<a href="redis">redis适配</a>，需要注意的是配置项：</p>
+<p>数据导入完成后就可以搭建 Redis Proxy 了，具体的说明参考<a href="redis">Redis适配</a>，需要注意的是配置项：</p>
 
 <div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>[apps.proxy]
 ; if using GEO APIs, an extra table name which store geo index data should be appened, i.e.
 arguments = redis_cluster temp temp_geo
 </code></pre></div></div>
 
-<h2 id="benchmark">benchmark</h2>
+<h2 id="benchmark">Benchmark</h2>
 
 <h3 id="测试环境">测试环境</h3>
 
-<p>机器配置：</p>
+<p>服务器配置：</p>
 
 <ul>
   <li>CPU：E5-2620v3 *2</li>
@@ -1278,9 +1294,9 @@ arguments = redis_cluster temp temp_geo
 <p>集群配置：</p>
 
 <ul>
-  <li>节点数：5个replica server节点（使用v1.9.2版本）</li>
-  <li>测试表的Partition数：128个</li>
-  <li>单条数据大小：120字节</li>
+  <li>节点数：5 个 Replica Server 节点（使用 v1.9.2 版本）</li>
+  <li>测试表的 Partition 数：128</li>
+  <li>单条数据大小：120 字节</li>
 </ul>
 
 <p>针对接口：</p>
@@ -1295,27 +1311,25 @@ arguments = redis_cluster temp temp_geo
 </code></pre></div></div>
 
 <p>传递参数：</p>
-
-<p>lat_degrees、lng_degrees：每次都选取北京五环内的随机点</p>
-
-<p>radius_m：如下表第一列，单位米</p>
-
-<p>count：-1，表示不限定结果数量</p>
-
-<p>sort_type：不排序</p>
+<ul>
+  <li>lat_degrees、lng_degrees：每次都选取北京五环内的随机点</li>
+  <li>radius_m：如下表第一列，单位米</li>
+  <li>count：-1，表示不限定结果数量</li>
+  <li>sort_type：不排序</li>
+</ul>
 
 <h3 id="测试结果">测试结果</h3>
 
 <table>
   <thead>
     <tr>
-      <th>半径(m)</th>
+      <th>Radius(m)</th>
       <th>P50(ms)</th>
       <th>P75(ms)</th>
       <th>P99(ms)</th>
       <th>P99.9(ms)</th>
-      <th>平均结果条数</th>
-      <th>单节点QPS</th>
+      <th>Avg result count</th>
+      <th>QPS per node</th>
     </tr>
   </thead>
   <tbody>
@@ -1427,7 +1441,7 @@ arguments = redis_cluster temp temp_geo
     本页导航
 </p>
 <ul class="menu-list">
-  <li><a href="#pegasus-geo支持">Pegasus GEO支持</a>
+  <li><a href="#pegasus-geo-支持">Pegasus GEO 支持</a>
     <ul>
       <li><a href="#背景">背景</a></li>
       <li><a href="#坐标转换">坐标转换</a></li>
@@ -1459,10 +1473,10 @@ arguments = redis_cluster temp temp_geo
         </ul>
       </li>
       <li><a href="#自定义extrator">自定义extrator</a></li>
-      <li><a href="#api--redis-proxy">API &amp; redis proxy</a></li>
+      <li><a href="#api--redis-proxy">API &amp; Redis Proxy</a></li>
       <li><a href="#配置文件">配置文件</a></li>
       <li><a href="#数据导入">数据导入</a></li>
-      <li><a href="#benchmark">benchmark</a>
+      <li><a href="#benchmark">Benchmark</a>
         <ul>
           <li><a href="#测试环境">测试环境</a></li>
           <li><a href="#测试结果">测试结果</a></li>
