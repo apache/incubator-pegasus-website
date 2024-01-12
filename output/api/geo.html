@@ -20,11 +20,11 @@
 <meta property="og:description" content="Pegasus GEO" />
 <meta property="og:site_name" content="Pegasus" />
 <meta property="og:type" content="article" />
-<meta property="article:published_time" content="2024-01-12T04:16:14+00:00" />
+<meta property="article:published_time" content="2024-01-12T06:32:20+00:00" />
 <meta name="twitter:card" content="summary" />
 <meta property="twitter:title" content="Geo" />
 <script type="application/ld+json">
-{"@context":"https://schema.org","@type":"BlogPosting","dateModified":"2024-01-12T04:16:14+00:00","datePublished":"2024-01-12T04:16:14+00:00","description":"Pegasus GEO","headline":"Geo","mainEntityOfPage":{"@type":"WebPage","@id":"/api/geo"},"url":"/api/geo"}</script>
+{"@context":"https://schema.org","@type":"BlogPosting","dateModified":"2024-01-12T06:32:20+00:00","datePublished":"2024-01-12T06:32:20+00:00","description":"Pegasus GEO","headline":"Geo","mainEntityOfPage":{"@type":"WebPage","@id":"/api/geo"},"url":"/api/geo"}</script>
 <!-- End Jekyll SEO tag -->
 </head>
 
@@ -1091,7 +1091,7 @@
 
 <h3 id="value">value</h3>
 
-<p>When using the Pegasus GEO feature, the value must be able to extract longitude and latitude, and the extract method can be found in <a href="/api/geo#value_extrator">Value Extractor</a>.</p>
+<p>When using the Pegasus GEO feature, the value must be able to extract longitude and latitude, and the extract method can be found in <a href="/api/geo#value-extrator">Value Extractor</a>.</p>
 
 <p>The value of the GEO index table is exactly the same as the value of the original table, so there will be redundant data. Here, trades space for time to avoid secondary indexing.</p>
 
@@ -1131,7 +1131,7 @@
 
 <p><img src="/assets/images/s2_cap_2.png" alt="s2_cap_2.png" class="img-responsive" /></p>
 
-<h3 id="查询流程">查询流程</h3>
+<h3 id="query-process">Query process</h3>
 
 <p>Taking <code class="language-plaintext highlighter-rouge">search_radial</code> as an example, it queries all POI data within the circular area according to the given center point and radius.</p>
 
@@ -1146,7 +1146,7 @@ S2CellUnion GetCovering(const S2Region&amp; region);
 </code></pre></div></div>
 
 <blockquote>
-  <p><code class="language-plaintext highlighter-rouge">search_radial</code> API 有两个重载函数，一个是输入经纬度，一个是输入 hashky + sortkey，后者是通过 key 取到 value 中的经纬度再转调前者。</p>
+  <p><code class="language-plaintext highlighter-rouge">search_radial</code> has two overloaded functions, one is to input longitude and latitude, and the other is to input hashky and sortkey. The latter query the value from the raw data table through the keys, extracts the longitude and latitude from the value, and then invoke the former.</p>
 </blockquote>
 
 <p>Query process:</p>
@@ -1168,8 +1168,9 @@ S2CellUnion GetCovering(const S2Region&amp; region);
 </ol>
 
 <blockquote>
-  <p><code class="language-plaintext highlighter-rouge">The configuration of the </code>minimum search level<code class="language-plaintext highlighter-rouge"> and the </code>maximum search level<code class="language-plaintext highlighter-rouge"> is referred to in the following documents
-The CellId length of the </code>minimum search level` determines the hashkey length of the data in GEO index table.</p>
+  <p>The configuration of the <code class="language-plaintext highlighter-rouge">minimum search level</code> and the <code class="language-plaintext highlighter-rouge">maximum search level</code> is referred to in the following documents</p>
+
+  <p>The CellId length of the <code class="language-plaintext highlighter-rouge">minimum search level</code> determines the hashkey length of the data in GEO index table.</p>
 </blockquote>
 
 <p>When querying all the POI data of a CellId, a pair of <code class="language-plaintext highlighter-rouge">start_sortkey</code> and <code class="language-plaintext highlighter-rouge">stop_sortkey</code> will be constructed which contain all the POI data of the CellId according to the key construction rules in the previous documents, then use Pegasus’ <code class="language-plaintext highlighter-rouge">scan</code> interface to query data.</p>
@@ -1458,7 +1459,7 @@ arguments = redis_cluster temp temp_geo
       <li><a href="#data-queries">Data queries</a>
         <ul>
           <li><a href="#design">Design</a></li>
-          <li><a href="#查询流程">查询流程</a></li>
+          <li><a href="#query-process">Query process</a></li>
           <li><a href="#flexibility">Flexibility</a>
             <ul>
               <li><a href="#api-method">API method</a></li>
