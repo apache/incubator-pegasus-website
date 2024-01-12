@@ -79,7 +79,7 @@ Redis 的原生命令请见[这里](https://redis.io/commands) 。
 
 也就是说，在 Pegasus 的 Redis GEO 数据中，不再有 namespace 的概念，全部数据在同一空间 `""` 下。若要区分 namespace，可以在 Pegasus 中创建新的表来实现。
 
-`SET` 的 value 格式参考[Value Extrator](/api/geo#value-extrator)。
+`SET` 的 value 格式参考[Value Extrator](/api/geo#value-extractor)。
 
 ### SET
 

@@ -30,14 +30,14 @@ The encoding of two-dimensional coordinate (116.334441, 40.030202) is: `1/223320
 
 Hilbert curve encoding in S2:
 - Encoding can be seen as a 4-digit numerical encoding
-- Encoding is done layer by layer from left to right, with a maximum of 30 layers
+- Encoding is done level by level from left to right, with a maximum of 30 levels
 - A code represents a geographic block area, and the longer the code, the smaller the area
 - The complete encoding is a sub-region of its prefix encoding, with each parent region consisting of four sub-regions. For example, `00`, `01`, `02`, and `03` are sub-regions of `0`, and the union of the sub-regions equal to the region of the prarent's.
 - Numerically continuous values are also geographically adjacent, for example, the range of regions for `00` and `01` is adjacent, and the range of regions for `0122` and `0123` is also adjacent
 
 ## Encoding accuracy
 
-The Hilbert curve encoding in S2 consists of 30 bytes, each representing a layer partition. The following table shows the area and number of individual cells in each layer.
+The Hilbert curve encoding in S2 consists of 30 bytes, each representing a level partition. The following table shows the area and number of individual cells in each level.
 
 | **level** | **min area** | **max area** | **average area** | **units** | **Number of cells** |
 |-----------|--------------|--------------|------------------|-----------|---------------------|
@@ -88,7 +88,7 @@ So, when using the Pegasus GEO feature, it is necessary to create two Pegasus ta
 
 Hashkey is composed of one-dimensional encoded prefixe. For example, in a user scenario, setting the hashkey length to `14` (1-byte face, 1-byte delimiter `/`, 12 byte Hilbert encoding) can achieve better performance.
 
-> So, the **minimum search layer** is 12
+> So, the **minimum search level** is 12
 
 ```
               CellId
@@ -104,13 +104,13 @@ To meet the requirements of queries with different radius ranges and precisions,
 - If the query is over larger radius ranges, take fewer sortkey bytes (corresponding to shorter CellId) as prefixes for data scan queries, which can reduce the number of data scans
 - If the query is over smaller radius ranges or point queries, take more sortkey bytes (corresponding to longer CellId) as prefixes for data scan queries, which can reduce the range of data scans
 
-This can maintain high flexibility in the application layer without modifying the underlying stored data.
+This can maintain high flexibility for the application without modifying the underlying stored data.
 
 > When querying data within the same geographical area (such as a circular area), using shorter CellIds to query data has larger ranges and fewer queries, but yields more useless data outside the area. Using longer CellIds to query data results in smaller range of queries, resulting in less useless data outside the region, but with higher number of queries
 >
 > refer to: [S2 coverings](http://s2geometry.io/devguide/examples/coverings)
 
-Although the area of the cell is already small enough ( < 1cm^2) at the 30th layer, it is still possible for two POI data to fall into the same cell, so it is necessary to solve the key conflict problem based on CellId encoding. Pegasus combines the hashkey and sortkey of the original table and appends them to the sortkey of the GEO data table.
+Although the area of the cell is already small enough ( < 1cm^2) at the 30th level, it is still possible for two POI data to fall into the same cell, so it is necessary to solve the key conflict problem based on CellId encoding. Pegasus combines the hashkey and sortkey of the original table and appends them to the sortkey of the GEO data table.
 
 ```
                CellId
@@ -122,7 +122,7 @@ Although the area of the cell is already small enough ( < 1cm^2) at the 30th lay
 
 ### value
 
-When using the Pegasus GEO feature, the value must be able to extract longitude and latitude, and the extract method can be found in [Value Extrator](/api/geo#value_extrator).
+When using the Pegasus GEO feature, the value must be able to extract longitude and latitude, and the extract method can be found in [Value Extractor](/api/geo#value_extrator).
 
 The value of the GEO index table is exactly the same as the value of the original table, so there will be redundant data. Here, trades space for time to avoid secondary indexing.
 
@@ -156,17 +156,17 @@ For example, when performing a range query with the red circle, the CellId query
 
 Although such results are more accurate, but there are more CellIds involved in the calculation, resulting in more client-server RPCs, higher network overhead, and higher latency. In addition, in real usage scenarios, CellId that is too small may not have POI data, but it will still consume one RPC.
 
-So, in the current Pegasus implementation, only two layers of cells, the `minimum search layer` and the `maximum search layer`, are used together. Taking layers 12 and 16 as examples, the CellId query set obtained is shown in the blue blocks as:
+So, in the current Pegasus implementation, only two levels of cells, the `minimum search level` and the `maximum search level`, are used together. Taking levels 12 and 16 as examples, the CellId query set obtained is shown in the blue blocks as:
 
 ![s2_cap_2.png](/assets/images/s2_cap_2.png){:class="img-responsive"}
 
 ### 查询流程
 
-以`search_radial`为例，此 API 的意义是给定点和半径，查询出该圆形区域内的所有数据。
+Taking `search_radial` as an example, it queries all POI data within the circular area according to the given center point and radius.
 
-> 这里我们只讨论圆形区域的数据查询，其他的比如多边形区域的思想是类似的。
+> Here we only discuss POI data queries for circular regions, while the idea for other regions such as polygonal regions is similar.
 
-需利用 S2 提供的查询覆盖指定区域的 CellId 集合的 API：
+Use the S2 API to query the CellId set that covers the given region:
 
 ```
 // Returns an S2CellUnion that covers the given region and satisfies the current options.
@@ -175,58 +175,58 @@ S2CellUnion GetCovering(const S2Region& region);
 
 > `search_radial` API 有两个重载函数，一个是输入经纬度，一个是输入 hashky + sortkey，后者是通过 key 取到 value 中的经纬度再转调前者。
 
-查询流程如下:
+Query process:
 
-1. 根据经纬度、半径，求出 S2Cap 圆形区域`C`
-2. 根据圆形区域、指定的`最小搜索层`，通过`GetCovering`，求出在`最小搜索层`上的 CellId 集合
-3. 遍历这些 CellId，判断 CellId 区域跟圆形区域`C`的关系
-    1. 全覆盖：取该 CellId 内的所有数据
-    2. 半覆盖：将该 CellId 按`最大搜索层`继续拆分，判断拆分后的 sub_CellId 区域与圆形区域`C`的关系
-        1. 覆盖/相交：取该 sub_CellId 的所有数据
-        2. 不相交：丢弃
+1. Calculate the circular region S2Cap `C` based on longitude, latitude, and radius
+2. Based on the circular region and the specified `minimum search level`, calculate the CellId set on the `minimum search level` using `GetCovering`
+3. Traverse these CellIds to determine the relationship between the CellId region and the circular region `C`
+    1. Full coverage: Retrieve all POI data within the CellId
+    2. Half coverage: Split the CellId according to the `maximum search level` and determine the relationship between sub_CellId region and the circular region `C`
+        1. Overlay/Intersection: Take all the POI data in the sub_CellId
+        2. Disjoint: Discard
 
-> `最小搜索层`，`最大搜索层`的配置参考后文。
-> `最小搜索层`的 CellId 长度确定 GEO 索引表的 hashkey 长度。
+> `The configuration of the `minimum search level` and the `maximum search level` is referred to in the following documents
+> The CellId length of the `minimum search level` determines the hashkey length of the data in GEO index table.
 
-取一个 CellId 的所有数据时，会根据上文的 key 构造规则，构造一对包含这个 CellId 所有数据的`start_sortkey`，`stop_sortkey`，再使用Pegasus的`scan`接口进行数据搜索。
+When querying all the POI data of a CellId, a pair of `start_sortkey` and `stop_sortkey` will be constructed which contain all the POI data of the CellId according to the key construction rules in the previous documents, then use Pegasus' `scan` interface to query data.
 
-- 对于`3.1`步取到的`最小搜索层` CellId 的编码，它也就是 GEO 索引表中的 hashkey，调用`scan(CellId, "", "")`查询所有数据
-    - 比如，一个 12 层的 cell `1/223320022232`被区域完全覆盖，则调用`scan("1/223320022232", "", "")`查询所有数据
-- 对于`3.2.1`步取到的 sub_CellId 集合，hashkey 是它的前缀，调用`scan(sub_CellId_common_prefix, sub_CellId1, sub_CellId2)`搜索数据
-    - 其中，sub_CellId_common_prefix 是 sub_CellId 集合的公共前缀，长度是 hashkey 的长度。sub_CellId1 和 sub_CellId2 之间连续的所有 sub_CellId 都在集合中，字符串长度是`最大搜索层`减`最小搜索层`的长度
-    - 比如，一个12层的 cell `1/223320022232`的子区域`0001`,`0002`,`0003`,`0100`才跟目标区域相交时，则调用`scan("1/223320022232", "0001", "0003")`、`scan("1/223320022232", "0100", "0100")`
+- For the `minimum search level` CellId encoding obtain in step `3.1`, it is also the hashkey of the data in GEO index table, then call Pegasus `scan(CellId, "", "")` to query all POI data
+    - For example, a cell in level 12, `1/223320022232` is full covered by the region, then call `scan("1/223320022232", "", "")` to query all POI data
+- For the sub_CellId set obtain in step `3.2.1`, the hashkey is their prefix, call `scan(sub_CellId_common_prefix, sub_CellId1, sub_CellId2)` to query POI data
+    - sub_CellId_common_prefix is the common prefix of the CellIds in sub_CellId set, its length is the length of hashkey. All the CellIds between sub_CellId1 and sub_CellId2 are continuous and all are in sub_CellId set, their length is the length of (`maximum search level` - `minimum search level`)
+    - For example, when the sub-regions `0001`,`0002`,`0003` and `0100` of a cell in level 12 `1/223320022232` are intersect with the search region, then call `scan("1/223320022232", "0001", "0003")`、`scan("1/223320022232", "0100", "0100")`
 
-得到`scan`的结果后，还需处理：
+After obtaining the result of `scan`, further processing is required:
 
-- 计算距离：因为 CellId 可能只与输入区域部分重合，该点若在区域外，需丢弃
-- 排序：当有升序/降序要求时
+- Calculate distance: Because CellId may only partially overlap with the search region, if the POI is outside the search region, discarded it
+- Sorting: When there is a requirement for ascending/descending order
 
-### 灵活性
+### Flexibility
 
-由于我们存储了完整的 30 层 CellId，所以在实际使用中，可以按照自己的地理数据密度、网络 IO、磁盘 IO等情况调整 API 的`最大搜索层`。
+Due to storing the complete 30 levels of CellIds, in practical use, we can adjust the `maximum search level` according to the geographic data density, network IO, disk IO conditions.
 
-> `最大搜索层`默认为`16`。
+> `maximum search level` is 16 by default.
 
-#### API方式
+#### API method
 
 ```
 dsn::error_s set_max_level(int level);
 ```
 
-#### 配置文件方式
+#### Configuration file method
 
 ```
 [geo_client.lib]
 max_level = 16
 ```
 
-### 不变性
+### Invariance
 
-由于`最小搜索层`确定了 hashkey 的长度，数据一旦写入 Pegasus 后，`最小搜索层`便不可修改了，因为数据已按这个 hashkey 长度规则固化下来。
+Due to the fact that the `minimum search level` determines the length of the hashkey in GEO index table, once the data is written to Pegasus, the `minimum search level` cannot be modified because the data has been persisted according to this hashkey length rule.
 
-若要修改，需要重建数据。
+The data needs to be reconstructed if modification is required.
 
-> 默认为`12`。
+> `minimum search level` is 12 by default.
 
 ```
 [geo_client.lib]
@@ -234,23 +234,23 @@ max_level = 16
 min_level = 12
 ```
 
-## 自定义extrator
+## Value extractor
 
-目前 Pegasus 支持从固定格式的 value 中解析出经纬度。经纬度以字符串形式嵌入在 value 中，以`|`分割。
+Currently, Pegasus supports extract longitude and latitude from fixed format values. Longitude and latitude are serialized as strings in value, separated by `|`.
 
-比如:`.*|115.886447|41.269031|.*`，经纬在 value 中的索引由配置文件中的`latitude_index`和`longitude_index`确定。
+For example: value can be `.*|115.886447|41.269031|.*`, the index of longitude and latitude in value is determined by the `latitude_index` and `longitude_index`.
 
 ## API & Redis Proxy
 
-Pegasus GEO 特性的使用有两种方式，一是直接使用 C++ GEO Client，二是使用 Redis Proxy。
+There are two ways to use Pegasus GEO features: one is to directly use C++ GEO Client, and the other is to use Redis Proxy.
 
-[C++ GEO client代码](https://github.com/apache/incubator-pegasus/blob/master/src/geo/lib/geo_client.h)中有详细的 API 说明，这里不再赘述。
+[C++ GEO client codebase](https://github.com/apache/incubator-pegasus/blob/master/src/geo/lib/geo_client.h), there is a detailed API description.
 
-## 配置文件
+## Configuration
 
-Redis Proxy 的使用请参考[Redis适配](redis)。
+Please refer to the usage of Redis Proxy [Redis Adaption](redis).
 
-GEO API 添加的配置文件如下:
+The configuration files added by GEO feature are as follows:
 
 ```
 [geo_client.lib]
@@ -258,22 +258,22 @@ GEO API 添加的配置文件如下:
 min_level = 12
 max_level = 16
 
-; 用于经纬度的extrator
+; Used by 'value extractor'
 latitude_index = 5
 longitude_index = 4
 ```
 
-## 数据导入
+## Data import in batch
 
-有的使用场景是用户已经有普通的 KV 数据，需要根据这份已有的 KV 数据转换成如上述的数据格式，我们可以使用 shell 工具里的[copy_data](/docs/tools/shell/#copy_data)功能来实现。比如：
+In some usage scenarios, users already has a raw data table which the values contain longitudes and latitudes, then requires constructing the GEO index table mentioned above. The [copy_data](/docs/tools/shell/#copy_data) function in the shell tool to achieve this. For example:
 
-在进行`copy_data`操作之前，目标集群以及两个目标表（例如，原始数据表`temp`，GEO 索引数据表 `temp_geo`）都需要提前创建好。
+Before the `copy_data` operation, the target cluster and two target tables (i.e., the raw data table `temp` and GEO index table `temp_geo`) are needed to be created at first.
 
 ```
 copy_data -c target_cluster -a temp -g
 ```
 
-数据导入完成后就可以搭建 Redis Proxy 了，具体的说明参考[Redis适配](redis)，需要注意的是配置项：
+After the data import is completed, Redis Proxy can be set up, please refer to [Redis Adaption](redis). For specific instructions:
 
 ```
 [apps.proxy]
@@ -283,22 +283,23 @@ arguments = redis_cluster temp temp_geo
 
 ## Benchmark
 
-### 测试环境
+### Environment
 
-服务器配置：
+#### Hardware
 
-- CPU：E5-2620v3 *2
-- 内存：128GB
-- 存储：480G SSD *8
-- 网卡：1Gb
+- CPU: E5-2620v3 * 2
+- Memory: 128GB
+- Disk: capacity 480GB SSD * 8
+- Network card: bandwidth 1Gb
 
-集群配置：
+#### Cluster
 
-- 节点数：5 个 Replica Server 节点（使用 v1.9.2 版本）
-- 测试表的 Partition 数：128
-- 单条数据大小：120 字节
+- Replica Server count：5
+- Version: v1.9.2
+- Partition count of the test table：128
+- Single data size: 120 bytes
 
-针对接口：
+#### Testing interface
 
 ```
 void async_search_radial(double lat_degrees,
@@ -310,13 +311,13 @@ void async_search_radial(double lat_degrees,
                          geo_search_callback_t &&callback);
 ```
 
-传递参数：
-- lat_degrees、lng_degrees：每次都选取北京五环内的随机点
-- radius_m：如下表第一列，单位米
-- count：-1，表示不限定结果数量
-- sort_type：不排序
+**Parameters**
+- lat_degrees, lng_degrees: Select random points within the 5th-Ring Road of Beijing every query
+- radius_m: The first column of the following table, in meters
+- count: -1, which indicates an unlimited number of results
+- sort_type: un-ordered
 
-### 测试结果
+### Result
 
 | Radius(m) | P50(ms)     | P75(ms)     | P99(ms)     | P99.9(ms)   | Avg result count | QPS per node |
 |-----------|-------------|-------------|-------------|-------------|------------------|--------------|
