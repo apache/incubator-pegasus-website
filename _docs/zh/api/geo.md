@@ -2,11 +2,11 @@
 permalink: api/geo
 ---
 
-# Pegasus GEO 支持
+# Pegasus GEO
 
 ## 背景
 
-用户数据存储在 Pegasus 中，由 hashkey、sortkey、value 组成。但用户数据中含有地理信息，比如 value 中包含有经纬度，需要 Pegasus 提供 API 进行 GEO 特性的支持。比如给定一个中心点坐标和一个半径，查找这个范围内的所有数据；给定两条数据的 hashkey 和 sortkey，求这两条数据地理上的距离等。
+在 Pegasus 中，当用户数据属于 POI (Points of Interest) 数据，其中含有地理信息，比如 value 中包含有经纬度，需要 Pegasus 提供接口进行 GEO 特性的支持。比如给定一个中心点坐标和一个半径，查找这个范围内的所有数据；给定两条 POI 数据的 hashkey 和 sortkey，求这两条数据地理上的距离等。
 
 Pegasus 的 GEO (Geographic) 支持使用了 [S2](https://github.com/google/s2geometry) 库, 主要用于将二维地理坐标（经度 + 纬度）与一维编码的相互转换、基于圆形的范围查询、Hilbert 曲线规则等特性。
 
@@ -30,15 +30,15 @@ Pegasus 的 GEO (Geographic) 支持使用了 [S2](https://github.com/google/s2ge
 ![hilbert.png](/assets/images/hilbert.png){:class="img-responsive"}
 
 S2 中的 Hilbert 曲线编码：
-- 编码可以看作是一个4进制的数值编码
-- 编码由左往右按层进行，最多30层
+- 编码可以看作是一个 4 进制的数值编码
+- 编码由左往右按层进行，最多 30 层
 - 一个编码代表地理上的一个方块区域，编码越长，区域越小
 - 完整编码是前缀编码的子区域，每个父区域由4个子区域组成，比如`00`,`01`,`02`,`03`是`0`的子区域，且前者的区域范围的并集就是后者的区域范围
 - 在数值上连续的值，在地理位置上也是连续的，比如`00`和`01`的区域范围是相邻的，`0122`和`0123`的区域范围也是相邻的
 
 ## 编码精度
 
-S2 中的 Hilbert 曲线编码由30位组成，每一位代表一层划分。下表是各层单个 cell 的面积和 cell 个数。
+S2 中的 Hilbert 曲线编码由 30 位组成，每一位代表一层划分。下表是各层单个 cell 的面积和 cell 个数。
 
 | **level** | **min area** | **max area** | **average area** | **units** | **Number of cells** |
 |-----------|--------------|--------------|------------------|-----------|---------------------|
@@ -87,7 +87,7 @@ GEO 索引数据独立于原始数据，两类数据存储在不同的 Pegasus �
 
 ### hashkey
 
-hashkey 直接由一维编码的前缀构成。比如在一个用户场景中，范围查询都是集中在 10km 半径内的圆形范围，实际测试结果是将 hashkey 长度定为`14`（1位face，1位分隔符`/`，12位Hilbert编码）能取得更好的性能。
+hashkey 由一维编码的前缀构成。比如在一个用户场景中，将 hashkey 长度定为`14`（1位face，1位分隔符`/`，12位Hilbert编码）能取得更好的性能。
 
 > 那么，最小搜索层就为12
 
@@ -102,8 +102,8 @@ hashkey 直接由一维编码的前缀构成。比如在一个用户场景中，
 ### sortkey
 
 为了满足不同半径范围、不同精度的查询，我们把 CellId 剩下的 18 位全部放到 sortkey 中。
-- 在进行较大范围的临近查询时，取更少的 sortkey 位数（对应的 CellId 更短）作为前缀，进行数据 scan 查询，这样可以减少数据 scan 的次数
-- 在进行较小范围的临近查询或点查询时，取更多的 sortkey 位数（对应的 CellId 更长）作为前缀，进行数据 scan 查询，这样可以减少数据 scan 的范围
+- 在进行较大半径的范围的查询时，取更少的 sortkey 位数（对应的 CellId 更短）作为前缀，进行数据 scan 查询，这样可以减少数据 scan 的次数
+- 在进行较小半径的范围的查询或点查询时，取更多的 sortkey 位数（对应的 CellId 更长）作为前缀，进行数据 scan 查询，这样可以减少数据 scan 的范围
 
 这可以在不修改底层存储数据的前提下，让应用层保持比较高的灵活性。
 
@@ -111,7 +111,7 @@ hashkey 直接由一维编码的前缀构成。比如在一个用户场景中，
 > 
 > 参考：[S2 coverings](http://s2geometry.io/devguide/examples/coverings)
 
-尽管在第30层时，cell 的面积已经足够小（<1cm^2），但仍有可能两条数据落在同一个 cell 里，所以需要在 CellId 编码的基础上，解决 key 冲突问题。Pegasus 将**原始表**的 hashkey 和 sortkey 联合起来，追加在 GEO 表的 sortkey 之后。
+尽管在第30层时，cell 的面积已经足够小（ < 1cm^2），但仍有可能两条数据落在同一个 cell 里，所以需要在 CellId 编码的基础上，解决 key 冲突问题。Pegasus 将**原始表**的 hashkey 和 sortkey 联合起来，追加在 GEO 索引表的 sortkey 之后。
 
 ```
                CellId
@@ -123,11 +123,11 @@ hashkey 直接由一维编码的前缀构成。比如在一个用户场景中，
 
 ### value
 
-使用 GEO 特性所存储的 value 必须能够解析出经纬度，具体的解析方式参考[自定义extrator](/api/geo#%E8%87%AA%E5%AE%9A%E4%B9%89extrator)。
+使用 Pegasus GEO 特性时，所存储的 value 必须能够解析出经纬度，具体的解析方式参考[Value extractor](/api/geo#value_extractor)。
 
-GEO 索引表的 value 跟原始表的 value 完全相同。这里会存在一份冗余数据，使用空间换时间的方式避免二次索引。
+GEO 索引表的 value 跟原始表的 value 完全相同，因此会存在一份冗余数据，使用空间换时间的方式避免二次索引。
 
-> 如果确实有在 GEO 的单条 value 中存储较大数据的需求，又想节省磁盘空间，可以手动实现二次索引，即在 GEO value 中存储二级索引的 key，再在另外的表中存储真实的大 value。
+> 如果确实有在单条 POI 中存储较大数据的需求，又想节省磁盘空间，可以手动实现二次索引，即在 GEO value 中存储二级索引的 key，再在另外的表中存储实际的大 value。
 
 ## 数据更新
 
@@ -135,11 +135,11 @@ GEO 索引表的 value 跟原始表的 value 完全相同。这里会存在一�
 
 `set` 操作会同时更新上述两个表的数据，即 Pegasus 原始表数据和 GEO 索引表数据，数据构造方式也如上所述。
 
-`set`操作的 hashkey，sortkey 是用户自己的格式，使用 GEO API 时并不做约束。两个表的数据转储对用户是透明的，由 GEO Client 自动完成。
+`set`操作的 hashkey，sortkey 是用户自己的格式，使用 GEO API 时并不做约束。两个表的数据同步对用户是透明的，由 GEO Client 自动完成。
 
 使用 Redis GEO API 时， 参考 [GEO API](/api/redis#geo-api)。
 
-在 Pegasus 实现中，`set`操作会首先尝试读取出已有的数据，如果数据不存在，则直接向两个表中写入数据。如果数据已存在，会先将老的 GEO 索引数据清理掉后，再写入新数据。因为新老数据的索引数据 <hashkey, sortkey> 可能是不一样的（即新老 value 根据 extractor 解析得到的经纬度不一样），若不清理，GEO 索引表中将存在垃圾数据，造成磁盘空间的浪费，也会在进行地理范围查询时（即`GEORADIUS`）查到脏数据。
+在 Pegasus 实现中，`set`操作会首先尝试读取出已有的数据，如果数据不存在，则直接向两个表中写入数据。如果数据已存在，会先将老的 GEO 索引数据清理掉后，再写入新数据。因为新老数据的索引数据 `<hashkey, sortkey>` 可能是不一样的（即新老 value 根据 extractor 解析得到的经纬度不一样），若不清理，GEO 索引表中将存在垃圾数据，造成磁盘空间的浪费，也会在进行地理范围查询时（即`GEORADIUS`）查到脏数据。
 
 ### del
 
@@ -147,7 +147,7 @@ GEO 索引表的 value 跟原始表的 value 完全相同。这里会存在一�
 
 ## 数据查询
 
-### 思路
+### 设计
 
 地理范围查询会转换成 Pegasus 的多次 scan 操作，一次 scan 对应为一个 CellId 范围内的所有数据扫描。 要想获得更高的性能，就需要减少 scan 的总次数和单次 scan 的数据量，也就是需要减少总的 CellId 数量和单个 CellId 的面积。
 
@@ -163,11 +163,11 @@ GEO 索引表的 value 跟原始表的 value 完全相同。这里会存在一�
 
 ### 查询流程
 
-以`search_radial`为例，此 API 的意义是给定点和半径，查询出该圆形区域内的所有数据。
+以`search_radial`为例，此 API 的意义是给定点和半径，查询出该圆形区域内的所有 POI 数据。
 
 > 这里我们只讨论圆形区域的数据查询，其他的比如多边形区域的思想是类似的。
 
-需利用 S2 提供的查询覆盖指定区域的 CellId 集合的 API：
+使用 S2 API 来查询覆盖了给定区域的 CellId 集合：
 
 ```
 // Returns an S2CellUnion that covers the given region and satisfies the current options.
@@ -181,19 +181,19 @@ S2CellUnion GetCovering(const S2Region& region);
 1. 根据经纬度、半径，求出 S2Cap 圆形区域`C`
 2. 根据圆形区域、指定的`最小搜索层`，通过`GetCovering`，求出在`最小搜索层`上的 CellId 集合
 3. 遍历这些 CellId，判断 CellId 区域跟圆形区域`C`的关系
-   1. 全覆盖：取该 CellId 内的所有数据
+   1. 全覆盖：取该 CellId 内的所有 POI 数据
    2. 半覆盖：将该 CellId 按`最大搜索层`继续拆分，判断拆分后的 sub_CellId 区域与圆形区域`C`的关系
-      1. 覆盖/相交：取该 sub_CellId 的所有数据
+      1. 覆盖/相交：取该 sub_CellId 的所有 POI 数据
       2. 不相交：丢弃
 
 > `最小搜索层`，`最大搜索层`的配置参考后文。
-> `最小搜索层`的 CellId 长度确定 GEO 索引表的 hashkey 长度。
+> `最小搜索层`的 CellId 长度确定 GEO 索引表中数据的 hashkey 长度。
 
-取一个 CellId 的所有数据时，会根据上文的 key 构造规则，构造一对包含这个 CellId 所有数据的`start_sortkey`，`stop_sortkey`，再使用Pegasus的`scan`接口进行数据搜索。
+取一个 CellId 的所有 POI 数据时，会根据上文的 key 构造规则，构造一对包含这个 CellId 所有数据的`start_sortkey`，`stop_sortkey`，再使用Pegasus的`scan`接口进行数据搜索。
 
-- 对于`3.1`步取到的`最小搜索层` CellId 的编码，它也就是 GEO 索引表中的 hashkey，调用`scan(CellId, "", "")`查询所有数据
-  - 比如，一个 12 层的 cell `1/223320022232`被区域完全覆盖，则调用`scan("1/223320022232", "", "")`查询所有数据
-- 对于`3.2.1`步取到的 sub_CellId 集合，hashkey 是它的前缀，调用`scan(sub_CellId_common_prefix, sub_CellId1, sub_CellId2)`搜索数据
+- 对于`3.1`步取到的`最小搜索层` CellId 的编码，它也就是 GEO 索引表中的 hashkey，调用`scan(CellId, "", "")`查询所有 POI 数据
+  - 比如，一个 12 层的 cell `1/223320022232`被区域完全覆盖，则调用`scan("1/223320022232", "", "")`查询所有 POI 数据
+- 对于`3.2.1`步取到的 sub_CellId 集合，hashkey 是它的前缀，调用`scan(sub_CellId_common_prefix, sub_CellId1, sub_CellId2)`搜索 POI 数据
   - 其中，sub_CellId_common_prefix 是 sub_CellId 集合的公共前缀，长度是 hashkey 的长度。sub_CellId1 和 sub_CellId2 之间连续的所有 sub_CellId 都在集合中，字符串长度是`最大搜索层`减`最小搜索层`的长度
   - 比如，一个12层的 cell `1/223320022232`的子区域`0001`,`0002`,`0003`,`0100`才跟目标区域相交时，则调用`scan("1/223320022232", "0001", "0003")`、`scan("1/223320022232", "0100", "0100")`
 
@@ -204,7 +204,7 @@ S2CellUnion GetCovering(const S2Region& region);
 
 ### 灵活性
 
-由于我们存储了完整的 30 层 CellId，所以在实际使用中，可以按照自己的地理数据密度、网络 IO、磁盘 IO等情况调整 API 的`最大搜索层`。
+由于我们存储了完整的 30 层 CellId，所以在实际使用中，可以根据地理数据密度、网络 IO、磁盘 IO等情况调整`最大搜索层`。
 
 > `最大搜索层`默认为`16`。
 
@@ -223,7 +223,7 @@ max_level = 16
 
 ### 不变性
 
-由于`最小搜索层`确定了 hashkey 的长度，数据一旦写入 Pegasus 后，`最小搜索层`便不可修改了，因为数据已按这个 hashkey 长度规则固化下来。
+由于`最小搜索层`确定了 GEO 索引数据的 hashkey 的长度，数据一旦写入 Pegasus 后，`最小搜索层`便不可修改了，因为数据已按这个 hashkey 长度规则固化下来。
 
 若要修改，需要重建数据。
 
@@ -235,17 +235,17 @@ max_level = 16
 min_level = 12
 ```
 
-## Value Extrator
+## Value extractor
 
 目前 Pegasus 支持从固定格式的 value 中解析出经纬度。经纬度以字符串形式嵌入在 value 中，以`|`分割。
 
-比如:`.*|115.886447|41.269031|.*`，经纬在 value 中的索引由配置文件中的`latitude_index`和`longitude_index`确定。
+比如：value 可以是`.*|115.886447|41.269031|.*`，经纬度在 value 中的索引由配置文件中的`latitude_index`和`longitude_index`确定。
 
 ## API & Redis Proxy
 
 Pegasus GEO 特性的使用有两种方式，一是直接使用 C++ GEO Client，二是使用 Redis Proxy。
 
-[C++ GEO client代码](https://github.com/apache/incubator-pegasus/blob/master/src/geo/lib/geo_client.h)中有详细的 API 说明，这里不再赘述。
+[C++ GEO client代码](https://github.com/apache/incubator-pegasus/blob/master/src/geo/lib/geo_client.h)中有详细的 API 说明。
 
 ## 配置文件
 
@@ -259,16 +259,16 @@ GEO API 添加的配置文件如下:
 min_level = 12
 max_level = 16
 
-; 用于经纬度的extrator
+; 用于经纬度的extractor
 latitude_index = 5
 longitude_index = 4
 ```
 
-## 数据导入
+## 批量数据导入
 
-有的使用场景是用户已经有普通的 KV 数据，需要根据这份已有的 KV 数据转换成如上述的数据格式，我们可以使用 shell 工具里的[copy_data](/docs/tools/shell/#copy_data)功能来实现。比如：
+在一些使用场景中，用户已经有 value 中包含经纬度的原始数据表，需要构建上述的 GEO 索引表，则可以使用 shell 工具里的[copy_data](/docs/tools/shell/#copy_data)功能来实现。比如：
 
-在进行`copy_data`操作之前，目标集群以及两个目标表（例如，原始数据表`temp`，GEO 索引数据表 `temp_geo`）都需要提前创建好。
+在进行`copy_data`操作之前，目标集群以及两个目标表（即，原始数据表`temp`，GEO 索引数据表 `temp_geo`）都需要提前创建好。
 
 ```
 copy_data -c target_cluster -a temp -g
@@ -286,20 +286,21 @@ arguments = redis_cluster temp temp_geo
 
 ### 测试环境
 
-服务器配置：
+#### 服务器配置
 
-- CPU：E5-2620v3 *2
+- CPU：E5-2620v3 * 2
 - 内存：128GB
-- 存储：480G SSD *8
-- 网卡：1Gb
+- 磁盘：容量 480GB SSD * 8
+- 网卡：带宽 1Gb
 
-集群配置：
+#### 集群配置
 
-- 节点数：5 个 Replica Server 节点（使用 v1.9.2 版本）
+- Replica Server 节点数：5 个
+- 版本：v1.9.2
 - 测试表的 Partition 数：128
 - 单条数据大小：120 字节
 
-针对接口：
+#### 测试接口
 
 ```
 void async_search_radial(double lat_degrees,
@@ -311,7 +312,7 @@ void async_search_radial(double lat_degrees,
                          geo_search_callback_t &&callback);
 ```
 
-传递参数：
+**参数**
 - lat_degrees、lng_degrees：每次都选取北京五环内的随机点
 - radius_m：如下表第一列，单位米
 - count：-1，表示不限定结果数量
