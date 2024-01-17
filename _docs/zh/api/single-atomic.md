@@ -24,7 +24,7 @@ Pegasus 的数据分布策略采用了固定 Hash 分片，同一个 HashKey 的
 
 # 原子增减
 
-虽然 Pegasus 的 value 不支持 schema，但是我们依然提供了原子增减操作，类似 Redis 的 [incr命令](http://www.redis.cn/commands/incr.html)，Pegasus 接口参见 [incr](/clients/java-client#incr)。
+虽然 Pegasus 的 value 不支持 schema，但是我们依然提供了原子增减操作，类似 Redis 的 [incr命令](https://redis.io/commands/incr/)，Pegasus 接口参见 [incr](/clients/java-client#incr)。
 
 ## 语义解释
 
