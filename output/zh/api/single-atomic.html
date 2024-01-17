@@ -20,11 +20,11 @@
 <meta property="og:description" content="从 v1.10.0 版本开始，Pegasus 支持了单行原子操作。 这里的单行是指同一 HashKey 下的所有数据。" />
 <meta property="og:site_name" content="Pegasus" />
 <meta property="og:type" content="article" />
-<meta property="article:published_time" content="2024-01-17T03:04:52+00:00" />
+<meta property="article:published_time" content="2024-01-17T08:06:07+00:00" />
 <meta name="twitter:card" content="summary" />
 <meta property="twitter:title" content="Single Atomic" />
 <script type="application/ld+json">
-{"@context":"https://schema.org","@type":"BlogPosting","dateModified":"2024-01-17T03:04:52+00:00","datePublished":"2024-01-17T03:04:52+00:00","description":"从 v1.10.0 版本开始，Pegasus 支持了单行原子操作。 这里的单行是指同一 HashKey 下的所有数据。","headline":"Single Atomic","mainEntityOfPage":{"@type":"WebPage","@id":"/api/single-atomic"},"url":"/api/single-atomic"}</script>
+{"@context":"https://schema.org","@type":"BlogPosting","dateModified":"2024-01-17T08:06:07+00:00","datePublished":"2024-01-17T08:06:07+00:00","description":"从 v1.10.0 版本开始，Pegasus 支持了单行原子操作。 这里的单行是指同一 HashKey 下的所有数据。","headline":"Single Atomic","mainEntityOfPage":{"@type":"WebPage","@id":"/api/single-atomic"},"url":"/api/single-atomic"}</script>
 <!-- End Jekyll SEO tag -->
 </head>
 
@@ -762,7 +762,7 @@
 
 <h1 id="原子增减">原子增减</h1>
 
-<p>虽然 Pegasus 的 value 不支持 schema，但是我们依然提供了原子增减操作，类似 Redis 的 <a href="http://www.redis.cn/commands/incr.html">incr命令</a>，Pegasus 接口参见 <a href="/zh/clients/java-client#incr">incr</a>。</p>
+<p>虽然 Pegasus 的 value 不支持 schema，但是我们依然提供了原子增减操作，类似 Redis 的 <a href="https://redis.io/commands/incr/">incr命令</a>，Pegasus 接口参见 <a href="/zh/clients/java-client#incr">incr</a>。</p>
 
 <h2 id="语义解释">语义解释</h2>
 
@@ -776,9 +776,9 @@
 
 <h1 id="cas-操作">CAS 操作</h1>
 
-<p>另一类很有用的原子操作就是 CAS（Compare-And-Swap）操作。基于 CAS 操作，可以实现很多高级的并发特性，譬如分布式锁。因此很多编程语言也原生地提供 CAS 操作。</p>
+<p>另一类很有用的原子操作就是 CAS（Compare-And-Swap）操作。基于 CAS 操作，可以实现很多高级的并发特性，譬如分布式锁。</p>
 
-<p>Pegasus 提供了 <em>check_and_set</em> 的 CAS 操作，其语义就是：根据 HashKey 的某一个 SortKey 的 value 是否满足某种条件，来决定是否修改另一个 SortKey 的值。我们将用于判断条件的 SortKey 称之为<code class="language-plaintext highlighter-rouge">CheckSortKey</code>，将用于设置值的 SortKey 称之为<code class="language-plaintext highlighter-rouge">SetSortKey</code>。对应地，<code class="language-plaintext highlighter-rouge">CheckSortKey</code> 的 value 称之为<code class="language-plaintext highlighter-rouge">CheckValue</code>，<code class="language-plaintext highlighter-rouge">SetSortKey</code> 要设置的 value 称之为<code class="language-plaintext highlighter-rouge">SetValue</code>。参见 <a href="/zh/clients/java-client#checkandset">checkAndSet</a>，以及其扩展版本 <a href="/zh/clients/java-client#checkandmutate">checkAndMutate</a> 和 <a href="/zh/clients/java-client#compareexchange">compareExchange</a>。</p>
+<p>Pegasus 提供了 <em>check_and_set</em> 的 CAS 操作，其语义就是：根据 HashKey 的某一个 SortKey 的 value 是否满足某种条件，来决定是否修改另一个 SortKey 的值。将用于判断条件的 SortKey 称之为<code class="language-plaintext highlighter-rouge">CheckSortKey</code>，将用于设置值的 SortKey 称之为<code class="language-plaintext highlighter-rouge">SetSortKey</code>。对应地，<code class="language-plaintext highlighter-rouge">CheckSortKey</code> 的 value 称之为<code class="language-plaintext highlighter-rouge">CheckValue</code>，<code class="language-plaintext highlighter-rouge">SetSortKey</code> 要设置的 value 称之为<code class="language-plaintext highlighter-rouge">SetValue</code>。参见 <a href="/zh/clients/java-client#checkandset">checkAndSet</a>，以及其扩展版本 <a href="/zh/clients/java-client#checkandmutate">checkAndMutate</a> 和 <a href="/zh/clients/java-client#compareexchange">compareExchange</a>。</p>
 
 <h2 id="语义解释-1">语义解释</h2>
 

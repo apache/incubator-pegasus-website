@@ -16,15 +16,15 @@
 <meta name="generator" content="Jekyll v4.3.3" />
 <meta property="og:title" content="Single Atomic" />
 <meta property="og:locale" content="en_US" />
-<meta name="description" content="TRANSLATING" />
-<meta property="og:description" content="TRANSLATING" />
+<meta name="description" content="Since v1.10.0, Pegasus supports single row atomic operations. The single row here means all data in the same HashKey." />
+<meta property="og:description" content="Since v1.10.0, Pegasus supports single row atomic operations. The single row here means all data in the same HashKey." />
 <meta property="og:site_name" content="Pegasus" />
 <meta property="og:type" content="article" />
-<meta property="article:published_time" content="2024-01-17T03:04:52+00:00" />
+<meta property="article:published_time" content="2024-01-17T08:06:07+00:00" />
 <meta name="twitter:card" content="summary" />
 <meta property="twitter:title" content="Single Atomic" />
 <script type="application/ld+json">
-{"@context":"https://schema.org","@type":"BlogPosting","dateModified":"2024-01-17T03:04:52+00:00","datePublished":"2024-01-17T03:04:52+00:00","description":"TRANSLATING","headline":"Single Atomic","mainEntityOfPage":{"@type":"WebPage","@id":"/api/single-atomic"},"url":"/api/single-atomic"}</script>
+{"@context":"https://schema.org","@type":"BlogPosting","dateModified":"2024-01-17T08:06:07+00:00","datePublished":"2024-01-17T08:06:07+00:00","description":"Since v1.10.0, Pegasus supports single row atomic operations. The single row here means all data in the same HashKey.","headline":"Single Atomic","mainEntityOfPage":{"@type":"WebPage","@id":"/api/single-atomic"},"url":"/api/single-atomic"}</script>
 <!-- End Jekyll SEO tag -->
 </head>
 
@@ -733,7 +733,79 @@
             </section>
             <section class="section" style="padding-top: 2rem;">
                 <div class="content">
-                    <p>TRANSLATING</p>
+                    <p>Since v1.10.0, Pegasus supports single row atomic operations.</p>
+<blockquote>
+  <p>The <strong>single row</strong> here means all data in the same HashKey.</p>
+</blockquote>
+
+<h1 id="principle">Principle</h1>
+
+<p>Pegasus adopts a fixed hash sharding strategy for data distribution, where data from the same HashKey is always stored in the same partition, while the data is in the same Replica within a single node. Meanwhile, the write operations of the same Replica are always executed serially on the server side. Therefore, for data operations under the same HashKey, atomic semantics can be implemented conveniently.</p>
+
+<p>For write operations, such as <a href="/clients/java-client#multiset">multiSet</a> and <a href="/clients/java-client#multidel">multiDel</a>, <em>set</em> or <em>delete</em> operate multiple SortKeys simultaneously in a single operation, atomic semantics can be comprehended easily, they are either successful or failed at the same time, so these two operations are single row atomic operations.</p>
+
+<p>Here we focus on another type of operations: <strong>read first, then write, and the write operation depends on the result of the read operation</strong>.</p>
+
+<p>The characteristic of this type of operations are <strong>non-idempotent</strong>, that is, if the same operation is repeated, the results (including the actual updates of data and the results returned to the user APIs) may be different. Atomic increment and decrement operations, as well as CAS operations, belong to this category. Pegasus can ensure the atomicity and consistency of such operations, because:</p>
+
+<ul>
+  <li>The data of the same HashKey is always stored in the same Replica</li>
+  <li>The write operations of the same Replica are always executed serially on the server side</li>
+  <li>One operation is guaranteed to be executed exactly once, even in the event of data migration, downtime recovery, etc</li>
+</ul>
+
+<p>Due to non-idempotent properties, such operations may conflict with other features of Pegasus, such as <a href="/administration/duplication">Duplication</a>. So since 1.10.0, Pegasus provides an option to specify whether the cluster allows non-idempotent operations. If setting as false, all non-idempotent operations will return <code class="language-plaintext highlighter-rouge">ERR_OPERATION_DISABLED</code>:</p>
+<div class="language-ini highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nn">[replication]</span>
+    <span class="py">allow_non_idempotent_write</span> <span class="p">=</span> <span class="s">false</span>
+</code></pre></div></div>
+
+<h1 id="atomic-increment-and-decrement-operations">Atomic increment and decrement operations</h1>
+
+<p>Although Pegasus does not support schema in values, it still provides atomic increment and decrement operations, similar to Redis’s <a href="https://redis.io/commands/incr/">incr command</a>, refer to Pegasus’ interface <a href="/clients/java-client#incr">incr</a>.</p>
+
+<h2 id="description">Description</h2>
+
+<ul>
+  <li>Due to the fact that the storage engine RocksDB can only store values of byte string type, when using <code class="language-plaintext highlighter-rouge">incr()</code>, the value byte string will be read and converted to <code class="language-plaintext highlighter-rouge">int64</code> type (the conversion method is simple String-to-Int). For example, the byte string <code class="language-plaintext highlighter-rouge">"12345"</code> will be converted to a number <code class="language-plaintext highlighter-rouge">12345</code>. After completing the <code class="language-plaintext highlighter-rouge">incr()</code> operation, the obtained result will be converted back into a byte string and stored as a new value</li>
+  <li>When converting a byte string to <code class="language-plaintext highlighter-rouge">int64</code>, it may encounter errors, such as invalid numbers or overflow of <code class="language-plaintext highlighter-rouge">int64</code>, all of these cases will return a failure status</li>
+  <li>If the original value does not exist, it is considered as <code class="language-plaintext highlighter-rouge">0</code> and then <code class="language-plaintext highlighter-rouge">incr()</code> operation is executed normally</li>
+  <li>The operand <code class="language-plaintext highlighter-rouge">increment</code> can be positive or negative, so the <code class="language-plaintext highlighter-rouge">incr()</code> interface can implement as atomic increment and decrement</li>
+  <li>TTL: If the original value exists, the TTL of the new value and the original value remains the same. If the original value does not exist, the new value will be stored without TTL</li>
+</ul>
+
+<h1 id="cas-operations">CAS operations</h1>
+
+<p>Another useful type of atomic operations are the CAS (Compare-And-Swap) operations. Based on CAS operations, many advanced distribute concurrency features can be implemented, such as distributed locks.</p>
+
+<p>Pegasus provides <em>check_and_set</em> CAS operations, the semantics are: whether to update the value of one SortKey is depends on whether the value of another SortKey of the same HashKey meets certain conditions.</p>
+
+<p>The SortKey which is used to determine the conditions is called <code class="language-plaintext highlighter-rouge">CheckSortKey</code>, the SortKey which is used to set value is called <code class="language-plaintext highlighter-rouge">SetSortKey</code>. Correspondingly, the value of <code class="language-plaintext highlighter-rouge">CheckSortKey</code> is called <code class="language-plaintext highlighter-rouge">CheckValue</code>, and the value to be set by <code class="language-plaintext highlighter-rouge">SetSortKey</code> is called <code class="language-plaintext highlighter-rouge">SetValue</code>.</p>
+
+<p>See <a href="/clients/java-client#checkandset">checkAndSet</a>, as well as its extended versions <a href="/clients/java-client#checkandmutate">checkAndMutate</a> and <a href="/clients/java-client#compareexchange">compareExchange</a>.</p>
+
+<h2 id="description-1">Description</h2>
+
+<ul>
+  <li>The value of <code class="language-plaintext highlighter-rouge">SetSortKey</code> will be set only when <code class="language-plaintext highlighter-rouge">CheckValue</code> meets the specified conditions</li>
+  <li>The condition types that need to be met are specified through <code class="language-plaintext highlighter-rouge">CheckType</code>, and some <code class="language-plaintext highlighter-rouge">CheckType</code> also require the specified operand <code class="language-plaintext highlighter-rouge">CheckOperand</code>. Currently, supporting:
+    <ul>
+      <li>Determine the <em>existence</em> of <code class="language-plaintext highlighter-rouge">CheckValue</code>: Whether it exists, or is an empty byte string, etc</li>
+      <li>Byte string comparison: Compare <code class="language-plaintext highlighter-rouge">CheckValue</code> and <code class="language-plaintext highlighter-rouge">CheckOperand</code> in byte order to check if they meet the relationships of <code class="language-plaintext highlighter-rouge">&lt;</code>, <code class="language-plaintext highlighter-rouge">&lt;=</code>, <code class="language-plaintext highlighter-rouge">==</code>, <code class="language-plaintext highlighter-rouge">&gt;=</code>, or <code class="language-plaintext highlighter-rouge">&gt;=</code></li>
+      <li>Number comparison: similar to <a href="#atomic-increment-and-decrement-operations">Atomic increment and decrement operations</a>, convert <code class="language-plaintext highlighter-rouge">CheckValue</code> to int64, then compare the converted int64 value with <code class="language-plaintext highlighter-rouge">CheckOperand</code>, to check if they meet the relationships of <code class="language-plaintext highlighter-rouge">&lt;</code>, <code class="language-plaintext highlighter-rouge">&lt;=</code>, <code class="language-plaintext highlighter-rouge">==</code>, <code class="language-plaintext highlighter-rouge">&gt;=</code>, or <code class="language-plaintext highlighter-rouge">&gt;=</code></li>
+    </ul>
+  </li>
+  <li><code class="language-plaintext highlighter-rouge">CheckSortKey</code> and <code class="language-plaintext highlighter-rouge">SetSortKey</code> can be the same. If they are the same, it means checking whether the old value meets the condition first. If it does, set it to the new value for the same SortKey</li>
+  <li>You can enable the <code class="language-plaintext highlighter-rouge">CheckAndSetOptions.returnCheckValue</code> option if you want to return the value of <code class="language-plaintext highlighter-rouge">CheckValue</code></li>
+  <li>You can enable the <code class="language-plaintext highlighter-rouge">CheckAndSetOptions.setValueTTLSeconds</code> option if you want to specify TTL</li>
+</ul>
+
+<p>For ease of use, Pegasus Java Client also provides <em>compare_exchange</em> interface: When the value of a SortKey is equal to the user specified <code class="language-plaintext highlighter-rouge">ExpectedValue</code> in byte string, its value will be updated to the user specified <code class="language-plaintext highlighter-rouge">DesiredValue</code>. Semantically, <em>compare_exchange</em> is a special form of Compare-And-Swap. The interface can be found in <a href="/clients/java-client#compareexchange">compareExchange</a>.</p>
+
+<p>Actually, <em>compare_exchange</em> is a specialized form of <em>check_and_set</em>, namely:</p>
+<ul>
+  <li><code class="language-plaintext highlighter-rouge">CheckSortKey</code> and <code class="language-plaintext highlighter-rouge">SetSortKey</code> are the same</li>
+  <li><code class="language-plaintext highlighter-rouge">CheckType</code> is <code class="language-plaintext highlighter-rouge">CT_VALUE_BYTES_EQUAL</code></li>
+</ul>
 
                 </div>
             </section>
@@ -776,7 +848,19 @@
     </span>
     Table of contents
 </p>
-
+<ul class="menu-list">
+  <li><a href="#principle">Principle</a></li>
+  <li><a href="#atomic-increment-and-decrement-operations">Atomic increment and decrement operations</a>
+    <ul>
+      <li><a href="#description">Description</a></li>
+    </ul>
+  </li>
+  <li><a href="#cas-operations">CAS operations</a>
+    <ul>
+      <li><a href="#description-1">Description</a></li>
+    </ul>
+  </li>
+</ul>
 
         </div>
     </div>
