@@ -16,7 +16,7 @@ Pegasus 的数据分布策略采用了固定 Hash 分片，同一个 HashKey 的
 * 同一个 Replica 的写操作在 server 端总是串行执行的
 * 同一个操作保证执行且只会执行一次，即使发生数据迁移、宕机恢复等情况
 
-由于非幂等特性，这类操作会和 Pegasus 的另外一些特性冲突，譬如 [跨机房热备](/administration/duplication.md)。所以我们在 1.10.0 版本中还提供了一个配置项，用于配置集群是否允许非幂等操作，如果配置为 false，则所有非幂等操作都会返回`ERR_OPERATION_DISABLED`：
+由于非幂等特性，这类操作会和 Pegasus 的另外一些特性冲突，譬如 [跨机房同步](/administration/duplication)。所以我们在 1.10.0 版本中还提供了一个配置项，用于配置集群是否允许非幂等操作，如果配置为 false，则所有非幂等操作都会返回`ERR_OPERATION_DISABLED`：
 ```ini
 [replication]
     allow_non_idempotent_write = false
