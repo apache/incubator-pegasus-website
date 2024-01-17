@@ -36,9 +36,9 @@ Pegasus 的数据分布策略采用了固定 Hash 分片，同一个 HashKey 的
 
 # CAS 操作
 
-另一类很有用的原子操作就是 CAS（Compare-And-Swap）操作。基于 CAS 操作，可以实现很多高级的并发特性，譬如分布式锁。因此很多编程语言也原生地提供 CAS 操作。
+另一类很有用的原子操作就是 CAS（Compare-And-Swap）操作。基于 CAS 操作，可以实现很多高级的并发特性，譬如分布式锁。
 
-Pegasus 提供了 _check_and_set_ 的 CAS 操作，其语义就是：根据 HashKey 的某一个 SortKey 的 value 是否满足某种条件，来决定是否修改另一个 SortKey 的值。我们将用于判断条件的 SortKey 称之为`CheckSortKey`，将用于设置值的 SortKey 称之为`SetSortKey`。对应地，`CheckSortKey` 的 value 称之为`CheckValue`，`SetSortKey` 要设置的 value 称之为`SetValue`。参见 [checkAndSet](/clients/java-client#checkandset)，以及其扩展版本 [checkAndMutate](/clients/java-client#checkandmutate) 和 [compareExchange](/clients/java-client#compareexchange)。
+Pegasus 提供了 _check_and_set_ 的 CAS 操作，其语义就是：根据 HashKey 的某一个 SortKey 的 value 是否满足某种条件，来决定是否修改另一个 SortKey 的值。将用于判断条件的 SortKey 称之为`CheckSortKey`，将用于设置值的 SortKey 称之为`SetSortKey`。对应地，`CheckSortKey` 的 value 称之为`CheckValue`，`SetSortKey` 要设置的 value 称之为`SetValue`。参见 [checkAndSet](/clients/java-client#checkandset)，以及其扩展版本 [checkAndMutate](/clients/java-client#checkandmutate) 和 [compareExchange](/clients/java-client#compareexchange)。
 
 ## 语义解释
 
