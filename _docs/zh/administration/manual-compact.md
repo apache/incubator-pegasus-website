@@ -67,7 +67,7 @@ virtual Status CompactRange(const CompactRangeOptions& options,
     * `manual_compact.periodic.bottommost_level_compaction`：可设置为`skip`或者`force`。如果是`skip`，则不对最高层做compaction；如果是`force`，则强制对最高层做compaction。如果不设置，则默认为`skip`。
   * Manual Compact总开关：
     * `manual_compact.disabled`(从v1.9.0版本开始支持)：如果为true，则关闭Manual Compact功能，并且取消正在执行中的Manual Compact动作。如果不设置，默认为false。
-    * `manual_compact.max_concurrent_running_count`(从v1.11.3版本开始支持)：指定最大并发数。实际上，可执行的最大并发数由`该env参数`和`服务端MANUAL_COMPACT_THRAD_POOL的线程数`共同决定，取两者的较小值。
+    * `manual_compact.max_concurrent_running_count`(从v1.11.3版本开始支持)：指定最大并发数。实际上，可执行的最大并发数由`该env参数`和`服务端MANUAL_COMPACT_THRAD_POOL的线程数`共同决定，取两者的较小值。该参数是节点级别的，如果同一时间进行manual compaction的表太多，则很有可能达到该最大并发数，后续该节点上的replica会忽略本轮manual compaction请求，延后执行。在日志中可以看到`xxx ignored compact because exceed max_concurrent_running_count`
 
 注意：
 * Manual Compact功能是分派到独立的Compact线程池中执行的，每个线程同一时刻只能处理一个replica的full compaction，因为并发处理量与Compact线程池的线程数量有关，可以通过配置文件的`worker_count`进行配置，如果使用Manual Compact比较频繁，建议调大线程数量（譬如设置为cpu core数量接近）：
@@ -81,6 +81,8 @@ virtual Status CompactRange(const CompactRangeOptions& options,
   ```
 * Manual Compact属于CPU和IO密集型操作，处理过程中会使CPU使用率长期处于高位，容易对集群的读写性能造成影响，所以**建议在流量低峰时段进行操作**。如果启动后发现读写性能下降影响了业务，可以立即通过设置该表的环境变量`manual_compact.disabled=true`来中止。
 * Manual Compact过程中可能需要较多的额外磁盘空间。因为compaction前后文件变化较大，而Pegasus一般又会保留最近3个版本的checkpoint，所以基本上额外需要的磁盘空间量大约等于执行Manual Compact的表的数据存储量。所以，在执行Manual Compact前需**确认集群有足够的存储空间**，同时在执行过程中**关注磁盘空间使用情况**，避免因为磁盘空间耗尽导致集群节点宕机，影响集群可用度。
+
+
 
 # 如何设置
 
@@ -144,3 +146,51 @@ for example:
 ```
 $ ./scripts/pegasus_manual_compact.sh -c 127.0.0.1:34601,127.0.0.1:34602 -a temp
 ```
+
+
+
+## 通过admin-cli设置
+
+在**2.4.0**之后的pegasus版本还支持用admin-cli来设置manual compaction的开始并且可以方便的查看进行的进度。
+
+### 使用命令
+
+```bash
+#开始单次manual compaction
+Pegasus-AdminCli-1.2.0 » manual-compaction start -h
+start manual compaction for a specific table
+
+Usage:
+  start [flags]
+
+Flags:
+  -b, --bottommostLevelCompaction           bottommost level files will be compacted or not, default value is false
+  -h, --help                                display help
+  -c, --maxConcurrentRunningCount int       max concurrent running count, default value is 0, no limited (default: 0)
+  -a, --tableName                 string    table name
+  -l, --targetLevel               int       compacted files move level, default value is -1 (default: -1)
+  
+  
+#查看manual compaction进度
+Pegasus-AdminCli-1.2.0 » manual-compaction query -h
+query manual compaction progress for a specific table
+
+Usage:
+  query [flags]
+
+Flags:
+  -h, --help                display help
+  -a, --tableName string    table name
+
+```
+
+
+
+## 补充说明
+
+manual compaction常与bulk load功能配合使用，作为批量导入大量数据后统一优化读取的手段。在需要进行bulk load操作的表中，我们常将**Usage Scenario**参数设置为bulkload模式，以便减小增加大量数据带来的性能损耗。
+
+- manual-compaction的开销要比引擎层compaction低，因为我们可以通过参数主动控制并发度。
+- bulk_load开启后会将**Usage Scenario**参数变为bulkload，在这种模式下，我们会禁止引擎层的compaction，因为bulkload会在level0层堆积大量的sst文件，如果不关闭引擎compact会消耗大量IO并且对读非常不友好。
+- 写延迟比较容易被磁盘IO瓶颈影响。compact本质是归并排序磁盘，需要把数据先读到内存中进行排序，然后再写，涉及2两次IO，是一个对磁盘IO负载很重的操作，因此会增加一定写延迟。但我们可以灵活的设置manual-compaction的并发度，逐个磁盘进行，将影响控制在可接受范围内。
+
