@@ -191,6 +191,6 @@ Flags:
 manual compaction常与bulk load功能配合使用，作为批量导入大量数据后统一优化读取的手段。在需要进行bulk load操作的表中，我们常将**Usage Scenario**参数设置为bulkload模式，以便减小增加大量数据带来的性能损耗。
 
 - manual-compaction的开销要比引擎层compaction低，因为我们可以通过参数主动控制并发度。
-- bulk_load开启后会将**Usage Scenario**参数变为bulkload，在这种模式下，我们会禁止引擎层的compaction，因为bulkload会在level0层堆积大量的sst文件，如果不关闭引擎compact会消耗大量IO并且对读非常不友好。
+- bulk_load开启后会将**Usage Scenario**参数变为bulk_load，在这种模式下，我们会禁止引擎层的compaction，因为bulk_load模式下会在level0层堆积大量的sst文件，如果不关闭引擎compact会消耗大量IO并且对读非常不友好。
 - 写延迟比较容易被磁盘IO瓶颈影响。compact本质是归并排序磁盘，需要把数据先读到内存中进行排序，然后再写，涉及2两次IO，是一个对磁盘IO负载很重的操作，因此会增加一定写延迟。但我们可以灵活的设置manual-compaction的并发度，逐个磁盘进行，将影响控制在可接受范围内。
 
