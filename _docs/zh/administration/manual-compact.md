@@ -143,7 +143,7 @@ for example:
 
 该工具不仅会调用 shell 命令设置 Table 环境变量，对于 once 类型还会等待所有的 replica 上的操作都执行完成，使用起来十分方便。
 
-譬如，在 [bulk load](usage-scenario# 支持场景) 完成后执行 once manual compact 如下：
+譬如，在 [bulk load](usage-scenario#支持场景) 完成后执行 once manual compact 如下：
 ```
 $ ./scripts/pegasus_manual_compact.sh -c 127.0.0.1:34601,127.0.0.1:34602 -a temp
 ```
