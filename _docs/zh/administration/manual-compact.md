@@ -86,7 +86,7 @@ virtual Status CompactRange(const CompactRangeOptions& options,
 
 # 如何设置
 
-## 通过 shell 设置
+## 通过 Pegasus shell 工具设置
 
 既然 Manual Compact 功能是利用 [Table 环境变量](table-env) 触发的，那么可以直接通过 shell 功能的 [set_app_envs 命令](/overview/shell#set_app_envs) 来设置。需要设置的环境变量参照上面的描述，环境变量设置后不会立即生效，大约需要等几十秒后才能在所有 replica 上生效。
 
