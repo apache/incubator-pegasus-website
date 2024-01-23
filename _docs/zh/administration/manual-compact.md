@@ -59,7 +59,7 @@ virtual Status CompactRange(const CompactRangeOptions& options,
 * 利用 [Table 环境变量](table-env)，来设置两类 Manual Compect 的环境变量：
   * 单次 Manual Compact：
     * `manual_compact.once.trigger_time`：格式为 Unix 时间戳的秒数，可通过 shell 命令 `date +%s` 获取当前时间戳。如果 LastManualCompactFinishTime 旧于该 trigger_time，就触发 Manual Compaction 的执行。
-    * `manual_compact.once.target_level`：用于设置 `CompactRangeOptions::target_level`。如果不设置，则使用默认值 - 1。
+    * `manual_compact.once.target_level`：用于设置 `CompactRangeOptions::target_level`。如果不设置，则使用默认值 `-1`。
     * `manual_compact.once.bottommost_level_compaction`：可设置为 `skip` 或者 `force`。如果是 `skip`，则不对最高层做 compaction；如果是 `force`，则强制对最高层做 compaction。如果不设置，则默认为 `skip`。
   * 周期 Manual Compact：
     * `manual_compact.periodic.trigger_time`：格式为逗号分隔的时钟，譬如 `3:00,21:00`，表示每一天的 3:00 和 21:00 都触发一次 Manual Compaction 的执行。
