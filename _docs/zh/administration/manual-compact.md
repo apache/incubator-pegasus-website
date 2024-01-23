@@ -147,9 +147,6 @@ for example:
 ```
 $ ./scripts/pegasus_manual_compact.sh -c 127.0.0.1:34601,127.0.0.1:34602 -a temp
 ```
-
-
-
 ## 通过 admin-cli 设置
 
 在 **2.4.0** 之后的 pegasus 版本还支持用 admin-cli 来设置 manual compaction 的开始并且可以方便的查看进行的进度。
