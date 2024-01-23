@@ -169,7 +169,7 @@ Flags:
   -l, --targetLevel               int       compacted files move level, default value is -1 (default: -1)
   
   
-#查看 manual compaction 进度
+# 查看 manual compaction 进度
 Pegasus-AdminCli-1.2.0 » manual-compaction query -h
 query manual compaction progress for a specific table
 
