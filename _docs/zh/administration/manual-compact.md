@@ -80,7 +80,7 @@ virtual Status CompactRange(const CompactRangeOptions& options,
   worker_count = 16
   ```
 * Manual Compact 属于 CPU 和 IO 密集型操作，处理过程中会使 CPU 使用率长期处于高位，容易对集群的读写性能造成影响，所以 ** 建议在流量低峰时段进行操作 **。如果启动后发现读写性能下降影响了业务，可以立即通过设置该表的环境变量 `manual_compact.disabled=true` 来中止。
-* Manual Compact 过程中可能需要较多的额外磁盘空间。因为 compaction 前后文件变化较大，而 Pegasus 一般又会保留最近 3 个版本的 checkpoint，所以基本上额外需要的磁盘空间量大约等于执行 Manual Compact 的表的数据存储量。所以，在执行 Manual Compact 前需 ** 确认集群有足够的存储空间 **，同时在执行过程中 ** 关注磁盘空间使用情况 **，避免因为磁盘空间耗尽导致集群节点宕机，影响集群可用度。
+* Manual Compact 过程中可能需要较多的额外磁盘空间。因为 compaction 前后文件变化较大，而 Pegasus 又会保留最近多个版本的 checkpoint，所以需要的额外磁盘空间量大约等于执行 Manual Compact 的表的数据存储量。所以，在执行 Manual Compact 前需 ** 确认集群有足够的存储空间 **，同时在执行过程中 ** 关注磁盘空间使用情况 **，避免因为磁盘空间耗尽导致集群节点宕机，影响集群可用度。
 
 
 
