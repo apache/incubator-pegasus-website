@@ -154,7 +154,7 @@ $ ./scripts/pegasus_manual_compact.sh -c 127.0.0.1:34601,127.0.0.1:34602 -a temp
 ### 使用命令
 
 ```bash
-#开始单次 manual compaction
+# 开始单次 manual compaction
 Pegasus-AdminCli-1.2.0 » manual-compaction start -h
 start manual compaction for a specific table
 
