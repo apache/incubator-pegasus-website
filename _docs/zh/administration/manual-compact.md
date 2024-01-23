@@ -67,7 +67,7 @@ virtual Status CompactRange(const CompactRangeOptions& options,
     * `manual_compact.periodic.bottommost_level_compaction`：可设置为 `skip` 或者 `force`。如果是 `skip`，则不对最高层做 compaction；如果是 `force`，则强制对最高层做 compaction。如果不设置，则默认为 `skip`。
   * Manual Compact 总开关：
     * `manual_compact.disabled`(从 v1.9.0 版本开始支持)：如果为 true，则关闭 Manual Compact 功能，并且取消正在执行中的 Manual Compact 动作。如果不设置，默认为 false。
-    * `manual_compact.max_concurrent_running_count`(从 v1.11.3 版本开始支持)：指定最大并发数。实际上，可执行的最大并发数由 ` 该 env 参数 ` 和 ` 服务端 MANUAL_COMPACT_THRAD_POOL 的线程数 ` 共同决定，取两者的较小值。该参数是节点级别的，如果同一时间进行 manual compaction 的表太多，则很有可能达到该最大并发数，后续该节点上的 replica 会忽略本轮 manual compaction 请求，延后执行。在日志中可以看到 `xxx ignored compact because exceed max_concurrent_running_count`
+    * `manual_compact.max_concurrent_running_count`(从 v1.11.3 版本开始支持)：指定最大并发数。实际上，可执行的最大并发数由该参数和服务端`MANUAL_COMPACT_THRAD_POOL`的线程数共同决定，取两者的较小值。该参数是节点级别的，如果同一时间进行 manual compaction 的表太多，则很有可能达到该最大并发数，后续该节点上的 replica 会忽略本轮 manual compaction 请求，延后执行。在日志中可以看到 `xxx ignored compact because exceed max_concurrent_running_count`
 
 注意：
 * Manual Compact 功能是分派到独立的 Compact 线程池中执行的，每个线程同一时刻只能处理一个 replica 的 full compaction，因为并发处理量与 Compact 线程池的线程数量有关，可以通过配置文件的 `worker_count` 进行配置，如果使用 Manual Compact 比较频繁，建议调大线程数量（譬如设置为 cpu core 数量接近）：
