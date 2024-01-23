@@ -183,7 +183,7 @@ Flags:
 ```
 ## 补充说明
 
-manual compaction 常与 bulk load 功能配合使用，作为批量导入大量数据后统一优化读取的手段。在需要进行 bulk load 操作的表中，我们常将 **Usage Scenario** 参数设置为 bulk_load 模式，以便减小增加大量数据带来的性能损耗。
+manual compaction 可与 bulk load 功能配合使用，作为批量导入大量数据后统一优化读取的手段。在需要进行 bulk load 操作的表中，可将 **Usage Scenario** 参数设置为 bulk_load 模式，以便减小增加大量数据带来的性能损耗。
 
 - manual-compaction 的开销要比引擎层 compaction 低，因为我们可以通过参数主动控制并发度。
 - bulk_load 开启后会将 **Usage Scenario** 参数变为 bulk_load，在这种模式下，我们会禁止引擎层的 compaction，因为 bulk_load 模式下会在 level0 层堆积大量的 sst 文件，如果不关闭引擎 compact 会消耗大量 IO 并且对读非常不友好。
