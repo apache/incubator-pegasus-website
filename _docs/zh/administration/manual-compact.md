@@ -181,9 +181,6 @@ Flags:
   -a, --tableName string    table name
 
 ```
-
-
-
 ## 补充说明
 
 manual compaction 常与 bulk load 功能配合使用，作为批量导入大量数据后统一优化读取的手段。在需要进行 bulk load 操作的表中，我们常将 **Usage Scenario** 参数设置为 bulk_load 模式，以便减小增加大量数据带来的性能损耗。
