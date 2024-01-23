@@ -63,7 +63,7 @@ virtual Status CompactRange(const CompactRangeOptions& options,
     * `manual_compact.once.bottommost_level_compaction`：可设置为 `skip` 或者 `force`。如果是 `skip`，则不对最高层做 compaction；如果是 `force`，则强制对最高层做 compaction。如果不设置，则默认为 `skip`。
   * 周期 Manual Compact：
     * `manual_compact.periodic.trigger_time`：格式为逗号分隔的时钟，譬如 `3:00,21:00`，表示每一天的 3:00 和 21:00 都触发一次 Manual Compaction 的执行。
-    * `manual_compact.periodic.target_level`：用于设置 `CompactRangeOptions::target_level`。如果不设置，则使用默认值 - 1。
+    * `manual_compact.periodic.target_level`：用于设置 `CompactRangeOptions::target_level`。如果不设置，则使用默认值 `-1`。
     * `manual_compact.periodic.bottommost_level_compaction`：可设置为 `skip` 或者 `force`。如果是 `skip`，则不对最高层做 compaction；如果是 `force`，则强制对最高层做 compaction。如果不设置，则默认为 `skip`。
   * Manual Compact 总开关：
     * `manual_compact.disabled`(从 v1.9.0 版本开始支持)：如果为 true，则关闭 Manual Compact 功能，并且取消正在执行中的 Manual Compact 动作。如果不设置，默认为 false。
