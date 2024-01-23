@@ -55,7 +55,7 @@ virtual Status CompactRange(const CompactRangeOptions& options,
 * 配合 [Usage Scenario 功能](usage-scenario) 中表的 bulk_load 模式，可以在灌数据完成后执行一次 Manual Compact，去除垃圾数据，整理数据和文件夹结构，提升读性能。
 
 实现方式：
-* 扩展 RocksDB，在 Manifest 中记录上一次执行 Manual Compact 的时间，并提供 `GetLastManualCompactFinishTime()` 方法来获取该时间。
+* 在 2.1 版本以前，Pegasus 扩展 RocksDB，并在 Manifest 中记录上一次执行 Manual Compact 的时间，并提供 `GetLastManualCompactFinishTime()` 方法来获取该时间。自 2.1 版本开始，Pegasus将该时间记录到了meta column family中，并提供了 `get_last_manual_compact_finish_time()`方法来获取。
 * 利用 [Table 环境变量](table-env)，来设置两类 Manual Compect 的环境变量：
   * 单次 Manual Compact：
     * `manual_compact.once.trigger_time`：格式为 Unix 时间戳的秒数，可通过 shell 命令 `date +%s` 获取当前时间戳。如果 LastManualCompactFinishTime 旧于该 trigger_time，就触发 Manual Compaction 的执行。
@@ -183,9 +183,9 @@ Flags:
 ```
 ## 补充说明
 
-manual compaction 可与 bulk load 功能配合使用，作为批量导入大量数据后统一优化读取的手段。在需要进行 bulk load 操作的表中，可将 **Usage Scenario** 参数设置为 bulk_load 模式，以便减小增加大量数据带来的性能损耗。
+Manual compaction 可与 bulk load 功能配合使用，作为批量导入大量数据后的一种优化读写性能的方式。在需要进行 bulk load 操作的表中，可将 [Usage Scenario](/administration/usage-scenario) 参数设置为 `bulk_load` 模式，以便减小导入大量数据带来的性能损耗。
 
-- manual-compaction 的开销要比引擎层 compaction 低，因为我们可以通过参数主动控制并发度。
-- bulk_load 开启后会将 Usage Scenario 参数变为`bulk_load`，在这种模式下，我们会禁止引擎层的 compaction，因为`bulk_load`模式下会在 level0 层堆积大量的 sst 文件，如果不关闭引擎 compact 会消耗大量 IO 并且对读非常不友好。
+- 在 Bulkload 的场景下，开启manual-compaction 一般来说要比引擎层的 compaction 更灵活，因为在选择集中进行 compact 的时间可以视 Pegasus 的使用低峰来设定，并且可以通过参数主动控制并发度。
+- Bulkload 开启后会将 Usage Scenario 参数变为`bulk_load`，在这种模式下，我们会禁止引擎层的 compaction，因为`bulk_load`模式下会在 level0 层堆积大量的 sst 文件，如果不关闭引擎 compact 会消耗大量 IO 并且对读非常不友好。
 - 写延迟比较容易被磁盘 IO 瓶颈影响。compact 本质是归并排序磁盘，需要把数据先读到内存中进行排序，然后再写，涉及 2 两次 IO，是一个对磁盘 IO 负载很重的操作，因此会增加一定写延迟。但我们可以灵活的设置 manual-compaction 的并发度，逐个磁盘进行，将影响控制在可接受范围内。
 
