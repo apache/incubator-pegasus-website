@@ -114,5 +114,5 @@ cd bin/
 ## 集群清理
 
 如果想完全重新部署集群，**并清理所有数据**，需要清理以下环境，否则可能会出现启动新集群失败的问题：
-* 清理 MetaServer，ReplicaServer 和 Collector 的 `%{app.dir}`，`%{slog.dir}` 和 `%{data.dirs}` 目录
-* 删除 Zookeeper 的 `%{cluster_root}` 背包路径
+* 删除 MetaServer，ReplicaServer 和 Collector 的 `%{app.dir}`，`%{slog.dir}` 和 `%{data.dirs}` 目录
+* 删除 Zookeeper 的 `%{cluster_root}` 路径
