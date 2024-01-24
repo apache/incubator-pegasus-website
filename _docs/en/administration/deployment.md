@@ -115,4 +115,4 @@ cd bin/
 
 If you want to completely redeploy the cluster and **clean up all data**, you need to clean up the following environment, otherwise there may be issues when starting a new cluster:
 * Clean up the `%{app.dir}`, `%{slog.dir}` and `%{data.dirs}` directories of MetaServer，ReplicaServer and Collector
-* Clean up the `/pegasus/%{cluster.name}` backpack path of Zookeeper
+* Clean up the `%{cluster_root}` backpack path of Zookeeper
