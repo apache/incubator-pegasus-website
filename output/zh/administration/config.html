@@ -20,11 +20,11 @@
 <meta property="og:description" content="配置组成部分" />
 <meta property="og:site_name" content="Pegasus" />
 <meta property="og:type" content="article" />
-<meta property="article:published_time" content="2024-01-24T14:51:52+00:00" />
+<meta property="article:published_time" content="2024-01-27T10:53:37+00:00" />
 <meta name="twitter:card" content="summary" />
 <meta property="twitter:title" content="Config" />
 <script type="application/ld+json">
-{"@context":"https://schema.org","@type":"BlogPosting","dateModified":"2024-01-24T14:51:52+00:00","datePublished":"2024-01-24T14:51:52+00:00","description":"配置组成部分","headline":"Config","mainEntityOfPage":{"@type":"WebPage","@id":"/administration/config"},"url":"/administration/config"}</script>
+{"@context":"https://schema.org","@type":"BlogPosting","dateModified":"2024-01-27T10:53:37+00:00","datePublished":"2024-01-27T10:53:37+00:00","description":"配置组成部分","headline":"Config","mainEntityOfPage":{"@type":"WebPage","@id":"/administration/config"},"url":"/administration/config"}</script>
 <!-- End Jekyll SEO tag -->
 </head>
 
@@ -737,49 +737,49 @@
             </section>
             <section class="section" style="padding-top: 2rem;">
                 <div class="content">
-                    <h2 id="配置组成部分">配置组成部分</h2>
+                    <h1 id="配置组成部分">配置组成部分</h1>
 
-<p>Pegasus的配置为ini格式，主要有以下组成部分：</p>
+<p>Pegasus 的配置为 ini 格式，主要有以下组成部分：</p>
 
 <ul>
-  <li>core：一个Pegasus Service内核引擎运行时的相关参数配置。</li>
-  <li>network：RPC组件的相关参数配置。</li>
-  <li>线程池相关：Pegasus进程中启动的各个线程池的相关参数配置。</li>
-  <li>app相关：app是rDSN中的一个概念，可以理解成分布式系统中的“组件”或者“job”，例如Pegasus中的MetaServer、ReplicaServer就各是一个app。一个进程内可以启动多个app，针对每个app，可以分别配置其行为，譬如名字、端口、线程池等。</li>
-  <li>task相关：task也是rDSN中的一个概念，可以理解成“异步任务”。比如一个RPC异步调用、一个异步文件IO操作、一个超时事件，都是一个task。每种task都有定义一个唯一的名字。针对每种task，都可以配置其相关的行为，譬如trace、profiler等。</li>
-  <li>一致性协议相关：一致性replication协议的相关参数配置。</li>
-  <li>RocksDB相关：Pegasus所依赖的RocksDB的参数配置。</li>
-  <li>其他杂项：Pegasus中一些组件模块的参数配置，譬如日志、监控、Zookeeper配置等。</li>
+  <li>core：一个 Pegasus Service 内核引擎运行时的相关参数配置。</li>
+  <li>network：RPC 组件的相关参数配置。</li>
+  <li>线程池相关：Pegasus 进程中启动的各个线程池的相关参数配置。</li>
+  <li>app 相关：app 是 rDSN 中的一个概念，可以理解成分布式系统中的 “组件” 或者 “job”，例如 Pegasus 中的 MetaServer、ReplicaServer 就各是一个 app。一个进程内可以启动多个 app，针对每个 app，可以分别配置其行为，譬如名字、端口、线程池等。</li>
+  <li>task 相关：task 也是 rDSN 中的一个概念，可以理解成 “异步任务”。比如一个 RPC 异步调用、一个异步文件 IO 操作、一个超时事件，都是一个 task。每种 task 都有定义一个唯一的名字。针对每种 task，都可以配置其相关的行为，譬如 trace、profiler 等。</li>
+  <li>一致性协议相关：一致性 replication 协议的相关参数配置。</li>
+  <li>RocksDB 相关：Pegasus 所依赖的 RocksDB 的参数配置。</li>
+  <li>其他：Pegasus 中一些组件模块的参数配置，譬如日志、监控、Zookeeper 配置等。</li>
 </ul>
 
-<p>配置文件中会涉及到一些rDSN的概念，对这些概念的进一步理解，请参见<a href="https://github.com/XiaoMi/rdsn">rDSN项目</a>。</p>
+<p>配置文件中会涉及到一些 rDSN 的概念，对这些概念的进一步理解，请参见 <a href="https://github.com/XiaoMi/rdsn">rDSN 项目</a>。</p>
 
-<p>下面列举出了Pegasus配置文件的部分说明。这些配置项有些是和client通用的，比如app、task、threadpool等，其他是server端所独有的。要理解这些配置的真正含义，建议先阅读PacificA论文，并了解清楚rDSN项目和Pegasus架构。</p>
+<p>下面列举出了 Pegasus 配置文件的部分说明。这些配置项有些是和 client 通用的，比如 app、task、threadpool 等，其他是 server 端所独有的。要理解这些配置的真正含义，建议先阅读 PacificA 论文，并了解清楚 rDSN 项目和 Pegasus 架构。</p>
 
-<h2 id="配置文件部分说明">配置文件部分说明</h2>
+<h1 id="配置文件部分说明">配置文件部分说明</h1>
 
-<div class="language-ini highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c">;;;; 各个app配置项的默认模板
+<div class="language-ini highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c">;;;; 各个 app 配置项的默认模板
 </span><span class="nn">[apps..default]</span>
 <span class="py">run</span> <span class="p">=</span> <span class="s">true</span>
 <span class="py">count</span> <span class="p">=</span> <span class="s">1</span>
 
-<span class="c">;;;; meta app的配置项
+<span class="c">;;;; meta app 的配置项
 </span><span class="nn">[apps.meta]</span>
 <span class="py">type</span> <span class="p">=</span> <span class="s">meta</span>
 <span class="py">name</span> <span class="p">=</span> <span class="s">meta</span>
-<span class="py">arguments</span> <span class="p">=</span> 
-<span class="c">;meta的运行端口
-</span><span class="s">ports = 34601</span>
+<span class="py">arguments</span> <span class="p">=</span>
+<span class="c">; meta 的运行端口
+</span><span class="py">ports</span> <span class="p">=</span> <span class="s">34601</span>
 
-<span class="c">;meta app运行时需要的线程池
+<span class="c">; meta app 运行时需要的线程池
 </span><span class="py">pools</span> <span class="p">=</span> <span class="s">THREAD_POOL_DEFAULT,THREAD_POOL_META_SERVER,THREAD_POOL_META_STATE,THREAD_POOL_FD,THREAD_POOL_DLOCK,THREAD_POOL_FDS_SERVICE</span>
 <span class="py">run</span> <span class="p">=</span> <span class="s">true</span>
-<span class="c">;meta app的实例个数，每个实例的运行端口依次为ports, ports+1...
-;可以用参数-app_list meta@1的方式启动指定的app
-</span><span class="py">count</span> <span class="p">=</span> <span class="s">3 </span>
+<span class="c">; meta app 的实例个数，每个实例的运行端口依次为 ports, ports+1...
+; 可以用参数 - app_list meta@1 的方式启动指定的 app
+</span><span class="py">count</span> <span class="p">=</span> <span class="s">3</span>
 
-<span class="c">;;;; replica app的配置项目
-</span><span class="nn">[apps.replica]</span> 
+<span class="c">;;;; replica app 的配置项目
+</span><span class="nn">[apps.replica]</span>
 <span class="py">type</span> <span class="p">=</span> <span class="s">replica</span>
 <span class="py">name</span> <span class="p">=</span> <span class="s">replica</span>
 <span class="py">arguments</span> <span class="p">=</span>
@@ -788,276 +788,240 @@
 <span class="py">run</span> <span class="p">=</span> <span class="s">true</span>
 <span class="py">count</span> <span class="p">=</span> <span class="s">1</span>
 
-<span class="c">;;;; pegasus内核引擎运行参数
-</span><span class="nn">[core]</span> 
-<span class="c">;rDSN相关概念，参见rDSN文档
+<span class="c">;;;; pegasus 内核引擎运行参数
+</span><span class="nn">[core]</span>
+<span class="c">; rDSN 相关概念，参见 rDSN 文档
 </span><span class="py">tool</span> <span class="p">=</span> <span class="s">nativerun</span>
-<span class="c">;rDSN相关概念，参见rDSN文档
+<span class="c">; rDSN 相关概念，参见 rDSN 文档
 </span><span class="py">toollets</span> <span class="p">=</span> <span class="s">profiler</span>
-<span class="c">;启动时是否暂停以等待交互输入
+<span class="c">; 启动时是否暂停以等待交互输入
 </span><span class="py">pause_on_start</span> <span class="p">=</span> <span class="s">false</span>
 
-<span class="c">;logging级别
-</span><span class="py">logging_start_level</span> <span class="p">=</span> <span class="s">LOG_LEVEL_DEBUG </span>
-<span class="c">;logging的实现类
-</span><span class="py">logging_factory_name</span> <span class="p">=</span> <span class="s">dsn::tools::simple_logger </span>
-<span class="c">;进程退出时是否将缓存的日志数据刷出到文件系统
+<span class="c">; logging 级别
+</span><span class="py">logging_start_level</span> <span class="p">=</span> <span class="s">LOG_LEVEL_DEBUG</span>
+<span class="c">; logging 的实现类
+</span><span class="py">logging_factory_name</span> <span class="p">=</span> <span class="s">dsn::tools::simple_logger</span>
+<span class="c">; 进程退出时是否将缓存的日志数据刷出到文件系统
 </span><span class="py">logging_flush_on_exit</span> <span class="p">=</span> <span class="s">true</span>
 
-<span class="c">;默认的数据文件夹
+<span class="c">; 默认的数据目录
 </span><span class="py">data_dir</span> <span class="p">=</span> <span class="s">/home/work/data/pegasus/@cluster@</span>
 
 <span class="c">;;;; 网络相关配置
 </span><span class="nn">[network]</span>
-<span class="c">;负责网络IO的线程个数
+<span class="c">; 负责网络 IO 的线程个数
 </span><span class="py">io_service_worker_count</span> <span class="p">=</span> <span class="s">4</span>
-<span class="c">;每个客户端IP限制的连接数
+<span class="c">; 每个客户端 IP 限制的连接数
 </span><span class="py">conn_threshold_per_ip</span> <span class="p">=</span> <span class="s">0</span>
 
 <span class="c">;;;; 线程池相关配置的默认模板
 </span><span class="nn">[threadpool..default]</span>
-<span class="c">;线程池的默认线程数
+<span class="c">; 线程池的默认线程数
 </span><span class="py">worker_count</span> <span class="p">=</span> <span class="s">4</span>
 
-<span class="c">;;;; 线程池THREAD_POOL_REPLICATION的配置
+<span class="c">;;;; 线程池 THREAD_POOL_REPLICATION 的配置
 </span><span class="nn">[threadpool.THREAD_POOL_REPLICATION]</span>
-<span class="c">;线程池名称
+<span class="c">; 线程池名称
 </span><span class="py">name</span> <span class="p">=</span> <span class="s">replica</span>
-<span class="c">;rDSN相关概念，partitioned = ture表示每个线程有一个自己的任务队列，
-;且task会根据hash分派到特定的线程执行
-</span><span class="py">partitioned</span> <span class="p">=</span> <span class="s">true </span>
-<span class="c">;线程在OS中的调度优先级
+<span class="c">; rDSN 相关概念，partitioned = ture 表示每个线程有一个自己的任务队列，且 task 会根据 hash 规则分派到特定的线程执行
+</span><span class="py">partitioned</span> <span class="p">=</span> <span class="s">true</span>
+<span class="c">; 线程在 OS 中的调度优先级
 </span><span class="py">worker_priority</span> <span class="p">=</span> <span class="s">THREAD_xPRIORITY_NORMAL</span>
-<span class="c">;线程池中的线程数，如果没有配置则使用默认模板的值
+<span class="c">; 线程池中的线程数，如果没有配置则使用默认模板的值
 </span><span class="py">worker_count</span> <span class="p">=</span> <span class="s">23</span>
 
-<span class="c">;;;; 线程池XXXXX的相关配置
+<span class="c">;;;; 线程池 XXXXX 的相关配置
 </span><span class="nn">[threadpool.XXXXX]</span>
 <span class="err">.....</span>
 
-<span class="c">;;;; meta_server的相关配置
-</span><span class="nn">[meta_server]</span> 
-<span class="c">;MetaServer的地址列表
-</span><span class="py">server_list</span> <span class="p">=</span> <span class="s">127.0.0.1:34601,127.0.0.1:34602,127.0.0.1:34603  </span>
-<span class="c">;MetaServer在元数据存储服务上的根目录，
-;一个集群的不同meta_server要配成相同的值，不同的集群用不同的值
-</span><span class="py">cluster_root</span> <span class="p">=</span> <span class="s">/pegasus/my-cluster </span>
-<span class="c">;元数据存储服务的实现类
-</span><span class="py">meta_state_service_type</span> <span class="p">=</span> <span class="s">meta_state_service_zookeeper </span>
-<span class="c">;元数据存储服务的初始化参数
-</span><span class="py">meta_state_service_parameters</span> <span class="p">=</span> 
-<span class="c">;分布式锁服务的实现类
-</span><span class="s">distributed_lock_service_type = distributed_lock_service_zookeeper </span>
-<span class="c">;分布式锁服务的初始化参数
-</span><span class="py">distributed_lock_service_parameters</span> <span class="p">=</span> <span class="s">/pegasus/onebox/127.0.0.1 </span>
-<span class="c">;判断一个ReplicaServer是不是稳定运行的时间阈值
+<span class="c">;;;; meta_server 的相关配置
+</span><span class="nn">[meta_server]</span>
+<span class="c">; MetaServer 的地址列表
+</span><span class="py">server_list</span> <span class="p">=</span> <span class="s">127.0.0.1:34601,127.0.0.1:34602,127.0.0.1:34603; MetaServer 在元数据存储服务上的根目录，一个集群的不同 meta_server 要配成相同的值，不同的集群用不同的值</span>
+<span class="py">cluster_root</span> <span class="p">=</span> <span class="s">/pegasus/my-cluster</span>
+<span class="c">; 元数据存储服务的实现类
+</span><span class="py">meta_state_service_type</span> <span class="p">=</span> <span class="s">meta_state_service_zookeeper</span>
+<span class="c">; 元数据存储服务的初始化参数
+</span><span class="py">meta_state_service_parameters</span> <span class="p">=</span>
+<span class="c">; 分布式锁服务的实现类
+</span><span class="py">distributed_lock_service_type</span> <span class="p">=</span> <span class="s">distributed_lock_service_zookeeper</span>
+<span class="c">; 分布式锁服务的初始化参数
+</span><span class="py">distributed_lock_service_parameters</span> <span class="p">=</span> <span class="s">/pegasus/onebox/127.0.0.1</span>
+<span class="c">; 判断一个 ReplicaServer 是不是稳定运行的时间阈值
 </span><span class="py">stable_rs_min_running_seconds</span> <span class="p">=</span> <span class="s">600</span>
-<span class="c">;一个ReplicaServer最多可以崩溃的次数，
-;如果崩溃太频繁，就会上MetaServer的黑名单
-</span><span class="py">max_succssive_unstable_restart</span> <span class="p">=</span> <span class="s">5 </span>
-<span class="c">;负载均衡器的实现类
+<span class="c">; 一个 ReplicaServer 最多可以崩溃的次数，如果崩溃太频繁，就会上 MetaServer 的黑名单
+</span><span class="py">max_succssive_unstable_restart</span> <span class="p">=</span> <span class="s">5</span>
+<span class="c">; 负载均衡器的实现类
 </span><span class="py">server_load_balancer_type</span> <span class="p">=</span> <span class="s">greedy_load_balancer</span>
-<span class="c">;当一个secondary被移除后，等待它回来的最长时间阈值
+<span class="c">; 当一个 secondary 被移除后，等待它回来的最长时间阈值
 </span><span class="py">replica_assign_delay_ms_for_dropouts</span> <span class="p">=</span> <span class="s">300000</span>
-<span class="c">;如果不可用节点比例太高，MetaServer会进入freezed的保护状态
+<span class="c">; 如果不可用节点比例太高，MetaServer 会进入 freezed 的保护状态
 </span><span class="py">node_live_percentage_threshold_for_update</span> <span class="p">=</span> <span class="s">50</span>
-<span class="c">;如果不可用的节点个数太少，MetaServer也会进入freezed的保护状态
+<span class="c">; 如果不可用的节点个数太少，MetaServer 也会进入 freezed 的保护状态
 </span><span class="py">min_live_node_count_for_unfreeze</span> <span class="p">=</span> <span class="s">3</span>
-<span class="c">;表删除后在回收站中默认的保留时间
+<span class="c">; 表删除后在回收站中默认的保留时间
 </span><span class="py">hold_seconds_for_dropped_app</span> <span class="p">=</span> <span class="s">604800</span>
-<span class="c">;MetaServer启动时的默认function_level状态，
-;steady表示不进行负载均衡的稳定状态
+<span class="c">; MetaServer 启动时的默认 function_level 状态。steady 表示不进行负载均衡的稳定状态
 </span><span class="py">meta_function_level_on_start</span> <span class="p">=</span> <span class="s">steady</span>
-<span class="c">;如果为true, 集群启动时就会进入“元数据恢复”流程
+<span class="c">; 如果为 true, 集群启动时就会进入 “元数据恢复” 流程
 </span><span class="py">recover_from_replica_server</span> <span class="p">=</span> <span class="s">false</span>
-<span class="c">;一个replica group中最多保留的副本数(可用副本+尸体)
-</span><span class="py">max_replicas_in_group</span> <span class="p">=</span> <span class="s">4 </span>
+<span class="c">; 一个 replica group 中最多保留的副本数 (可用副本 + 尸体)
+</span><span class="py">max_replicas_in_group</span> <span class="p">=</span> <span class="s">4</span>
 
-<span class="c">;;;; 集群在bootstrap时默认要创建的表
+<span class="c">;;;; 集群在 bootstrap 时默认要创建的表
 </span><span class="nn">[replication.app]</span>
-<span class="c">;表名
+<span class="c">; 表名
 </span><span class="py">app_name</span> <span class="p">=</span> <span class="s">temp</span>
-<span class="c">;type表征了存储引擎，pegasus表示我们基于rocksdb实现的存储引擎
+<span class="c">; 存储引擎类型，pegasus 表示我们基于 rocksdb 实现的存储引擎。当前只可选 pegasus
 </span><span class="py">app_type</span> <span class="p">=</span> <span class="s">pegasus</span>
-<span class="c">;分片数
+<span class="c">; 分片数
 </span><span class="py">partition_count</span> <span class="p">=</span> <span class="s">8</span>
-<span class="c">;每个分片的副本个数
+<span class="c">; 每个分片的副本个数
 </span><span class="py">max_replica_count</span> <span class="p">=</span> <span class="s">3</span>
-<span class="c">;rDSN参数，对于app_type = pegasus需要设置为true
+<span class="c">; rDSN 参数，对于 app_type = pegasus 需要设置为 true
 </span><span class="py">stateful</span> <span class="p">=</span> <span class="s">true</span>
-<span class="py">package_id</span> <span class="p">=</span> 
+<span class="py">package_id</span> <span class="p">=</span>
 
-<span class="c">;;;; 一致性协议相关配置，很多概念和PacificA相关
-</span><span class="s">[replication] </span>
-<span class="c">;shared log存储的文件夹路径
-</span><span class="py">slog_dir</span> <span class="p">=</span> <span class="s">/home/work/ssd1/pegasus/@cluster@ </span>
-<span class="c">;replica数据存储的文件夹路径列表，建议一块磁盘配置一个项，
-;tag为磁盘的标记名
-</span><span class="py">data_dirs</span> <span class="p">=</span> <span class="s">tag1:/home/work/ssd2/pegasus/@cluster@,tag2:/home/work/ssd3/pegasus/@cluster@ </span>
-<span class="c">;黑名单文件，文件中每行是一个需忽略掉的文件夹，主要用于过滤坏盘
+<span class="c">;;;; 一致性协议相关配置，很多概念和 PacificA 相关
+</span><span class="nn">[replication]</span>
+<span class="c">; shared log 存储的文件夹路径（2.6开始已被移除）
+</span><span class="py">slog_dir</span> <span class="p">=</span> <span class="s">/home/work/ssd1/pegasus/@cluster@</span>
+<span class="c">; replica 数据存储的文件夹路径列表，建议一块磁盘配置一个项。tag 为磁盘的标记名
+</span><span class="py">data_dirs</span> <span class="p">=</span> <span class="s">tag1:/home/work/ssd2/pegasus/@cluster@,tag2:/home/work/ssd3/pegasus/@cluster@</span>
+<span class="c">; 黑名单文件，文件中每行是一个需忽略掉的文件夹，主要用于过滤坏盘
 </span><span class="py">data_dirs_black_list_file</span> <span class="p">=</span> <span class="s">/home/mi/.pegasus_data_dirs_black_list</span>
-
-<span class="c">;ReplicaServer启动时是否要拒绝掉客户端写
+<span class="c">; ReplicaServer 启动时是否要拒绝掉客户端写
 </span><span class="py">deny_client_on_start</span> <span class="p">=</span> <span class="s">false</span>
-<span class="c">;ReplicaServer启动时是否等待一段时间后才开始连接MetaServer
-</span><span class="py">delay_for_fd_timeout_on_start</span> <span class="p">=</span> <span class="s">false </span>
-<span class="c">;是否打印commit log的调试信息
-</span><span class="py">verbose_log_on_commit</span> <span class="p">=</span> <span class="s">false </span>
-<span class="c">;primary会定期生成一个空的写操作以检查group状态，是否禁止该特性
+<span class="c">; ReplicaServer 启动时是否等待一段时间后才开始连接 MetaServer
+</span><span class="py">delay_for_fd_timeout_on_start</span> <span class="p">=</span> <span class="s">false</span>
+<span class="c">; 是否打印 commit log 的调试信息
+</span><span class="py">verbose_log_on_commit</span> <span class="p">=</span> <span class="s">false</span>
+<span class="c">; primary 会定期生成一个空的写操作以检查 group 状态，是否禁止该特性
 </span><span class="py">empty_write_disabled</span> <span class="p">=</span> <span class="s">false</span>
-
-<span class="c">;prepare的超时时间
+<span class="c">; prepare 的超时时间
 </span><span class="py">prepare_timeout_ms_for_secondaries</span> <span class="p">=</span> <span class="s">1000</span>
-<span class="c">;给learner发prepare的超时时间
-</span><span class="py">prepare_timeout_ms_for_potential_secondaries</span> <span class="p">=</span> <span class="s">3000 </span>
-
-<span class="c">;是否禁止掉客户端写请求的batch功能
+<span class="c">; 给 learner 发 prepare 的超时时间
+</span><span class="py">prepare_timeout_ms_for_potential_secondaries</span> <span class="p">=</span> <span class="s">3000</span>
+<span class="c">; 是否禁止掉客户端写请求的 batch 功能
 </span><span class="py">batch_write_disabled</span> <span class="p">=</span> <span class="s">false</span>
-<span class="c">;保留多少个已经commit的写请求在队列中
+<span class="c">; 保留多少个已经 commit 的写请求在队列中
 </span><span class="py">staleness_for_commit</span> <span class="p">=</span> <span class="s">20</span>
-<span class="c">;prepare_list的容量
-</span><span class="py">max_mutation_count_in_prepare_list</span> <span class="p">=</span> <span class="s">110 </span>
-<span class="c">;想要成功进行一次写操作，最少需要多少个副本
-</span><span class="py">mutation_2pc_min_replica_count</span> <span class="p">=</span> <span class="s">2 </span>
-
-<span class="c">;primary会定期推送group状态给其他成员，是否禁用该特性
-</span><span class="py">group_check_disabled</span> <span class="p">=</span> <span class="s">false </span>
-<span class="c">;group check的时间间隔
-</span><span class="py">group_check_interval_ms</span> <span class="p">=</span> <span class="s">100000 </span>
-
-<span class="c">;是否禁用定期checkpoint的生成
-</span><span class="py">checkpoint_disabled</span> <span class="p">=</span> <span class="s">false </span>
-<span class="c">;checkpoint的尝试触发时间间隔，尝试触发并不一定生成checkpoint
-</span><span class="py">checkpoint_interval_seconds</span> <span class="p">=</span> <span class="s">100 </span>
+<span class="c">; prepare_list 的容量
+</span><span class="py">max_mutation_count_in_prepare_list</span> <span class="p">=</span> <span class="s">110</span>
+<span class="c">; 想要成功进行一次写操作，最少需要多少个副本
+</span><span class="py">mutation_2pc_min_replica_count</span> <span class="p">=</span> <span class="s">2</span>
+<span class="c">; primary 会定期推送 group 状态给其他成员，是否禁用该特性
+</span><span class="py">group_check_disabled</span> <span class="p">=</span> <span class="s">false</span>
+<span class="c">; group check 的时间间隔
+</span><span class="py">group_check_interval_ms</span> <span class="p">=</span> <span class="s">100000</span>
+<span class="c">; 是否禁用定期 checkpoint 的生成
+</span><span class="py">checkpoint_disabled</span> <span class="p">=</span> <span class="s">false</span>
+<span class="c">; checkpoint 的尝试触发时间间隔。注意尝试触发并不一定生成 checkpoint
+</span><span class="py">checkpoint_interval_seconds</span> <span class="p">=</span> <span class="s">100</span>
 <span class="py">checkpoint_min_decree_gap</span> <span class="p">=</span> <span class="s">10000</span>
-<span class="c">;checkpoint的强制触发时间间隔，强制触发会将memtable的数据刷出
-</span><span class="py">checkpoint_max_interval_hours</span> <span class="p">=</span> <span class="s">1 </span>
-
-<span class="c">;是否禁用WAL的垃圾回收
+<span class="c">; checkpoint 的强制触发时间间隔，强制触发会将 memtable 的数据刷出
+</span><span class="py">checkpoint_max_interval_hours</span> <span class="p">=</span> <span class="s">1</span>
+<span class="c">; 是否禁用 WAL 的垃圾回收
 </span><span class="py">gc_disabled</span> <span class="p">=</span> <span class="s">false</span>
-<span class="py">gc_interval_ms</span> <span class="p">=</span> <span class="s">30000</span>
-<span class="c">;如果一个replica需要关闭，在内存中保留多长时间
+<span class="c">; WAL 的垃圾回收间隔
+</span><span class="py">gc_interval_ms</span> <span class="p">=</span> <span class="s">30000</span>
+<span class="c">; 如果一个 replica 需要关闭，在内存中保留多长时间
 </span><span class="py">gc_memory_replica_interval_ms</span> <span class="p">=</span> <span class="s">300000</span>
-<span class="c">;一个因为IO错误关闭掉的replica，在磁盘保留多长时间
+<span class="c">; 一个因为 IO 错误关闭掉的 replica，在磁盘保留多长时间
 </span><span class="py">gc_disk_error_replica_interval_seconds</span> <span class="p">=</span> <span class="s">172800000</span>
-
-<span class="c">;failure detector是否禁止
+<span class="c">; failure detector 相关参数
 </span><span class="py">fd_disabled</span> <span class="p">=</span> <span class="s">false</span>
 <span class="py">fd_check_interval_seconds</span> <span class="p">=</span> <span class="s">5</span>
 <span class="py">fd_beacon_interval_seconds</span> <span class="p">=</span> <span class="s">3</span>
 <span class="py">fd_lease_seconds</span> <span class="p">=</span> <span class="s">10</span>
 <span class="py">fd_grace_seconds</span> <span class="p">=</span> <span class="s">15</span>
-
-<span class="c">;每一个private log多大，超过了该阈值就滚动到下一个文件
-</span><span class="py">log_private_file_size_mb</span> <span class="p">=</span> <span class="s">32 </span>
-<span class="c">;private log一个batch的最小容量
-</span><span class="py">log_private_batch_buffer_kb</span> <span class="p">=</span> <span class="s">512 </span>
-<span class="c">;private log一个batch的最小条数
-</span><span class="py">log_private_batch_buffer_count</span> <span class="p">=</span> <span class="s">512 </span>
-<span class="c">;超过该事件没写private log, 则强制刷一次
-</span><span class="py">log_private_batch_buffer_flush_interval_ms</span> <span class="p">=</span> <span class="s">100000 </span>
+<span class="c">; 每一个 private log 多大，超过了该阈值就滚动到下一个文件
+</span><span class="py">log_private_file_size_mb</span> <span class="p">=</span> <span class="s">32</span>
+<span class="c">; private log 一个 batch 的最小容量
+</span><span class="py">log_private_batch_buffer_kb</span> <span class="p">=</span> <span class="s">512</span>
+<span class="c">; private log 一个 batch 的最小条数
+</span><span class="py">log_private_batch_buffer_count</span> <span class="p">=</span> <span class="s">512</span>
+<span class="c">; 超过该事件没写 private log, 则强制刷一次
+</span><span class="py">log_private_batch_buffer_flush_interval_ms</span> <span class="p">=</span> <span class="s">100000</span>
 <span class="py">log_private_reserve_max_size_mb</span> <span class="p">=</span> <span class="s">0</span>
 <span class="py">log_private_reserve_max_time_seconds</span> <span class="p">=</span> <span class="s">0</span>
-
-<span class="c">;shared log多大，超过该阈值就滚动到下一个文件
-</span><span class="py">log_shared_file_size_mb</span> <span class="p">=</span> <span class="s">32 </span>
+<span class="c">; shared log 多大，超过该阈值就滚动到下一个文件
+</span><span class="py">log_shared_file_size_mb</span> <span class="p">=</span> <span class="s">32</span>
 <span class="py">log_shared_file_count_limit</span> <span class="p">=</span> <span class="s">32</span>
 <span class="py">log_shared_batch_buffer_kb</span> <span class="p">=</span> <span class="s">0</span>
 <span class="py">log_shared_force_flush</span> <span class="p">=</span> <span class="s">false</span>
+<span class="c">; replica server 会定期和 meta server 同步本机所服务的 replica。该配置表示是否禁止这一特性
+</span><span class="py">config_sync_disabled</span> <span class="p">=</span> <span class="s">false</span>
+<span class="c">; 同步的时间间隔
+</span><span class="py">config_sync_interval_ms</span> <span class="p">=</span> <span class="s">30000</span>
+<span class="c">; meta server 跑负载均衡的周期
+</span><span class="py">lb_interval_ms</span> <span class="p">=</span> <span class="s">10000</span>
 
-<span class="c">;replica server会定期和meta server同步本机所服务的replica, 
-;该配置表示是否禁止这一特性
-</span><span class="py">config_sync_disabled</span> <span class="p">=</span> <span class="s">false </span>
-<span class="c">;同步的时间间隔
-</span><span class="py">config_sync_interval_ms</span> <span class="p">=</span> <span class="s">30000 </span>
-
-<span class="c">;meta server跑负载均衡的周期
-</span><span class="py">lb_interval_ms</span> <span class="p">=</span> <span class="s">10000 </span>
-
-<span class="nn">[pegasus.server]</span>
-<span class="c">;;; rocksdb相关配置
-;是否打印Pegasus中反应RocksDB运行情况的调试日志
+<span class="c">;;;; pegasus server 层相关配置
+</span><span class="nn">[pegasus.server]</span>
+<span class="c">;;; rocksdb 相关配置
+; 是否打印 Pegasus 中反应 RocksDB 运行情况的调试日志
 </span><span class="py">rocksdb_verbose_log</span> <span class="p">=</span> <span class="s">false</span>
-<span class="c">;RocksDB Get操作的慢日志阈值，如果操作时长超过了该数值，
-;那么将会被写入日志。0代表不会写入
+<span class="c">; RocksDB Get 操作的慢日志阈值，如果操作时长超过了该数值，那么将会打印相关日志。0 代表不打印
 </span><span class="py">rocksdb_abnormal_get_time_threshold_ns</span> <span class="p">=</span> <span class="s">100000000</span>
-<span class="c">;RocksDB Get操作的大key日志阈值，如果操作获取的value的长度大于该数值，
-;那么将会被写入日志。0代表不会写入
+<span class="c">; RocksDB Get 操作的大 key 日志阈值，如果操作获取的 value 的长度大于该数值，那么将会打印相关日志。0 代表不打印
 </span><span class="py">rocksdb_abnormal_get_size_threshold</span> <span class="p">=</span> <span class="s">1000000</span>
-<span class="c">;RocksDB Multi-Get操作的慢日志阈值，如果操作时长超过了该数值，
-;那么将会被写入日志。0代表不会写入
+<span class="c">; RocksDB Multi-Get 操作的慢日志阈值，如果操作时长超过了该数值，那么将会打印相关日志。0 代表不打印
 </span><span class="py">rocksdb_abnormal_multi_get_time_threshold_ns</span> <span class="p">=</span> <span class="s">100000000</span>
-<span class="c">;如果RocksDB Multi-Get操作的所有key-value的长度之和大于该数值，
-;那么将会被写入日志。0代表不会写入
+<span class="c">; 如果 RocksDB Multi-Get 操作的所有 key-value 的长度之和大于该数值，那么将会打印相关日志。0 代表不打印
 </span><span class="py">rocksdb_abnormal_multi_get_size_threshold</span> <span class="p">=</span> <span class="s">10000000</span>
-<span class="c">;如果RocksDB Multi-Get操作的key-value对数量超过了该数值，
-;那么将会被写入日志。0代表不会写入
+<span class="c">; 如果 RocksDB Multi-Get 操作的 key-value 对数量超过了该数值，那么将会打印相关日志。0 代表不打印
 </span><span class="py">rocksdb_abnormal_multi_get_iterate_count_threshold</span> <span class="p">=</span> <span class="s">1000</span>
-<span class="c">;单个memtable的最大size。
-;一旦memtable大小超过该数值，将会被标记为不可修改，
-;并且会创建一个新的memtable。
-;然后，一个后台线程会把memtable的内容落盘到一个SST文件
+<span class="c">; 单个 memtable 的最大 size。一旦 memtable 大小超过该数值，将会被标记为不可修改，并且会创建一个新的 memtable。然后，一个后台线程会把 memtable 的内容落盘到一个 SST 文件
 </span><span class="py">rocksdb_write_buffer_size</span> <span class="p">=</span> <span class="s">67108864</span>
-<span class="c">;memtable的最大数量，包括active-memtable和immutable-memtable，
-;如果active memtable被填满，并且memtable的总数量大于该数值，
-;那么将会被延缓写入
+<span class="c">; memtable 的最大数量，包括 active-memtable 和 immutable-memtable，如果 active memtable 被填满，并且 memtable 的总数量大于该数值，那么将会被延缓写入
 </span><span class="py">rocksdb_max_write_buffer_number</span> <span class="p">=</span> <span class="s">3</span>
-<span class="c">;后台flush线程数量。flush线程在高优先级的线程池中
+<span class="c">; 后台 flush 线程数量。flush 线程在高优先级的线程池中
 </span><span class="py">rocksdb_max_background_flushes</span> <span class="p">=</span> <span class="s">4</span>
-<span class="c">;后台compaction线程数量。compaction线程在低优先级的线程池中
+<span class="c">; 后台 compaction 线程数量。compaction 线程在低优先级的线程池中
 </span><span class="py">rocksdb_max_background_compactions</span> <span class="p">=</span> <span class="s">12</span>
-<span class="c">;RocksDB LSM tree层数
-</span><span class="py">rocksdb_num_levels</span> <span class="p">=</span> <span class="s">6 </span>
-<span class="c">;level 1层的文件大小最大为target_file_size_base字节
+<span class="c">; RocksDB LSM tree 层数
+</span><span class="py">rocksdb_num_levels</span> <span class="p">=</span> <span class="s">6</span>
+<span class="c">; level 1 层的文件大小最大为 target_file_size_base 字节
 </span><span class="py">rocksdb_target_file_size_base</span> <span class="p">=</span> <span class="s">67108864</span>
-<span class="c">;每一层文件大小是其上一层的rocksdb_target_file_size_multiplier倍。
-;默认情况下rocksdb_target_file_size_multiplier是１，
-;也就是说每层的文件大小相同
+<span class="c">; 每一层文件大小是其上一层的 rocksdb_target_file_size_multiplier 倍
 </span><span class="py">rocksdb_target_file_size_multiplier</span> <span class="p">=</span> <span class="s">1</span>
-<span class="c">;level 1层中的所有文件的总大小
+<span class="c">; level 1 层中的所有文件的总大小
 </span><span class="py">rocksdb_max_bytes_for_level_base</span> <span class="p">=</span> <span class="s">671088640</span>
-<span class="c">;每一层其所有总文件大小是其上一层的rocksdb_max_bytes_for_level_multiplier倍。
-;默认情况下rocksdb_max_bytes_for_level_multiplier是10，
-;也就是说每层总文件大小是上一层的10倍。
-</span><span class="py">rocksdb_max_bytes_for_level_multiplier</span> <span class="p">=</span> <span class="s">10 </span>
-<span class="c">;如果level 0中的文件数量超过了该指定数值，L0-&gt;L1 compaction将会被触发
+<span class="c">; 每一层其所有总文件大小是其上一层的 rocksdb_max_bytes_for_level_multiplier 倍
+</span><span class="py">rocksdb_max_bytes_for_level_multiplier</span> <span class="p">=</span> <span class="s">10</span>
+<span class="c">; 如果 level 0 中的文件数量超过了该指定数值，L0-&gt;L1 compaction 将会被触发
 </span><span class="py">rocksdb_level0_file_num_compaction_trigger</span> <span class="p">=</span> <span class="s">4</span>
-<span class="c">;如果level 0中的文件数量超过了该指定数值，那么写入速度将会被降低
+<span class="c">; 如果 level 0 中的文件数量超过了该指定数值，那么写入速度将会被降低
 </span><span class="py">rocksdb_level0_slowdown_writes_trigger</span> <span class="p">=</span> <span class="s">30</span>
-<span class="c">;如果level 0中的文件数量超过了该指定数值，那么写入将会被禁止
+<span class="c">; 如果 level 0 中的文件数量超过了该指定数值，那么写入将会被禁止
 </span><span class="py">rocksdb_level0_stop_writes_trigger</span> <span class="p">=</span> <span class="s">60</span>
-<span class="c">;压缩算法类型, 支持 none，snappy，lz4，zstd几种选项。
-;支持为每一层单独配置压缩算法，用逗号分隔，如:
-;“none,none,snappy,zstd” 表示L0，L1不进行压缩，
-;L2使用snappy压缩，L3往下使用zstd压缩。
-</span><span class="py">rocksdb_compression_type</span> <span class="p">=</span> <span class="s">lz4 </span>
-<span class="c">;如果该值被设置为true，则表示禁用block cache功能
+<span class="c">; 压缩算法类型，支持 none，snappy，lz4，zstd 几种选项。支持为每一层单独配置压缩算法，用逗号分隔，如: “none,none,snappy,zstd” 表示 L0，L1 不进行压缩，L2 使用 snappy 压缩，L3 往下使用 zstd 压缩。
+</span><span class="py">rocksdb_compression_type</span> <span class="p">=</span> <span class="s">lz4</span>
+<span class="c">; 如果该值被设置为 true，则表示禁用 block cache 功能
 </span><span class="py">rocksdb_disable_table_block_cache</span> <span class="p">=</span> <span class="s">false</span>
-<span class="c">;进程中所有RocksDB实例共享的 Block Cache 内存容量，以 bytes为单位
+<span class="c">; 进程中所有 RocksDB 实例共享的 Block Cache 内存容量，以 bytes 为单位
 </span><span class="py">rocksdb_block_cache_capacity</span> <span class="p">=</span> <span class="s">10737418240</span>
-<span class="c">;shard id的bit位数。
-;为了并发操作，block cache被分成很多shard, 
-;数量为2^rocksdb_block_ache_num_shard_bits个
-</span><span class="py">rocksdb_block_cache_num_shard_bits</span> <span class="p">=</span> <span class="s">-1 </span>
-<span class="c">;如果该值被设置为true,则表示禁用bloom filter功能
+<span class="c">; shard id 的 bit 位数。为了并发操作，block cache 被分成很多 shard，数量为 2^rocksdb_block_ache_num_shard_bits 个
+</span><span class="py">rocksdb_block_cache_num_shard_bits</span> <span class="p">=</span> <span class="s">-1</span>
+<span class="c">; 如果该值被设置为 true, 则表示禁用 bloom filter 功能
 </span><span class="py">rocksdb_disable_bloom_filter</span> <span class="p">=</span> <span class="s">false</span>
 
-<span class="c">;;; 监控相关配置，部分和小米的开源监控系统open-falcon相关
+<span class="c">;;; 监控相关配置，部分与 open-falcon 相关
 </span><span class="py">perf_counter_cluster_name</span> <span class="p">=</span> <span class="s">onebox</span>
-<span class="c">;监控项的汇报周期
-</span><span class="py">perf_counter_update_interval_seconds</span> <span class="p">=</span> <span class="s">10 </span>
-<span class="c">;是否允许直接向service拉去监控项
+<span class="c">; 监控项的汇报周期
+</span><span class="py">perf_counter_update_interval_seconds</span> <span class="p">=</span> <span class="s">10</span>
+<span class="c">; 是否允许直接向 service 拉去监控项
 </span><span class="py">perf_counter_enable_stat</span> <span class="p">=</span> <span class="s">true</span>
-<span class="c">;是否允许把所有监控项打印到日志
+<span class="c">; 是否允许把所有监控项打印到日志
 </span><span class="py">perf_counter_enable_logging</span> <span class="p">=</span> <span class="s">false</span>
-<span class="c">;是否允许把监控项推送到falcon
+<span class="c">; 是否允许把监控项推送到 falcon
 </span><span class="py">perf_counter_enable_falcon</span> <span class="p">=</span> <span class="s">false</span>
-
 <span class="py">falcon_host</span> <span class="p">=</span> <span class="s">127.0.0.1</span>
 <span class="py">falcon_port</span> <span class="p">=</span> <span class="s">1988</span>
 <span class="py">falcon_path</span> <span class="p">=</span> <span class="s">/v1/push</span>
 
-<span class="c">;;;; task相关配置模板，里面的概念都和rDSN相关
+<span class="c">;;;; task 相关配置模板，里面的概念都和 rDSN 相关
 </span><span class="nn">[task..default]</span>
 <span class="py">is_trace</span> <span class="p">=</span> <span class="s">false</span>
 <span class="py">is_profile</span> <span class="p">=</span> <span class="s">false</span>
@@ -1068,9 +1032,9 @@
 <span class="py">disk_write_fail_ratio</span> <span class="p">=</span> <span class="s">0.0</span>
 <span class="py">disk_read_fail_ratio</span> <span class="p">=</span> <span class="s">0.0</span>
 
-<span class="c">;;;; task RPC_L2_CLIENT_READ的相关配置，
-;选项均继承模板，自定义的部分表示该task需要监控的内容
-</span><span class="nn">[task.RPC_L2_CLIENT_READ]</span> 
+<span class="c">;;;; task RPC_L2_CLIENT_READ 的相关配置，
+; 选项均继承模板，自定义的部分表示该 task 需要监控的内容
+</span><span class="nn">[task.RPC_L2_CLIENT_READ]</span>
 <span class="py">is_profile</span> <span class="p">=</span> <span class="s">true</span>
 <span class="err">profiler::</span><span class="py">inqueue</span> <span class="p">=</span> <span class="s">false</span>
 <span class="err">profiler::</span><span class="py">queue</span> <span class="p">=</span> <span class="s">false</span>
@@ -1079,18 +1043,17 @@
 <span class="err">profiler::</span><span class="py">cancelled</span> <span class="p">=</span> <span class="s">false</span>
 <span class="err">profiler::</span><span class="py">latency.server</span> <span class="p">=</span> <span class="s">false</span>
 
-<span class="c">;;;;;;; 以下是各种各样的杂项配置
-;;;; 监控实现类相关
+<span class="c">;;;; 监控实现类相关
 </span><span class="nn">[components.pegasus_perf_counter_number_percentile_atomic]</span>
 <span class="py">counter_computation_interval_seconds</span> <span class="p">=</span> <span class="s">10</span>
 
-<span class="c">;;;; zookeeper相关
+<span class="c">;;;; zookeeper 相关
 </span><span class="nn">[zookeeper]</span>
 <span class="py">hosts_list</span> <span class="p">=</span> <span class="s">127.0.0.1:22181</span>
 <span class="py">timeout_ms</span> <span class="p">=</span> <span class="s">10000</span>
 <span class="py">logfile</span> <span class="p">=</span> <span class="s">zoo.log</span>
 
-<span class="c">;;;; logger的实现类相关
+<span class="c">;;;; logger 的实现类相关
 </span><span class="nn">[tools.simple_logger]</span>
 <span class="py">short_header</span> <span class="p">=</span> <span class="s">false</span>
 <span class="py">fast_flush</span> <span class="p">=</span> <span class="s">false</span>
@@ -1098,15 +1061,15 @@
 <span class="py">stderr_start_level</span> <span class="p">=</span> <span class="s">LOG_LEVEL_ERROR</span>
 </code></pre></div></div>
 
-<h2 id="配置建议">配置建议</h2>
+<h1 id="配置建议">配置建议</h1>
 
 <p>一些配置建议：</p>
 
 <ul>
-  <li>配置文件中所有需要使用机器名的地方，都建议使用IP地址。</li>
+  <li>配置文件中所有需要使用服务器地址的地方，都建议使用 IP 地址。</li>
   <li>大部分配置项，建议使用默认值。</li>
-  <li>对于高级用户，可以根据需要自行配置，但是前提是需要理解配置项的作用和影响。</li>
-  <li>由于文档不能面面俱到，对配置项的作用不太清楚的，可以直接查看源代码。</li>
+  <li>在理解配置项的作用和影响的前提下，可以根据需要自行更改配置值。</li>
+  <li>对于配置项的进一步了解，可以查看源代码。</li>
 </ul>
 
                 </div>
