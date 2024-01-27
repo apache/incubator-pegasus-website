@@ -23,7 +23,7 @@ permalink: administration/scale-in-out
 
 缩容相对扩容要考虑的点就多些，主要包括：
 * 如果同时要下线多个节点，需要一个一个进行，等一个下线完成后再下线另一个，避免影响集群的可用度和数据的安全性。
-* 如果同时要下线多个节点，在下线一个节点时，meta server 补充副本要时，要尽量避免将副本分派到即将要下线的其他节点上，否则在下线其他节点时，又要重新补充副本，造成不必要的跨节点数据拷贝。我们提供了 [black_list](/administration/rebalance#assign_secondary_black_list) 来支持这个功能。
+* 如果同时要下线多个节点，那么在下线一个节点时，要尽量避免 meta server 在补充副本时将副本分派到即将要下线的其他节点上，否则在下线其他节点时，又要重新补充副本，造成不必要的跨节点数据拷贝。我们提供了 [black_list](/administration/rebalance#assign_secondary_black_list) 来支持这个功能。
 
 > 注意：节点下线后，在 meta server 上的状态会变成 `UNALIVE`，可能会造成 `ALIVE` 的节点比例低于配置参数 `node_live_percentage_threshold_for_update`。如果低于了该限制，meta server 就会自动降级为 `freezed` 状态，此时所有的 `reconfiguration` 操作（即重新分派副本的操作）都无法进行，缩容流程也将无进继续进行。所以在缩容之前需要计算一下是否会造成这种情况，如果会，就先修改 meta server 的配置，将 `node_live_percentage_threshold_for_update` 修改至足够低，以保证在缩容过程中 meta server 不会自动降级为 `freezed` 状态。
 
