@@ -450,7 +450,7 @@ USAGE:flush_log                  [-t all|meta-server|replica-server] [-l ip:port
 
 ### disk_replica
 
-查询副本在 replica_server 节点的磁盘分布，1.12.3版本提供支持
+查询副本在 replica_server 节点的磁盘分布，1.12.3 版本提供支持
 
 用法：
 
@@ -473,7 +473,7 @@ USAGE:disk_replica             [-n|--node replica_server(ip:port)][-a|-app app_n
 
 ### disk_capacity
 
-查询 replica_server 节点的磁盘空间占用，1.12.3版本提供支持
+查询 replica_server 节点的磁盘空间占用，1.12.3 版本提供支持
 
 用法：
 
@@ -1416,7 +1416,7 @@ USAGE:  count_data    [-p|--partition num] [-b|--max_batch_count num] [-t|--time
 
 说明：
 
-- `-c|--precise`参数：指定表的详细数据。(版本提供支持)
+- `-c|--precise`参数：指定表的详细数据。
 - `-p|--partition`参数：指定删除的分片。
 - `-b|--max_batch_count`参数：指定一次性删除的最大数量。
 - `-d|--diff_hash_key`参数：统计 hashKey 数量。
