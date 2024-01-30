@@ -20,11 +20,11 @@
 <meta property="og:description" content="功能目标" />
 <meta property="og:site_name" content="Pegasus" />
 <meta property="og:type" content="article" />
-<meta property="article:published_time" content="2024-01-27T10:56:22+00:00" />
+<meta property="article:published_time" content="2024-01-30T08:23:43+00:00" />
 <meta name="twitter:card" content="summary" />
 <meta property="twitter:title" content="Scale In Out" />
 <script type="application/ld+json">
-{"@context":"https://schema.org","@type":"BlogPosting","dateModified":"2024-01-27T10:56:22+00:00","datePublished":"2024-01-27T10:56:22+00:00","description":"功能目标","headline":"Scale In Out","mainEntityOfPage":{"@type":"WebPage","@id":"/administration/scale-in-out"},"url":"/administration/scale-in-out"}</script>
+{"@context":"https://schema.org","@type":"BlogPosting","dateModified":"2024-01-30T08:23:43+00:00","datePublished":"2024-01-30T08:23:43+00:00","description":"功能目标","headline":"Scale In Out","mainEntityOfPage":{"@type":"WebPage","@id":"/administration/scale-in-out"},"url":"/administration/scale-in-out"}</script>
 <!-- End Jekyll SEO tag -->
 </head>
 
@@ -741,11 +741,15 @@
 
 <p>当集群存储容量不够或者读写吞吐太大了，需要通过增加节点来扩容；反之，可以通过减少节点来缩容。</p>
 
+<blockquote>
+  <p>本文所述的扩容缩容是针对 replica server。</p>
+</blockquote>
+
 <p>扩容和缩容时，需要考虑这些点：</p>
 <ul>
-  <li>不停服</li>
+  <li>不要停止 Pegasus 服务</li>
   <li>尽量不要影响可用性</li>
-  <li>尽量减少不必要的数据拷贝</li>
+  <li>尽量减少不必要的数据传输</li>
 </ul>
 
 <h1 id="扩容流程">扩容流程</h1>
@@ -755,19 +759,19 @@
   <li>要扩容多个服务器，就在这些新增服务器上启动 replica server 进程，启动后 replica server 会主动联系 meta server，加入节点列表中。</li>
   <li>在 meta level 为 <code class="language-plaintext highlighter-rouge">steady</code> 时，不会进行 <a href="rebalance">负载均衡</a>，因此用 shell 工具的 <code class="language-plaintext highlighter-rouge">nodes -d</code> 命令查看，可以看到新节点的状态为 <code class="language-plaintext highlighter-rouge">ALIVE</code>，但是该节点服务的 replica 个数为 0。</li>
   <li>通过 shell 工具的 <code class="language-plaintext highlighter-rouge">set_meta_level lively</code> 启动负载均衡，meta server 会逐渐将部分 replica 迁移到新节点上。</li>
-  <li>通过 shell 工具的 <code class="language-plaintext highlighter-rouge">nodes -d</code> 命令查看个节点服务 replica 的情况，在达到均衡状态后，通过 <code class="language-plaintext highlighter-rouge">set_meta_level steady</code> 关闭负载均衡，扩容完成。</li>
+  <li>通过 shell 工具的 <code class="language-plaintext highlighter-rouge">nodes -d</code> 命令查看各节点服务 replica 的情况，在达到均衡状态后，通过 <code class="language-plaintext highlighter-rouge">set_meta_level steady</code> 关闭负载均衡，扩容完成。</li>
 </ul>
 
 <h1 id="缩容流程">缩容流程</h1>
 
 <p>缩容相对扩容要考虑的点就多些，主要包括：</p>
 <ul>
-  <li>如果同时要下线多个节点，需要一个一个进行，等一个下线完成后再下线另一个，避免影响集群的可用度和数据的安全性。</li>
+  <li>如果同时要下线多个节点，需要一个一个进行，等一个下线完成后再下线另一个，避免影响集群的可用性和数据的完整性。</li>
   <li>如果同时要下线多个节点，那么在下线一个节点时，要尽量避免 meta server 在补充副本时将副本分派到即将要下线的其他节点上，否则在下线其他节点时，又要重新补充副本，造成不必要的跨节点数据拷贝。我们提供了 <a href="/zh/administration/rebalance#assign_secondary_black_list">black_list</a> 来支持这个功能。</li>
 </ul>
 
 <blockquote>
-  <p>注意：节点下线后，在 meta server 上的状态会变成 <code class="language-plaintext highlighter-rouge">UNALIVE</code>，可能会造成 <code class="language-plaintext highlighter-rouge">ALIVE</code> 的节点比例低于配置参数 <code class="language-plaintext highlighter-rouge">node_live_percentage_threshold_for_update</code>。如果低于了该限制，meta server 就会自动降级为 <code class="language-plaintext highlighter-rouge">freezed</code> 状态，此时所有的 <code class="language-plaintext highlighter-rouge">reconfiguration</code> 操作（即重新分派副本的操作）都无法进行，缩容流程也将无进继续进行。所以在缩容之前需要计算一下是否会造成这种情况，如果会，就先修改 meta server 的配置，将 <code class="language-plaintext highlighter-rouge">node_live_percentage_threshold_for_update</code> 修改至足够低，以保证在缩容过程中 meta server 不会自动降级为 <code class="language-plaintext highlighter-rouge">freezed</code> 状态。</p>
+  <p>注意：节点下线后，在 meta server 上的状态会变成 <code class="language-plaintext highlighter-rouge">UNALIVE</code>，可能会造成 <code class="language-plaintext highlighter-rouge">ALIVE</code> 的节点比例低于配置参数 <code class="language-plaintext highlighter-rouge">node_live_percentage_threshold_for_update</code>，此时，meta server 就会自动降级为 <code class="language-plaintext highlighter-rouge">freezed</code> 状态，此时所有的 <code class="language-plaintext highlighter-rouge">reconfiguration</code> 操作（即重新分派副本的操作）都无法进行，缩容流程也将无进继续进行。所以在缩容之前需要计算一下是否会造成这种情况，如果会，就先修改 meta server 的配置，将 <code class="language-plaintext highlighter-rouge">node_live_percentage_threshold_for_update</code> 修改至足够低，以保证在缩容过程中 meta server 不会自动降级为 <code class="language-plaintext highlighter-rouge">freezed</code> 状态。</p>
 </blockquote>
 
 <h2 id="推荐的缩容流程">推荐的缩容流程</h2>
@@ -782,7 +786,7 @@
     <div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>&gt;&gt;&gt; set_meta_level steady
 </code></pre></div>    </div>
   </li>
-  <li>使用 shell 工具向 meta server 发送 <a href="remote-commands#meta-server">远程命令</a>，设置 black_list：
+  <li>使用 shell 工具向 meta server 发送 <a href="remote-commands#meta-server">远程命令</a> 来更新 <code class="language-plaintext highlighter-rouge">assign_secondary_black_list</code>：
     <div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>&gt;&gt;&gt; remote_command -t meta-server meta.lb.assign_secondary_black_list $address_list
 </code></pre></div>    </div>
     <p>其中 <code class="language-plaintext highlighter-rouge">address_list</code> 是要下线节点的 <code class="language-plaintext highlighter-rouge">ip:port</code> 列表，用逗号分隔。</p>
@@ -794,7 +798,7 @@
   <li>逐个下线 replica server。单个 replica server 下线流程：
     <ul>
       <li>kill 掉想要下线的 replica server 进程。</li>
-      <li>使用 shell 的 <code class="language-plaintext highlighter-rouge">ls -d</code> 命令查看集群状态，等待所有 partition 都完全恢复健康（所有表的 unhealthy 数都为 0）。</li>
+      <li>使用 shell 工具的 <code class="language-plaintext highlighter-rouge">ls -d</code> 命令查看集群状态，等待所有 partition 都完全恢复健康（所有表的 unhealthy partition 数都为 0）。</li>
       <li>清理该节点上的数据，释放磁盘空间。</li>
     </ul>
   </li>
@@ -805,13 +809,16 @@
   </li>
 </ul>
 
-<p>以上过程可以自动化，我们提供了集群升级脚本 <a href="https://github.com/apache/incubator-pegasus/blob/master/scripts/pegasus_offline_node_list.sh">scripts/pegasus_offline_node_list.sh</a>。不过这个脚本并不能直接使用，因为其依赖 minos 部署工具来完成进程的远程 stop 操作。<code class="language-plaintext highlighter-rouge">pegasus_offline_node_list.sh</code> 调用 <code class="language-plaintext highlighter-rouge">pegasus_offline_node.sh</code>，因此这两个脚本的 minos_client_dir 都需要更改。你可以针对你们自己的部署系统，修改脚本中 minos 相关部分，使其可以正常工作。如需帮助，请联系我们。</p>
+<h2 id="脚本">脚本</h2>
 
-<p>注意：在使用集群升级脚本的时候，也要保证配置参数 <code class="language-plaintext highlighter-rouge">node_live_percentage_threshold_for_update</code> 的值足够小（有必要可以先升级 meta-server），避免使集群进入 freezed 状态。</p>
+<p>以上过程已被脚本 <a href="https://github.com/apache/incubator-pegasus/blob/master/scripts/pegasus_offline_node_list.sh">scripts/pegasus_offline_node_list.sh</a> 实现。</p>
+<blockquote>
+  <p>不过该脚本不能直接使用，因为他依赖 <a href="https://github.com/XiaoMi/minos">minos 部署工具</a>.</p>
+</blockquote>
 
 <h1 id="节点迁移">节点迁移</h1>
 
-<p>通过先扩容，再缩容的方式，来实现集群的节点迁移。为了尽量减少数据的重复拷贝，建议按照如下步骤：</p>
+<p>通过先扩容，再缩容的方式，来实现集群的节点迁移。为了尽量减少不必要的数据传输，建议按照如下步骤：</p>
 <ul>
   <li>先扩容：将需要扩容的服务器加入到集群中，但是在加入后暂时不进行 <a href="/zh/administration/rebalance#控制集群的负载均衡">负载均衡</a>。</li>
   <li>再缩容：将需要缩容的服务器通过上面的 <a href="#缩容流程">缩容流程</a> 进行下线。</li>
@@ -821,7 +828,7 @@
 <h1 id="其他配置">其他配置</h1>
 
 <ul>
-  <li>迁移限速。可以设置单块磁盘的读取或写入速度，避免高吞吐带来的性能影响。
+  <li>迁移限速。可以设置单块磁盘的读写带宽，避免高吞吐带来的性能影响。
     <div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>&gt;&gt;&gt; remote_command -t replica-server nfs.max_send_rate_megabytes_per_disk $rate
 &gt;&gt;&gt; remote_command -t replica-server nfs.max_copy_rate_megabytes_per_disk $rate
 </code></pre></div>    </div>
@@ -876,6 +883,7 @@
   <li><a href="#缩容流程">缩容流程</a>
     <ul>
       <li><a href="#推荐的缩容流程">推荐的缩容流程</a></li>
+      <li><a href="#脚本">脚本</a></li>
     </ul>
   </li>
   <li><a href="#节点迁移">节点迁移</a></li>
