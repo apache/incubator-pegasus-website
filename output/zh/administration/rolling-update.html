@@ -20,11 +20,11 @@
 <meta property="og:description" content="功能目标" />
 <meta property="og:site_name" content="Pegasus" />
 <meta property="og:type" content="article" />
-<meta property="article:published_time" content="2024-01-30T08:23:43+00:00" />
+<meta property="article:published_time" content="2024-01-30T08:26:02+00:00" />
 <meta name="twitter:card" content="summary" />
 <meta property="twitter:title" content="Rolling Update" />
 <script type="application/ld+json">
-{"@context":"https://schema.org","@type":"BlogPosting","dateModified":"2024-01-30T08:23:43+00:00","datePublished":"2024-01-30T08:23:43+00:00","description":"功能目标","headline":"Rolling Update","mainEntityOfPage":{"@type":"WebPage","@id":"/administration/rolling-update"},"url":"/administration/rolling-update"}</script>
+{"@context":"https://schema.org","@type":"BlogPosting","dateModified":"2024-01-30T08:26:02+00:00","datePublished":"2024-01-30T08:26:02+00:00","description":"功能目标","headline":"Rolling Update","mainEntityOfPage":{"@type":"WebPage","@id":"/administration/rolling-update"},"url":"/administration/rolling-update"}</script>
 <!-- End Jekyll SEO tag -->
 </head>
 
@@ -739,151 +739,167 @@
                 <div class="content">
                     <h1 id="功能目标">功能目标</h1>
 
-<p>当需要升级server版本或者修改config配置时，都需要对集群进行升级。对于分布式集群来说，常用的升级方法就是<strong>滚动升级(Rolling-Update)</strong>，即不停止服务，对一台一台server逐个进行升级。</p>
+<p>当需要升级 server 版本或者持久化修改配置时，都需要对集群进行重启。对于分布式集群来说，常用的重启方法是滚动重启 (Rolling-Restart)，即不停止集群服务，而对 server 逐个进行重启。</p>
 
-<p>集群升级的重要目标在于<strong>平稳</strong>，即不停服，并且对可用性的影响降至最低。为了达到这个目标，我们先看看在升级过程中哪些地方可能会影响可用性：</p>
+<blockquote>
+  <p>以下文档假定 Pegasus 集群中表的副本数为 3。</p>
+</blockquote>
+
+<p>集群重启的重要目标是不停服，并且对可用性的影响降至最低。为了达到这个目标，我们先梳理在重启过程会影响可用性的点：</p>
 <ul>
-  <li>replica server进程被kill后，该进程服务的replica无法提供服务：
+  <li>replica server 进程被 kill 后，该进程服务的 replica 无法提供服务：
     <ul>
-      <li>对于primary replica：因为直接向客户端提供读写服务，所以进程kill后肯定会影响读写，需要等metaserver重新分派新的primary replica后才能恢复。meta server通过心跳感知replica server的存活状态，failure detection的时间延迟取决于配置参数<code class="language-plaintext highlighter-rouge">fd_grace_seconds</code>，通常配置为10秒，即最多需要经过<strong>10秒</strong>，meta server才能知道replica server挂了，然后重新分派新的primary replica。</li>
-      <li>对于secondary replica：由于不服务读，所以理论上对读无影响。但是会影响写，因为一致性协议要求一主两备都写成功，写操作才能提交。进程kill后，primary replica在执行写操作过程中会发现该secondary replica已失联，然后通知meta server将其踢掉，经过<code class="language-plaintext highlighter-rouge">reconfiguration</code>阶段后变成一主一备，继续提供写服务。在切换过程中尚未完成的写操作，即使有<code class="language-plaintext highlighter-rouge">reconciliation</code>阶段重新执行，但客户端那边大概率已经超时了，对可用性有一定影响。但是这个影响相对小些，因为<code class="language-plaintext highlighter-rouge">reconfiguration</code>的速度是比较快的，通常在<strong>1秒</strong>以内就能完成。</li>
+      <li>对于 primary replica：因为直接向客户端提供读写服务，所以进程被 kill 后肯定会影响读写，需要等 meta server 重新分派新的 primary replica 后才能恢复。meta server 通过心跳感知 replica server 的存活状态，failure detection 的时间延迟取决于配置参数 <code class="language-plaintext highlighter-rouge">fd_grace_seconds</code>，默认为 10 秒，即最多需要经过 10 秒，meta server 才能知道 replica server 宕机了，然后重新分派新的 primary replica。</li>
+      <li>对于 secondary replica：由于不服务读，所以理论上对读无影响。但是会影响写，因为 PacificA 一致性协议要求所有副本都写成功，写操作才能提交。进程被 kill 后，primary replica 在执行写操作过程中会发现该 secondary replica 已失联，然后通知 meta server 将其踢出，经过 <code class="language-plaintext highlighter-rouge">reconfiguration</code> 阶段后变成一主一备，继续提供写服务。对于在该切换过程中尚未完成的写操作，即使有 <code class="language-plaintext highlighter-rouge">reconciliation</code> 阶段重新执行，但客户端可能已经超时，这对可用性是有一定影响的。但是这个影响相对较小，因为 <code class="language-plaintext highlighter-rouge">reconfiguration</code> 的速度是比较快的，通常能在 1 秒内完成。</li>
     </ul>
   </li>
-  <li>升级meta server：升级meta server对可用度的影响几乎可以忽略不计，因为客户端会在本地缓存各partition的服务节点信息，通常情况下并不需要向meta server查询，因此meta server重启过程中的短暂失联对客户端基本没有影响。不过考虑到meta server需要与replica server维持心跳，所以要避免连续kill meta server进程，造成replica server心跳失联的风险。</li>
-  <li>升级collector：升级collector对可用度没有影响。但是可用度统计是在collector上进行的，所以可能会对统计数据有轻微影响。</li>
+  <li>重启 meta server：重启 meta server 对可用性的影响几乎可以忽略不计。因为客户端首次从 meta server 获取到各 partition 的服务节点信息后，会在本地缓存该信息，通常不需要再次向 meta server 查询，因此 meta server 重启过程中的短暂失联对客户端基本没有影响。不过考虑到 meta server 需要与 replica server 维持心跳，所以要避免连续 kill meta server 进程，造成 replica server 心跳失联的风险。</li>
+  <li>重启 collector：重启 collector 对可用性没有影响。但是可用性统计是在 collector 上进行的，所以可能会对 metrics 数据有轻微影响。</li>
 </ul>
 
-<p>因此，在集群升级过程要提高可用性，需要考虑如下几点：</p>
+<p>因此，在集群重启过程要提高可用性，需要考虑如下几点：</p>
 <ul>
-  <li>一次只能升级一个进程，且在该进程重启并完全恢复进入服务状态后，才能升级下一个进程。
+  <li>一次只能重启一个进程，且在该进程重启并完全恢复进入服务状态后，才能重启下一个进程。因为：
     <ul>
-      <li>因为如果升级一个进程后，集群没有恢复到完全健康状态，有的partition还只有一主一备，这时再kill一个replica server的话，很可能进入只有一主的状态，无法提供写服务。</li>
-      <li>另外，等待集群所有partition都恢复三备份后再继续升级下一个进程，也能有效降低数据丢失的风险。</li>
+      <li>如果重启一个进程后，集群没有恢复到完全健康状态，有的 partition 还只有一主一备，这时如果再 kill 一个 replica server 进程，很可能进入只有一主的状态，从而无法提供写服务。</li>
+      <li>等待集群所有 partition 都恢复三副本后再重启下一个进程，也能降低数据丢失的风险。</li>
     </ul>
   </li>
-  <li>尽量主动迁移replica，而不是被动迁移replica，避免failure detection的时间延迟影响可用度。
+  <li>尽量主动迁移 replica，而不是被动迁移 replica，避免 failure detection 的延迟影响可用性。因为：
     <ul>
-      <li>被动迁移需要等待failure detection来感知节点失联，而主动迁移就是在kill掉replica server之前，先将这个进程服务的primary replica都迁移到其他节点上，这个<code class="language-plaintext highlighter-rouge">reconfiguration</code>过程是很快的，基本1秒以内完成。</li>
-      <li>更进一步，还可以在kill掉replica server之前，将这个进程服务的secondary replica手动降级，将<code class="language-plaintext highlighter-rouge">reconfiguration</code>过程由“写失败被动触发”变为“主动触发”，也能降低对可用度的影响。</li>
+      <li>被动迁移需要等待 failure detection 来感知节点失联，而主动迁移就是在 kill 掉 replica server 之前，先将这个进程服务的 primary replica 都迁移到其他节点上，这个 <code class="language-plaintext highlighter-rouge">reconfiguration</code> 过程是很快的，基本 1 秒以内完成。</li>
     </ul>
   </li>
-  <li>尽量减少进程重启时恢复过程的工作量，缩短进程重启时间。
+  <li>尽量在 kill 掉 replica server 之前，将该进程服务的 secondary replica 手动降级。因为：
     <ul>
-      <li>replica server在重启时需要replay log来恢复数据。如果直接kill掉，需要replay的数据量可能很大。但是如果在kill之前，先主动触发memtable的flush操作，让内存数据先落地，在重启时需要replay的数据量就会大大减少，重启时间会缩短很多，而整个集群升级所需的时间也能大大缩短。</li>
+      <li>将 <code class="language-plaintext highlighter-rouge">reconfiguration</code> 过程由 “写失败时的被动触发” 变为 “主动触发”，进一步降低对可用性的影响。</li>
     </ul>
   </li>
-  <li>尽量减少不必要的节点间数据拷贝，避免因为增加CPU/网络/IO负载影响可用度。
+  <li>尽量减少进程重启时恢复过程的工作量，以缩短进程重启时间。
     <ul>
-      <li>replica server挂掉后，部分partition进入一主一备的状态。如果meta server立即在其他replica server上补充备份，会带来大量的跨节点数据拷贝，增加CPU/网络/IO负载压力，影响集群稳定性。Pegasus解决这个问题的办法是，允许在一段时间内维持一主一备状态，给原来的replica server进行恢复的机会。如果长时间没有恢复，才会在新的replica server上补充备份。这样兼顾了数据的安全性和集群的稳定性。可以通过配置参数<code class="language-plaintext highlighter-rouge">replica_assign_delay_ms_for_dropouts</code>控制等待时间，默认为10分钟。</li>
+      <li>replica server 在重启时需要 replay log 来恢复数据。如果直接 kill 掉，则需要 replay 的数据量可能很大。但是如果在 kill 之前，先主动触发 memtable 的 flush 操作，让内存数据持久化到磁盘，在重启时需要 replay 的数据量就会大大减少，重启时间会缩短很多，而整个集群重启所需的时间也能大大缩短。</li>
+    </ul>
+  </li>
+  <li>尽量减少不必要的节点间数据拷贝，避免因为增加 CPU、网络 IO、磁盘 IO 的负载带来的可用性影响。
+    <ul>
+      <li>replica server 挂掉后，部分 partition 进入一主一备的状态。如果 meta server 立即在其他 replica server 上补充副本，会带来大量的跨节点数据拷贝，增加 CPU、网络 IO、磁盘 IO 负载压力，影响集群稳定性。Pegasus 解决这个问题的办法是，允许在一段时间内维持一主一备状态，给重启的 replica server 一个维护窗口。如果长时间没有恢复，才会在新的 replica server 上补充副本。这样兼顾了数据的安全性和集群的稳定性。可以通过配置参数 <code class="language-plaintext highlighter-rouge">replica_assign_delay_ms_for_dropouts</code> 控制等待时间，默认为 5 分钟。</li>
     </ul>
   </li>
 </ul>
 
-<h1 id="升级流程">升级流程</h1>
+<h1 id="重启流程">重启流程</h1>
 
-<h2 id="高可用升级">高可用升级</h2>
-<p>根据以上对高可用度的考虑，我们建议完善的升级流程如下：</p>
+<h2 id="高可用重启">高可用重启</h2>
+
+<p>流程如下：</p>
 <ul>
-  <li>准备好新的Server程序包和配置文件</li>
-  <li>使用shell工具将集群的meta level设置为steady，关闭<a href="rebalance">负载均衡功能</a>，避免不必要的replica迁移
+  <li>如果是升级，请先准备好新的 server 程序包和配置文件</li>
+  <li>使用 shell 工具将集群的 meta level 设置为 <code class="language-plaintext highlighter-rouge">steady</code>，关闭 <a href="rebalance">负载均衡功能</a>，避免不必要的 replica 迁移
     <div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>&gt;&gt;&gt; set_meta_level steady
 </code></pre></div>    </div>
   </li>
-  <li>升级replica server进程，采用逐个升级的策略。升级单个replica server：
+  <li>使用 shell 工具将集群的 meta level 设置为 <code class="language-plaintext highlighter-rouge">steady</code>，关闭 <a href="rebalance">负载均衡功能</a>，避免不必要的 replica 迁移
+    <div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>&gt;&gt;&gt; remote_command -t meta-server meta.lb.assign_delay_ms $value
+</code></pre></div>    </div>
+    <p>其中 <code class="language-plaintext highlighter-rouge">value</code> 可理解为 replcia server 的维护时间，即为 meta server 发现 replica server 失联后，到其他节点补充副本的触发时间。例如配置为 <code class="language-plaintext highlighter-rouge">3600000</code>。</p>
+  </li>
+  <li>重启 replica server 进程，采用逐个重启的策略。重启单个 replica server：
     <ul>
-      <li>通过shell向meta server发送<a href="remote-commands#meta-server">远程命令</a>，禁掉<code class="language-plaintext highlighter-rouge">add_secondary</code>操作：
+      <li>通过 shell 工具向 meta server 发送 <a href="remote-commands#meta-server">远程命令</a>，临时禁掉 <code class="language-plaintext highlighter-rouge">add_secondary</code> 操作：
         <div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>&gt;&gt;&gt; remote_command -t meta-server meta.lb.add_secondary_max_count_for_one_node 0
 </code></pre></div>        </div>
       </li>
-      <li>通过migrate_node命令，将replica server上的primary replica都迁走：
+      <li>通过 migrate_node 命令，将 replica server 上的 primary replica 都转移到其他节点：
         <div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">$ </span>./run.sh migrate_node <span class="nt">-c</span> <span class="nv">$meta_list</span> <span class="nt">-n</span> <span class="nv">$node</span> <span class="nt">-t</span> run
 </code></pre></div>        </div>
-        <p>通过shell的<code class="language-plaintext highlighter-rouge">nodes -d</code>命令查看该节点的服务replica情况，等待primary replica的个数变为0；如果长时间不变为0，重新执行上面命令。</p>
+        <p>通过 shell 工具的 <code class="language-plaintext highlighter-rouge">nodes -d</code> 命令查看该节点服务的 replica 情况，等待 primary replica 的个数变为 0。如果长时间不变为 0，请重新执行该命令。</p>
       </li>
-      <li>通过downgrade_node命令，将replica server上的secondary replica都降级为INACTIVE：
+      <li>通过 downgrade_node 命令，将 replica server 上的 secondary replica 都降级为 <code class="language-plaintext highlighter-rouge">INACTIVE</code>：
         <div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">$ </span>./run.sh downgrade_node <span class="nt">-c</span> <span class="nv">$meta_list</span> <span class="nt">-n</span> <span class="nv">$node</span> <span class="nt">-t</span> run
 </code></pre></div>        </div>
-        <p>通过shell的<code class="language-plaintext highlighter-rouge">nodes -d</code>命令查看该节点的服务replica情况，等待secondary replica的个数变为0；如果长时间不变为0，重新执行上面命令。</p>
+        <p>通过 shell 工具的 <code class="language-plaintext highlighter-rouge">nodes -d</code> 命令查看该节点的服务 replica 情况，等待 secondary replica 的个数变为 0。如果长时间不变为 0，请重新执行该命令。</p>
       </li>
-      <li>通过shell向replica server发送远程命令，将所有replica都关闭，以触发flush操作，将数据都落地：
+      <li>通过 shell 工具向 replica server 发送远程命令，将所有 replica 都关闭，以触发 flush 操作，将数据都刷到磁盘：
         <div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>&gt;&gt;&gt; remote_command -l $node replica.kill_partition
 </code></pre></div>        </div>
-        <p>等待大约1分钟，让数据完成落地。</p>
+        <p>等待大约 1 分钟，让数据刷到磁盘完成。</p>
       </li>
-      <li>通过shell向meta server发送<a href="remote-commands#meta-server">远程命令</a>，开启<code class="language-plaintext highlighter-rouge">add_secondary</code>操作：
+      <li>如果是升级操作，则替换程序包和配置文件</li>
+      <li>重启 replica server 进程</li>
+      <li>通过 shell 工具向 meta server 发送 <a href="remote-commands#meta-server">远程命令</a>，开启 <code class="language-plaintext highlighter-rouge">add_secondary</code> 操作，让其快速补充副本：
         <div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>&gt;&gt;&gt; remote_command -t meta-server meta.lb.add_secondary_max_count_for_one_node 100
 </code></pre></div>        </div>
       </li>
-      <li>替换程序包和配置文件</li>
-      <li>重启meta server进程</li>
-      <li>使用shell的<code class="language-plaintext highlighter-rouge">ls -d</code>命令查看集群状态，等待所有partition都完全恢复健康</li>
-      <li>继续升级下一个replica server</li>
+      <li>使用 shell 工具的 <code class="language-plaintext highlighter-rouge">ls -d</code> 命令查看集群状态，等待所有 partition 都完全恢复健康</li>
+      <li>继续操作下一个 replica server</li>
     </ul>
   </li>
-  <li>升级meta server进程，采用逐个升级的策略。升级单个meta server：
+  <li>重启 meta server 进程，采用逐个重启的策略。重启单个 meta server：
     <ul>
-      <li>kill掉meta server进程</li>
-      <li>替换程序包和配置文件</li>
-      <li>重启meta server进程</li>
-      <li>等待30秒以上，保证meta server与replica server心跳的连续性</li>
-      <li>继续升级下一个meta server</li>
+      <li>kill 掉 meta server 进程</li>
+      <li>如果是升级操作，替换程序包和配置文件</li>
+      <li>重启 meta server 进程</li>
+      <li>等待 30 秒以上，保证 meta server 与 replica server 心跳的连续性</li>
+      <li>继续操作下一个 meta server</li>
     </ul>
   </li>
-  <li>升级collector进程：
+  <li>重启 collector 进程：
     <ul>
-      <li>kill掉collector进程</li>
-      <li>替换程序包和配置文件</li>
-      <li>重启collector进程</li>
+      <li>kill 掉 collector 进程</li>
+      <li>如果是升级操作，替换程序包和配置文件</li>
+      <li>重启 collector 进程</li>
+    </ul>
+  </li>
+  <li>重置参数
+    <ul>
+      <li>通过 shell 工具重置以上步骤修改过的参数：
+        <div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>&gt;&gt;&gt; remote_command -t meta-server meta.lb.add_secondary_max_count_for_one_node DEFAULT
+&gt;&gt;&gt; remote_command -t meta-server meta.lb.assign_delay_ms DEFAULT
+</code></pre></div>        </div>
+      </li>
     </ul>
   </li>
 </ul>
 
-<h2 id="简化版升级">简化版升级</h2>
-<p>如果对可用性要求没那么高，升级流程可简化如下：</p>
+<h2 id="简化版重启">简化版重启</h2>
+
+<p>如果对可用性要求不高，重启流程可简化如下：</p>
 <ul>
-  <li>准备好新的Server程序包和配置文件</li>
-  <li>使用shell工具将集群的meta level设置为steady，关闭<a href="rebalance">负载均衡功能</a>，避免不必要的replica迁移
+  <li>如果是升级操作，请准备好新的 server 程序包和配置文件</li>
+  <li>使用 shell 工具将集群的 meta level 设置为 <code class="language-plaintext highlighter-rouge">steady</code>，关闭 <a href="rebalance">负载均衡功能</a>，避免不必要的 replica 迁移
     <div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>&gt;&gt;&gt; set_meta_level steady
 </code></pre></div>    </div>
   </li>
-  <li>升级replica server进程，采用逐个升级的策略。升级单个replica server：
+  <li>重启 replica server 进程，采用逐个重启的策略。重启单个 replica server：
     <ul>
-      <li>kill掉replica server进程</li>
-      <li>替换程序包和配置文件</li>
-      <li>重启replica server进程</li>
-      <li>使用shell的<code class="language-plaintext highlighter-rouge">ls -d</code>命令查看集群状态，等待所有partition都完全恢复健康</li>
-      <li>继续升级下一个replica server</li>
+      <li>kill 掉 replica server 进程</li>
+      <li>如果是升级操作，替换程序包和配置文件</li>
+      <li>重启 replica server 进程</li>
+      <li>使用 shell 工具的 <code class="language-plaintext highlighter-rouge">ls -d</code> 命令查看集群状态，等待所有 partition 都完全恢复健康</li>
+      <li>继续操作下一个 replica server</li>
     </ul>
   </li>
-  <li>升级meta server进程，采用逐个升级的策略。升级单个meta server：
+  <li>重启 meta server 进程，采用逐个重启的策略。重启单个 meta server：
     <ul>
-      <li>kill掉meta server进程</li>
-      <li>替换程序包和配置文件</li>
-      <li>重启meta server进程</li>
-      <li>等待30秒以上，保证meta server与replica server心跳的连续性</li>
-      <li>继续升级下一个meta server</li>
+      <li>kill 掉 meta server 进程</li>
+      <li>如果是升级操作，替换程序包和配置文件</li>
+      <li>重启 meta server 进程</li>
+      <li>等待 30 秒以上，保证 meta server 与 replica server 心跳的连续性</li>
+      <li>继续操作下一个 meta server</li>
     </ul>
   </li>
-  <li>升级collector进程：
+  <li>重启 collector 进程：
     <ul>
-      <li>kill掉collector进程</li>
-      <li>替换程序包和配置文件</li>
-      <li>重启collector进程</li>
+      <li>kill 掉 collector 进程</li>
+      <li>如果是升级操作，替换程序包和配置文件</li>
+      <li>重启 collector 进程</li>
     </ul>
   </li>
 </ul>
 
-<h1 id="升级脚本">升级脚本</h1>
+<h1 id="重启脚本">重启脚本</h1>
 
-<p>我们提供了集群升级脚本<a href="https://github.com/apache/incubator-pegasus/blob/master/scripts/pegasus_rolling_update.sh">scripts/pegasus_rolling_update.sh</a>。该脚本采用<a href="#高可用升级">高可用升级</a>流程，用于小米内部的集群升级。</p>
-
-<p>不过这个脚本并不能直接使用，因为其依赖minos部署工具来完成以下事情：</p>
-<ul>
-  <li>获取集群的进程列表</li>
-  <li>自动部署更新程序包和配置文件，并重启进程</li>
-</ul>
-
-<p>你可以修改该脚本，针对你们自己的部署系统，修改以上通过minos完成的部分，使其可以正常工作。如需帮助，请联系我们。</p>
+<p>可参考基于 <a href="https://github.com/XiaoMi/minos">Minos</a> 和 <a href="#高可用重启">高可用重启</a> 流程的脚本：<a href="https://github.com/apache/incubator-pegasus/blob/master/scripts/pegasus_rolling_update.sh">scripts/pegasus_rolling_update.sh</a>。</p>
 
                 </div>
             </section>
@@ -928,13 +944,13 @@
 </p>
 <ul class="menu-list">
   <li><a href="#功能目标">功能目标</a></li>
-  <li><a href="#升级流程">升级流程</a>
+  <li><a href="#重启流程">重启流程</a>
     <ul>
-      <li><a href="#高可用升级">高可用升级</a></li>
-      <li><a href="#简化版升级">简化版升级</a></li>
+      <li><a href="#高可用重启">高可用重启</a></li>
+      <li><a href="#简化版重启">简化版重启</a></li>
     </ul>
   </li>
-  <li><a href="#升级脚本">升级脚本</a></li>
+  <li><a href="#重启脚本">重启脚本</a></li>
 </ul>
 
         </div>
