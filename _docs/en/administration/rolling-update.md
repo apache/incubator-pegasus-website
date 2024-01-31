@@ -19,101 +19,94 @@ Therefore, the following points can be considered to keep availability during cl
 * Only one process can be restarted at a time, and the next process can only be restarted after the process is restarted and fully recovered to provide service. Because:
   * If the cluster does not recover to a fully healthy state after restarting a process, and some partitions still have only one primary and one secondary replica, then killing another Replica Server process is likely to enter a state with only one primary replica, making it unable to provide write service.
   * Waiting for all partitions in the cluster to recover three replicas before restarting the next process can also reduce the risk of data loss.
-* Try to actively migrate replicas instead of passively migrating replicas to avoid the delay of Failure Detector affecting availability. Because:
-* 尽量主动迁移 replica，而不是被动迁移 replica，避免 Failure Detector 的延迟影响可用性。因为：
-  * 被动迁移需要等待 Failure Detector 来感知节点失联，而主动迁移就是在 kill 掉 Replica Server 之前，先将这个进程服务的 primary replica 都迁移到其他节点上，这个 `reconfiguration` 过程是很快的，基本 1 秒以内完成。
-* 尽量在 kill 掉 Replica Server 之前，将该进程服务的 secondary replica 手动降级。因为：
-  * 将 `reconfiguration` 过程由 “写失败时的被动触发” 变为 “主动触发”，进一步降低对可用性的影响。
-* 尽量减少进程重启时恢复过程的工作量，以缩短进程重启时间。
-  * Replica Server 在重启时需要 replay log 来恢复数据。如果直接 kill 掉，则需要 replay 的数据量可能很大。但是如果在 kill 之前，先主动触发 memtable 的 flush 操作，让内存数据持久化到磁盘，在重启时需要 replay 的数据量就会大大减少，重启时间会缩短很多，而整个集群重启所需的时间也能大大缩短。
-* 尽量减少不必要的节点间数据拷贝，避免因为增加 CPU、网络 IO、磁盘 IO 的负载带来的可用性影响。
-  * Replica Server 挂掉后，部分 partition 进入一主一备的状态。如果 Meta Server 立即在其他 Replica Server 上补充副本，会带来大量的跨节点数据拷贝，增加 CPU、网络 IO、磁盘 IO 负载压力，影响集群稳定性。Pegasus 解决这个问题的办法是，允许在一段时间内维持一主一备状态，给重启的 Replica Server 一个维护窗口。如果长时间没有恢复，才会在新的 Replica Server 上补充副本。这样兼顾了数据的安全性和集群的稳定性。可以通过配置参数 `replica_assign_delay_ms_for_dropouts` 控制等待时间，默认为 5 分钟。
+* Proactively migrate replicas before Failure Detector delays impact availability, instead passively migrate. Because:
+  * Passive migration requires waiting for the Failure Detector to detect Replica Server loss, while proactive migration involves migrating the primary replicas served by this server to other servers before killing the process. This `reconfiguration` procedure is fast and typically takes less than 1 second to complete.
+* Try to manually downgrade the secondary replicas of the Replica Server served before killing the process. Because:
+  * Proactively trigger the `reconfiguration` rather than passive triggering on write failures, further reducing the impact on availability.
+* Minimize the workload of the recovery process during process restart to shorten the process restart time.
+  * Replica Server requires replay WAL logs to recover data upon restart. If it is killed directly, the amount of data that needs to be replayed may be large. However, if the flush operation of memtables to disk is actively triggered before killing, the amount of data that needs to be replayed during restart will be greatly reduced, and the restart time will be much shorter. The time required for the entire cluster to restart can also be greatly reduced.
+* Minimize unnecessary data transmission between servers to avoid availability impacts caused by high load of CPU, network IO, and disk IO when transmit data.
+  * After the Replica Server crashes, some partitions enter the state of `1 primary + 1 secondary`. If the Meta Server immediately supplements replicas on other Replica Servers, it will bring about a large number of cross server data transmission, increase CPU, network IO, and disk IO load, and affect cluster stability. Pegasus's solution to this problem is to allow `1 primary + 1 secondary` state for a period of time, providing a maintenance window for the restarted Replica Server. If it's not recovered for too long time, the missing replicas will be replenished on other Replica Servers. This balances the data integrity and the stability of the cluster. The wait time can be configured though the parameter `replica_assign_delay_ms_for_dropouts`, default to 5 minutes.
 
-# 重启流程
+# Restart steps
 
-## 高可用重启
+## High availability restart steps
 
-流程如下：
-* 如果是升级，请先准备好新的 server 程序包和配置文件
-* 使用 shell 工具将集群的 meta level 设置为 `steady`，关闭 [负载均衡功能](rebalance)，避免不必要的 replica 迁移
+* If it is an upgrade, please prepare new server packages and configuration files first
+* Use shell tools to set the meta level of the cluster to `steady`, turn off [load balancing](rebalance), and avoid unnecessary replica migration
   ```
   >>> set_meta_level steady
   ```
-* 使用 shell 工具将集群的 meta level 设置为 `steady`，关闭 [负载均衡功能](rebalance)，避免不必要的 replica 迁移
+* Use shell tools to set the maintenance window of a single Replica Server
   ```
   >>> remote_command -t meta-server meta.lb.assign_delay_ms $value
   ```
-  其中 `value` 可理解为 replcia server 的维护时间，即为 Meta Server 发现 Replica Server 失联后，到其他节点补充副本的触发时间。例如配置为 `3600000`。
-* 重启 Replica Server 进程，采用逐个重启的策略。重启单个 Replica Server：
-  * 通过 shell 工具向 Meta Server 发送 [远程命令](remote-commands#meta-server)，临时禁掉 `add_secondary` 操作：
+  `value` can be understood as the maintenance window of a single Replica Server, which is the trigger time for the Meta Server to supplement replicas to other servers after discovering that the Replica Server is lost. For example, configure to `3600000`.
+* Restart the Replica Server process one by one. Restart a single Replica Server steps:
+  * Use shell tools to send [remote commands](remote-commands#meta-server) to Meta Server, temporarily disable `add_secondary` operations:
     ```
     >>> remote_command -t meta-server meta.lb.add_secondary_max_count_for_one_node 0
     ```
-  * 通过 migrate_node 命令，将 Replica Server 上的 primary replica 都转移到其他节点：
+  * Use `migrate_node` command to transfer all primary replicas on the Replica Server to other servers:
     ```bash
     $ ./run.sh migrate_node -c $meta_list -n $node -t run
     ```
-    通过 shell 工具的 `nodes -d` 命令查看该节点服务的 replica 情况，等待 primary replica 的个数变为 0。如果长时间不变为 0，请重新执行该命令。
-  * 通过 downgrade_node 命令，将 Replica Server 上的 secondary replica 都降级为 `INACTIVE`：
+    Use shell tools to check the replicas of the servers served through the `nodes -d` command, and wait for the number of **primary** replicas to become 0. If it doesn't change to 0 for a long time, please execute the command again.
+  * Use `downgrade_node` command to downgrade all secondary replicas on the Replica Server to `INACTIVE`:
     ```bash
     $ ./run.sh downgrade_node -c $meta_list -n $node -t run
     ```
-    通过 shell 工具的 `nodes -d` 命令查看该节点的服务 replica 情况，等待 secondary replica 的个数变为 0。如果长时间不变为 0，请重新执行该命令。
-  * 通过 shell 工具向 Replica Server 发送远程命令，将所有 replica 都关闭，以触发 flush 操作，将数据都刷到磁盘：
+    Use shell tools to check the replicas of the servers served through the `nodes -d` command, and wait for the number of **secondary** replicas to become 0. If it doesn't change to 0 for a long time, please execute the command again.
+  * Use shell tools to send a remote command to the Replica Server to close all replicas and trigger flush operations:
     ```
     >>> remote_command -l $node replica.kill_partition
     ```
-    等待大约 1 分钟，让数据刷到磁盘完成。
-  * 如果是升级操作，则替换程序包和配置文件
-  * 重启 Replica Server 进程
-  * 通过 shell 工具向 Meta Server 发送 [远程命令](remote-commands#meta-server)，开启 `add_secondary` 操作，让其快速补充副本：
+    Wait for about 1 minute for the data to be flushed to the disk to complete.
+  * If it is an upgrade, replace the package and configuration file
+  * Restart the Replica Server process
+  * Use shell tools to send [remote commands](remote-commands#meta-server) to Meta Server, enable `add_secondary` operations, let it quickly supplement replicas:
     ```
     >>> remote_command -t meta-server meta.lb.add_secondary_max_count_for_one_node 100
     ```
-  * 使用 shell 工具的 `ls -d` 命令查看集群状态，等待所有 partition 都完全恢复健康
-  * 继续操作下一个 Replica Server
-* 重启 Meta Server 进程，采用逐个重启的策略。重启单个 Meta Server：
-  * kill 掉 Meta Server 进程
-  * 如果是升级操作，替换程序包和配置文件
-  * 重启 Meta Server 进程
-  * 等待 30 秒以上，保证 Meta Server 与 Replica Server 心跳的连续性
-  * 继续操作下一个 Meta Server
-* 重启 Collector 进程：
-  * kill 掉 Collector 进程
-  * 如果是升级操作，替换程序包和配置文件
-  * 重启 Collector 进程
-* 重置参数
-  * 通过 shell 工具重置以上步骤修改过的参数：
+  * Use the `ls - d` command of the shell tool to check the cluster status and wait for all partitions to fully recover health
+  * Continue with the next Replica Server
+* Restart the Meta Server process one by one. Restart a single Meta Server steps:
+  * If it is an upgrade, replace the package and configuration file
+  * Restart the Meta Server process
+  * Wait for more than 30 seconds to ensure the continuity of beacons between Meta Server and Replica Servers
+  * Continue with the next Meta Server
+* Restart the Collector process:
+  * If it is an upgrade, replace the package and configuration file
+  * Restart the Collector process
+* Reset configurations
+  * Reset the configurations modified in the above steps using shell tools:
     ```
     >>> remote_command -t meta-server meta.lb.add_secondary_max_count_for_one_node DEFAULT
     >>> remote_command -t meta-server meta.lb.assign_delay_ms DEFAULT
     ```
 
-## 简化版重启
+## Simplified restart steps
 
-如果对可用性要求不高，重启流程可简化如下：
-* 如果是升级操作，请准备好新的 server 程序包和配置文件
-* 使用 shell 工具将集群的 meta level 设置为 `steady`，关闭 [负载均衡功能](rebalance)，避免不必要的 replica 迁移
+If the availability requirement is not high, the restart steps can be simplified as follows:
+* If it is an upgrade, please prepare new server packages and configuration files first
+* Use shell tools to set the meta level of the cluster to `steady`, turn off [load balancing](rebalance), and avoid unnecessary replica migration
   ```
   >>> set_meta_level steady
   ```
-* 重启 Replica Server 进程，采用逐个重启的策略。重启单个 Replica Server：
-  * kill 掉 Replica Server 进程
-  * 如果是升级操作，替换程序包和配置文件
-  * 重启 Replica Server 进程
-  * 使用 shell 工具的 `ls -d` 命令查看集群状态，等待所有 partition 都完全恢复健康
-  * 继续操作下一个 Replica Server
-* 重启 Meta Server 进程，采用逐个重启的策略。重启单个 Meta Server：
-  * kill 掉 Meta Server 进程
-  * 如果是升级操作，替换程序包和配置文件
-  * 重启 Meta Server 进程
-  * 等待 30 秒以上，保证 Meta Server 与 Replica Server 心跳的连续性
-  * 继续操作下一个 Meta Server
-* 重启 Collector 进程：
-  * kill 掉 Collector 进程
-  * 如果是升级操作，替换程序包和配置文件
-  * 重启 Collector 进程
+* Restart the Replica Server process one by one. Restart a single Replica Server steps:
+  * If it is an upgrade, replace the package and configuration file
+  * Restart the Replica Server process
+  * Use the `ls - d` command of the shell tool to check the cluster status and wait for all partitions to fully recover health
+  * Continue with the next Replica Server
+* Restart the Meta Server process one by one. Restart a single Meta Server steps:
+  * If it is an upgrade, replace the package and configuration file
+  * Restart the Meta Server process
+  * Wait for more than 30 seconds to ensure the continuity of beacons between Meta Server and Replica Servers
+  * Continue with the next Meta Server
+* Restart the Collector process:
+  * If it is an upgrade, replace the package and configuration file
+  * Restart the Collector process
 
-# 重启脚本
+# Restart script
 
-可参考基于 [Minos](https://github.com/XiaoMi/minos) 和 [高可用重启](#高可用重启) 流程的脚本：[scripts/pegasus_rolling_update.sh](https://github.com/apache/incubator-pegasus/blob/master/scripts/pegasus_rolling_update.sh)。
+It can be referenced the script based on [Minos](https://github.com/XiaoMi/minos) and [High availability restart steps](#high-availability-restart-steps): [scripts/pegasus_rolling_update.sh](https://github.com/apache/incubator-pegasus/blob/master/scripts/pegasus_rolling_update.sh).
