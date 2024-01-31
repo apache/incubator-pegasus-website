@@ -3,11 +3,11 @@ permalink: /docs/tools/shell/
 redirect_from: /overview/shell/
 ---
 
-Pegasus 提供了 Shell 工具，用于查看集群相关信息，创建/删除表，操作数据等。目前最新版本为 2.5.0。
+Pegasus 提供了 Shell 工具，用于查看集群相关信息，创建/删除表，操作数据等。本文档基于 2.5.0 版本。
 
 # 工具获取
 
-在成功[编译Pegasus](compilation)后，在 pegasus 目录下启动 Shell 工具:
+在成功[编译 Pegasus ](compilation)后，再成功启动 [onebox](overview/onebox) 后在 pegasus 目录下启动 Shell 工具:
 
 ```bash
 ./run.sh shell
@@ -19,7 +19,7 @@ Pegasus 提供了 Shell 工具，用于查看集群相关信息，创建/删除�
 ./run.sh pack_tools
 ```
 
-pack 成功后，会在本地文件夹下生成`pegasus-tools-{version}-{platform}-{buildType}.tar.gz`文件。将该文件拷贝到目标机器上，解压后进入该文件夹，运行`./run.sh shell`就可以使用 Shell 工具，可以使用 `-h` 选项获取帮助：
+pack 成功后，会在本地文件夹下生成`pegasus-tools-{version}-{gitSHA}-{platform}-{buildType}.tar.gz`文件。将该文件拷贝到目标机器上，解压后进入该文件夹，运行`./run.sh shell`就可以使用 Shell 工具，可以使用 `-h` 选项获取帮助：
 
 ```
 $ ./run.sh shell -h
@@ -243,8 +243,8 @@ USAGE:  cc                       [cluster_name]
 
 说明：
 
-- 指定的集群名必须在`src/shell/config.ini`配置文件的[pegasus.clusters]配置段中可以找到。
-- 你可以在[pegasus.clusters]配置段中设置多个集群。
+- 指定的集群名必须在`src/shell/config.ini`配置文件的 [pegasus.clusters] 配置段中可以找到。
+- 你可以在 [pegasus.clusters] 配置段中设置多个集群。
 
 示例：
 
@@ -264,7 +264,7 @@ USAGE:  use                      [app_name]
 
 说明：
 
-- 表必须已经创建才能使用，默认存在temp表。
+- 表必须已经创建才能使用，默认存在 temp 表。
 
 示例：
 
@@ -304,7 +304,7 @@ USAGE:  timeout                  [time_in_ms]
 
 说明：
 
-- 如果不指定[time_in_ms]，则输出当前的超时时间。
+- 如果不指定 [time_in_ms]，则输出当前的超时时间。
 
 示例：
 
@@ -320,8 +320,8 @@ USAGE:  timeout                  [time_in_ms]
 | nodes          | 获取节点列表，可加`-d`选项获取各节点的负载情况                                                  |
 | server_info    | 各节点的基本信息，主要是 server 版本、节点启动时间                                              |
 | server_stat    | 各节点的统计信息，包含一些关键的统计数据，譬如 get 和 put 操作的 QPS 和延迟、内存和存储使用情况 |
-| remote_command | 向节点发送**远程命令**，以执行某些特殊操作                                                      |
-| flush_log      | 向节点发送**远程命令**，将最近缓冲区中的日志数据刷出到日志文件中                                |
+| remote_command | 向节点发送[远程命令](/administration/remote_command)，以执行某些特殊操作                        |
+| flush_log      | 向节点发送[远程命令](/administration/remote_command)，将最近缓冲区中的日志数据刷出到日志文件中  |
 | disk_replica   | 各节点的副本在磁盘上的分布                                                                      |
 | disk_capacity  | 各节点的磁盘空间占用                                                                            |
 
@@ -345,8 +345,8 @@ USAGE:  timeout                  [time_in_ms]
 用法：
 
 ```
-USAGE:  nodes                    [-d|--detailed] [-j|--json] [-r|--resolve_ip] [-u|--resource_usage]  Not Committed Yet
-│                                [-o|--output file_name] [-s|--status all|alive|unalive] [-q|--qps]
+USAGE:  nodes                    [-d|--detailed] [-j|--json] [-r|--resolve_ip] [-u|--resource_usage]
+                                 [-o|--output file_name] [-s|--status all|alive|unalive] [-q|--qps]
                                  [-p|latency_percentile 50|90|95|99|999]
 ```
 
@@ -357,8 +357,8 @@ USAGE:  nodes                    [-d|--detailed] [-j|--json] [-r|--resolve_ip] [
 - `-u`选项：如果指定，输出节点资源使用情况。
 - `-o`选项：如果指定，输出基本信息到指定文件，默认为当前路径。
 - `-s`选项：如果指定，输出某种状态的节点信息，包括 all、alive、unalive。
-- `-q`选项：如果指定，则仅显示指定节点的 qps 信息。(版本提供支持)
-- `-p`选项：如果指定，则显示指定节点的延迟等级。(版本提供支持)
+- `-q`选项：如果指定，则仅显示指定节点的 QPS 信息。
+- `-p`选项：如果指定，则显示指定节点的延迟等级。
 
 示例：
 
@@ -379,7 +379,7 @@ USAGE:server_info                [-t all|meta-server|replica-server] [-l ip:port
 说明：
 
 - `-t`选项：如果指定，则选择输出服务器节点类别的信息，包含 all、meta-server、replica-server。
-- `-l`选项：如果指定，则选择输出特定IP地址节点的信息，多个节点使用`,`连接。
+- `-l`选项：如果指定，则选择输出特定 IP 地址节点的信息，多个节点使用`,`连接。
 
 示例：
 
@@ -399,7 +399,7 @@ USAGE:server_stat                [-t all|meta-server|replica-server] [-l ip:port
 
 说明：
 
-- 选项参数说明同[server_info](#server_info)。
+- 选项参数说明同 [server_info](#server_info)。
 
 示例：
 
@@ -419,7 +419,7 @@ USAGE:remote_command             [-t all|meta-server|replica-server] [-l ip:port
 
 说明：
 
-- `-t`、`-l`选项：用于选择特定目标机器，参见[server_info](#server_info)说明。
+- `-t`、`-l`选项：用于选择特定目标机器，参见 [server_info](#server_info) 说明。
 - 远程命令详细信息，参见[远程命令](/administration/remote-commands)。
 
 示例：
@@ -440,7 +440,7 @@ USAGE:flush_log                  [-t all|meta-server|replica-server] [-l ip:port
 
 说明：
 
-- `-t`、`-l`选项：用于选择特定目标机器，参见[server_info](#server_info)说明。
+- `-t`、`-l`选项：用于选择特定目标机器，参见 [server_info](#server_info) 说明。
 
 示例：
 
@@ -450,7 +450,7 @@ USAGE:flush_log                  [-t all|meta-server|replica-server] [-l ip:port
 
 ### disk_replica
 
-查询副本在 replica_server 节点的磁盘分布，1.12.3 版本提供支持
+查询副本在 replica_server 节点的磁盘分布，1.12.3 版本提供支持。
 
 用法：
 
@@ -473,7 +473,7 @@ USAGE:disk_replica             [-n|--node replica_server(ip:port)][-a|-app app_n
 
 ### disk_capacity
 
-查询 replica_server 节点的磁盘空间占用，1.12.3 版本提供支持
+查询 replica_server 节点的磁盘空间占用，1.12.3 版本提供支持。
 
 用法：
 
@@ -502,21 +502,21 @@ USAGE:disk_capacity            [-n|--node replica_server(ip:port)][-o|--out file
 | app               | 获取某个表的信息，可加`-d`选项获取详细信息，包括各 partition 的分布情况、健康状况                          |
 | app_stat          | 获取表的读写情况和存储统计信息，可加`-a`选项指定单个表，以获取该表各个 partition 的详细统计信息            |
 | app_disk          | 获取某个表的详细存储信息，可加`-d`选项获取各 partition 的详细存储信息                                      |
-| create            | 创建表，可加`-p`和`-r`选项指定分片数和副本数，要求分片数是 2 的指数倍，不指定 -r 则默认副本数为3（推荐值） |
-| drop              | 删除表，参见[使用drop命令删除表](/administration/table-soft-delete#使用drop命令删除表)                     |
-| recall            | 恢复已删除的表，参见[使用recall命令恢复表](/administration/table-soft-delete#使用recall命令恢复表)         |
-| get_app_envs      | 获取表的环境变量，参见[Table环境变量#get_app_envs](/administration/table-env#get_app_envs)                 |
-| set_app_envs      | 设置表的环境变量，参见[Table环境变量#set_app_envs](/administration/table-env#set_app_envs)                 |
-| del_app_envs      | 删除表的环境变量，参见[Table环境变量#del_app_envs](/administration/table-env#del_app_envs)                 |
-| clear_app_envs    | 清理表的环境变量，参见[Table环境变量#clear_app_envs](/administration/table-env#clear_app_envs)             |
+| create            | 创建表，可加`-p`和`-r`选项指定分片数和副本数，要求分片数是 2 的指数倍，不指定 -r 则默认副本数为 3（推荐值）|
+| drop              | 删除表，参见[使用 drop 命令删除表](/administration/table-soft-delete#使用drop命令删除表)                   |
+| recall            | 恢复已删除的表，参见[使用 recall 命令恢复表](/administration/table-soft-delete#使用recall命令恢复表)       |
+| get_app_envs      | 获取表的环境变量，参见 [Table 环境变量#get_app_envs](/administration/table-env#get_app_envs)               |
+| set_app_envs      | 设置表的环境变量，参见 [Table 环境变量#set_app_envs](/administration/table-env#set_app_envs)               |
+| del_app_envs      | 删除表的环境变量，参见 [Table 环境变量#del_app_envs](/administration/table-env#del_app_envs)               |
+| clear_app_envs    | 清理表的环境变量，参见 [Table 环境变量#clear_app_envs](/administration/table-env#clear_app_envs)           |
 | add_dup           | 添加 duplication 的集群，参见[跨机房同步](/administration/duplication)                                     |
-| query_dup         | 查询表的跨机房同步的集群, 参加[跨机房同步](/administration/duplication)2ee37f3                             |
+| query_dup         | 查询表的跨机房同步的集群, 参加[跨机房同步](/administration/duplication)                                    |
 | remove_dup        | 移除 duplication 的集群, 参见[跨机房同步](/administration/duplication)                                     |
 | start_dup         | 开始跨机房同步, 启动 duplication 的备份功能, 参见[跨机房同步](/administration/duplication)                 |
 | pause_dup         | 暂停跨机房同步, 暂停 duplication 的备份功能, 参见[跨机房同步](/administration/duplication)                 |
 | set_dup_fail_mode | 设置 duplication 失败后的处理的方式, 对指定的表的指定同步集群设置, 可设置为 fail 和 skip                   |
 | get_replica_count | 获取表的副本数参数值                                                                                       |
-| set_replica_count | 设置表的副本数参数                                                                                         |
+| set_replica_count | 设置表的副本数参数值                                                                                       |
 
 ### ls
 
@@ -583,7 +583,7 @@ USAGE: app_stat                [-a|--app_name str] [-q|--only_qps] [-u|--only_us
 说明：
 
 - `-a`选项：如果指定，则按照指定表的 partition 分类显示详细信息。
-- `-q`选项：如果指定，则仅显示指定表的 qps 信息。
+- `-q`选项：如果指定，则仅显示指定表的 QPS 信息。
 - `-u`选项：如果指定，则仅显示指定表的 usage 信息。
 - `-o`选项：如果指定，则把结果输出到指定文件中。
 
@@ -623,7 +623,7 @@ USAGE: create                    <app_name> [-p|--partition_count num] [-r|--rep
 
 - `-p`选项：如果指定，则可以设置分片数，要求分片数是 2 的指数倍。
 - `-r`选项：如果指定，则可以指定副本数，推荐副本数为 3。
-- `-e`选项：如果指定，则可是设置环境变量，参见[Table环境变量](/administration/table-env)。
+- `-e`选项：如果指定，则可是设置环境变量，参见 [Table 环境变量](/administration/table-env)。
 
 示例：
 
@@ -633,7 +633,7 @@ USAGE: create                    <app_name> [-p|--partition_count num] [-r|--rep
 
 ### drop
 
-删除表
+删除表。
 
 用法：
 
@@ -643,7 +643,7 @@ USAGE: drop                      <app_name> [-r|--reserve_seconds num]
 
 说明：
 
-- `-r`选项：如果指定，则设置数据的保留时间（删除时间开始计算，单位为秒）。如果不指定，则使用配置文件 hold_seconds_for_dropped_app 指定的值，默认为7天，参见[Table软删除#使用drop命令删除表](/administration/table-soft-delete#使用drop命令删除表)。
+- `-r`选项：如果指定，则设置数据的保留时间（删除时间开始计算，单位为秒）。如果不指定，则使用配置文件 hold_seconds_for_dropped_app 指定的值，默认为 7 天，参见 [Table 软删除#使用drop命令删除表](/administration/table-soft-delete#使用drop命令删除表)。
 
 示例：
 
@@ -665,7 +665,7 @@ USAGE: recall                    <app_id> [new_app_name]
 
 - 注意该命令通过 app_id 进行表恢复。
 - `new_app_name`参数：如果不指定新表名，则会使用原表名，否则使用指定的新表名，如果原表名已存在（删表后新建了同名表），则必须指定另外一个不同的新表名，否则会失败。
-- 详细信息参见[Table软删除#使用recall命令恢复表](/administration/table-soft-delete#使用recall命令恢复表)。
+- 详细信息参见 [Table 软删除#使用recall命令恢复表](/administration/table-soft-delete#使用recall命令恢复表)。
 
 示例：
 
@@ -675,7 +675,7 @@ USAGE: recall                    <app_id> [new_app_name]
 
 ### get_app_envs
 
-获取表的环境变量，关于环境变量请参见[Table环境变量](/administration/table-env)。
+获取表的环境变量，关于环境变量请参见 [Table 环境变量](/administration/table-env)。
 
 用法：
 
@@ -685,7 +685,7 @@ USAGE: get_app_envs
 
 说明：
 
-- 该命令输出当前表的环境变量，使用前请首先使用`use [app_name]`选定特定表，参见[get_app_envs](/administration/table-env#get_app_envs)。
+- 该命令输出当前表的环境变量，使用前请首先使用`use [app_name]`选定特定表，参见 [get_app_envs](/administration/table-env#get_app_envs)。
 
 示例：
 
@@ -696,7 +696,7 @@ USAGE: get_app_envs
 
 ### set_app_envs
 
-设置表的环境变量，关于环境变量请参见[Table环境变量](/administration/table-env)。
+设置表的环境变量，关于环境变量请参见 [Table 环境变量](/administration/table-env)。
 
 用法：
 
@@ -706,7 +706,7 @@ USAGE: set_app_envs              <key> <value> [key value...]
 
 说明：
 
-- 该命令设置当前表的环境变量，使用前请首先使用`use [app_name]`选定特定表，参见[set_app_envs](/administration/table-env#set_app_envs)。
+- 该命令设置当前表的环境变量，使用前请首先使用`use [app_name]`选定特定表，参见 [set_app_envs](/administration/table-env#set_app_envs)。
 
 示例：
 
@@ -717,7 +717,7 @@ USAGE: set_app_envs              <key> <value> [key value...]
 
 ### del_app_envs
 
-删除表的环境变量，关于环境变量请参见[Table环境变量](/administration/table-env)。
+删除表的环境变量，关于环境变量请参见 [Table 环境变量](/administration/table-env)。
 
 用法：
 
@@ -727,7 +727,7 @@ USAGE: del_app_envs              <key> [key...]
 
 说明：
 
-- 该命令删除当前表的环境变量，使用前请首先使用`use [app_name]`选定特定表，参见[del_app_envs](/administration/table-env#del_app_envs)。
+- 该命令删除当前表的环境变量，使用前请首先使用`use [app_name]`选定特定表，参见 [del_app_envs](/administration/table-env#del_app_envs)。
 
 示例：
 
@@ -738,7 +738,7 @@ USAGE: del_app_envs              <key> [key...]
 
 ### clear_app_envs
 
-清理表的环境变量，关于环境变量请参见[Table环境变量](/administration/table-env)。
+清理表的环境变量，关于环境变量请参见 [Table 环境变量](/administration/table-env)。
 
 用法：
 
@@ -748,7 +748,7 @@ USAGE: clear_app_envs              [-a|--all] [-p|--prefix str]
 
 说明：
 
-- 该命令删除当前表的环境变量，使用前请首先使用`use [app_name]`选定特定表，参见[clear_app_envs](/administration/table-env#clear_app_envs)。
+- 该命令删除当前表的环境变量，使用前请首先使用`use [app_name]`选定特定表，参见 [clear_app_envs](/administration/table-env#clear_app_envs)。
 - `-a`选项：如果指定，则清理所有的环境变量。
 - `-p`选项：如果指定，则可以清理以特定字符串为前缀的环境变量。
 
@@ -761,7 +761,7 @@ USAGE: clear_app_envs              [-a|--all] [-p|--prefix str]
 
 ### add_dup
 
-添加 duplication 的集群，参见[跨机房同步](/administration/duplication)
+添加 duplication 的集群，参见[跨机房同步](/administration/duplication)。
 
 用法:
 
@@ -772,18 +772,16 @@ USAGE: add_dup                     <app_name> <remote_cluster_name> [-f|--freeze
 说明:
 
 - 对指定表加上指定的 duplication 的集群
-- `-f`选项: 如果指定，则
 
 示例:
 
 ```
 >>> add_dup temp my_cluster
->>> add_dup temp my_cluster
 ```
 
 ### query_dup
 
-查询表的跨机房同步的集群, 参加[跨机房同步](/administration/duplication)
+查询表的跨机房同步的集群, 参见[跨机房同步](/administration/duplication)。
 
 用法:
 
@@ -799,12 +797,11 @@ USAGE: query_dup                   <app_name> [-d|--detail]
 
 ```
 >>> query_dup temp -d
->>>
 ```
 
 ### remove_dup
 
-移除 duplication 的集群, 参见[跨机房同步](/administration/duplication)
+移除 duplication 的集群, 参见[跨机房同步](/administration/duplication)。
 
 用法:
 
@@ -812,22 +809,15 @@ USAGE: query_dup                   <app_name> [-d|--detail]
 USAGE: remove_dup                  <app_name> <dup_id>
 ```
 
-说明:
-
--
--
--
-
 示例:
 
 ```
 >>> remove_dup temp my_cluster:8000
->>>
 ```
 
 ### start_dup
 
-开始跨机房同步, 启动 duplication 的备份功能, 参见[跨机房同步](/administration/duplication)
+开始跨机房同步, 启动 duplication 的备份功能, 参见[跨机房同步](/administration/duplication)。
 
 用法:
 
@@ -835,20 +825,15 @@ USAGE: remove_dup                  <app_name> <dup_id>
 USAGE: start_dup                   <app_name> <dup_id>
 ```
 
-说明:
-
--
-
 示例:
 
 ```
 >>> start_dup temp my_cluster
->>>
 ```
 
 ### pause_dup
 
-暂停跨机房同步, 暂停 duplication 的备份功能, 参见[跨机房同步](/administration/duplication)
+暂停跨机房同步, 暂停 duplication 的备份功能, 参见[跨机房同步](/administration/duplication)。
 
 用法:
 
@@ -864,7 +849,6 @@ USAGE: pause_dup                   <app_name> <dup_id>
 
 ```
 >>> pause_dup temp my_cluster
->>>
 ```
 
 ### set_dup_fail_mode
@@ -886,7 +870,6 @@ USAGE: set_dup_fail_mode           <app_name> <dup_id> <slow|skip>
 
 ```
 >>> set_dup_fail_mode temp my_cluster slow
->>>
 ```
 
 ### get_replica_count
@@ -925,31 +908,29 @@ USAGE: set_replica_count           <app_name> <replica_count>
 
 ## 数据操作
 
-| 子命令             | 功能                                                                                                                                                                                                                                                 |
-| ------------------ | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| set                | 设置单条数据                                                                                                                                                                                                                                         |
-| multi_set          | 设置同一 HashKey 下的多条数据                                                                                                                                                                                                                        |
-| get                | 获取单条数据                                                                                                                                                                                                                                         |
-| multi_get          | 通过指定多个 SortKey，获取同一 HashKey 下的多条数据                                                                                                                                                                                                  |
-| multi_get_range    | 通过指定 SortKey 的查询范围和过滤条件，获取同一 HashKey 下的多条数据                                                                                                                                                                                 |
-| multi_get_sortkeys | 获取同一 HashKey 下的所有 SortKey                                                                                                                                                                                                                    |
-| del                | 删除单条数据                                                                                                                                                                                                                                         |
-| multi_del          | 通过指定多个 SortKey，删除同一 HashKey 下的多条数据                                                                                                                                                                                                  |
-| multi_del_range    | 通过指定 SortKey 的查询范围和过滤条件，删除同一 HashKey 下的多条数据                                                                                                                                                                                 |
-| incr               | [原子增减操作](/api/single-atomic#原子增减)                                                                                                                                                                                                          |
-| check_and_set      | [原子CAS操作](/api/single-atomic#cas操作)                                                                                                                                                                                                            |
-| check_and_mutate   | [原子CAS扩展版本](/clients/java-client#checkandmutate)                                                                                                                                                                                               |
-| exist              | 查询某条数据是否存在                                                                                                                                                                                                                                 |
-| count              | 获取同一 HashKey 下的 SortKey 的个数                                                                                                                                                                                                                 |
-| ttl                | 查询某条数据的 TTL(Time To Live) 时间，返回剩余的 live 时间，单位为秒；返回 Infinite 表示没有 TTL 限制                                                                                                                                               |
-| hash               | 计算键值的哈希值                                                                                                                                                                                                                                     |
-| hash_scan          | 逐条扫描同一 HashKey 下的数据，可指定 SortKey 的查询范围和过滤条件，结果按照 SortKey 排序                                                                                                                                                            |
-| full_scan          | 对表进行全扫描，可指定 HashKey、SortKey 和 Value 的过滤条件，同一 HashKey 的结果按照 SortKey 排序，HashKey 之间无顺序保证                                                                                                                            |
-| copy_data          | 将一个表的数据逐条插入到另外一个表，源表通过`use`命令指定，目标表通过`-c`和`-a`命令执行，目标表可以在另外一个集群，详细用法参见[Table迁移#copy_data迁移](/administration/table-migration#copy_data迁移)，可指定 HashKey、SortKey 和 Value 的过滤条件 |
-| clear_data         | 将一个表的数据逐条删除，实际上就是先扫描数据，然后对每一条数据执行删除操作，可指定 HashKey、SortKey 和 Value 的过滤条件                                                                                                                              |
-| count_data         | 统计一个表的数据条数，可加`-z`选项统计数据大小，可指定 HashKey、SortKey 和 Value 的过滤条件                                                                                                                                                          |
-| get_replica_count  | get the max replica count of an app                                                                                                                                                                                                                  |
-| set_replica_count  | set the max replica count of an app                                                                                                                                                                                                                  |
+| 子命令             | 功能                                                                                                                                                                 |
+| ------------------ | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| set                | 设置单条数据                                                                                                                                                         |
+| multi_set          | 设置同一 HashKey 下的多条数据                                                                                                                                        |
+| get                | 获取单条数据                                                                                                                                                         |
+| multi_get          | 通过指定多个 SortKey，获取同一 HashKey 下的多条数据                                                                                                                  |
+| multi_get_range    | 通过指定 SortKey 的查询范围和过滤条件，获取同一 HashKey 下的多条数据                                                                                                 |
+| multi_get_sortkeys | 获取同一 HashKey 下的所有 SortKey                                                                                                                                    |
+| del                | 删除单条数据                                                                                                                                                         |
+| multi_del          | 通过指定多个 SortKey，删除同一 HashKey 下的多条数据                                                                                                                  |
+| multi_del_range    | 通过指定 SortKey 的查询范围和过滤条件，删除同一 HashKey 下的多条数据                                                                                                 |
+| incr               | [原子增减操作](/api/single-atomic#原子增减)                                                                                                                          |
+| check_and_set      | [原子 CAS 操作](/api/single-atomic#cas操作)                                                                                                                          |
+| check_and_mutate   | [原子 CAS 扩展版本](/clients/java-client#checkandmutate)                                                                                                             |
+| exist              | 查询某条数据是否存在                                                                                                                                                 |
+| count              | 获取同一 HashKey 下的 SortKey 的个数                                                                                                                                 |
+| ttl                | 查询某条数据的 TTL(Time To Live) 时间，返回剩余的 live 时间，单位为秒；返回 Infinite 表示没有 TTL 限制                                                               |
+| hash               | 计算键值的哈希值                                                                                                                                                     |
+| hash_scan          | 逐条扫描同一 HashKey 下的数据，可指定 SortKey 的查询范围和过滤条件，结果按照 SortKey 排序                                                                            |
+| full_scan          | 对表进行全扫描，可指定 HashKey、SortKey 和 Value 的过滤条件，同一 HashKey 的结果按照 SortKey 排序，HashKey 之间无顺序保证                                            |
+| copy_data          | 将一个表的数据逐条插入到另外一个表，源表通过`use`命令指定，目标表通过`-c`和`-a`命令执行，目标表可以在另外一个集群，详细用法参见 [Table迁移#copy_data迁移](/administration/table-migration#copy_data迁移)，可指定 HashKey、SortKey 和 Value 的过滤条件                                                                                                                                                     |
+| clear_data         | 将一个表的数据逐条删除，实际上就是先扫描数据，然后对每一条数据执行删除操作，可指定 HashKey、SortKey 和 Value 的过滤条件                                              |
+| count_data         | 统计一个表的数据条数，可加`-z`选项统计数据大小，可指定 HashKey、SortKey 和 Value 的过滤条件                                                                          |
 
 ### set
 
@@ -1052,7 +1033,7 @@ USAGE:  multi_get_range        <hash_key> <start_sort_key> <stop_sort_key>
 示例：
 
 ```
->>> multi_get_range xioami cloud0 cloud5 -a true -b true -s prefix -y str -n 100 -i false -r false
+>>> multi_get_range pegasus cloud0 cloud5 -a true -b true -s prefix -y str -n 100 -i false -r false
 ```
 
 ### multi_get_sortkeys
@@ -1120,12 +1101,12 @@ USAGE:  multi_del_range        <hash_key> <start_sort_key> <stop_sort_key>
 说明：
 
 - `-i|--silent`参数：如果为`true`表示不打印删除时的日志。
-- 其余参数，参见[multi_get_range](#multi_get_range)说明。
+- 其余参数，参见 [multi_get_range](#multi_get_range) 说明。
 
 示例：
 
 ```
->>> multi_del_range xioami cloud0 cloud5 -a true -b true -s prefix -y str -n 100 -i false -r false
+>>> multi_del_range pegasus cloud0 cloud5 -a true -b true -s prefix -y str -n 100 -i false -r false
 ```
 
 ### incr
@@ -1166,7 +1147,7 @@ USAGE:  check_and_set          <hash_key> [-c|--check_sort_key str]
 
 说明：
 
-- 对比交换，最初是表示一条 CPU 的原子指令，其作用是让 CPU 先进行比较两个值是否相等，然后原子地更新某个位置的值。参照[CAS操作](/api/single-atomic#cas操作)。
+- 对比交换，最初是表示一条 CPU 的原子指令，其作用是让 CPU 先进行比较两个值是否相等，然后原子地更新某个位置的值。参照 [CAS 操作](/api/single-atomic#cas操作)。
 
 示例：
 该命令检查 hashKey=cloud 的数据，若 sortKey=90 的 value 存在，则将 sortKey=91 的 value 设置为 92，且返回 sortKey=90 的 value 值。
@@ -1177,7 +1158,7 @@ USAGE:  check_and_set          <hash_key> [-c|--check_sort_key str]
 
 ### check_and_mutate
 
-原子 CAS 扩展版本，参见[原子CAS扩展版本](/clients/java-client#checkandmutate)。
+原子 CAS 扩展版本，参见[原子 CAS 扩展版本](/clients/java-client#checkandmutate)。
 
 用法：
 
@@ -1319,7 +1300,7 @@ USAGE: full_scan      [-h|--hash_key_filter_type anywhere|prefix|postfix]
 
 说明：
 
-- 参数说明参见[hash_scan](#hashKey_scan)。
+- 参数说明参见 [hash_scan](#hashKey_scan)。
 
 实例：
 
@@ -1348,7 +1329,7 @@ USAGE:  copy_data     <-c|--target_cluster_name str> <-a|--target_app_name str>
 
 说明：
 
-- 源表通过 use 命令指定，目标表通过 -c 和 -a 命令执行，目标表可以在另外一个集群，详细用法参见[Table迁移#copy_data迁移](/administration/table-migration#copy_data迁移)，可指定 HashKey、SortKey 和 Value 的过滤条件。
+- 源表通过 use 命令指定，目标表通过 -c 和 -a 命令执行，目标表可以在另外一个集群，详细用法参见 [Table 迁移#copy_data迁移](/administration/table-migration#copy_data迁移)，可指定 HashKey、SortKey 和 Value 的过滤条件。
 
 示例：
 
@@ -1380,7 +1361,7 @@ USAGE:  clear_data    [-p|--partition num]
 - `-p|--partition num`参数：指定删除的分片。
 - `-b|--max_batch_count num`参数：指定一次性删除的最大数量。
 - `-f|--force`参数：如果为 true，则表示删除，否则无法删除并打印再次确认信息 “ERROR: be careful to clear data!!! Please specify --force if you are determined to do”。
-- 其余参数均为过滤条件，参见[multi_get_range](#multi_get_range)。
+- 其余参数均为过滤条件，参见 [multi_get_range](#multi_get_range)。
 
 示例：
 
@@ -1423,7 +1404,7 @@ USAGE:  count_data    [-p|--partition num] [-b|--max_batch_count num] [-t|--time
 - `-n|--top_count`参数：仅展示指定数量的数据。
 - `-a|--stat_size`参数：统计当前 value 的大小，单位字节。
 - `-r|--run_seconds num`参数：仅运行指定时间进行统计。
-- 其余参数均为过滤条件，参见[multi_get_range](#multi_get_range)。
+- 其余参数均为过滤条件，参见 [multi_get_range](#multi_get_range)。
 
 示例：
 
@@ -1447,7 +1428,7 @@ USAGE:  count_data    [-p|--partition num] [-b|--max_batch_count num] [-t|--time
 | 子命令       | 功能                                                                                                                                  |
 | ------------ | ------------------------------------------------------------------------------------------------------------------------------------- |
 | recover      | 启动数据恢复流程，通过向 ReplicaServer 收集和学习，重新构建 Zookeeper 上的元数据信息，参见[元数据恢复](/administration/meta-recovery) |
-| ddd_diagnose | DDD 自动诊断工具，用于恢复所有备份全部不可用的 partition，参见[Replica数据恢复](/administration/replica-recovery)                     |
+| ddd_diagnose | DDD 自动诊断工具，用于恢复所有备份全部不可用的 partition，参见 [Replica数据恢复](/administration/replica-recovery)                     |
 
 ## 冷备份管理
 

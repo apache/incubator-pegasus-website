@@ -3,11 +3,11 @@ permalink: /docs/tools/shell/
 redirect_from: /overview/shell/
 ---
 
-Pegasus offers a comprehensive Shell utility designed for perusing cluster-related data, crafting and eliminating tables, and orchestrating data operations, among other functions. As of the present moment, the most recent iteration stands at 2.5.0.
+Pegasus offers a comprehensive Shell utility designed for perusing cluster-related data, crafting and eliminating tables, and orchestrating data operations, among other functions. This document base on version 2.5.0.
 
 # Obtaining the tool
 
-After successfully [compiling Pegasus](compilation), initiate the Shell utility in the Pegasus directory:
+After successfully [compiling Pegasus](compilation) and initiating [onebox](overviwe/onebox), initiate the Shell utility in the Pegasus directory:
 
 ```bash
 ./run.sh shell
@@ -19,7 +19,7 @@ You can also utilize the 'pack' tool to package the Shell utility, making it con
 ./run.sh pack_tools
 ```
 
-After a successful execution of 'pack', a file named `pegasus-tools-{version}-{platform}-{buildType}.tar.gz` will be generated in your local directory. Copy this file to your target machine, extract it, navigate to the folder, and run './run.sh shell' to use the Shell utility. You can also use the '-h' option to retrieve assistance:
+After a successful execution of 'pack', a file named `pegasus-tools-{version}-{gitSHA}-{platform}-{buildType}.tar.gz` will be generated in your local directory. Copy this file to your target machine, extract it, navigate to the folder, and run './run.sh shell' to use the Shell utility. You can also use the '-h' option to retrieve assistance:
 
 ```
 $ ./run.sh shell -h
@@ -264,7 +264,7 @@ USAGE:  use                    [app_name]
 
 Explanation:
 
-- Tables must be created before they can be used; by default, there is a `temp` table available.
+- Tables must be created before they can be used. By default, there is a `temp` table available.
 
 Examples:
 
@@ -314,16 +314,16 @@ Examples:
 
 ## Node Management
 
-| Subcommands    | Functionality                                                                                                                                                                              |
-| -------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
-| cluster_info   | Obtain Basic Cluster Information.                                                                                                                                                          |
-| nodes          | Retrieve a List of Nodes; you can include the -d option to obtain the load status of each node.                                                                                            |
-| server_info    | Obtain essential information about each node, primarily including the server version and node startup time.                                                                                |
-| server_stat    | The statistical data for each node includes essential metrics, such as the Queries Per Second (QPS) and latency for 'get' and 'put' operations, as well as memory and storage utilization. |
-| remote_command | Dispatch remote commands to the nodes to execute certain specialized operations.                                                                                                           |
-| flush_log      | Transmit remote commands to the nodes to flush log data from the recent buffer into the log files.                                                                                         |
-| disk_replica   | The distribution of each node's replicas across the disks.                                                                                                                                 |
-| disk_capacity  | The disk space utilization of each node.                                                                                                                                                   |
+| Subcommands    | Functionality                                                                                                                                                                                  |
+| -------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| cluster_info   | Obtain Basic Cluster Information.                                                                                                                                                              |
+| nodes          | Retrieve a List of Nodes; you can include the `-d` option to obtain the load status of each node.                                                                                              |
+| server_info    | Obtain essential information about each node, primarily including the server version and node startup time.                                                                                    |
+| server_stat    | The statistical data for each node includes essential metrics, such as the Queries Per Second (QPS) and latency for **get** and **put** operations, as well as memory and storage utilization. |
+| remote_command | Dispatch remote commands to the nodes to execute certain specialized operations.                                                                                                               |
+| flush_log      | Transmit remote commands to the nodes to flush log data from the recent buffer into the log files.                                                                                             |
+| disk_replica   | The distribution of each node's replicas across the disks.                                                                                                                                     |
+| disk_capacity  | The disk space utilization of each node.                                                                                                                                                       |
 
 ### cluster_info
 
@@ -334,7 +334,7 @@ Explanation:
 - The primary components of cluster information primarily encompass:
   - Information on the nodes for meta_server and zookeeper.
   - Meta_function_level: Strategies for load balancing.
-  - balance_operation_count: Statistics for load balancing operations, including move_pri, move_pri, copy_sec, and total. For more information on load balancing, refer to [Load balancing](/administration/rebalance).
+  - balance_operation_count: Statistics for load balancing operations, including **move_pri**, **move_pri**, **copy_sec**, and **total**. For more information on load balancing, refer to [Load balancing](/administration/rebalance).
   - Primary_replica_count_stddev: A metric for measuring load balancing.
   - Total_replica_count_stddev: A metric for measuring load balancing.
 
@@ -361,17 +361,17 @@ Usage:
 
 ```
 USAGE:  nodes                  [-d|--detailed] [-j|--json] [-r|--resolve_ip] [-u|--resource_usage]
-│                              [-o|--output file_name] [-s|--status all|alive|unalive] [-q|--qps]
+                               [-o|--output file_name] [-s|--status all|alive|unalive] [-q|--qps]
                                [-p|latency_percentile 50|90|95|99|999]
 ```
 
 Explanation:
 
 - The `-d` option: When specified, it provides detailed information about each node, such as the load conditions of the nodes.
-- The `-r` option: When specified, represent the node using domain name information and display its basic details. If the domain name corresponding to the node's address cannot be found, indicate it as "UNRESOLVABLE".
+- The `-r` option: When specified, represent the node using domain name information and display its basic details. If the domain name corresponding to the node's address cannot be found, indicate it as **UNRESOLVABLE**.
 - The `-u` option: When specified, display the resource utilization of the nodes.
 - The `-o` option: When specified, export basic information to a specified file, defaulting to the current path.
-- The `-s` option: When specified, output information of nodes in a specific status, including options like 'all', 'alive', and 'unalive'.
+- The `-s` option: When specified, output information of nodes in a specific status, including options like **all**, **alive**, and **unalive**.
 - The `-q` option: When specified, display only the QPS information of the specified node.
 - The `-p` option: When specified, exhibit the latency levels of the specified node.
 
@@ -393,8 +393,8 @@ USAGE:  server_info              [-t all|meta-server|replica-server] [-l ip:port
 
 Explanation:
 
-- The `-t` option: When specified, opt to output information regarding the categories of server nodes, including 'all', 'meta-server', and 'replica-server'.
-- The `-l` option: When specified, choose to output information for nodes with specific IP addresses, connecting multiple nodes with a comma ','.
+- The `-t` option: When specified, opt to output information regarding the categories of server nodes, including **all**, **meta-server**, and **replica-server**.
+- The `-l` option: When specified, choose to output information for nodes with specific IP addresses, connecting multiple nodes with a comma **","**.
 
 Examples:
 
@@ -404,7 +404,7 @@ Examples:
 
 ### server_stat
 
-The statistical data for each node includes essential metrics, such as the Queries Per Second (QPS) and latency for 'get' and 'put' operations, as well as memory and storage utilization.
+The statistical data for each node includes essential metrics, such as the Queries Per Second (QPS) and latency for **get** and **put** operations, as well as memory and storage utilization.
 
 Usage:
 
@@ -529,7 +529,7 @@ Examples:
 | remove_dup        | Remove a cluster with duplication, refer to [duplication](/administration/duplication).                                                                                                                                                                         |
 | start_dup         | Initiate cross-data center synchronization and activate the duplication backup feature, refer to [duplication](/administration/duplication).                                                                                                                    |
 | pause_dup         | Pause cross-data center synchronization and suspend the duplication backup feature, refer to [duplication](/administration/duplication).                                                                                                                        |
-| set_dup_fail_mode | Configure the handling method for duplication failures, setting it for a specified table and its synchronization cluster, with options to set as 'fail' or 'skip'.                                                                                              |
+| set_dup_fail_mode | Configure the handling method for duplication failures, setting it for a specified table and its synchronization cluster, with options to set as **fail** or **skip**.                                                                                              |
 | get_replica_count | Retrieve the replica count parameter value for the table.                                                                                                                                                                                                       |
 | set_replica_count | Set the replica count parameter for the table.                                                                                                                                                                                                                  |
 
@@ -580,7 +580,7 @@ Examples:
 
 ### app_stat
 
-Retrieve the read, write, and storage statistical information of the table, including operations like get, put, del, etc.
+Retrieve the read, write, and storage statistical information of the table, including operations like **get**, **put**, **del**, etc.
 
 Usage:
 
@@ -936,8 +936,8 @@ Examples:
 | del                | Delete a single piece of data.                                                                                                                                                                                                                                                                                                                                                                                           |
 | multi_del          | Delete multiple pieces of data under the same HashKey by specifying multiple SortKeys.                                                                                                                                                                                                                                                                                                                                   |
 | multi_del_range    | Delete multiple pieces of data under the same HashKey by specifying a query range and filtering criteria for the SortKey.                                                                                                                                                                                                                                                                                                |
-| incr               | [Atomic Increment-Decrement](/api/single-atomic#Atomic_Increment_Decrement).                                                                                                                                                                                                                                                                                                                                             |
-| check_and_set      | [Atomic CAS operation](/api/single-atomic#cas_operation).                                                                                                                                                                                                                                                                                                                                                                |
+| incr               | [Atomic Increment-Decrement](/api/single-atomic#Atomic-Increment-Decrement).                                                                                                                                                                                                                                                                                                                                             |
+| check_and_set      | [Atomic CAS operation](/api/single-atomic#cas-operation).                                                                                                                                                                                                                                                                                                                                                                |
 | check_and_mutate   | [Atomic CAS extented version](/clients/java-client#checkandmutate).                                                                                                                                                                                                                                                                                                                                                      |
 | exist              | Query whether a specific piece of data exists.                                                                                                                                                                                                                                                                                                                                                                           |
 | count              | Retrieve the count of SortKeys under the same HashKey.                                                                                                                                                                                                                                                                                                                                                                   |
@@ -945,7 +945,7 @@ Examples:
 | hash               | Compute the hash value of the key.                                                                                                                                                                                                                                                                                                                                                                                       |
 | hash_scan          | Scan the data under the same HashKey one item at a time, with the option to specify a query range and filtering criteria for the SortKey. The results will be sorted by SortKey.                                                                                                                                                                                                                                         |
 | full_scan          | Perform a full scan of the table, with the option to specify filtering conditions for HashKey, SortKey, and Value. Results under the same HashKey will be sorted by SortKey. There is no guaranteed order between HashKeys.                                                                                                                                                                                              |
-| copy_data          | Insert the data from one table into another table one item at a time. Specify the source table using the `use` command and the target table using the `-c` and `-a` commands. The target table can be in another cluster. For detailed usage, refer to [Table Migration#copy_data_migration](/administration/table-migration#copy_data_migration). You can specify filtering conditions for HashKey, SortKey, and Value. |
+| copy_data          | Insert the data from one table into another table one item at a time. Specify the source table using the `use` command and the target table using the `-c` and `-a` commands. The target table can be in another cluster. For detailed usage, refer to [Table Migration#copy_data_migration](/administration/table-migration#copy-data-migration). You can specify filtering conditions for HashKey, SortKey, and Value. |
 | clear_data         | Delete the data from one table one item at a time, which involves scanning the data and performing deletion for each item. You can specify filtering conditions for HashKey, SortKey, and Value.                                                                                                                                                                                                                         |
 | count_data         | Count the number of data items in a table, with the option to add `-z` to calculate the data size. You can also specify filtering conditions for HashKey, SortKey, and Value.                                                                                                                                                                                                                                            |
 
@@ -972,7 +972,7 @@ Examples:
 
 ### multi_set
 
-Configure multiple pieces of data under the same HashKey.
+Configure multiple pieces of data under the same **HashKey**.
 
 Usage:
 
@@ -982,7 +982,7 @@ USAGE:  multi_set              <hash_key> <sort_key> <value> [sort_key value...]
 
 Explanation:
 
-- Sort_key is a data model defined by Pegasus. For detailed information, please refer to the [Data Model](/overview/en/data-model).
+- Sort_key is a data model defined by Pegasus. For detailed information, please refer to the [Data Model](/overview/data-model).
 - Different sort_key names must be distinct; otherwise, an "ERROR: duplicate sort key <sort_key>" will be generated.
 
 Examples:
@@ -1009,7 +1009,7 @@ Examples:
 
 ### multi_get
 
-Retrieve multiple pieces of data under the same HashKey by specifying multiple SortKeys.
+Retrieve multiple pieces of data under the same **HashKey** by specifying multiple SortKeys.
 
 Usage:
 
@@ -1025,7 +1025,7 @@ Examples:
 
 ### multi_get_range
 
-Retrieve multiple pieces of data under the same HashKey by specifying a query range and filtering criteria for the SortKey.
+Retrieve multiple pieces of data under the same **HashKey** by specifying a query range and filtering criteria for the **SortKey**.
 
 Usage:
 
@@ -1041,11 +1041,11 @@ Explanation:
 
 - `-a|--start_inclusive`: Specifies whether to include the StartSortKey. Default is true.
 - `-b|--stop_inclusive`: Specifies whether to include the StopSortKey. Default is false.
-- `-s|--sort_key_filter_type`: Specifies the filter type for SortKey, including no filter, any position match, prefix match, and suffix match. Default is no filter.
-- `-y|--sort_key_filter_pattern`: Specifies the filter pattern for SortKey. An empty string is equivalent to no filter.
+- `-s|--sort_key_filter_type`: Specifies the filter type for **SortKey**, including no filter, any position match, prefix match, and suffix match. Default is no filter.
+- `-y|--sort_key_filter_pattern`: Specifies the filter pattern for **SortKey**. An empty string is equivalent to no filter.
 - `-n|--max_count`: Specifies the maximum number of data items to read.
-- `-i|--no_value`: Specifies whether to only return HashKey and SortKey without returning Value data. Default is false.
-- `-r|--reverse`: Specifies whether to scan the database in reverse order, from the end to the beginning while returning results in ascending SortKey order. This parameter is supported from [v1.8.0 version](https://github.com/apache/incubator-pegasus/releases/tag/v1.8.0) onward.
+- `-i|--no_value`: Specifies whether to only return **HashKey** and **SortKey** without returning **Value** data. Default is false.
+- `-r|--reverse`: Specifies whether to scan the database in reverse order, from the end to the beginning while returning results in ascending **SortKey** order. This parameter is supported from [v1.8.0 version](https://github.com/apache/incubator-pegasus/releases/tag/v1.8.0) onward.
 
 Examples:
 
@@ -1055,7 +1055,7 @@ Examples:
 
 ### multi_get_sortkeys
 
-Retrieve all SortKeys under the same HashKey.
+Retrieve all SortKeys under the same **HashKey**.
 
 Usage:
 
@@ -1087,7 +1087,7 @@ Examples:
 
 ### multi_del
 
-Delete multiple pieces of data under the same HashKey by specifying multiple SortKeys.
+Delete multiple pieces of data under the same **HashKey** by specifying multiple **SortKey**s.
 
 Usage:
 
@@ -1103,7 +1103,7 @@ Examples:
 
 ### multi_del_range
 
-Delete multiple pieces of data under the same HashKey by specifying a query range and filtering criteria for the SortKey.
+Delete multiple pieces of data under the same **HashKey** by specifying a query range and filtering criteria for the **SortKey**.
 
 Usage:
 
@@ -1138,7 +1138,7 @@ USAGE:  incr                   <hash_key> <sort_key> [increment]
 
 Explanation:
 
-- The operand "increment" can be either positive or negative, so a single "incr" interface can be used to achieve both atomic increment and atomic decrement. For more details, please refer to [Atomic Increment/Decrement](/api/single-atomic#Atomic_Increment_Decrement).
+- The operand "increment" can be either positive or negative, so a single "incr" interface can be used to achieve both atomic increment and atomic decrement. For more details, please refer to [Atomic Increment/Decrement](/api/single-atomic#Atomic-Increment-Decrement).
 
 Examples:
 
@@ -1164,7 +1164,7 @@ USAGE:  check_and_set          <hash_key> [-c|--check_sort_key str]
 
 Explanation:
 
-- Compare-And-Swap (CAS) is originally a term used to describe a CPU's atomic instruction. Its purpose is to compare two values and then atomically update a location if they are equal. Please refer to [Atomic CAS](/api/single-atomic#cas_operations).
+- Compare-And-Swap (CAS) is originally a term used to describe a CPU's atomic instruction. Its purpose is to compare two values and then atomically update a location if they are equal. Please refer to [Atomic CAS](/api/single-atomic#cas-operations).
 
 Examples:
 Like the below command checks data with hashKey "cloud." If the value with sortKey "90" exists, it sets the value of sortKey "91" to "92" and returns the value of sortKey "90".
@@ -1206,7 +1206,7 @@ Examples:
 
 ### count
 
-Retrieve the count of SortKeys under the same HashKey.
+Retrieve the count of SortKeys under the same **HashKey**.
 
 Usage:
 
@@ -1255,7 +1255,7 @@ Examples:
 
 ### hash_scan
 
-Scan the data under the same HashKey one item at a time, with the option to specify a query range and filtering criteria for the SortKey. The results will be sorted by SortKey.
+Scan the data under the same **HashKey** one item at a time, with the option to specify a query range and filtering criteria for the **SortKey**. The results will be sorted by **SortKey**.
 
 Usage:
 
@@ -1296,7 +1296,7 @@ Examples:
 
 ### full_scan
 
-Perform a full scan of the table, with the option to specify filtering conditions for HashKey, SortKey, and Value. Results under the same HashKey will be sorted by SortKey. There is no guaranteed order between HashKeys.
+Perform a full scan of the table, with the option to specify filtering conditions for **HashKey**, **SortKey**, and **Value**. Results under the same **HashKey** will be sorted by **SortKey**. There is no guaranteed order between HashKeys.
 
 Usage:
 
@@ -1345,7 +1345,7 @@ USAGE:  copy_data              <-c|--target_cluster_name str> <-a|--target_app_n
 
 Explanation:
 
-- The source table is specified using the `use` command, and the target table is executed using the `-c` and `-a` commands. The target table can be in another cluster. For detailed usage, refer to [Table Migration#copy_data_migration](/administration/table-migration#copy_data_migration). You can specify filtering conditions for HashKey, SortKey, and Value.
+- The source table is specified using the `use` command, and the target table is executed using the `-c` and `-a` commands. The target table can be in another cluster. For detailed usage, refer to [Table Migration#copy_data_migration](/administration/table-migration#copy-data-migration). You can specify filtering conditions for **HashKey**, **SortKey**, and **Value**.
 
 Examples:
 
@@ -1355,7 +1355,7 @@ Examples:
 
 ### clear_data
 
-Deleting the data from one table item by item essentially involves scanning the data and then performing a delete operation on each data item. You can specify filtering conditions for HashKey, SortKey, and Value.
+Deleting the data from one table item by item essentially involves scanning the data and then performing a delete operation on each data item. You can specify filtering conditions for **HashKey**, **SortKey**, and **Value**.
 
 Usage:
 
@@ -1387,7 +1387,7 @@ Examples:
 
 ### count_data
 
-Count the number of data items in a table. You can specify filtering conditions for HashKey, SortKey, and Value.
+Count the number of data items in a table. You can specify filtering conditions for **HashKey**, **SortKey**, and **Value**.
 
 Usage:
 
