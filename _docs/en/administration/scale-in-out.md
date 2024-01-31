@@ -2,7 +2,7 @@
 permalink: administration/scale-in-out
 ---
 
-# Design goal
+# Design goals
 
 When the storage capacity of the cluster is insufficient or the read/write throughput is too high, it is necessary to scale out the capacity by adding more nodes. On the contrary, scaling in can be achieved by reducing the number of nodes.
 
