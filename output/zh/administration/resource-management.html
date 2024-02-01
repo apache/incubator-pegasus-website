@@ -20,11 +20,11 @@
 <meta property="og:description" content="背景介绍" />
 <meta property="og:site_name" content="Pegasus" />
 <meta property="og:type" content="article" />
-<meta property="article:published_time" content="2024-02-01T06:10:45+00:00" />
+<meta property="article:published_time" content="2024-02-01T06:12:23+00:00" />
 <meta name="twitter:card" content="summary" />
 <meta property="twitter:title" content="Resource Management" />
 <script type="application/ld+json">
-{"@context":"https://schema.org","@type":"BlogPosting","dateModified":"2024-02-01T06:10:45+00:00","datePublished":"2024-02-01T06:10:45+00:00","description":"背景介绍","headline":"Resource Management","mainEntityOfPage":{"@type":"WebPage","@id":"/administration/resource-management"},"url":"/administration/resource-management"}</script>
+{"@context":"https://schema.org","@type":"BlogPosting","dateModified":"2024-02-01T06:12:23+00:00","datePublished":"2024-02-01T06:12:23+00:00","description":"背景介绍","headline":"Resource Management","mainEntityOfPage":{"@type":"WebPage","@id":"/administration/resource-management"},"url":"/administration/resource-management"}</script>
 <!-- End Jekyll SEO tag -->
 </head>
 
@@ -739,7 +739,7 @@
                 <div class="content">
                     <h1 id="背景介绍">背景介绍</h1>
 
-<p>Pegasus 主要用到的资源包括 CPU、磁盘、内存、网络连接等。对这些系统资源的使用负载不要太高，否则 Pegasus 服务可能会不稳定甚至崩溃。建议：</p>
+<p>Pegasus 主要用到的资源包括 CPU、磁盘、内存、网络等。对这些系统资源的使用负载不要太高，否则 Pegasus 服务可能会不稳定甚至崩溃。建议：</p>
 <ul>
   <li>单块磁盘的存储使用不要超过 80%。</li>
   <li>内存使用不要超过每个节点的 80%。</li>
@@ -764,46 +764,46 @@
 
 <p>该参数的意义是：允许一个 partition 中最多存在的副本数（包括活跃和不活跃的），默认为 4（表示允许保留 1 个不活跃的副本）。虽然正在提供服务的活跃副本是 3 个（1 primary + 2 secondary），但是在宕机恢复或者负载均衡过程中，replica 可能从 A 节点迁移到 B 节点，迁移完成后 A 节点上的数据实际上不需要了，但是在存储充足的情况下，可以继续将 A 节点的数据保留在磁盘上，如果将来 replica 重新迁移到 A 节点，这些数据还有可能被重用，避免重新传输数据。</p>
 
-<p>如果想要节省磁盘存储使用量，及时删除无用的副本数据，就可以设置 <code class="language-plaintext highlighter-rouge">max_replicas_in_group = 3</code>，并重启 MetaServer 使配置生效，然后设置 <a href="rebalance">负载均衡</a> 状态为 <code class="language-plaintext highlighter-rouge">lively</code>，让 MetaServer 控制删除无用的副本数据。</p>
+<p>如果想要节省磁盘存储使用量，及时删除无用的副本数据，就可以设置 <code class="language-plaintext highlighter-rouge">max_replicas_in_group = 3</code>，并重启 Meta Server 使配置生效，然后设置 <a href="rebalance">负载均衡</a> 状态为 <code class="language-plaintext highlighter-rouge">lively</code>，让 Meta Server 允许删除无用的副本数据。</p>
 
 <h1 id="垃圾目录管理">垃圾目录管理</h1>
 
-<p>ReplicaServer 中的 replica 目录如果不需要了或者损坏了，都会变成垃圾目录：不需要的目录会加 <code class="language-plaintext highlighter-rouge">.gar</code> 后缀，出错的目录会加 <code class="language-plaintext highlighter-rouge">.err</code> 后缀。这些目录不会被立即删除，因为考虑到某些极端情况下可能还有价值（例如系统崩溃时通过他们来找回数据）。</p>
+<p>Replica Server 中的 replica 目录如果不需要了或者损坏了，都会变成垃圾目录：不需要的目录会加 <code class="language-plaintext highlighter-rouge">.gar</code> 后缀，出错的目录会加 <code class="language-plaintext highlighter-rouge">.err</code> 后缀。这些目录不会被立即删除，因为考虑到某些极端情况下可能还有价值（例如系统崩溃时通过他们来找回数据）。</p>
 
 <p>有两个配置参数决定这些目录的真正删除时机：</p>
 <div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>[replication]
     gc_disk_error_replica_interval_seconds = 604800
     gc_disk_garbage_replica_interval_seconds = 86400
 </code></pre></div></div>
-<p>参数的意义是：对于这两种目录，会检查目录的最后修改时间（2.6 版本以前是目录的最后修改时间，2.6 开始是目录名中的时间戳字段），只有当最后修改时间与当前时间的差距超过了对应的参数时，才会执行删除。</p>
+<p>对于这两种目录，会检查目录的最后修改时间（2.6 版本以前是目录的最后修改时间，2.6 开始是目录名中的时间戳字段），只有当最后修改时间与当前时间的差距超过了对应的参数时，才会执行删除。</p>
 
-<p>如果想要节省磁盘存储使用量，及时删除这些垃圾目录，可以减小这两个参数的值。</p>
+<p>如果想通过及时删除这些垃圾目录来节省磁盘存储使用量，可以减小这两个参数的值。</p>
 <div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>[replication]
     gc_disk_error_replica_interval_seconds = 3600
     gc_disk_garbage_replica_interval_seconds = 3600
 </code></pre></div></div>
 <ul>
-  <li>如果版本小于 1.11.3，需要重启 ReplicaServer 使配置生效。</li>
-  <li>如果版本在 1.11.3 到 2.1 之间，可以通过 <a href="remote-commands">远程命令</a> 的 <code class="language-plaintext highlighter-rouge">useless-dir-reserve-seconds</code> 命令来动态地同时修改这两个参数，不用重启 ReplicaServer 进程使其生效。例如将这两个参数修改为 0，用于紧急清理垃圾目录：
+  <li>如果版本小于 1.11.3，需要重启 Replica Server 使配置生效。</li>
+  <li>如果版本在 1.11.3 到 2.1 之间，可以通过 <a href="remote-commands">远程命令</a> 的 <code class="language-plaintext highlighter-rouge">useless-dir-reserve-seconds</code> 命令来动态地同时修改这两个参数，不用重启 Replica Server 进程使其生效。例如将这两个参数修改为 0，用于紧急清理垃圾目录：
     <div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>&gt;&gt;&gt; remote_command -t replica-server useless-dir-reserve-seconds 0
 </code></pre></div>    </div>
     <p>在确认清理完毕后，再还原为配置文件中的值：</p>
     <div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>&gt;&gt;&gt; remote_command -t replica-server useless-dir-reserve-seconds DEFAULT
 </code></pre></div>    </div>
   </li>
-  <li>从版本 2.2 开始，可以通过 <a href="/zh/api/http">HTTP 接口</a> 动态修改这两个参数的值，不用重启 ReplicaServer 进程使其生效。</li>
+  <li>从版本 2.2 开始，可以通过 <a href="/zh/api/http">HTTP 接口</a> 动态修改这两个参数的值，不用重启 Replica Server 进程使其生效。</li>
 </ul>
 
-<h1 id="rocksdb-checkpoints-管理">Rocksdb checkpoints 管理</h1>
+<h1 id="rocksdb-checkpoints-管理">RocksDB checkpoints 管理</h1>
 
-<p>ReplicaServer 底层使用 RocksDB 存储数据，会定期生成 <a href="https://github.com/facebook/rocksdb/wiki/Checkpoints">checkpoint</a>。Checkpoint 目录会放在 replica 的 data 目录下，并以生成时的 <code class="language-plaintext highlighter-rouge">last_durable_decree</code> 作为作为后缀。</p>
+<p>Replica Server 底层使用 RocksDB 存储数据，会定期生成 <a href="https://github.com/facebook/rocksdb/wiki/Checkpoints">checkpoint</a>。Checkpoint 目录会放在 replica 的 data 目录下，并以生成时的 <code class="language-plaintext highlighter-rouge">last_durable_decree</code> 作为作为后缀。</p>
 
 <p>如下图，replica 的 data 目录下包含当前正在使用的 rdb 目录和若干个 checkpoint 目录：
 <img src="/assets/images/checkpoint_dirs.png" alt="checkpoint_dirs.png" class="img-responsive" /></p>
 
-<p>生成 checkpoint 时，checkpoint 中的文件都是通过硬链接方式生成的，而不是通过拷贝的方式。其中的一个 sstable 文件可能被 rdb 持有，也可能被一个或者多个 checkpoint 持有。只要任意一个在持有，该文件的数据就存在于磁盘盘上，占据存储空间。只有 rdb 和所有的 checkpoint 都不持有该文件，他才会被删除。</p>
+<p>生成 checkpoint 时，checkpoint 中的文件都是通过硬链接方式生成的，而不是通过拷贝的方式。其中的一个 sstable 文件可能被 rdb 持有，也可能被一个或者多个 checkpoint 持有。只要任意一个在持有，该文件的数据就存在于磁盘盘上，消耗存储空间。只有 rdb 和所有的 checkpoint 都不持有该文件，他才会被删除。</p>
 
-<p>RocksDB 后台在持续进行 compaction 操作，所以 checkpoint 中持有的 sstable 可能已经不被 rdb 所持有了。如果 checkpoint 的保留时间太长，这些过期的 sstable 不能被及时删除，就会占用额外的磁盘存储空间。尤其对于写入量大的表，compaction 也会进行得更频繁，单个 sstable 文件的生命周期很短，如果 checkpoint 数保留得比较多的话，占用的存储空间很可能几倍于当前实际的数据大小。</p>
+<p>RocksDB 后台在持续进行 compaction 操作，所以 checkpoint 中持有的 sstable 可能已经不被 rdb 所持有了（称其为过期）。如果 checkpoint 的保留时间太长，这些过期的 sstable 不能被及时删除，就会占用额外的磁盘存储空间。尤其对于写入量大的表，compaction 也会进行得更频繁，单个 sstable 文件的生命周期很短，如果 checkpoint 数保留得比较多的话，占用的存储空间很可能几倍于当前实际的数据大小。</p>
 
 <p>以下配置参数决定了 checkpoint 删除的策略：</p>
 <div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>[pegasus.server]
@@ -822,11 +822,11 @@
     checkpoint_reserve_min_count = 1
     checkpoint_reserve_time_seconds = 1200
 </code></pre></div></div>
-<p>注意：不建议将 <code class="language-plaintext highlighter-rouge">checkpoint_reserve_time_seconds</code> 设得太小。考虑到对 learn 的影响，要尽量大于 <code class="language-plaintext highlighter-rouge">replica_assign_delay_ms_for_dropouts</code> 的值（默认是 5 分钟），所以建议至少在 5 分钟以上。</p>
+<p>注意：不建议将 <code class="language-plaintext highlighter-rouge">checkpoint_reserve_time_seconds</code> 设得太小。考虑到对 learn 的影响，要大于 <code class="language-plaintext highlighter-rouge">replica_assign_delay_ms_for_dropouts</code> 的值（默认是 5 分钟）。</p>
 
 <h2 id="设置表级配置">设置表级配置</h2>
 
-<p>从 1.11.3 版本开始，支持通过 <a href="table-env">Table 环境变量</a> 动态修改指定表的这两项配置，可不重启 ReplicaServer 进程。例如：</p>
+<p>从 1.11.3 版本开始，支持通过 <a href="table-env">Table 环境变量</a> 动态修改指定表的这两项配置，可不重启 Replica Server 进程。例如：</p>
 <div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>&gt;&gt;&gt; use &lt;table_name&gt;
 &gt;&gt;&gt; set_app_envs rocksdb.checkpoint.reserve_min_count 1
 &gt;&gt;&gt; set_app_envs rocksdb.checkpoint.reserve_time_seconds 600
@@ -877,7 +877,7 @@
   <li><a href="#背景介绍">背景介绍</a></li>
   <li><a href="#replica-副本数管理">Replica 副本数管理</a></li>
   <li><a href="#垃圾目录管理">垃圾目录管理</a></li>
-  <li><a href="#rocksdb-checkpoints-管理">Rocksdb checkpoints 管理</a>
+  <li><a href="#rocksdb-checkpoints-管理">RocksDB checkpoints 管理</a>
     <ul>
       <li><a href="#设置表级配置">设置表级配置</a></li>
     </ul>

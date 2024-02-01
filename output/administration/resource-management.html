@@ -16,15 +16,15 @@
 <meta name="generator" content="Jekyll v4.3.3" />
 <meta property="og:title" content="Resource Management" />
 <meta property="og:locale" content="en_US" />
-<meta name="description" content="TRANSLATING" />
-<meta property="og:description" content="TRANSLATING" />
+<meta name="description" content="Background Introduction" />
+<meta property="og:description" content="Background Introduction" />
 <meta property="og:site_name" content="Pegasus" />
 <meta property="og:type" content="article" />
-<meta property="article:published_time" content="2024-02-01T06:10:45+00:00" />
+<meta property="article:published_time" content="2024-02-01T06:12:23+00:00" />
 <meta name="twitter:card" content="summary" />
 <meta property="twitter:title" content="Resource Management" />
 <script type="application/ld+json">
-{"@context":"https://schema.org","@type":"BlogPosting","dateModified":"2024-02-01T06:10:45+00:00","datePublished":"2024-02-01T06:10:45+00:00","description":"TRANSLATING","headline":"Resource Management","mainEntityOfPage":{"@type":"WebPage","@id":"/administration/resource-management"},"url":"/administration/resource-management"}</script>
+{"@context":"https://schema.org","@type":"BlogPosting","dateModified":"2024-02-01T06:12:23+00:00","datePublished":"2024-02-01T06:12:23+00:00","description":"Background Introduction","headline":"Resource Management","mainEntityOfPage":{"@type":"WebPage","@id":"/administration/resource-management"},"url":"/administration/resource-management"}</script>
 <!-- End Jekyll SEO tag -->
 </head>
 
@@ -733,7 +733,99 @@
             </section>
             <section class="section" style="padding-top: 2rem;">
                 <div class="content">
-                    <p>TRANSLATING</p>
+                    <h1 id="background-introduction">Background Introduction</h1>
+
+<p>The main resources used by Pegasus include CPU, disk, memory, network, etc. The usage load of these system resources should not be too high, otherwise the Pegasus service may become unstable or even crash. It’s recommend:</p>
+<ul>
+  <li>The storage usage of a single disk should not exceed 80%.</li>
+  <li>Memory usage should not exceed 80% of each node.</li>
+  <li>The number of network connections should not exceed the system’s limit, and it is recommended to limit the number of connections less than 50000.</li>
+</ul>
+
+<p>By adjusting these configurations, the use of disk storage can be reduced:</p>
+<ul>
+  <li>Set <code class="language-plaintext highlighter-rouge">max_replicas_in_group = 3</code>, refer to <a href="#replica-management">Replica management</a>.</li>
+  <li>Set <code class="language-plaintext highlighter-rouge">gc_disk_error_replica_interval_seconds = 3600</code> and <code class="language-plaintext highlighter-rouge">gc_disk_garbage_replica_interval_seconds = 3600</code>, refer to <a href="#garbage-directory-management">Garbage directory management</a>.</li>
+  <li>Set <code class="language-plaintext highlighter-rouge">checkpoint_reserve_min_count = 2</code> and <code class="language-plaintext highlighter-rouge">checkpoint_reserve_time_seconds = 1200</code>, refer to <a href="#rocksdb-checkpoints-management">RocksDB checkpoints management</a>.</li>
+</ul>
+
+<h1 id="replica-management">Replica management</h1>
+
+<p>Pegasus recommends using 3 replicas (1 primary + 2 secondaries) and setting the <code class="language-plaintext highlighter-rouge">-r</code> parameter to 3 when creating tables.</p>
+
+<p>However, the actual number of replicas in the cluster may exceed 3, which is determined by the following configuration:</p>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>[meta_server]
+    max_replicas_in_group = 4
+</code></pre></div></div>
+
+<p>The meaning of this configuration: allow the maximum number of replicas (including primary and secondaries) of a partition, with a default value of 4 (indicating allowing the retention of 1 inactive replica). Although there are 3 active replicas (1 primary + 2 secondaries) being served, during the procedure of downtime recovery or load balancing, replicas may migrate from server A to server B. After the migration, the data on server A is actually no longer needed. However, with sufficient storage, the replica on server A can be retained. If the replica is re-migrated to server A in the future, these retained replicas may be reused to avoid re-transmission.</p>
+
+<p>In aim to reduce disk storage usage and delete useless replicas data in time, you can set <code class="language-plaintext highlighter-rouge">max_replicas_in_group = 3</code>, restart Meta Server to make the configuration take effect, and then set the <a href="rebalance">Load Rebalance</a> level to <code class="language-plaintext highlighter-rouge">lively</code>, allowing Meta Server to delete useless replicas data.</p>
+
+<h1 id="garbage-directory-management">Garbage directory management</h1>
+
+<p>If the replica directory in Replica Server is no longer needed or damaged, it becomes a garbage directory: unnecessary directory has a <code class="language-plaintext highlighter-rouge">.gar</code> suffix, and damaged directory has a <code class="language-plaintext highlighter-rouge">.err</code> suffix. These directories are not deleted immediately, as they may still have value in certain extreme situations (such as recall data through them in the event of a cluster crash).</p>
+
+<p>There are two configurations that determine the actual deletion time for these directories:</p>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>[replication]
+    gc_disk_error_replica_interval_seconds = 604800
+    gc_disk_garbage_replica_interval_seconds = 86400
+</code></pre></div></div>
+<p>For these two types of directories, the last modification time (before Pegasus 2.6 is the last modification time of the directory, starting from Pegasus 2.6 is the timestamp field in the directory name) of the directory will be checked, and deletion is executed when the gap between the last modification time and the current time exceeds the corresponding configuration.</p>
+
+<p>In aim to reduce disk storage usage by deleting these garbage directories in time, it can be achieved by reducing the values of these two configurations.</p>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>[replication]
+    gc_disk_error_replica_interval_seconds = 3600
+    gc_disk_garbage_replica_interval_seconds = 3600
+</code></pre></div></div>
+<ul>
+  <li>If the Pegasus version is less than 1.11.3, it’s needed to restart the Replica Server for the configurations to take effect.</li>
+  <li>If the Pegasus version is between 1.11.3 and 2.1, these two configurations can be modified and take effect at runtime through the <code class="language-plaintext highlighter-rouge">useless-dir-reserve-seconds</code> command in <a href="remote-commands">Remote commands</a>, without restarting the Replica Server process. For example, modify these two configurations to 0 for emergency cleaning of the garbage directories:
+    <div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>&gt;&gt;&gt; remote_command -t replica-server useless-dir-reserve-seconds 0
+</code></pre></div>    </div>
+    <p>After confirming that the cleaning is complete, restore to the configurations:</p>
+    <div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>&gt;&gt;&gt; remote_command -t replica-server useless-dir-reserve-seconds DEFAULT
+</code></pre></div>    </div>
+  </li>
+  <li>Starting from version 2.2, the configurations can be modified and take effect at runtime through the <a href="/api/http">HTTP API</a> without restarting the Replica Server process.</li>
+</ul>
+
+<h1 id="rocksdb-checkpoints-management">RocksDB checkpoints management</h1>
+
+<p>The storage engine of Replica Server is RocksDB, it generates <a href="https://github.com/facebook/rocksdb/wiki/Checkpoints">checkpoint</a> regularly. The checkpoints are placed in the data directory of the replica, and are suffixed by the <code class="language-plaintext highlighter-rouge">last_durable_decree</code>.</p>
+
+<p>As shown in the figure below, the data directory of the replica contains the currently using <code class="language-plaintext highlighter-rouge">rdb</code> directory and several checkpoint directories:
+<img src="/assets/images/checkpoint_dirs.png" alt="checkpoint_dirs.png" class="img-responsive" /></p>
+
+<p>When generating a checkpoint, the files in the checkpoint are generated through hard linking rather than copying. One of the sstable files may be held by the <code class="language-plaintext highlighter-rouge">rdb</code> or by one or more checkpoints. As long as any one of them holds, the data of that file exists on the disk, consuming storage space. The file can be deleted only when <code class="language-plaintext highlighter-rouge">rdb</code> and all checkpoints do not hold it.</p>
+
+<p>The RocksDB is continuously performing background compactions, so the sstable held by any checkpoint may no longer be held by <code class="language-plaintext highlighter-rouge">rdb</code> (call it expired). If the retention time of the checkpoints are too long, these expired sstables cannot be deleted in time, which consume extra disk storage space. Especially for tables with high write throughput, compaction occurs more frequently, and the lifecycle of a single sstable file is very short. If the number of checkpoints is kept relatively high, the storage space consumed may be several times larger than the current actual data size.</p>
+
+<p>The following configurations determine the strategy for deleting checkpoints:</p>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>[pegasus.server]
+    checkpoint_reserve_min_count = 2
+    checkpoint_reserve_time_seconds = 1800
+</code></pre></div></div>
+<ul>
+  <li>checkpoint_reserve_min_count: represents the minimum number of reserved checkpoints. Only when the number of checkpoints exceeds this limit, the oldest checkpoint may be deleted.</li>
+  <li>checkpoint_reserve_time_seconds: represents the minimum retention time of the checkpoint. Only when the generation time of the checkpoint exceeds this value from the current time can the oldest one be deleted.</li>
+  <li>The checkpoint will only be deleted when meet the 2 conditions simultaneously.</li>
+</ul>
+
+<p>In aim to reduce disk storage usage by deleting the old checkpoint directories in time, you can lower these two configurations. For example:</p>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>[pegasus.server]
+    checkpoint_reserve_min_count = 1
+    checkpoint_reserve_time_seconds = 1200
+</code></pre></div></div>
+<p>Note: It is not recommended to set <code class="language-plaintext highlighter-rouge">checkpoint_reserve_time_seconds</code> too low. Considering the impact on learning, it should be larger than <code class="language-plaintext highlighter-rouge">replica_assign_delay_ms_for_dropouts</code> (default is 5 minutes).</p>
+
+<h2 id="set-table-level-configuration">Set table level configuration</h2>
+
+<p>Since Pegasus 1.11.3, it is supported to modify these two configurations at runtime through the <a href="table-env">Table environment variable</a> for a specified table, without restarting the Replica Server process. For example:</p>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>&gt;&gt;&gt; use &lt;table_name&gt;
+&gt;&gt;&gt; set_app_envs rocksdb.checkpoint.reserve_min_count 1
+&gt;&gt;&gt; set_app_envs rocksdb.checkpoint.reserve_time_seconds 600
+</code></pre></div></div>
 
                 </div>
             </section>
@@ -776,7 +868,16 @@
     </span>
     Table of contents
 </p>
-
+<ul class="menu-list">
+  <li><a href="#background-introduction">Background Introduction</a></li>
+  <li><a href="#replica-management">Replica management</a></li>
+  <li><a href="#garbage-directory-management">Garbage directory management</a></li>
+  <li><a href="#rocksdb-checkpoints-management">RocksDB checkpoints management</a>
+    <ul>
+      <li><a href="#set-table-level-configuration">Set table level configuration</a></li>
+    </ul>
+  </li>
+</ul>
 
         </div>
     </div>
