@@ -496,27 +496,27 @@ USAGE:disk_capacity            [-n|--node replica_server(ip:port)][-o|--out file
 
 ## 表管理
 
-| 子命令            | 功能                                                                                                       |
-| ----------------- | ---------------------------------------------------------------------------------------------------------- |
-| ls                | 获取所有表的列表，可加`-d`选项获取各表的健康状况，可加`-a`选项包含已删除表的信息                           |
-| app               | 获取某个表的信息，可加`-d`选项获取详细信息，包括各 partition 的分布情况、健康状况                          |
-| app_stat          | 获取表的读写情况和存储统计信息，可加`-a`选项指定单个表，以获取该表各个 partition 的详细统计信息            |
-| app_disk          | 获取某个表的详细存储信息，可加`-d`选项获取各 partition 的详细存储信息                                      |
-| create            | 创建表，可加`-p`和`-r`选项指定分片数和副本数，要求分片数是 2 的指数倍，不指定 -r 则默认副本数为 3（推荐值）|
-| drop              | 删除表，参见[使用 drop 命令删除表](/administration/table-soft-delete#使用drop命令删除表)                   |
-| recall            | 恢复已删除的表，参见[使用 recall 命令恢复表](/administration/table-soft-delete#使用recall命令恢复表)       |
-| get_app_envs      | 获取表的环境变量，参见 [Table 环境变量#get_app_envs](/administration/table-env#get_app_envs)               |
-| set_app_envs      | 设置表的环境变量，参见 [Table 环境变量#set_app_envs](/administration/table-env#set_app_envs)               |
-| del_app_envs      | 删除表的环境变量，参见 [Table 环境变量#del_app_envs](/administration/table-env#del_app_envs)               |
-| clear_app_envs    | 清理表的环境变量，参见 [Table 环境变量#clear_app_envs](/administration/table-env#clear_app_envs)           |
-| add_dup           | 添加 duplication 的集群，参见[跨机房同步](/administration/duplication)                                     |
-| query_dup         | 查询表的跨机房同步的集群, 参加[跨机房同步](/administration/duplication)                                    |
-| remove_dup        | 移除 duplication 的集群, 参见[跨机房同步](/administration/duplication)                                     |
-| start_dup         | 开始跨机房同步, 启动 duplication 的备份功能, 参见[跨机房同步](/administration/duplication)                 |
-| pause_dup         | 暂停跨机房同步, 暂停 duplication 的备份功能, 参见[跨机房同步](/administration/duplication)                 |
-| set_dup_fail_mode | 设置 duplication 失败后的处理的方式, 对指定的表的指定同步集群设置, 可设置为 fail 和 skip                   |
-| get_replica_count | 获取表的副本数参数值                                                                                       |
-| set_replica_count | 设置表的副本数参数值                                                                                       |
+| 子命令            | 功能                                                                                                        |
+| ----------------- | ----------------------------------------------------------------------------------------------------------- |
+| ls                | 获取所有表的列表，可加`-d`选项获取各表的健康状况，可加`-a`选项包含已删除表的信息                            |
+| app               | 获取某个表的信息，可加`-d`选项获取详细信息，包括各 partition 的分布情况、健康状况                           |
+| app_stat          | 获取表的读写情况和存储统计信息，可加`-a`选项指定单个表，以获取该表各个 partition 的详细统计信息             |
+| app_disk          | 获取某个表的详细存储信息，可加`-d`选项获取各 partition 的详细存储信息                                       |
+| create            | 创建表，可加`-p`和`-r`选项指定分片数和副本数，要求分片数是 2 的指数倍，不指定 -r 则默认副本数为 3（推荐值） |
+| drop              | 删除表，参见[使用 drop 命令删除表](/administration/table-soft-delete#使用drop命令删除表)                    |
+| recall            | 恢复已删除的表，参见[使用 recall 命令恢复表](/administration/table-soft-delete#使用recall命令恢复表)        |
+| get_app_envs      | 获取表的环境变量，参见 [Table 环境变量#get_app_envs](/administration/table-env#get_app_envs)                |
+| set_app_envs      | 设置表的环境变量，参见 [Table 环境变量#set_app_envs](/administration/table-env#set_app_envs)                |
+| del_app_envs      | 删除表的环境变量，参见 [Table 环境变量#del_app_envs](/administration/table-env#del_app_envs)                |
+| clear_app_envs    | 清理表的环境变量，参见 [Table 环境变量#clear_app_envs](/administration/table-env#clear_app_envs)            |
+| add_dup           | 添加 duplication 的集群，参见[跨机房同步](/administration/duplication)                                      |
+| query_dup         | 查询表的跨机房同步的集群, 参加[跨机房同步](/administration/duplication)                                     |
+| remove_dup        | 移除 duplication 的集群, 参见[跨机房同步](/administration/duplication)                                      |
+| start_dup         | 开始跨机房同步, 启动 duplication 的备份功能, 参见[跨机房同步](/administration/duplication)                  |
+| pause_dup         | 暂停跨机房同步, 暂停 duplication 的备份功能, 参见[跨机房同步](/administration/duplication)                  |
+| set_dup_fail_mode | 设置 duplication 失败后的处理的方式, 对指定的表的指定同步集群设置, 可设置为 fail 和 skip                    |
+| get_replica_count | 获取表的副本数参数值                                                                                        |
+| set_replica_count | 设置表的副本数参数值                                                                                        |
 
 ### ls
 
@@ -908,29 +908,29 @@ USAGE: set_replica_count           <app_name> <replica_count>
 
 ## 数据操作
 
-| 子命令             | 功能                                                                                                                                                                 |
-| ------------------ | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------|
-| set                | 设置单条数据                                                                                                                                                         |
-| multi_set          | 设置同一 HashKey 下的多条数据                                                                                                                                        |
-| get                | 获取单条数据                                                                                                                                                         |
-| multi_get          | 通过指定多个 SortKey，获取同一 HashKey 下的多条数据                                                                                                                  |
-| multi_get_range    | 通过指定 SortKey 的查询范围和过滤条件，获取同一 HashKey 下的多条数据                                                                                                 |
-| multi_get_sortkeys | 获取同一 HashKey 下的所有 SortKey                                                                                                                                    |
-| del                | 删除单条数据                                                                                                                                                         |
-| multi_del          | 通过指定多个 SortKey，删除同一 HashKey 下的多条数据                                                                                                                  |
-| multi_del_range    | 通过指定 SortKey 的查询范围和过滤条件，删除同一 HashKey 下的多条数据                                                                                                 |
-| incr               | [原子增减操作](/api/single-atomic#原子增减)                                                                                                                          |
-| check_and_set      | [原子 CAS 操作](/api/single-atomic#cas操作)                                                                                                                          |
-| check_and_mutate   | [原子 CAS 扩展版本](/clients/java-client#checkandmutate)                                                                                                             |
-| exist              | 查询某条数据是否存在                                                                                                                                                 |
-| count              | 获取同一 HashKey 下的 SortKey 的个数                                                                                                                                 |
-| ttl                | 查询某条数据的 TTL(Time To Live) 时间，返回剩余的 live 时间，单位为秒；返回 Infinite 表示没有 TTL 限制                                                               |
-| hash               | 计算键值的哈希值                                                                                                                                                     |
-| hash_scan          | 逐条扫描同一 HashKey 下的数据，可指定 SortKey 的查询范围和过滤条件，结果按照 SortKey 排序                                                                            |
-| full_scan          | 对表进行全扫描，可指定 HashKey、SortKey 和 Value 的过滤条件，同一 HashKey 的结果按照 SortKey 排序，HashKey 之间无顺序保证                                            |
-| copy_data          | 将一个表的数据逐条插入到另外一个表，源表通过`use`命令指定，目标表通过`-c`和`-a`命令执行，目标表可以在另外一个集群，详细用法参见 [Table迁移#copy_data迁移](/administration/table-migration#copy_data迁移)，可指定 HashKey、SortKey 和 Value 的过滤条件                                                                                                                                                     |
-| clear_data         | 将一个表的数据逐条删除，实际上就是先扫描数据，然后对每一条数据执行删除操作，可指定 HashKey、SortKey 和 Value 的过滤条件                                              |
-| count_data         | 统计一个表的数据条数，可加`-z`选项统计数据大小，可指定 HashKey、SortKey 和 Value 的过滤条件                                                                          |
+| 子命令             | 功能                                                                                                                                                                                                                                                  |
+| ------------------ | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| set                | 设置单条数据                                                                                                                                                                                                                                          |
+| multi_set          | 设置同一 HashKey 下的多条数据                                                                                                                                                                                                                         |
+| get                | 获取单条数据                                                                                                                                                                                                                                          |
+| multi_get          | 通过指定多个 SortKey，获取同一 HashKey 下的多条数据                                                                                                                                                                                                   |
+| multi_get_range    | 通过指定 SortKey 的查询范围和过滤条件，获取同一 HashKey 下的多条数据                                                                                                                                                                                  |
+| multi_get_sortkeys | 获取同一 HashKey 下的所有 SortKey                                                                                                                                                                                                                     |
+| del                | 删除单条数据                                                                                                                                                                                                                                          |
+| multi_del          | 通过指定多个 SortKey，删除同一 HashKey 下的多条数据                                                                                                                                                                                                   |
+| multi_del_range    | 通过指定 SortKey 的查询范围和过滤条件，删除同一 HashKey 下的多条数据                                                                                                                                                                                  |
+| incr               | [原子增减操作](/api/single-atomic#原子增减)                                                                                                                                                                                                           |
+| check_and_set      | [原子 CAS 操作](/api/single-atomic#cas操作)                                                                                                                                                                                                           |
+| check_and_mutate   | [原子 CAS 扩展版本](/clients/java-client#checkandmutate)                                                                                                                                                                                              |
+| exist              | 查询某条数据是否存在                                                                                                                                                                                                                                  |
+| count              | 获取同一 HashKey 下的 SortKey 的个数                                                                                                                                                                                                                  |
+| ttl                | 查询某条数据的 TTL(Time To Live) 时间，返回剩余的 live 时间，单位为秒；返回 Infinite 表示没有 TTL 限制                                                                                                                                                |
+| hash               | 计算键值的哈希值                                                                                                                                                                                                                                      |
+| hash_scan          | 逐条扫描同一 HashKey 下的数据，可指定 SortKey 的查询范围和过滤条件，结果按照 SortKey 排序                                                                                                                                                             |
+| full_scan          | 对表进行全扫描，可指定 HashKey、SortKey 和 Value 的过滤条件，同一 HashKey 的结果按照 SortKey 排序，HashKey 之间无顺序保证                                                                                                                             |
+| copy_data          | 将一个表的数据逐条插入到另外一个表，源表通过`use`命令指定，目标表通过`-c`和`-a`命令执行，目标表可以在另外一个集群，详细用法参见 [Table迁移#copy_data迁移](/administration/table-migration#copy_data迁移)，可指定 HashKey、SortKey 和 Value 的过滤条件 |
+| clear_data         | 将一个表的数据逐条删除，实际上就是先扫描数据，然后对每一条数据执行删除操作，可指定 HashKey、SortKey 和 Value 的过滤条件                                                                                                                               |
+| count_data         | 统计一个表的数据条数，可加`-z`选项统计数据大小，可指定 HashKey、SortKey 和 Value 的过滤条件                                                                                                                                                           |
 
 ### set
 
@@ -1428,7 +1428,7 @@ USAGE:  count_data    [-p|--partition num] [-b|--max_batch_count num] [-t|--time
 | 子命令       | 功能                                                                                                                                  |
 | ------------ | ------------------------------------------------------------------------------------------------------------------------------------- |
 | recover      | 启动数据恢复流程，通过向 ReplicaServer 收集和学习，重新构建 Zookeeper 上的元数据信息，参见[元数据恢复](/administration/meta-recovery) |
-| ddd_diagnose | DDD 自动诊断工具，用于恢复所有备份全部不可用的 partition，参见 [Replica数据恢复](/administration/replica-recovery)                     |
+| ddd_diagnose | DDD 自动诊断工具，用于恢复所有备份全部不可用的 partition，参见 [Replica数据恢复](/administration/replica-recovery)                    |
 
 ## 冷备份管理
 
