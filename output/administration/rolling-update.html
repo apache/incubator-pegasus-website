@@ -16,15 +16,15 @@
 <meta name="generator" content="Jekyll v4.3.3" />
 <meta property="og:title" content="Rolling Update" />
 <meta property="og:locale" content="en_US" />
-<meta name="description" content="TRANSLATING" />
-<meta property="og:description" content="TRANSLATING" />
+<meta name="description" content="Design goals" />
+<meta property="og:description" content="Design goals" />
 <meta property="og:site_name" content="Pegasus" />
 <meta property="og:type" content="article" />
-<meta property="article:published_time" content="2024-01-30T08:26:02+00:00" />
+<meta property="article:published_time" content="2024-02-01T06:10:45+00:00" />
 <meta name="twitter:card" content="summary" />
 <meta property="twitter:title" content="Rolling Update" />
 <script type="application/ld+json">
-{"@context":"https://schema.org","@type":"BlogPosting","dateModified":"2024-01-30T08:26:02+00:00","datePublished":"2024-01-30T08:26:02+00:00","description":"TRANSLATING","headline":"Rolling Update","mainEntityOfPage":{"@type":"WebPage","@id":"/administration/rolling-update"},"url":"/administration/rolling-update"}</script>
+{"@context":"https://schema.org","@type":"BlogPosting","dateModified":"2024-02-01T06:10:45+00:00","datePublished":"2024-02-01T06:10:45+00:00","description":"Design goals","headline":"Rolling Update","mainEntityOfPage":{"@type":"WebPage","@id":"/administration/rolling-update"},"url":"/administration/rolling-update"}</script>
 <!-- End Jekyll SEO tag -->
 </head>
 
@@ -222,7 +222,7 @@
         <li>
             <a href="/administration/rolling-update"
                 class="is-active">
-                Rolling-Update
+                Rolling Restart and Upgrade
             </a>
         </li>
         
@@ -588,7 +588,7 @@
                     
                     <a href="/administration/rolling-update"
                         class="navbar-item is-active">
-                        Rolling-Update
+                        Rolling Restart and Upgrade
                     </a>
                     
                     <a href="/administration/scale-in-out"
@@ -728,12 +728,168 @@
             <section class="hero is-info lg:mr-3">
                 <div class="hero-body">
                     
-                    <p class="title is-size-2 is-centered">Rolling-Update</p>
+                    <p class="title is-size-2 is-centered">Rolling Restart and Upgrade</p>
                 </div>
             </section>
             <section class="section" style="padding-top: 2rem;">
                 <div class="content">
-                    <p>TRANSLATING</p>
+                    <h1 id="design-goals">Design goals</h1>
+
+<p>When upgrading the Pegasus server version or persistently modifying the configuration, it is necessary to restart the cluster. For distributed clusters, the commonly used restart method is <strong>Rolling Restart</strong>, which means restarting servers one by one without stopping cluster service.</p>
+
+<blockquote>
+  <p>The following document assumes that the number of replicas of tables in the Pegasus cluster is 3.</p>
+</blockquote>
+
+<p>The important goal of cluster restart is to maintain continuous service and minimize the impact on availability. During the restart process, the following factors can affect service availability:</p>
+<ul>
+  <li>After the Replica Server process is killed, the replicas served by the process cannot provide services:
+    <ul>
+      <li>For primary replicas: Since the primary replicas directly provide reading and writing services to the client, killing a process will definitely affect read and write operations, and it needs to wait for the Meta Server to reassign new primary replicas before it can be recovered. The Meta Server maintenance the survival status of the Replica Servers through beacons, and the latency of Failure Detector depends on the configuration parameter <code class="language-plaintext highlighter-rouge">fd_grace_seconds</code>, default to 10 seconds, which means it takes up to 10 seconds for the Meta Server to know that the Replica Server is down, and then reassign new primary replicas.</li>
+      <li>For secondary replicas: Since the secondary replicas do not serve reads, theoretically they have no impact on reads. But it will affect writing because the PacificA consistency protocol requires all replicas to be written successfully before the write operation can be submitted. After the process is killed, the primary replica will find that the secondary replica has been lost during the write operation, and then notify the Meta Server to kick it out. After the <em>configuration</em> stage, the replica group is combined by one primary and one secondary replica, then continuing to provide write services. For write operations that have not yet been completed during this switching process, even if there is a <em>reconciliation</em> stage to execute again, the client may have timed out, which has a certain impact on availability. However, this impact is relatively small because the speed of <em>reconfiguration</em> is relatively fast and can usually be completed within 1 second.</li>
+    </ul>
+  </li>
+  <li>Restarting Meta Server: The impact of restarting Meta Server on availability can be almost negligible. Because the client retrieves the service node information for each partition from the Meta Server for the first time and caches the information locally, there is usually no need to query from Meta Server again. Therefore, a short disconnection during the Meta Server restart process has little impact on the client. However, considering that the Meta Server needs to maintain beacons with the Replica Server, it is important to avoid stopping the Meta Server process for a long time, which could cause the Replica Server to be disconnected.</li>
+  <li>Restarting the Collector: Restarting the Collector has no impact on availability. However, availability metrics are collected from the Collector, so it may have a slight impact on the metrics data.</li>
+</ul>
+
+<p>Therefore, the following points can be considered to keep availability during cluster restart:</p>
+<ul>
+  <li>Only one process can be restarted at a time, and the next process can only be restarted after the process is restarted and fully recovered to provide service. Because:
+    <ul>
+      <li>If the cluster does not recover to a fully healthy state after restarting a process, and some partitions still have only one primary and one secondary replica, then killing another Replica Server process is likely to enter a state with only one primary replica, making it unable to provide write service.</li>
+      <li>Waiting for all partitions in the cluster to recover three replicas before restarting the next process can also reduce the risk of data loss.</li>
+    </ul>
+  </li>
+  <li>Proactively migrate replicas before Failure Detector delays impact availability, instead passively migrate. Because:
+    <ul>
+      <li>Passive migration requires waiting for the Failure Detector to detect Replica Server loss, while proactive migration involves migrating the primary replicas served by this server to other servers before killing the process. This <code class="language-plaintext highlighter-rouge">reconfiguration</code> procedure is fast and typically takes less than 1 second to complete.</li>
+    </ul>
+  </li>
+  <li>Try to manually downgrade the secondary replicas of the Replica Server served before killing the process. Because:
+    <ul>
+      <li>Proactively trigger the <code class="language-plaintext highlighter-rouge">reconfiguration</code> rather than passive triggering on write failures, further reducing the impact on availability.</li>
+    </ul>
+  </li>
+  <li>Minimize the workload of the recovery process during process restart to shorten the process restart time.
+    <ul>
+      <li>Replica Server requires replay WAL logs to recover data upon restart. If it is killed directly, the amount of data that needs to be replayed may be large. However, if the flush operation of memtables to disk is actively triggered before killing, the amount of data that needs to be replayed during restart will be greatly reduced, and the restart time will be much shorter. The time required for the entire cluster to restart can also be greatly reduced.</li>
+    </ul>
+  </li>
+  <li>Minimize unnecessary data transmission between servers to avoid availability impacts caused by high load of CPU, network IO, and disk IO when transmit data.
+    <ul>
+      <li>After the Replica Server crashes, some partitions enter the state of <code class="language-plaintext highlighter-rouge">1 primary + 1 secondary</code>. If the Meta Server immediately supplements replicas on other Replica Servers, it will bring about a large number of cross server data transmission, increase CPU, network IO, and disk IO load, and affect cluster stability. Pegasus’s solution to this problem is to allow <code class="language-plaintext highlighter-rouge">1 primary + 1 secondary</code> state for a period of time, providing a maintenance window for the restarted Replica Server. If it’s not recovered for too long time, the missing replicas will be replenished on other Replica Servers. This balances the data integrity and the stability of the cluster. The wait time can be configured though the parameter <code class="language-plaintext highlighter-rouge">replica_assign_delay_ms_for_dropouts</code>, default to 5 minutes.</li>
+    </ul>
+  </li>
+</ul>
+
+<h1 id="restart-steps">Restart steps</h1>
+
+<h2 id="high-availability-restart-steps">High availability restart steps</h2>
+
+<ul>
+  <li>If it is an upgrade, please prepare new server packages and configuration files first</li>
+  <li>Use shell tools to set the meta level of the cluster to <code class="language-plaintext highlighter-rouge">steady</code>, turn off <a href="rebalance">load balancing</a>, and avoid unnecessary replica migration
+    <div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>&gt;&gt;&gt; set_meta_level steady
+</code></pre></div>    </div>
+  </li>
+  <li>Use shell tools to set the maintenance window of a single Replica Server
+    <div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>&gt;&gt;&gt; remote_command -t meta-server meta.lb.assign_delay_ms $value
+</code></pre></div>    </div>
+    <p><code class="language-plaintext highlighter-rouge">value</code> can be understood as the maintenance window of a single Replica Server, which is the trigger time for the Meta Server to supplement replicas to other servers after discovering that the Replica Server is lost. For example, configure to <code class="language-plaintext highlighter-rouge">3600000</code>.</p>
+  </li>
+  <li>Restart the Replica Server process one by one. Restart a single Replica Server steps:
+    <ul>
+      <li>Use shell tools to send <a href="remote-commands#meta-server">remote commands</a> to Meta Server, temporarily disable <code class="language-plaintext highlighter-rouge">add_secondary</code> operations:
+        <div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>&gt;&gt;&gt; remote_command -t meta-server meta.lb.add_secondary_max_count_for_one_node 0
+</code></pre></div>        </div>
+      </li>
+      <li>Use <code class="language-plaintext highlighter-rouge">migrate_node</code> command to transfer all primary replicas on the Replica Server to other servers:
+        <div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">$ </span>./run.sh migrate_node <span class="nt">-c</span> <span class="nv">$meta_list</span> <span class="nt">-n</span> <span class="nv">$node</span> <span class="nt">-t</span> run
+</code></pre></div>        </div>
+        <p>Use shell tools to check the replicas of the servers served through the <code class="language-plaintext highlighter-rouge">nodes -d</code> command, and wait for the number of <strong>primary</strong> replicas to become 0. If it doesn’t change to 0 for a long time, please execute the command again.</p>
+      </li>
+      <li>Use <code class="language-plaintext highlighter-rouge">downgrade_node</code> command to downgrade all secondary replicas on the Replica Server to <code class="language-plaintext highlighter-rouge">INACTIVE</code>:
+        <div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">$ </span>./run.sh downgrade_node <span class="nt">-c</span> <span class="nv">$meta_list</span> <span class="nt">-n</span> <span class="nv">$node</span> <span class="nt">-t</span> run
+</code></pre></div>        </div>
+        <p>Use shell tools to check the replicas of the servers served through the <code class="language-plaintext highlighter-rouge">nodes -d</code> command, and wait for the number of <strong>secondary</strong> replicas to become 0. If it doesn’t change to 0 for a long time, please execute the command again.</p>
+      </li>
+      <li>Use shell tools to send a remote command to the Replica Server to close all replicas and trigger flush operations:
+        <div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>&gt;&gt;&gt; remote_command -l $node replica.kill_partition
+</code></pre></div>        </div>
+        <p>Wait for about 1 minute for the data to be flushed to the disk to complete.</p>
+      </li>
+      <li>If it is an upgrade, replace the package and configuration file</li>
+      <li>Restart the Replica Server process</li>
+      <li>Use shell tools to send <a href="remote-commands#meta-server">remote commands</a> to Meta Server, enable <code class="language-plaintext highlighter-rouge">add_secondary</code> operations, let it quickly supplement replicas:
+        <div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>&gt;&gt;&gt; remote_command -t meta-server meta.lb.add_secondary_max_count_for_one_node 100
+</code></pre></div>        </div>
+      </li>
+      <li>Use the <code class="language-plaintext highlighter-rouge">ls - d</code> command of the shell tool to check the cluster status and wait for all partitions to fully recover health</li>
+      <li>Continue with the next Replica Server</li>
+    </ul>
+  </li>
+  <li>Restart the Meta Server process one by one. Restart a single Meta Server steps:
+    <ul>
+      <li>If it is an upgrade, replace the package and configuration file</li>
+      <li>Restart the Meta Server process</li>
+      <li>Wait for more than 30 seconds to ensure the continuity of beacons between Meta Server and Replica Servers</li>
+      <li>Continue with the next Meta Server</li>
+    </ul>
+  </li>
+  <li>Restart the Collector process:
+    <ul>
+      <li>If it is an upgrade, replace the package and configuration file</li>
+      <li>Restart the Collector process</li>
+    </ul>
+  </li>
+  <li>Reset configurations
+    <ul>
+      <li>Reset the configurations modified in the above steps using shell tools:
+        <div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>&gt;&gt;&gt; remote_command -t meta-server meta.lb.add_secondary_max_count_for_one_node DEFAULT
+&gt;&gt;&gt; remote_command -t meta-server meta.lb.assign_delay_ms DEFAULT
+</code></pre></div>        </div>
+      </li>
+    </ul>
+  </li>
+</ul>
+
+<h2 id="simplified-restart-steps">Simplified restart steps</h2>
+
+<p>If the availability requirement is not high, the restart steps can be simplified as follows:</p>
+<ul>
+  <li>If it is an upgrade, please prepare new server packages and configuration files first</li>
+  <li>Use shell tools to set the meta level of the cluster to <code class="language-plaintext highlighter-rouge">steady</code>, turn off <a href="rebalance">load balancing</a>, and avoid unnecessary replica migration
+    <div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>&gt;&gt;&gt; set_meta_level steady
+</code></pre></div>    </div>
+  </li>
+  <li>Restart the Replica Server process one by one. Restart a single Replica Server steps:
+    <ul>
+      <li>If it is an upgrade, replace the package and configuration file</li>
+      <li>Restart the Replica Server process</li>
+      <li>Use the <code class="language-plaintext highlighter-rouge">ls - d</code> command of the shell tool to check the cluster status and wait for all partitions to fully recover health</li>
+      <li>Continue with the next Replica Server</li>
+    </ul>
+  </li>
+  <li>Restart the Meta Server process one by one. Restart a single Meta Server steps:
+    <ul>
+      <li>If it is an upgrade, replace the package and configuration file</li>
+      <li>Restart the Meta Server process</li>
+      <li>Wait for more than 30 seconds to ensure the continuity of beacons between Meta Server and Replica Servers</li>
+      <li>Continue with the next Meta Server</li>
+    </ul>
+  </li>
+  <li>Restart the Collector process:
+    <ul>
+      <li>If it is an upgrade, replace the package and configuration file</li>
+      <li>Restart the Collector process</li>
+    </ul>
+  </li>
+</ul>
+
+<h1 id="restart-script">Restart script</h1>
+
+<p>It can be referenced the script based on <a href="https://github.com/XiaoMi/minos">Minos</a> and <a href="#high-availability-restart-steps">High availability restart steps</a>: <a href="https://github.com/apache/incubator-pegasus/blob/master/scripts/pegasus_rolling_update.sh">scripts/pegasus_rolling_update.sh</a>.</p>
 
                 </div>
             </section>
@@ -776,7 +932,16 @@
     </span>
     Table of contents
 </p>
-
+<ul class="menu-list">
+  <li><a href="#design-goals">Design goals</a></li>
+  <li><a href="#restart-steps">Restart steps</a>
+    <ul>
+      <li><a href="#high-availability-restart-steps">High availability restart steps</a></li>
+      <li><a href="#simplified-restart-steps">Simplified restart steps</a></li>
+    </ul>
+  </li>
+  <li><a href="#restart-script">Restart script</a></li>
+</ul>
 
         </div>
     </div>
