@@ -16,15 +16,15 @@
 <meta name="generator" content="Jekyll v4.3.3" />
 <meta property="og:title" content="Compression" />
 <meta property="og:locale" content="en_US" />
-<meta name="description" content="TRANSLATING" />
-<meta property="og:description" content="TRANSLATING" />
+<meta name="description" content="Compression on the client side" />
+<meta property="og:description" content="Compression on the client side" />
 <meta property="og:site_name" content="Pegasus" />
 <meta property="og:type" content="article" />
-<meta property="article:published_time" content="2024-02-01T06:12:23+00:00" />
+<meta property="article:published_time" content="2024-02-02T11:24:08+00:00" />
 <meta name="twitter:card" content="summary" />
 <meta property="twitter:title" content="Compression" />
 <script type="application/ld+json">
-{"@context":"https://schema.org","@type":"BlogPosting","dateModified":"2024-02-01T06:12:23+00:00","datePublished":"2024-02-01T06:12:23+00:00","description":"TRANSLATING","headline":"Compression","mainEntityOfPage":{"@type":"WebPage","@id":"/administration/compression"},"url":"/administration/compression"}</script>
+{"@context":"https://schema.org","@type":"BlogPosting","dateModified":"2024-02-02T11:24:08+00:00","datePublished":"2024-02-02T11:24:08+00:00","description":"Compression on the client side","headline":"Compression","mainEntityOfPage":{"@type":"WebPage","@id":"/administration/compression"},"url":"/administration/compression"}</script>
 <!-- End Jekyll SEO tag -->
 </head>
 
@@ -733,7 +733,109 @@
             </section>
             <section class="section" style="padding-top: 2rem;">
                 <div class="content">
-                    <p>TRANSLATING</p>
+                    <h1 id="compression-on-the-client-side">Compression on the client side</h1>
+
+<p>Please refer to the <a href="/clients/java-client#data-serialization">Java client - Data Serialization</a> and <a href="/clients/java-client#data-compression">Java client - Data Compression</a>.</p>
+
+<h1 id="compression-on-the-server-side">Compression on the server side</h1>
+
+<p>It’s recommended:</p>
+<ul>
+  <li>For the server with low CPU load, use the <code class="language-plaintext highlighter-rouge">zstd</code> algorithm with the highest compression ratio.</li>
+  <li>For the server with high CPU load, use the <code class="language-plaintext highlighter-rouge">lz4</code> algorithm with good compression rate and speed.</li>
+</ul>
+
+<p>The compression algorithms supported by the Pegasus server:</p>
+<ul>
+  <li>snappy</li>
+  <li>lz4 (Since Pegasus v1.11.2)</li>
+  <li>zstd (Since Pegasus v1.11.2)</li>
+</ul>
+
+<p>Configure the compression algorithm through <a href="config">Configurations</a>, for example:</p>
+<div class="language-ini highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nn">[pegasus.server]</span>
+    <span class="py">rocksdb_compression_type</span> <span class="p">=</span> <span class="s">lz4</span>
+</code></pre></div></div>
+
+<p>Comparison of different compression algorithms (from <a href="https://facebook.github.io/zstd/">zstd official benchmark</a>):</p>
+
+<table>
+  <thead>
+    <tr>
+      <th>Compressor name</th>
+      <th>Ratio</th>
+      <th>Compression (MB/s)</th>
+      <th>Decompress (MB/s)</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>zstd 1.3.4 -1</td>
+      <td>2.877</td>
+      <td>470</td>
+      <td>1380</td>
+    </tr>
+    <tr>
+      <td>zlib 1.2.11 -1</td>
+      <td>2.743</td>
+      <td>110</td>
+      <td>400</td>
+    </tr>
+    <tr>
+      <td>brotli 1.0.2 -0</td>
+      <td>2.701</td>
+      <td>410</td>
+      <td>430</td>
+    </tr>
+    <tr>
+      <td>quicklz 1.5.0 -1</td>
+      <td>2.238</td>
+      <td>550</td>
+      <td>710</td>
+    </tr>
+    <tr>
+      <td>lzo1x 2.09 -1</td>
+      <td>2.108</td>
+      <td>650</td>
+      <td>830</td>
+    </tr>
+    <tr>
+      <td>lz4 1.8.1</td>
+      <td>2.101</td>
+      <td>750</td>
+      <td>3700</td>
+    </tr>
+    <tr>
+      <td>snappy 1.1.4</td>
+      <td>2.091</td>
+      <td>530</td>
+      <td>1800</td>
+    </tr>
+    <tr>
+      <td>lzf 3.6 -1</td>
+      <td>2.077</td>
+      <td>400</td>
+      <td>860</td>
+    </tr>
+  </tbody>
+</table>
+
+<p><img src="/assets/images/compression-comparation.png" alt="compression-comparation.png" class="img-responsive" /></p>
+
+<p>This result is consistent with <a href="https://github.com/lz4/lz4#benchmarks">lz4 official benchmark</a>.</p>
+
+<p><a href="https://github.com/facebook/rocksdb/wiki/Compression">Compression algorithm suggestions from RocksDB official</a>:</p>
+<blockquote>
+  <p>Use options.compression to specify the compression to use. By default it is Snappy. We believe LZ4 is almost always better than Snappy. We leave Snappy as default to avoid unexpected compatibility problems to previous users. LZ4/Snappy is lightweight compression so it usually strikes a good balance between space and CPU usage.</p>
+</blockquote>
+
+<blockquote>
+  <p>If you want to further reduce the in-memory and have some free CPU to use, you can try to set a heavy-weight compression in the latter by setting options.bottommost_compression. The bottommost level will be compressed using this compression style. Usually the bottommost level contains majority of the data, so users get almost optimal space setting, without paying CPU for compress all the data ever flowing to any level. We recommend ZSTD. If it is not available, Zlib is the second choice.</p>
+</blockquote>
+
+<blockquote>
+  <p>If you want have a lot of free CPU and want to reduce not just space but write amplification too, try to set options.compression to heavy weight compression type. We recommend ZSTD. Use Zlib if it is not available.</p>
+</blockquote>
 
                 </div>
             </section>
@@ -776,7 +878,10 @@
     </span>
     Table of contents
 </p>
-
+<ul class="menu-list">
+  <li><a href="#compression-on-the-client-side">Compression on the client side</a></li>
+  <li><a href="#compression-on-the-server-side">Compression on the server side</a></li>
+</ul>
 
         </div>
     </div>

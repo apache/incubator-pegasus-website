@@ -20,11 +20,11 @@
 <meta property="og:description" content="客户端压缩" />
 <meta property="og:site_name" content="Pegasus" />
 <meta property="og:type" content="article" />
-<meta property="article:published_time" content="2024-02-01T06:12:23+00:00" />
+<meta property="article:published_time" content="2024-02-02T11:24:08+00:00" />
 <meta name="twitter:card" content="summary" />
 <meta property="twitter:title" content="Compression" />
 <script type="application/ld+json">
-{"@context":"https://schema.org","@type":"BlogPosting","dateModified":"2024-02-01T06:12:23+00:00","datePublished":"2024-02-01T06:12:23+00:00","description":"客户端压缩","headline":"Compression","mainEntityOfPage":{"@type":"WebPage","@id":"/administration/compression"},"url":"/administration/compression"}</script>
+{"@context":"https://schema.org","@type":"BlogPosting","dateModified":"2024-02-02T11:24:08+00:00","datePublished":"2024-02-02T11:24:08+00:00","description":"客户端压缩","headline":"Compression","mainEntityOfPage":{"@type":"WebPage","@id":"/administration/compression"},"url":"/administration/compression"}</script>
 <!-- End Jekyll SEO tag -->
 </head>
 
@@ -739,37 +739,37 @@
                 <div class="content">
                     <h1 id="客户端压缩">客户端压缩</h1>
 
-<p>请参考 <a href="/zh/clients/java-client#数据序列化">Java客户端文档#数据序列化</a> 和 <a href="/zh/clients/java-client#数据压缩">Java客户端文档#数据压缩</a> 。</p>
+<p>请参考 <a href="/zh/clients/java-client#数据序列化">Java 客户端 - 数据序列化</a> 和 <a href="/zh/clients/java-client#数据压缩">Java 客户端 - 数据压缩</a> 。</p>
 
 <h1 id="服务端压缩">服务端压缩</h1>
 
-<p><strong>把总结放在最前面：</strong></p>
+<p>建议：</p>
 <ul>
-  <li>对于CPU比较空闲的场景，建议采用压缩率高的<code class="language-plaintext highlighter-rouge">zstd</code>算法。</li>
-  <li>对于CPU比较繁忙的场景，建议采用综合性能比较优异的<code class="language-plaintext highlighter-rouge">lz4</code>算法。</li>
+  <li>对于 CPU 比较空闲的服务器，采用压缩率最高的 <code class="language-plaintext highlighter-rouge">zstd</code> 算法。</li>
+  <li>对于 CPU 比较繁忙的服务器，采用压缩率和速度都比较好的 <code class="language-plaintext highlighter-rouge">lz4</code> 算法。</li>
 </ul>
 
-<p>Pegasus服务端支持的压缩算法：</p>
+<p>Pegasus 服务端支持的压缩算法：</p>
 <ul>
   <li>snappy</li>
-  <li>lz4 (从v1.11.2版本开始支持)</li>
-  <li>zstd (从v1.11.2版本开始支持)</li>
+  <li>lz4 (从 v1.11.2 版本开始支持)</li>
+  <li>zstd (从 v1.11.2 版本开始支持)</li>
 </ul>
 
-<p>通过<a href="config">配置文件</a>来配置压缩算法，譬如：</p>
+<p>通过 <a href="config">配置文件</a> 来配置压缩算法，例如：</p>
 <div class="language-ini highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nn">[pegasus.server]</span>
     <span class="py">rocksdb_compression_type</span> <span class="p">=</span> <span class="s">lz4</span>
 </code></pre></div></div>
 
-<p>不同压缩算法的比较（数据来自<a href="https://facebook.github.io/zstd/">zstd官方的benchmark</a>）：</p>
+<p>不同压缩算法的比较（数据来自 <a href="https://facebook.github.io/zstd/">zstd 官方的 benchmark</a>）：</p>
 
 <table>
   <thead>
     <tr>
       <th>Compressor name</th>
       <th>Ratio</th>
-      <th>Compression(MB/s)</th>
-      <th>Decompress(MB/s)</th>
+      <th>Compression (MB/s)</th>
+      <th>Decompress (MB/s)</th>
     </tr>
   </thead>
   <tbody>
@@ -826,9 +826,9 @@
 
 <p><img src="/assets/images/compression-comparation.png" alt="compression-comparation.png" class="img-responsive" /></p>
 
-<p>这个结果与<a href="https://github.com/lz4/lz4#benchmarks">lz4官方的benchmark</a>也是一致的。</p>
+<p>这个结果与 <a href="https://github.com/lz4/lz4#benchmarks">lz4 官方的 benchmark</a> 是一致的。</p>
 
-<p>附上<a href="https://github.com/facebook/rocksdb/wiki/Compression">RocksDB的压缩建议</a>：</p>
+<p>附上 <a href="https://github.com/facebook/rocksdb/wiki/Compression">RocksDB 的压缩建议</a>：</p>
 <blockquote>
   <p>Use options.compression to specify the compression to use. By default it is Snappy. We believe LZ4 is almost always better than Snappy. We leave Snappy as default to avoid unexpected compatibility problems to previous users. LZ4/Snappy is lightweight compression so it usually strikes a good balance between space and CPU usage.</p>
 </blockquote>
@@ -840,7 +840,6 @@
 <blockquote>
   <p>If you want have a lot of free CPU and want to reduce not just space but write amplification too, try to set options.compression to heavy weight compression type. We recommend ZSTD. Use Zlib if it is not available.</p>
 </blockquote>
-
 
                 </div>
             </section>
