@@ -39,8 +39,8 @@ Fortunately, RocksDB has also provided some solutions to this issue, for example
 > 3. use vector memtable
 > 4. make sure options.max_background_flushes is at least 4
 > 5. before inserting the data, disable automatic compaction, set options.level0_file_num_compaction_trigger, options.level0_slowdown_writes_trigger and options.level0_stop_writes_trigger to very large value. After inserting all the data, issue a manual compaction.
-     >
-     >   3-5 will be automatically done if you call Options::PrepareForBulkLoad() to your option
+>
+>   3-5 will be automatically done if you call Options::PrepareForBulkLoad() to your option
 
 Pegasus's solution is to set different RocksDB options for different usage scenarios and adjust the behavior of RocksDB to provide better read and write performance. Specifically:
 * Use the [Table environment](table-env) to set `rocksdb.usage_scenario` to specify the corresponding usage scenario
