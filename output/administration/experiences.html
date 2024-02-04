@@ -16,15 +16,15 @@
 <meta name="generator" content="Jekyll v4.3.3" />
 <meta property="og:title" content="Experiences" />
 <meta property="og:locale" content="en_US" />
-<meta name="description" content="TRANSLATING" />
-<meta property="og:description" content="TRANSLATING" />
+<meta name="description" content="The administrator work of a distributed system includes periodic inspections, monitoring &amp; alarms, troubleshooting, access auditing, etc. to help ensure the stability of service." />
+<meta property="og:description" content="The administrator work of a distributed system includes periodic inspections, monitoring &amp; alarms, troubleshooting, access auditing, etc. to help ensure the stability of service." />
 <meta property="og:site_name" content="Pegasus" />
 <meta property="og:type" content="article" />
-<meta property="article:published_time" content="2024-02-02T11:24:08+00:00" />
+<meta property="article:published_time" content="2024-02-04T07:44:40+00:00" />
 <meta name="twitter:card" content="summary" />
 <meta property="twitter:title" content="Experiences" />
 <script type="application/ld+json">
-{"@context":"https://schema.org","@type":"BlogPosting","dateModified":"2024-02-02T11:24:08+00:00","datePublished":"2024-02-02T11:24:08+00:00","description":"TRANSLATING","headline":"Experiences","mainEntityOfPage":{"@type":"WebPage","@id":"/administration/experiences"},"url":"/administration/experiences"}</script>
+{"@context":"https://schema.org","@type":"BlogPosting","dateModified":"2024-02-04T07:44:40+00:00","datePublished":"2024-02-04T07:44:40+00:00","description":"The administrator work of a distributed system includes periodic inspections, monitoring &amp; alarms, troubleshooting, access auditing, etc. to help ensure the stability of service.","headline":"Experiences","mainEntityOfPage":{"@type":"WebPage","@id":"/administration/experiences"},"url":"/administration/experiences"}</script>
 <!-- End Jekyll SEO tag -->
 </head>
 
@@ -733,7 +733,122 @@
             </section>
             <section class="section" style="padding-top: 2rem;">
                 <div class="content">
-                    <p>TRANSLATING</p>
+                    <p>The administrator work of a distributed system includes periodic inspections, monitoring &amp; alarms, troubleshooting, access auditing, etc. to help ensure the stability of service.</p>
+
+<h1 id="periodic-inspection">Periodic inspection</h1>
+
+<ul>
+  <li>Availability: Availability remains at 100% normally. Occasionally, in the event of node failures or other anomalies, availability may fall below 100%</li>
+  <li>IOPS: The sudden increase in IOPS may affect service stability, while the sudden decrease in traffic may be caused by service issues</li>
+  <li>Read and write latency: The P99 latency spikes of read and/or write operations may affect Pegasus users</li>
+  <li>System resources usage: Whether CPU, memory, disk usage, network bandwidth and connection count have skyrocketed, and whether they have reached the high water mark</li>
+</ul>
+
+<h1 id="monitoring-and-alarms">Monitoring and alarms</h1>
+
+<p>Refer to <a href="/administration/monitoring">Monitoring</a>.</p>
+
+<h1 id="troubleshooting">Troubleshooting</h1>
+
+<p>Use the <a href="/overview/shell">Shell tools</a> to check the status of Pegasus:</p>
+<ul>
+  <li>Whether the basic information of the cluster is normal:
+    <ul>
+      <li>Whether the <code class="language-plaintext highlighter-rouge">meta_servers</code> list is normal</li>
+      <li>Whether the value of <code class="language-plaintext highlighter-rouge">meta_function_level</code> is <code class="language-plaintext highlighter-rouge">steady</code></li>
+    </ul>
+  </li>
+  <li>Whether each table and each partition is health：<code class="language-plaintext highlighter-rouge">ls -d</code>
+    <ul>
+      <li>Whether the count of table count is correct</li>
+      <li>Whether the number of all table’s <code class="language-plaintext highlighter-rouge">unhealthy</code> partition count is 0</li>
+    </ul>
+  </li>
+  <li>Whether each server is health: <code class="language-plaintext highlighter-rouge">nodes -d</code>
+    <ul>
+      <li>All servers are in the list and their status is <code class="language-plaintext highlighter-rouge">ALIVE</code></li>
+      <li>Is the data distribution severely skewed (i.e. the number of <code class="language-plaintext highlighter-rouge">replica_count</code> or <code class="language-plaintext highlighter-rouge">primary_count</code> columns in the list is imbalance). If severely skewed, it’s recommended to use the shell tool command <code class="language-plaintext highlighter-rouge">set_meta_level</code> to set it to <code class="language-plaintext highlighter-rouge">lively</code> in a time window with relatively low traffic, then load balancing performed. Remember to reset it to <code class="language-plaintext highlighter-rouge">steady</code> state when they are balanced.
+        <blockquote>
+          <p>Note: For latency sensitive users, load balancing can only be performed when necessary and should not affect service stability. During the process, the cluster status should be closely observed</p>
+        </blockquote>
+      </li>
+    </ul>
+  </li>
+  <li>Whether the basic information of each server is normal: <code class="language-plaintext highlighter-rouge">server_info</code>
+    <ul>
+      <li>Whether each server version is correct</li>
+      <li>Determine whether a restart has occurred through each server’s <em>start time</em></li>
+    </ul>
+  </li>
+  <li>Whether the metrics of each server is normal: <code class="language-plaintext highlighter-rouge">server_stat</code>
+    <ul>
+      <li>IOPS and latency</li>
+      <li>Memory usage</li>
+    </ul>
+  </li>
+  <li>Whether the metrics of each table is normal: <code class="language-plaintext highlighter-rouge">app_stat</code>
+    <ul>
+      <li>IOPS</li>
+      <li>Disk usage</li>
+    </ul>
+  </li>
+</ul>
+
+<p>Check the system information:
+For example, check the count of socket connections on the server (where <code class="language-plaintext highlighter-rouge">34601</code> is the service listening port of Meta Server):</p>
+<ul>
+  <li>Use the <code class="language-plaintext highlighter-rouge">netstat</code> command on the server where the Meta Server is deployed to check the count of connections:
+    <div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>netstat <span class="nt">-na</span> | <span class="nb">grep</span> <span class="s1">'34601\&gt;'</span> | <span class="nb">grep </span>ESTABLISHED | <span class="nb">wc</span> <span class="nt">-l</span>
+</code></pre></div>    </div>
+  </li>
+  <li>Check the remote nodes that have established a connection with the server, sorted by the count of connections:
+    <div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>netstat <span class="nt">-na</span> | <span class="nb">grep</span> <span class="s1">'34601\&gt;'</span> | <span class="nb">grep </span>ESTABLISHE | <span class="nb">awk</span> <span class="s1">'{print $5}'</span> | <span class="nb">sed</span> <span class="s1">'s/:.*//'</span> | <span class="nb">sort</span> | <span class="nb">uniq</span> <span class="nt">-c</span> | <span class="nb">sort</span> <span class="nt">-k1</span> <span class="nt">-n</span> <span class="nt">-r</span> | <span class="nb">head</span>
+</code></pre></div>    </div>
+  </li>
+  <li>If there are too many connections (for example, if the count of a single node connections exceeds 100), further analysis is needed to determine the cause.</li>
+</ul>
+
+<h2 id="common-troubleshooting-methods">Common troubleshooting methods</h2>
+
+<ul>
+  <li>If the service process exits abnormally, it is necessary to log in to the corresponding server to check the reason:
+    <ul>
+      <li>Check to abnormal exit reason via <code class="language-plaintext highlighter-rouge">dmesg</code> or <code class="language-plaintext highlighter-rouge">/var/log/messages</code></li>
+      <li>If it’s <code class="language-plaintext highlighter-rouge">Out of memory: Killed process xxx</code>: Check the memory usage monitoring of Meta Server or Replica Server and analyze for any abnormal issues</li>
+      <li>If it’s <code class="language-plaintext highlighter-rouge">segfault at xxx</code>:
+        <ul>
+          <li>Check the standard error output logs and server logs of Meta Server or Replica Server</li>
+          <li>Check if there is a coredump file generated, and use <code class="language-plaintext highlighter-rouge">gdb</code> for analysis if there is. If there is no coredump file, set the system and user’s <code class="language-plaintext highlighter-rouge">ulimit</code> as needed.</li>
+        </ul>
+      </li>
+    </ul>
+  </li>
+  <li>If there are many faulty servers, consider to use the <code class="language-plaintext highlighter-rouge">set_meta_level</code> command to set it to <code class="language-plaintext highlighter-rouge">freezed</code> state to avoid service avalanches</li>
+  <li>If the process keeps restarting (abnormally exiting and being restarted by other process monitoring services), consider temporarily stopping the process monitoring service to automatically restart the Pegasus process</li>
+  <li>If remote login (such as <code class="language-plaintext highlighter-rouge">ssh</code>) to the server is not available, it is possible that the physical server has shutdown. Please contact the service provider for assistance</li>
+</ul>
+
+<h1 id="audit-when-user-apply-pegasus-service">Audit when user apply Pegasus service</h1>
+
+<p>Pegasus, like most databases, manage resources in the unit of <em>table</em>. As Pegasus administrators, when user apply Pegasus table, it is necessary to understand the resources required by the table in order to allocate appropriate computing and storage resources. Consider Pegasus storage principles and optimizing the key-value schema design can also help ensure service stability.</p>
+
+<p>The following information can be collected and analyzed:</p>
+
+<ul>
+  <li>Table name</li>
+  <li>Read operation peak (QPS)</li>
+  <li>Total number of reads operations (operations/day)</li>
+  <li>Write operation peak (TPS)</li>
+  <li>Total number of reads operations (operations/day)</li>
+  <li>Key-value design schema (to determine if there is a data skew issue)</li>
+  <li>Read/write mode (to determine if there are read or write hotspot issues)</li>
+  <li>Average size of each key-value (KB)</li>
+  <li>Estimated total data usage (GB)</li>
+  <li>Growth estimate (e.g. 6 months/1 year/3 years of growth)</li>
+  <li>Read operation latency required (P99 latency)</li>
+  <li>Write operation latency required (P99 latency)</li>
+  <li>IOPS characteristic (such as all-day equilibrium, smooth with peaks and valleys, timed batch writes, etc.)</li>
+</ul>
 
                 </div>
             </section>
@@ -776,7 +891,16 @@
     </span>
     Table of contents
 </p>
-
+<ul class="menu-list">
+  <li><a href="#periodic-inspection">Periodic inspection</a></li>
+  <li><a href="#monitoring-and-alarms">Monitoring and alarms</a></li>
+  <li><a href="#troubleshooting">Troubleshooting</a>
+    <ul>
+      <li><a href="#common-troubleshooting-methods">Common troubleshooting methods</a></li>
+    </ul>
+  </li>
+  <li><a href="#audit-when-user-apply-pegasus-service">Audit when user apply Pegasus service</a></li>
+</ul>
 
         </div>
     </div>

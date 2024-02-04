@@ -16,15 +16,15 @@
 <meta name="generator" content="Jekyll v4.3.3" />
 <meta property="og:title" content="Experiences" />
 <meta property="og:locale" content="en_US" />
-<meta name="description" content="任何一个分布式系统的运维工作都少不了周期巡检，问题排查，故障报警，人工审核。它们是保证服务稳定运行的关键。 这里整理Pegasus的监控指标，你可以根据需要接入到你的运维工具中。" />
-<meta property="og:description" content="任何一个分布式系统的运维工作都少不了周期巡检，问题排查，故障报警，人工审核。它们是保证服务稳定运行的关键。 这里整理Pegasus的监控指标，你可以根据需要接入到你的运维工具中。" />
+<meta name="description" content="一个分布式系统的Meta Server管理工作包含周期巡检，监控报警，故障排查，接入审核等，通过这些手段来帮助服务稳定运行。" />
+<meta property="og:description" content="一个分布式系统的Meta Server管理工作包含周期巡检，监控报警，故障排查，接入审核等，通过这些手段来帮助服务稳定运行。" />
 <meta property="og:site_name" content="Pegasus" />
 <meta property="og:type" content="article" />
-<meta property="article:published_time" content="2024-02-02T11:24:08+00:00" />
+<meta property="article:published_time" content="2024-02-04T07:44:40+00:00" />
 <meta name="twitter:card" content="summary" />
 <meta property="twitter:title" content="Experiences" />
 <script type="application/ld+json">
-{"@context":"https://schema.org","@type":"BlogPosting","dateModified":"2024-02-02T11:24:08+00:00","datePublished":"2024-02-02T11:24:08+00:00","description":"任何一个分布式系统的运维工作都少不了周期巡检，问题排查，故障报警，人工审核。它们是保证服务稳定运行的关键。 这里整理Pegasus的监控指标，你可以根据需要接入到你的运维工具中。","headline":"Experiences","mainEntityOfPage":{"@type":"WebPage","@id":"/administration/experiences"},"url":"/administration/experiences"}</script>
+{"@context":"https://schema.org","@type":"BlogPosting","dateModified":"2024-02-04T07:44:40+00:00","datePublished":"2024-02-04T07:44:40+00:00","description":"一个分布式系统的Meta Server管理工作包含周期巡检，监控报警，故障排查，接入审核等，通过这些手段来帮助服务稳定运行。","headline":"Experiences","mainEntityOfPage":{"@type":"WebPage","@id":"/administration/experiences"},"url":"/administration/experiences"}</script>
 <!-- End Jekyll SEO tag -->
 </head>
 
@@ -737,115 +737,106 @@
             </section>
             <section class="section" style="padding-top: 2rem;">
                 <div class="content">
-                    <p>任何一个分布式系统的运维工作都少不了周期巡检，问题排查，故障报警，人工审核。它们是保证服务稳定运行的关键。
-这里整理Pegasus的监控指标，你可以根据需要接入到你的运维工具中。</p>
+                    <p>一个分布式系统的Meta Server管理工作包含周期巡检，监控报警，故障排查，接入审核等，通过这些手段来帮助服务稳定运行。</p>
 
-<h2 id="周期巡检">周期巡检</h2>
+<h1 id="周期巡检">周期巡检</h1>
 
 <ul>
-  <li>
-    <p><strong>可用度</strong>：正常时可用度会保持在100%，发生节点故障等异常偶尔会有可用度低于100%的情况</p>
-  </li>
-  <li>
-    <p><strong>总QPS</strong>：异常流量的突增或者突降有时会导致服务抖动</p>
-  </li>
-  <li>
-    <p><strong>读写延迟</strong>：P99读延迟和P99写延迟可能有异常毛刺的情况，对用户会造成影响</p>
-  </li>
-  <li>
-    <p><strong>内存使用</strong>：关注内存使用是否正常，譬如memory是否出现暴涨、是否达到了警戒线</p>
-  </li>
-  <li>
-    <p><strong>存储使用</strong>：关注磁盘存储使用是否正常，预估存储是否够用</p>
-  </li>
+  <li>可用性：正常时可用性会保持在 100%，发生节点故障等异常偶尔会有可用性低于 100% 的情况</li>
+  <li>IOPS：流量的突增可能导致服务稳定性受到影响，而流量的突降可能是服务已故障所致</li>
+  <li>读写延迟：读写操作的 P99 延迟可能有异常毛刺的情况，对 Pegasus 用户产生影响</li>
+  <li>系统资源使用：CPU、内存、磁盘的使用量，网络带宽及连接数是否出现暴涨、是否达到高水位线</li>
 </ul>
 
-<h2 id="问题排查">问题排查</h2>
+<h1 id="监控报警">监控报警</h1>
 
+<p>参考 <a href="/zh/administration/monitoring">可视化监控</a>.</p>
+
+<h1 id="问题排查">问题排查</h1>
+
+<p>使用 <a href="/zh/overview/shell">Shell 工具</a> 查看 Pegasus 系统状态：</p>
 <ul>
   <li>集群基础信息是否正常：<code class="language-plaintext highlighter-rouge">cluster_info</code>
     <ul>
-      <li>meta_servers列表是否正确</li>
-      <li>primary_meta_server是否为第一个（因为推荐使用第一个，第二个节点上可能部署有数据节点）</li>
-      <li>meta_function_level是否是steady状态</li>
+      <li><code class="language-plaintext highlighter-rouge">meta_servers</code> 列表是否正常</li>
+      <li><code class="language-plaintext highlighter-rouge">meta_function_level</code> 是否是 <code class="language-plaintext highlighter-rouge">steady</code> 状态</li>
     </ul>
   </li>
-  <li>各Table、各Partition是否健康：<code class="language-plaintext highlighter-rouge">ls -d</code>
+  <li>各 Table、各 Partition 是否健康：<code class="language-plaintext highlighter-rouge">ls -d</code>
     <ul>
-      <li>Table数量是否正常</li>
-      <li>所有Table的unhealthy_num（没有达到一主一备的partition数量）和partly_healthy_num（没有达到一主两备的partition数量）是否都为0</li>
+      <li>Table 数量是否正常</li>
+      <li>所有 Table 的 <code class="language-plaintext highlighter-rouge">unhealthy</code> 分片数量是否都为 0</li>
     </ul>
   </li>
   <li>各节点是否健康：<code class="language-plaintext highlighter-rouge">nodes -d</code>
     <ul>
-      <li>所有节点是否都是ALIVE状态</li>
-      <li>数据分布是否倾斜严重，如果倾斜严重，可以选择集群流量比较小的时间段将meta_function_level设置为lively进行负载均衡调整，并在调整完成后设置回steady状态</li>
-      <li>注意：负载均衡只有在必要的时候才进行，前提是不要影响服务稳定性，因此不要频繁操作；在调整过程中要全程监控集群状态</li>
+      <li>所有节点都在列表中，且状态都是 <code class="language-plaintext highlighter-rouge">ALIVE</code></li>
+      <li>数据分布是否倾斜严重（即 <code class="language-plaintext highlighter-rouge">replica_count</code> 列或 <code class="language-plaintext highlighter-rouge">primary_count</code> 列数量不平均）。如果倾斜严重，可以选择集群流量比较小的时间段，使用 shell 工具命令 <code class="language-plaintext highlighter-rouge">set_meta_level</code> 设置为 <code class="language-plaintext highlighter-rouge">lively</code>，使其进行负载均衡调整。记得在调整完成后设置回 <code class="language-plaintext highlighter-rouge">steady</code> 状态
+        <blockquote>
+          <p>注意：对于延迟敏感的用户，负载均衡只能在必要的时候才进行，不要影响服务稳定性，在该过程中要密切观察集群状态</p>
+        </blockquote>
+      </li>
     </ul>
   </li>
   <li>各节点的基本信息是否正常：<code class="language-plaintext highlighter-rouge">server_info</code>
     <ul>
-      <li>Server版本是否正确</li>
-      <li>通过Start Time判断是否发生过重启</li>
+      <li>每个 server 的版本是否正确</li>
+      <li>通过 start time 判断是否发生过重启</li>
     </ul>
   </li>
-  <li>各节点的实时统计信息是否正常：<code class="language-plaintext highlighter-rouge">server_stat</code>
+  <li>各节点的 metrics 信息是否正常：<code class="language-plaintext highlighter-rouge">server_stat</code>
     <ul>
-      <li>读写QPS、读写延迟</li>
-      <li>SharedLog大小</li>
+      <li>IOPS、读写延迟</li>
       <li>内存使用量</li>
     </ul>
   </li>
-  <li>各Table的实时统计信息是否正常：<code class="language-plaintext highlighter-rouge">app_stat</code>
+  <li>各表的 metrics 信息是否正常：<code class="language-plaintext highlighter-rouge">app_stat</code>
     <ul>
-      <li>各操作的QPS情况是否正常</li>
-      <li>各Table的存储用量是否正常</li>
-    </ul>
-  </li>
-  <li>检查机器的socket连接数：
-    <ul>
-      <li>到MetaServer所在机器上使用netstat命令检查连接数：</li>
-    </ul>
-
-    <div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>netstat <span class="nt">-na</span> | <span class="nb">grep</span> <span class="s1">'601\&gt;'</span> | <span class="nb">grep </span>ESTABLISHED | <span class="nb">wc</span> <span class="nt">-l</span>
-</code></pre></div>    </div>
-
-    <ul>
-      <li>检查与该机器建立连接的远程节点，按照连接数排序：</li>
-    </ul>
-
-    <div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>netstat <span class="nt">-na</span> | <span class="nb">grep</span> <span class="s1">'601\&gt;'</span> | <span class="nb">grep </span>ESTABLISHE | <span class="nb">awk</span> <span class="s1">'{print $5}'</span> | <span class="nb">sed</span> <span class="s1">'s/:.*//'</span> | <span class="nb">sort</span> | <span class="nb">uniq</span> <span class="nt">-c</span> | <span class="nb">sort</span> <span class="nt">-k1</span> <span class="nt">-n</span> <span class="nt">-r</span> | <span class="nb">head</span>
-</code></pre></div>    </div>
-
-    <ul>
-      <li>如果连接数太多（譬如单节点连接数超过100），就需要进一步分析原因。</li>
+      <li>IOPS</li>
+      <li>存储用量</li>
     </ul>
   </li>
 </ul>
 
-<p>常见故障处理办法：</p>
+<p>查看系统信息：
+例如，检查服务器的 socket 连接数（其中 <code class="language-plaintext highlighter-rouge">34601</code> 为 MetaServer 的服务监听端口）：</p>
+<ul>
+  <li>在 Meta Server 所在服务器上使用 <code class="language-plaintext highlighter-rouge">netstat</code> 命令检查连接数：
+    <div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>  netstat <span class="nt">-na</span> | <span class="nb">grep</span> <span class="s1">'34601\&gt;'</span> | <span class="nb">grep </span>ESTABLISHED | <span class="nb">wc</span> <span class="nt">-l</span>
+</code></pre></div>    </div>
+  </li>
+  <li>检查与该服务器建立连接的远程节点，按照连接数排序：
+    <div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>  netstat <span class="nt">-na</span> | <span class="nb">grep</span> <span class="s1">'34601\&gt;'</span> | <span class="nb">grep </span>ESTABLISHE | <span class="nb">awk</span> <span class="s1">'{print $5}'</span> | <span class="nb">sed</span> <span class="s1">'s/:.*//'</span> | <span class="nb">sort</span> | <span class="nb">uniq</span> <span class="nt">-c</span> | <span class="nb">sort</span> <span class="nt">-k1</span> <span class="nt">-n</span> <span class="nt">-r</span> | <span class="nb">head</span>
+</code></pre></div>    </div>
+  </li>
+  <li>如果连接数太多（例如单节点连接数超过 100），就需要进一步分析原因。</li>
+</ul>
+
+<h2 id="常见故障处理方法">常见故障处理方法</h2>
 
 <ul>
-  <li>如果节点挂掉重启，需要登录到对应机器上，检查原因：
+  <li>如果服务进程异常退出，需要登录到对应服务器上，检查原因：
     <ul>
-      <li>通过server的日志</li>
-      <li>通过core文件；如果没有core文件，需要检查ulimit配置是否正确，或者通过dmesg或者/var/log/messages查看是否因为OutOfMemory原因被系统杀死</li>
+      <li>查看 <code class="language-plaintext highlighter-rouge">dmesg</code> 或 <code class="language-plaintext highlighter-rouge">/var/log/messages</code> 确认进程退出原因</li>
+      <li>如果是 <code class="language-plaintext highlighter-rouge">Out of memory: Killed process xxx</code>：查看 Meta Server 或 Replica Server 的内存使用监控，分析是否有异常现象</li>
+      <li>如果是 <code class="language-plaintext highlighter-rouge">segfault at xxx</code>：
+        <ul>
+          <li>查看 Meta Server 或 Replica Server 的标准错误输出日志和服务日志</li>
+          <li>检查是否有 coredump 文件生成，有则使用 <code class="language-plaintext highlighter-rouge">gdb</code> 分析；如果没有 coredump 文件，则按需设置系统和用户的 <code class="language-plaintext highlighter-rouge">ulimit</code></li>
+        </ul>
+      </li>
     </ul>
   </li>
-  <li>如果出故障机器较多，可以考虑将meta置为freezed状态，避免雪崩</li>
-  <li>进程不停重启，可以考虑停止进程</li>
-  <li>机器无法从relay连接，有可能是宕机了，快速联系系统运维人员</li>
-  <li>注意系统的参数：CPU情况、diskIO负载和latency、network负载和latency、socket个数</li>
-  <li>通过dmesg查看内核报错</li>
+  <li>如果出故障服务器较多，可以考虑将设置 <code class="language-plaintext highlighter-rouge">set_meta_level</code> 置为 <code class="language-plaintext highlighter-rouge">freezed</code> 状态，避免服务雪崩</li>
+  <li>如果进程不断重启（异常退出，又被其他进程监控服务拉起），可以考虑临时停止进程监控服务自动地拉起 Pegasus 进程</li>
+  <li>如果无法远程登录（如 <code class="language-plaintext highlighter-rouge">ssh</code>）到该服务器，有可能是物理机发生宕机，请联系服务提供方处理</li>
 </ul>
 
-<h2 id="需求审核">需求审核</h2>
+<h1 id="pegasus-服务接入审核">Pegasus 服务接入审核</h1>
 
-<p>Pegasus和多数数据库一样，以表的方式管理资源。
-每个表需要的资源量需要提前告知，这样我们才能为需求分配合适的计算存储资源。
-除此外，与业务深度交流，定制最合适的存储方案也有助于后期服务的稳定运行。</p>
+<p>Pegasus 和多数数据库一样，以 <em>表</em> 为单位管理资源。作为 Pegasus 的管理员，在每个表接入时，需要了解表需要的资源量，以便分配合适的计算和存储资源。结合 Pegasus 的存储原理，优化 key-value 的 schema 设计，也有助于保证服务的稳定性。</p>
 
-<p>有哪些重要的需求需要提前审核：</p>
+<p>可以收集分析以下信息：</p>
 
 <ul>
   <li>表名</li>
@@ -853,13 +844,14 @@
   <li>读总量（条/天）</li>
   <li>写峰值（QPS）</li>
   <li>写总量（条/天）</li>
+  <li>key-value 设计模式（以此判断是否存在数据倾斜问题）</li>
+  <li>访问模式（判断是否存在热点读写问题）</li>
   <li>单条数据平均大小（KB/条）</li>
-  <li>数据总量预估 （GB）</li>
-  <li>增长预估（6个月/1年/3年与目前相比倍数）</li>
-  <li>读延迟需求（毫秒/P99）</li>
-  <li>写延迟需求（毫秒/P99）</li>
-  <li>访问特征（如定时批量写入）</li>
-  <li>是否存在既有数据需导入/数据规模</li>
+  <li>数据总量预估（GB）</li>
+  <li>增长预估（例如 6 个月 / 1 年 / 3 年的增长量）</li>
+  <li>读延迟需求（P99 延迟）</li>
+  <li>写延迟需求（P99 延迟）</li>
+  <li>IOPS 特征（例如全天均衡、平滑的波峰与低谷、定时的批量写入等）</li>
 </ul>
 
                 </div>
@@ -905,8 +897,13 @@
 </p>
 <ul class="menu-list">
   <li><a href="#周期巡检">周期巡检</a></li>
-  <li><a href="#问题排查">问题排查</a></li>
-  <li><a href="#需求审核">需求审核</a></li>
+  <li><a href="#监控报警">监控报警</a></li>
+  <li><a href="#问题排查">问题排查</a>
+    <ul>
+      <li><a href="#常见故障处理方法">常见故障处理方法</a></li>
+    </ul>
+  </li>
+  <li><a href="#pegasus-服务接入审核">Pegasus 服务接入审核</a></li>
 </ul>
 
         </div>
