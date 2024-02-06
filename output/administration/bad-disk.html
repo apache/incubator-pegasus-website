@@ -16,15 +16,15 @@
 <meta name="generator" content="Jekyll v4.3.3" />
 <meta property="og:title" content="Bad Disk" />
 <meta property="og:locale" content="en_US" />
-<meta name="description" content="TRANSLATING" />
-<meta property="og:description" content="TRANSLATING" />
+<meta name="description" content="Bad disk troubleshooting" />
+<meta property="og:description" content="Bad disk troubleshooting" />
 <meta property="og:site_name" content="Pegasus" />
 <meta property="og:type" content="article" />
-<meta property="article:published_time" content="2024-02-06T06:26:56+00:00" />
+<meta property="article:published_time" content="2024-02-06T06:32:21+00:00" />
 <meta name="twitter:card" content="summary" />
 <meta property="twitter:title" content="Bad Disk" />
 <script type="application/ld+json">
-{"@context":"https://schema.org","@type":"BlogPosting","dateModified":"2024-02-06T06:26:56+00:00","datePublished":"2024-02-06T06:26:56+00:00","description":"TRANSLATING","headline":"Bad Disk","mainEntityOfPage":{"@type":"WebPage","@id":"/administration/bad-disk"},"url":"/administration/bad-disk"}</script>
+{"@context":"https://schema.org","@type":"BlogPosting","dateModified":"2024-02-06T06:32:21+00:00","datePublished":"2024-02-06T06:32:21+00:00","description":"Bad disk troubleshooting","headline":"Bad Disk","mainEntityOfPage":{"@type":"WebPage","@id":"/administration/bad-disk"},"url":"/administration/bad-disk"}</script>
 <!-- End Jekyll SEO tag -->
 </head>
 
@@ -733,7 +733,38 @@
             </section>
             <section class="section" style="padding-top: 2rem;">
                 <div class="content">
-                    <p>TRANSLATING</p>
+                    <h1 id="bad-disk-troubleshooting">Bad disk troubleshooting</h1>
+
+<p>When a disk failure occurs, it can be checked by the following methods:</p>
+
+<ul>
+  <li>In the Replica Server logs, an <code class="language-plaintext highlighter-rouge">IO error</code> was found for a certain disk</li>
+  <li>It is possible that the latency of a certain server is significantly higher than that of other servers. Continuing to investigate, if it is found that the <em>IO wait</em> of a certain disk is significantly higher, it basically proves that the disk is a <em>slow disk</em></li>
+</ul>
+
+<h1 id="bad-disk-blacklist">Bad disk blacklist</h1>
+
+<p>Pegasus supports <em>disk black list</em>, if you want to take a bad disk offline, firstly, define it in the <em>disk black list</em> file on the Replica Server where it is located, the file path is determined by the configuration:</p>
+
+<div class="language-ini highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nn">[replication]</span>
+    <span class="py">data_dirs_black_list_file</span> <span class="p">=</span> <span class="s">/home/work/.pegasus_data_dirs_black_list</span>
+</code></pre></div></div>
+
+<p>Then log in to the corresponding server and edit the file, for example, disable <code class="language-plaintext highlighter-rouge">ssd2</code> and <code class="language-plaintext highlighter-rouge">ssd3</code>:</p>
+<pre><code class="language-txt">/home/work/ssd2
+/home/work/ssd3
+</code></pre>
+
+<h2 id="restart-service">Restart service</h2>
+
+<p>After marking the black list of bad disks, a restart is required to take effect. It is recommended to restart the Replica Server process on the corresponding server through <a href="rolling-update#high-availability-restart-steps">High availability restart steps</a>.</p>
+
+<p>After restarting, the following records can be found in the server log, indicating that the disks marked in the black list have taken effect:</p>
+
+<pre><code class="language-log">data_dirs_black_list_file[/home/work/.pegasus_data_dirs_black_list] found, apply it
+black_list[1] = [/home/work/ssd2/]
+black_list[2] = [/home/work/ssd3/]
+</code></pre>
 
                 </div>
             </section>
@@ -776,7 +807,14 @@
     </span>
     Table of contents
 </p>
-
+<ul class="menu-list">
+  <li><a href="#bad-disk-troubleshooting">Bad disk troubleshooting</a></li>
+  <li><a href="#bad-disk-blacklist">Bad disk blacklist</a>
+    <ul>
+      <li><a href="#restart-service">Restart service</a></li>
+    </ul>
+  </li>
+</ul>
 
         </div>
     </div>
