@@ -16,15 +16,15 @@
 <meta name="generator" content="Jekyll v4.3.3" />
 <meta property="og:title" content="Whitelist" />
 <meta property="og:locale" content="en_US" />
-<meta name="description" content="TRANSLATING" />
-<meta property="og:description" content="TRANSLATING" />
+<meta name="description" content="Introduction" />
+<meta property="og:description" content="Introduction" />
 <meta property="og:site_name" content="Pegasus" />
 <meta property="og:type" content="article" />
-<meta property="article:published_time" content="2024-02-06T06:32:21+00:00" />
+<meta property="article:published_time" content="2024-02-06T06:36:45+00:00" />
 <meta name="twitter:card" content="summary" />
 <meta property="twitter:title" content="Whitelist" />
 <script type="application/ld+json">
-{"@context":"https://schema.org","@type":"BlogPosting","dateModified":"2024-02-06T06:32:21+00:00","datePublished":"2024-02-06T06:32:21+00:00","description":"TRANSLATING","headline":"Whitelist","mainEntityOfPage":{"@type":"WebPage","@id":"/administration/whitelist"},"url":"/administration/whitelist"}</script>
+{"@context":"https://schema.org","@type":"BlogPosting","dateModified":"2024-02-06T06:36:45+00:00","datePublished":"2024-02-06T06:36:45+00:00","description":"Introduction","headline":"Whitelist","mainEntityOfPage":{"@type":"WebPage","@id":"/administration/whitelist"},"url":"/administration/whitelist"}</script>
 <!-- End Jekyll SEO tag -->
 </head>
 
@@ -355,7 +355,7 @@
         <li>
             <a href="/administration/whitelist"
                 class="is-active">
-                Whitelist
+                Replica Server Whitelist
             </a>
         </li>
         
@@ -683,7 +683,7 @@
                     
                     <a href="/administration/whitelist"
                         class="navbar-item is-active">
-                        Whitelist
+                        Replica Server Whitelist
                     </a>
                     
                     <a href="/administration/backup-request"
@@ -728,12 +728,60 @@
             <section class="hero is-info lg:mr-3">
                 <div class="hero-body">
                     
-                    <p class="title is-size-2 is-centered">Whitelist</p>
+                    <p class="title is-size-2 is-centered">Replica Server Whitelist</p>
                 </div>
             </section>
             <section class="section" style="padding-top: 2rem;">
                 <div class="content">
-                    <p>TRANSLATING</p>
+                    <h1 id="introduction">Introduction</h1>
+
+<p>The Pegasus Replica Server whitelist function is used to prevent unexpected Replica Server joining the cluster. For example:</p>
+<ol>
+  <li>The offline Replica Server was restarted unexpectedly and rejoined the cluster</li>
+  <li>The Meta Server list configured on Replica Server is incorrect, causing it to join to another cluster unexpectedly</li>
+</ol>
+
+<p>When the Replica Server whitelist function is disabled, any Replica Server could join a cluster if configure the corresponding Meta Server list.</p>
+
+<p>When the Replica Server whitelist function is enabled, Meta Server only allows Replica Servers in the Replica Server whitelist to join the cluster.</p>
+
+<h1 id="how-to-use-the-replica-server-whitelist">How to use the Replica Server whitelist</h1>
+
+<h2 id="configuration">Configuration</h2>
+
+<p>Configure <code class="language-plaintext highlighter-rouge">[meta_server].enable_white_list</code> and <code class="language-plaintext highlighter-rouge">[meta_server].replica_white_list</code>, use <code class="language-plaintext highlighter-rouge">,</code> to separate multiple servers:</p>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>[meta_server]
+  enable_white_list = true
+  replica_white_list = 127.0.0.1:34801,127.0.0.2:34801
+</code></pre></div></div>
+
+<h2 id="query">Query</h2>
+
+<p>After updating the whitelist configuration, it is necessary to restart the Meta Server to take effect, it can be queried through shell tools <a href="remote-commands">Remote commands</a> or <a href="/api/http">HTTP API</a>.</p>
+
+<p>Taking remote_command as an example:</p>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>&gt;&gt;&gt; remote_command -t meta-server fd.allow_list
+</code></pre></div></div>
+
+<h1 id="scale-in-and-scale-out">Scale-in and scale-out</h1>
+
+<p>When the Replica Server whitelist is enabled, scaling operations need to consider the impact of this feature.</p>
+
+<h2 id="scale-out">Scale-out</h2>
+
+<p>Because the newly added Replica Server needs to communicate with Meta Server, if the Replica Server whitelist has not been updated, it will cause the Meta Server to reject the new Replica Server from joining the cluster.</p>
+
+<p>So, for the scale-out steps of a cluster with the Replica Server whitelist function enabled, the following steps need to be taken before <a href="/administration/scale-in-out#scale-out-steps">Scale out steps</a>:</p>
+<ol>
+  <li>Add the new Replica Servers to the Replica Server whitelist configuration on the Meta Server</li>
+  <li>Restart Meta Server to take effect</li>
+</ol>
+
+<h2 id="scale-in">Scale-in</h2>
+
+<p>In <a href="/administration/scale-in-out#scale-in-steps">Scale in steps</a>, whether update the Replica Server whitelist has no impact, the updating can be done at any time after the scaling is completed.</p>
+
+<p>But for safety reasons, it is recommended to update the Replica Server whitelist in a timely manner. Just before the final step (i.e. <em>Restart the meta server</em>) of the scaling process, update the Replica Server whitelist configuration of the Meta Server.</p>
 
                 </div>
             </section>
@@ -776,7 +824,21 @@
     </span>
     Table of contents
 </p>
-
+<ul class="menu-list">
+  <li><a href="#introduction">Introduction</a></li>
+  <li><a href="#how-to-use-the-replica-server-whitelist">How to use the Replica Server whitelist</a>
+    <ul>
+      <li><a href="#configuration">Configuration</a></li>
+      <li><a href="#query">Query</a></li>
+    </ul>
+  </li>
+  <li><a href="#scale-in-and-scale-out">Scale-in and scale-out</a>
+    <ul>
+      <li><a href="#scale-out">Scale-out</a></li>
+      <li><a href="#scale-in">Scale-in</a></li>
+    </ul>
+  </li>
+</ul>
 
         </div>
     </div>
