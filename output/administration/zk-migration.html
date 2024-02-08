@@ -16,15 +16,15 @@
 <meta name="generator" content="Jekyll v4.3.3" />
 <meta property="og:title" content="Zk Migration" />
 <meta property="og:locale" content="en_US" />
-<meta name="description" content="TRANSLATING" />
-<meta property="og:description" content="TRANSLATING" />
+<meta name="description" content="Pegasus’s Meta Server uses Zookeeper to store metadata and leader election, so the instability of the Zookeeper service can cause instability in Pegasus. If necessary, Pegasus metadata needs to be migrated to other more stable or idle Zookeeper." />
+<meta property="og:description" content="Pegasus’s Meta Server uses Zookeeper to store metadata and leader election, so the instability of the Zookeeper service can cause instability in Pegasus. If necessary, Pegasus metadata needs to be migrated to other more stable or idle Zookeeper." />
 <meta property="og:site_name" content="Pegasus" />
 <meta property="og:type" content="article" />
-<meta property="article:published_time" content="2024-02-06T06:36:45+00:00" />
+<meta property="article:published_time" content="2024-02-08T09:31:22+00:00" />
 <meta name="twitter:card" content="summary" />
 <meta property="twitter:title" content="Zk Migration" />
 <script type="application/ld+json">
-{"@context":"https://schema.org","@type":"BlogPosting","dateModified":"2024-02-06T06:36:45+00:00","datePublished":"2024-02-06T06:36:45+00:00","description":"TRANSLATING","headline":"Zk Migration","mainEntityOfPage":{"@type":"WebPage","@id":"/administration/zk-migration"},"url":"/administration/zk-migration"}</script>
+{"@context":"https://schema.org","@type":"BlogPosting","dateModified":"2024-02-08T09:31:22+00:00","datePublished":"2024-02-08T09:31:22+00:00","description":"Pegasus’s Meta Server uses Zookeeper to store metadata and leader election, so the instability of the Zookeeper service can cause instability in Pegasus. If necessary, Pegasus metadata needs to be migrated to other more stable or idle Zookeeper.","headline":"Zk Migration","mainEntityOfPage":{"@type":"WebPage","@id":"/administration/zk-migration"},"url":"/administration/zk-migration"}</script>
 <!-- End Jekyll SEO tag -->
 </head>
 
@@ -733,7 +733,130 @@
             </section>
             <section class="section" style="padding-top: 2rem;">
                 <div class="content">
-                    <p>TRANSLATING</p>
+                    <p>Pegasus’s Meta Server uses Zookeeper to store metadata and leader election, so the instability of the Zookeeper service can cause instability in Pegasus. If necessary, Pegasus metadata needs to be migrated to other more stable or idle Zookeeper.</p>
+
+<p>There are two ways to migrate Zookeeper metadata: through metadata recovery, or through the <code class="language-plaintext highlighter-rouge">zkcopy</code> tool.</p>
+
+<h1 id="migration-through-metadata-recovery">Migration through metadata recovery</h1>
+
+<p>Pegasus provides <a href="meta-recovery">Metadata Recovery</a> function, it can also be used for Zookeeper migration. The basic idea is to configure a new Zookeeper list and perform metadata recovery through the <code class="language-plaintext highlighter-rouge">recover</code> command, then the metadata is migrated to the new Zookeeper.</p>
+
+<ol>
+  <li>
+    <p>Backup table list</p>
+
+    <p>Use the <code class="language-plaintext highlighter-rouge">ls</code> command of the shell tools:</p>
+    <div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>&gt;&gt;&gt; ls -o apps.list
+</code></pre></div>    </div>
+  </li>
+  <li>
+    <p>Backup node list</p>
+
+    <p>Use the <code class="language-plaintext highlighter-rouge">nodes</code> command of the shell tools:</p>
+    <div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>&gt;&gt;&gt; nodes -d -o nodes.list
+</code></pre></div>    </div>
+
+    <p>Generate the <code class="language-plaintext highlighter-rouge">recover_node_list</code> file required for metadata recovery:</p>
+    <div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nb">grep </span>ALIVE nodes.list | <span class="nb">awk</span> <span class="s1">'{print $1}'</span> <span class="o">&gt;</span> recover_node_list
+</code></pre></div>    </div>
+  </li>
+  <li>
+    <p>Stop all Meta Servers</p>
+
+    <p>Stop all Meta Servers, and wait for a period of time (default to 30 seconds, depending on configuration <code class="language-plaintext highlighter-rouge">[replication]config_sync_interval_ms</code>) to ensure that all Replica Servers enter the <code class="language-plaintext highlighter-rouge">INACTIVE</code> state due to the beacon timeout.</p>
+  </li>
+  <li>
+    <p>Modifying Meta Server configuration file</p>
+
+    <p>The modified content is as follows:</p>
+    <div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>[meta_server]
+  recover_from_replica_server = true
+[zookeeper]
+  hosts_list = {new Zookeeper host list}
+</code></pre></div>    </div>
+    <p>They mean:</p>
+    <ul>
+      <li>Set <code class="language-plaintext highlighter-rouge">recover_from_replica_server</code> to <code class="language-plaintext highlighter-rouge">true</code> and enable to recover metadata from Replica Servers</li>
+      <li>Update Zookeeper configuration to the new service addresses</li>
+    </ul>
+  </li>
+  <li>
+    <p>Start a Meta Server</p>
+
+    <p>Start a Meta Server in the cluster, it will become the leader Meta Server of the cluster.</p>
+  </li>
+  <li>
+    <p>Use the <code class="language-plaintext highlighter-rouge">recover</code> command of the shell tools</p>
+
+    <div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>&gt;&gt;&gt; recover -f recover_node_list
+</code></pre></div>    </div>
+  </li>
+  <li>
+    <p>Modify the configuration file and restart the Meta Server</p>
+
+    <p>After successful recovery, it is necessary to modify the configuration file of the Meta Server and reset to non-recovery state:</p>
+    <div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>[meta_server]
+  recover_from_replica_server = false
+</code></pre></div>    </div>
+  </li>
+  <li>
+    <p>Restart all Meta Servers, then the cluster enters the normal state.</p>
+  </li>
+</ol>
+
+<h2 id="sample-script">Sample script</h2>
+
+<p>Refer to the main process in the sample script <a href="https://github.com/apache/incubator-pegasus/blob/master/scripts/pegasus_migrate_zookeeper.sh">pegasus_migrate_zookeeper.sh</a> for Zookeeper metadata migration.</p>
+
+<h1 id="migration-through-the-zkcopy-tool">Migration through the <code class="language-plaintext highlighter-rouge">zkcopy</code> tool</h1>
+
+<p>The basic idea is to use <a href="https://github.com/ksprojects/zkcopy">zkcopy tool</a> to copy the Pegasus metadata from the original Zookeeper to the target Zookeeper, modify the Meta Server configuration file, and restart the cluster.</p>
+
+<ol>
+  <li>
+    <p>Stop all follower Meta Servers</p>
+
+    <p>In order to prevent other follower Meta Servers from requiring the lock and becoming the new leader when restarting the leader Meta Server, causing metadata inconsistency, it is necessary to keep only the leader Meta Server in live state and stop all other follower Meta Servers throughout the entire migration process.</p>
+  </li>
+  <li>
+    <p>Modify the leader Meta Server status to <code class="language-plaintext highlighter-rouge">blind</code></p>
+
+    <p>Set the leader Meta Server’s meta_level to <code class="language-plaintext highlighter-rouge">blind</code>, to prohibit any update operations on Zookeeper data and prevent metadata inconsistency during the migration process:</p>
+    <div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>&gt;&gt;&gt; set_meta_level blind
+</code></pre></div>    </div>
+    <blockquote>
+      <p>For an introduction to Meta Server’s meta_level, please refer to <a href="rebalance">Rebalance</a>.</p>
+    </blockquote>
+  </li>
+  <li>
+    <p>Use the <code class="language-plaintext highlighter-rouge">zkcopy</code> tool to copy Zookeeper metadata</p>
+
+    <p>Obtain the path <code class="language-plaintext highlighter-rouge">zookeeper_root</code> where Pegasus metadata is stored on the Zookeeper through the <code class="language-plaintext highlighter-rouge">cluster_info</code> command of the shell tools, and then use the <code class="language-plaintext highlighter-rouge">zkcopy</code> tool to copy all the data from this path to the new Zookeeper, being careful to recursively copy.</p>
+  </li>
+  <li>
+    <p>Modify configuration file</p>
+
+    <p>Modify the configuration file of Meta Servers and change the <code class="language-plaintext highlighter-rouge">hosts_lists</code> value to the new service addresses:</p>
+    <div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>[meta_server]
+  hosts_list = {new Zookeeper host list}
+</code></pre></div>    </div>
+  </li>
+  <li>
+    <p>Restart the leader Meta Server</p>
+
+    <p>Restart the leader Meta Server and use shell tools to <a href="/administration/experiences#troubleshooting">check</a> that the cluster has entered the normal state.</p>
+  </li>
+  <li>
+    <p>Restart all follower Meta Servers</p>
+
+    <p>Start all follower Meta Servers and check the cluster enters the normal state.</p>
+  </li>
+  <li>
+    <p>Clean up data on old Zookeepers</p>
+
+    <p>Use the <code class="language-plaintext highlighter-rouge">rmr</code> command of the <a href="https://github.com/openark/zookeepercli">zookeepercli tool</a> to clean up data on old Zookeepers.</p>
+  </li>
+</ol>
 
                 </div>
             </section>
@@ -776,7 +899,14 @@
     </span>
     Table of contents
 </p>
-
+<ul class="menu-list">
+  <li><a href="#migration-through-metadata-recovery">Migration through metadata recovery</a>
+    <ul>
+      <li><a href="#sample-script">Sample script</a></li>
+    </ul>
+  </li>
+  <li><a href="#migration-through-the-zkcopy-tool">Migration through the zkcopy tool</a></li>
+</ul>
 
         </div>
     </div>

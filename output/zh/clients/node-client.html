@@ -20,11 +20,11 @@
 <meta property="og:description" content="安装NodeJs客户端 项目地址：Pegasus NodeJS Client 下载并将客户端依赖添加到package.json中： npm install pegasus-nodejs-client --save 创建/关闭客户端 create let pegasusClient = require(&#39;pegasus-nodejs-client&#39;); /** * Create a client instance * @param {Object} configs * {Array} configs.metaServers required * {String} configs.metaServers[i] required * {Number} configs.operationTimeout(ms) optional * {Object} configs.log optional * @return {Client} client instance * @throws {InvalidParamException} */ client = pegasusClient.create({ metaServers: [&#39;127.0.0.1:34601&#39;, &#39;127.0.0.1:34602&#39;, &#39;127.0.0.1:34603&#39;], operationTimeout : 5000, log : log, }); metaServers为meta server地址列表，为必填项 operationTimeout为本次操作的超时时间，单位是毫秒，默认是1000ms log为日志库实例 我们使用日志库 log4js 默认使用的日志配置在log_config.js文件中，配置如下： let filename = &quot;./logs/&quot;+process.pid+&quot;/pegasus-nodejs-client.log&quot;; let logConfig = { appenders: { pegasus: { type: &quot;file&quot;, filename: filename, maxLogSize: 104857600, backups: 10 } }, categories: { default: { appenders: [&quot;pegasus&quot;], level: &quot;INFO&quot; } } }; 上述配置表示，会将错误级别等于及高于INFO级别的日志存储在文件中，每个日志文件最大100M，最多保留10个日志文件 若不想使用默认配置，则需要重新定义如上的logConfig对象，作为创建客户端时的log对象 当参数有误时，会抛出异常，停止后续操作" />
 <meta property="og:site_name" content="Pegasus" />
 <meta property="og:type" content="article" />
-<meta property="article:published_time" content="2024-02-06T06:36:45+00:00" />
+<meta property="article:published_time" content="2024-02-08T09:31:22+00:00" />
 <meta name="twitter:card" content="summary" />
 <meta property="twitter:title" content="Node Client" />
 <script type="application/ld+json">
-{"@context":"https://schema.org","@type":"BlogPosting","dateModified":"2024-02-06T06:36:45+00:00","datePublished":"2024-02-06T06:36:45+00:00","description":"安装NodeJs客户端 项目地址：Pegasus NodeJS Client 下载并将客户端依赖添加到package.json中： npm install pegasus-nodejs-client --save 创建/关闭客户端 create let pegasusClient = require(&#39;pegasus-nodejs-client&#39;); /** * Create a client instance * @param {Object} configs * {Array} configs.metaServers required * {String} configs.metaServers[i] required * {Number} configs.operationTimeout(ms) optional * {Object} configs.log optional * @return {Client} client instance * @throws {InvalidParamException} */ client = pegasusClient.create({ metaServers: [&#39;127.0.0.1:34601&#39;, &#39;127.0.0.1:34602&#39;, &#39;127.0.0.1:34603&#39;], operationTimeout : 5000, log : log, }); metaServers为meta server地址列表，为必填项 operationTimeout为本次操作的超时时间，单位是毫秒，默认是1000ms log为日志库实例 我们使用日志库 log4js 默认使用的日志配置在log_config.js文件中，配置如下： let filename = &quot;./logs/&quot;+process.pid+&quot;/pegasus-nodejs-client.log&quot;; let logConfig = { appenders: { pegasus: { type: &quot;file&quot;, filename: filename, maxLogSize: 104857600, backups: 10 } }, categories: { default: { appenders: [&quot;pegasus&quot;], level: &quot;INFO&quot; } } }; 上述配置表示，会将错误级别等于及高于INFO级别的日志存储在文件中，每个日志文件最大100M，最多保留10个日志文件 若不想使用默认配置，则需要重新定义如上的logConfig对象，作为创建客户端时的log对象 当参数有误时，会抛出异常，停止后续操作","headline":"Node Client","mainEntityOfPage":{"@type":"WebPage","@id":"/clients/node-client"},"url":"/clients/node-client"}</script>
+{"@context":"https://schema.org","@type":"BlogPosting","dateModified":"2024-02-08T09:31:22+00:00","datePublished":"2024-02-08T09:31:22+00:00","description":"安装NodeJs客户端 项目地址：Pegasus NodeJS Client 下载并将客户端依赖添加到package.json中： npm install pegasus-nodejs-client --save 创建/关闭客户端 create let pegasusClient = require(&#39;pegasus-nodejs-client&#39;); /** * Create a client instance * @param {Object} configs * {Array} configs.metaServers required * {String} configs.metaServers[i] required * {Number} configs.operationTimeout(ms) optional * {Object} configs.log optional * @return {Client} client instance * @throws {InvalidParamException} */ client = pegasusClient.create({ metaServers: [&#39;127.0.0.1:34601&#39;, &#39;127.0.0.1:34602&#39;, &#39;127.0.0.1:34603&#39;], operationTimeout : 5000, log : log, }); metaServers为meta server地址列表，为必填项 operationTimeout为本次操作的超时时间，单位是毫秒，默认是1000ms log为日志库实例 我们使用日志库 log4js 默认使用的日志配置在log_config.js文件中，配置如下： let filename = &quot;./logs/&quot;+process.pid+&quot;/pegasus-nodejs-client.log&quot;; let logConfig = { appenders: { pegasus: { type: &quot;file&quot;, filename: filename, maxLogSize: 104857600, backups: 10 } }, categories: { default: { appenders: [&quot;pegasus&quot;], level: &quot;INFO&quot; } } }; 上述配置表示，会将错误级别等于及高于INFO级别的日志存储在文件中，每个日志文件最大100M，最多保留10个日志文件 若不想使用默认配置，则需要重新定义如上的logConfig对象，作为创建客户端时的log对象 当参数有误时，会抛出异常，停止后续操作","headline":"Node Client","mainEntityOfPage":{"@type":"WebPage","@id":"/clients/node-client"},"url":"/clients/node-client"}</script>
 <!-- End Jekyll SEO tag -->
 </head>
 
@@ -44,7 +44,7 @@
 
 <aside class="menu">
     
-    <p class="menu-label">Pegasus产品文档</p>
+    <p class="menu-label">Pegasus 产品文档</p>
     <ul class="menu-list">
         
         <li>
@@ -62,7 +62,7 @@
         <li>
             <a href="/zh/docs/build/compile-by-docker"
                 class="">
-                使用Docker完成编译（推荐）
+                使用 Docker 完成编译（推荐）
             </a>
         </li>
         
@@ -81,42 +81,42 @@
         <li>
             <a href="/zh/clients/java-client"
                 class="">
-                Java客户端
+                Java 客户端
             </a>
         </li>
         
         <li>
             <a href="/zh/clients/cpp-client"
                 class="">
-                C++客户端
+                C++ 客户端
             </a>
         </li>
         
         <li>
             <a href="https://github.com/apache/incubator-pegasus/tree/master/go-client"
                 class="">
-                Golang客户端
+                Golang 客户端
             </a>
         </li>
         
         <li>
             <a href="/zh/clients/python-client"
                 class="">
-                Python客户端
+                Python 客户端
             </a>
         </li>
         
         <li>
             <a href="/zh/clients/node-client"
                 class="is-active">
-                NodeJS客户端
+                NodeJS 客户端
             </a>
         </li>
         
         <li>
             <a href="/zh/clients/scala-client"
                 class="">
-                Scala客户端
+                Scala 客户端
             </a>
         </li>
         
@@ -168,21 +168,21 @@
         <li>
             <a href="/zh/api/redis"
                 class="">
-                Redis适配
+                Redis 适配
             </a>
         </li>
         
         <li>
             <a href="/zh/api/geo"
                 class="">
-                GEO支持
+                GEO 支持
             </a>
         </li>
         
         <li>
             <a href="/zh/api/http"
                 class="">
-                HTTP接口
+                HTTP 接口
             </a>
         </li>
         
@@ -257,35 +257,35 @@
         <li>
             <a href="/zh/administration/replica-recovery"
                 class="">
-                Replica数据恢复
+                Replica 数据恢复
             </a>
         </li>
         
         <li>
             <a href="/zh/administration/zk-migration"
                 class="">
-                Zookeeper迁移
+                Zookeeper 迁移
             </a>
         </li>
         
         <li>
             <a href="/zh/administration/table-migration"
                 class="">
-                Table迁移
+                Table 迁移
             </a>
         </li>
         
         <li>
             <a href="/zh/administration/table-soft-delete"
                 class="">
-                Table软删除
+                Table 软删除
             </a>
         </li>
         
         <li>
             <a href="/zh/administration/table-env"
                 class="">
-                Table环境变量
+                Table 环境变量
             </a>
         </li>
         
@@ -334,14 +334,14 @@
         <li>
             <a href="/zh/administration/manual-compact"
                 class="">
-                Manual Compact功能
+                Manual Compact 功能
             </a>
         </li>
         
         <li>
             <a href="/zh/administration/usage-scenario"
                 class="">
-                Usage Scenario功能
+                Usage Scenario 功能
             </a>
         </li>
         
@@ -413,7 +413,7 @@
                 <a href=""
                     class="navbar-link ">
                     <span>
-                        Pegasus产品文档
+                        Pegasus 产品文档
                     </span>
                 </a>
                 <div class="navbar-dropdown">
@@ -438,7 +438,7 @@
                     
                     <a href="/zh/docs/build/compile-by-docker"
                         class="navbar-item ">
-                        使用Docker完成编译（推荐）
+                        使用 Docker 完成编译（推荐）
                     </a>
                     
                     <a href="/zh/docs/build/compile-from-source"
@@ -461,32 +461,32 @@
                     
                     <a href="/zh/clients/java-client"
                         class="navbar-item ">
-                        Java客户端
+                        Java 客户端
                     </a>
                     
                     <a href="/zh/clients/cpp-client"
                         class="navbar-item ">
-                        C++客户端
+                        C++ 客户端
                     </a>
                     
                     <a href="https://github.com/apache/incubator-pegasus/tree/master/go-client"
                         class="navbar-item ">
-                        Golang客户端
+                        Golang 客户端
                     </a>
                     
                     <a href="/zh/clients/python-client"
                         class="navbar-item ">
-                        Python客户端
+                        Python 客户端
                     </a>
                     
                     <a href="/zh/clients/node-client"
                         class="navbar-item is-active">
-                        NodeJS客户端
+                        NodeJS 客户端
                     </a>
                     
                     <a href="/zh/clients/scala-client"
                         class="navbar-item ">
-                        Scala客户端
+                        Scala 客户端
                     </a>
                     
                 </div>
@@ -542,17 +542,17 @@
                     
                     <a href="/zh/api/redis"
                         class="navbar-item ">
-                        Redis适配
+                        Redis 适配
                     </a>
                     
                     <a href="/zh/api/geo"
                         class="navbar-item ">
-                        GEO支持
+                        GEO 支持
                     </a>
                     
                     <a href="/zh/api/http"
                         class="navbar-item ">
-                        HTTP接口
+                        HTTP 接口
                     </a>
                     
                 </div>
@@ -615,27 +615,27 @@
                     
                     <a href="/zh/administration/replica-recovery"
                         class="navbar-item ">
-                        Replica数据恢复
+                        Replica 数据恢复
                     </a>
                     
                     <a href="/zh/administration/zk-migration"
                         class="navbar-item ">
-                        Zookeeper迁移
+                        Zookeeper 迁移
                     </a>
                     
                     <a href="/zh/administration/table-migration"
                         class="navbar-item ">
-                        Table迁移
+                        Table 迁移
                     </a>
                     
                     <a href="/zh/administration/table-soft-delete"
                         class="navbar-item ">
-                        Table软删除
+                        Table 软删除
                     </a>
                     
                     <a href="/zh/administration/table-env"
                         class="navbar-item ">
-                        Table环境变量
+                        Table 环境变量
                     </a>
                     
                     <a href="/zh/administration/remote-commands"
@@ -670,12 +670,12 @@
                     
                     <a href="/zh/administration/manual-compact"
                         class="navbar-item ">
-                        Manual Compact功能
+                        Manual Compact 功能
                     </a>
                     
                     <a href="/zh/administration/usage-scenario"
                         class="navbar-item ">
-                        Usage Scenario功能
+                        Usage Scenario 功能
                     </a>
                     
                     <a href="/zh/administration/bad-disk"
@@ -732,7 +732,7 @@
             <section class="hero is-info lg:mr-3">
                 <div class="hero-body">
                     
-                    <p class="title is-size-2 is-centered">NodeJS客户端</p>
+                    <p class="title is-size-2 is-centered">NodeJS 客户端</p>
                 </div>
             </section>
             <section class="section" style="padding-top: 2rem;">
