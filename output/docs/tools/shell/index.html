@@ -16,15 +16,15 @@
 <meta name="generator" content="Jekyll v4.3.3" />
 <meta property="og:title" content="Shell" />
 <meta property="og:locale" content="en_US" />
-<meta name="description" content="Pegasus提供了Shell工具，用于查看集群相关信息，创建/删除表，操作数据等。" />
-<meta property="og:description" content="Pegasus提供了Shell工具，用于查看集群相关信息，创建/删除表，操作数据等。" />
+<meta name="description" content="Pegasus offers a comprehensive Shell utility designed for perusing cluster-related data, crafting and eliminating tables, and orchestrating data operations, among other functions. This document base on version 2.5.0." />
+<meta property="og:description" content="Pegasus offers a comprehensive Shell utility designed for perusing cluster-related data, crafting and eliminating tables, and orchestrating data operations, among other functions. This document base on version 2.5.0." />
 <meta property="og:site_name" content="Pegasus" />
 <meta property="og:type" content="article" />
-<meta property="article:published_time" content="2024-02-08T09:31:22+00:00" />
+<meta property="article:published_time" content="2024-02-28T07:24:31+00:00" />
 <meta name="twitter:card" content="summary" />
 <meta property="twitter:title" content="Shell" />
 <script type="application/ld+json">
-{"@context":"https://schema.org","@type":"BlogPosting","dateModified":"2024-02-08T09:31:22+00:00","datePublished":"2024-02-08T09:31:22+00:00","description":"Pegasus提供了Shell工具，用于查看集群相关信息，创建/删除表，操作数据等。","headline":"Shell","mainEntityOfPage":{"@type":"WebPage","@id":"/docs/tools/shell/"},"url":"/docs/tools/shell/"}</script>
+{"@context":"https://schema.org","@type":"BlogPosting","dateModified":"2024-02-28T07:24:31+00:00","datePublished":"2024-02-28T07:24:31+00:00","description":"Pegasus offers a comprehensive Shell utility designed for perusing cluster-related data, crafting and eliminating tables, and orchestrating data operations, among other functions. This document base on version 2.5.0.","headline":"Shell","mainEntityOfPage":{"@type":"WebPage","@id":"/docs/tools/shell/"},"url":"/docs/tools/shell/"}</script>
 <!-- End Jekyll SEO tag -->
 </head>
 
@@ -733,908 +733,1224 @@
             </section>
             <section class="section" style="padding-top: 2rem;">
                 <div class="content">
-                    <p>Pegasus提供了Shell工具，用于查看集群相关信息，创建/删除表，操作数据等。</p>
+                    <p>Pegasus offers a comprehensive Shell utility designed for perusing cluster-related data, crafting and eliminating tables, and orchestrating data operations, among other functions. This document base on version 2.5.0.</p>
 
-<h1 id="工具获取">工具获取</h1>
-<p>在成功<a href="compilation">编译Pegasus</a>后，在pegasus目录下启动Shell工具：</p>
+<h1 id="obtaining-the-tool">Obtaining the tool</h1>
+
+<p>After successfully <a href="compilation">compiling Pegasus</a> and initiating <a href="overviwe/onebox">onebox</a>, initiate the Shell utility in the Pegasus directory:</p>
+
 <div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>./run.sh shell
 </code></pre></div></div>
 
-<p>也可以用pack工具打包Shell工具，方便在其他机器上使用：</p>
+<p>You can also utilize the ‘pack’ tool to package the Shell utility, making it convenient for use on other machines:</p>
+
 <div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>./run.sh pack_tools
 </code></pre></div></div>
-<p>pack成功后，会在本地文件夹下生成<code class="language-plaintext highlighter-rouge">pegasus-tools-{version}-{platform}-{buildType}.tar.gz</code>文件。将该文件拷贝到目标机器上，解压后进入该文件夹，运行<code class="language-plaintext highlighter-rouge">./run.sh shell</code>就可以使用Shell工具，可以使用<code class="language-plaintext highlighter-rouge">-h</code>选项获取帮助：</p>
+
+<p>After a successful execution of ‘pack’, a file named <code class="language-plaintext highlighter-rouge">pegasus-tools-{version}-{gitSHA}-{platform}-{buildType}.tar.gz</code> will be generated in your local directory. Copy this file to your target machine, extract it, navigate to the folder, and run ‘./run.sh shell’ to use the Shell utility. You can also use the ‘-h’ option to retrieve assistance:</p>
+
 <div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>$ ./run.sh shell -h
 Options for subcommand 'shell':
    -h|--help            print the help info
    -c|--config &lt;path&gt;   config file path, default './config-shell.ini.{PID}'
    --cluster &lt;str&gt;      cluster meta lists, default '127.0.0.1:34601,127.0.0.1:34602,127.0.0.1:34603'
 </code></pre></div></div>
-<p>譬如访问某个特定集群：</p>
+
+<p>For instance, when accessing a particular cluster:</p>
+
 <div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>./run.sh shell --cluster 127.0.0.1:34601,127.0.0.1:34602
 </code></pre></div></div>
 
-<h1 id="工具使用">工具使用</h1>
+<h1 id="introduction-to-tool-usage">Introduction to Tool Usage</h1>
 
-<p>Shell工具采用子命令模式，进入子命令模式执行<code class="language-plaintext highlighter-rouge">help</code>后会显示帮助文档。（注：根据版本不同命令会有区别，以下为1.11.3版本）。对于每个子命令，也可以通过<code class="language-plaintext highlighter-rouge">-h</code>选项获取该子命令的帮助信息。</p>
+<p>The Shell tool adopts a subcommand mode. Entering the subcommand mode and executing <code class="language-plaintext highlighter-rouge">help</code> will display the help document. (Note: Commands may vary depending on the version. The following is for version 2.5.0). For each subcommand, you can also use the <code class="language-plaintext highlighter-rouge">-h</code> option to obtain help information for that subcommand.</p>
 
 <div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>Usage:
-	help
-	version
-	cluster_info           [-r|--resolve_ip] [-o|--output file_name] [-j|--json]
-	app                    &lt;app_name&gt; [-d|--detailed] [-r|--resolve_ip] [-o|--output file_name]
-	                       [-j|--json]
-	app_disk               &lt;app_name&gt; [-d|--detailed] [-r|--resolve_ip] [-j|--json]
-	                       [-o|--output file_name]
-	ls                     [-a|-all] [-d|--detailed] [-j|--json]
-	                       [-o|--output file_name][-s|--status all|available|creating|dropping|dropped]
-	nodes                  [-d|--detailed] [-j|--json] [-r|--resolve_ip]
-	                       [-u|--resource_usage][-o|--output file_name]
-	                       [-s|--status all|alive|unalive] [-q|--qps]
-	create                 &lt;app_name&gt; [-p|--partition_count num] [-r|--replica_count num]
-	                       [-e|--envs k1=v1,k2=v2...]
-	drop                   &lt;app_name&gt; [-r|--reserve_seconds num]
-	recall                 &lt;app_id&gt; [new_app_name]
-	set_meta_level         &lt;stopped|blind|freezed|steady|lively&gt;
-	get_meta_level
-	balance                &lt;-g|--gpid appid.pidx&gt; &lt;-p|--type move_pri|copy_pri|copy_sec&gt;
-	                       &lt;-f|--from from_address&gt; &lt;-t|--to to_address&gt;
-	propose                [-f|--force] &lt;-g|--gpid appid.pidx&gt;
-	                       &lt;-p|--type ASSIGN_PRIMARY|ADD_SECONDARY|DOWNGRADE_TO_INACTIVE...&gt;
-	                       &lt;-t|--target node_to_exec_command&gt; &lt;-n|--node node_to_be_affected&gt;
-	use                    [app_name]
-	cc                     [cluster_name]
-	escape_all             [true|false]
-	timeout                [time_in_ms]
-	hash                   &lt;hash_key&gt; &lt;sort_key&gt;
-	set                    &lt;hash_key&gt; &lt;sort_key&gt; &lt;value&gt; [ttl_in_seconds]
-	multi_set              &lt;hash_key&gt; &lt;sort_key&gt; &lt;value&gt; [sort_key value...]
-	get                    &lt;hash_key&gt; &lt;sort_key&gt;
-	multi_get              &lt;hash_key&gt; [sort_key...]
-	multi_get_range        &lt;hash_key&gt; &lt;start_sort_key&gt; &lt;stop_sort_key&gt;
-	                       [-a|--start_inclusive true|false] [-b|--stop_inclusive true|false]
-	                       [-s|--sort_key_filter_type anywhere|prefix|postfix]
-	                       [-y|--sort_key_filter_pattern str] [-n|--max_count num]
-	                       [-i|--no_value] [-r|--reverse]
-	multi_get_sortkeys     &lt;hash_key&gt;
-	del                    &lt;hash_key&gt; &lt;sort_key&gt;
-	multi_del              &lt;hash_key&gt; &lt;sort_key&gt; [sort_key...]
-	multi_del_range        &lt;hash_key&gt; &lt;start_sort_key&gt; &lt;stop_sort_key&gt;
-	                       [-a|--start_inclusive true|false] [-b|--stop_inclusive true|false]
-	                       [-s|--sort_key_filter_type anywhere|prefix|postfix]
-	                       [-y|--sort_key_filter_pattern str] [-o|--output file_name]
-	                       [-i|--silent]
-	incr                   &lt;hash_key&gt; &lt;sort_key&gt; [increment]
-	check_and_set          &lt;hash_key&gt; [-c|--check_sort_key str]
-	                       [-t|--check_type not_exist|not_exist_or_empty|exist|not_empty]
-	                       [match_anywhere|match_prefix|match_postfix]
-	                       [bytes_less|bytes_less_or_equal|bytes_equal|bytes_greater_or_equal|bytes_greater]
-	                       [int_less|int_less_or_equal|int_equal|int_greater_or_equal|int_greater]
-	                       [-o|--check_operand str] [-s|--set_sort_key str] [-v|--set_value str]
-	                       [-l|--set_value_ttl_seconds num] [-r|--return_check_value]
-	check_and_mutate       &lt;hash_key&gt; [-c|--check_sort_key str]
-	                       [-t|--check_type not_exist|not_exist_or_empty|exist|not_empty]
-	                       [match_anywhere|match_prefix|match_postfix]
-	                       [bytes_less|bytes_less_or_equal|bytes_equal|bytes_greater_or_equal|bytes_greater]
-	                       [int_less|int_less_or_equal|int_equal|int_greater_or_equal|int_greater]
-	                       [-o|--check_operand str] [-r|--return_check_value]
-	exist                  &lt;hash_key&gt; &lt;sort_key&gt;
-	count                  &lt;hash_key&gt;
-	ttl                    &lt;hash_key&gt; &lt;sort_key&gt;
-	hash_scan              &lt;hash_key&gt; &lt;start_sort_key&gt; &lt;stop_sort_key&gt;
-	                       [-a|--start_inclusive true|false] [-b|--stop_inclusive true|false]
-	                       [-s|--sort_key_filter_type anywhere|prefix|postfix]
-	                       [-y|--sort_key_filter_pattern str]
-	                       [-v|--value_filter_type anywhere|prefix|postfix|exact]
-	                       [-z|--value_filter_pattern str] [-o|--output file_name]
-	                       [-n|--max_count num] [-t|--timeout_ms num] [-d|--detailed]
-	                       [-i|--no_value]
-	full_scan              [-h|--hash_key_filter_type anywhere|prefix|postfix]
-	                       [-x|--hash_key_filter_pattern str]
-	                       [-s|--sort_key_filter_type anywhere|prefix|postfix|exact]
-	                       [-y|--sort_key_filter_pattern str]
-	                       [-v|--value_filter_type anywhere|prefix|postfix|exact]
-	                       [-z|--value_filter_pattern str] [-o|--output file_name]
-	                       [-n|--max_count num] [-t|--timeout_ms num] [-d|--detailed]
-	                       [-i|--no_value] [-p|--partition num]
-	copy_data              &lt;-c|--target_cluster_name str&gt; &lt;-a|--target_app_name str&gt;
-	                       [-p|--partition num] [-b|--max_batch_count num] [-t|--timeout_ms num]
-	                       [-h|--hash_key_filter_type anywhere|prefix|postfix]
-	                       [-x|--hash_key_filter_pattern str]
-	                       [-s|--sort_key_filter_type anywhere|prefix|postfix|exact]
-	                       [-y|--sort_key_filter_pattern str]
-	                       [-v|--value_filter_type anywhere|prefix|postfix|exact]
-	                       [-z|--value_filter_pattern str] [-n|--no_overwrite] [-i|--no_value]
-	                       [-g|--geo_data]
-	clear_data             [-p|--partition num] [-b|--max_batch_count num] [-t|--timeout_ms num]
-	                       [-h|--hash_key_filter_type anywhere|prefix|postfix]
-	                       [-x|--hash_key_filter_pattern str]
-	                       [-s|--sort_key_filter_type anywhere|prefix|postfix|exact]
-	                       [-y|--sort_key_filter_pattern str]
-	                       [-v|--value_filter_type anywhere|prefix|postfix|exact]
-	                       [-z|--value_filter_pattern str] [-f|--force]
-	count_data             [-p|--partition num] [-b|--max_batch_count num] [-t|--timeout_ms num]
-	                       [-h|--hash_key_filter_type anywhere|prefix|postfix]
-	                       [-x|--hash_key_filter_pattern str]
-	                       [-s|--sort_key_filter_type anywhere|prefix|postfix|exact]
-	                       [-y|--sort_key_filter_pattern str]
-	                       [-v|--value_filter_type anywhere|prefix|postfix|exact]
-	                       [-z|--value_filter_pattern str] [-d|--diff_hash_key] [-a|--stat_size]
-	                       [-n|--top_count num] [-r|--run_seconds num]
-	remote_command         [-t all|meta-server|replica-server] [-r|--resolve_ip]
-	                       [-l ip:port,ip:port...]&lt;command&gt; [arguments...]
-	server_info            [-t all|meta-server|replica-server] [-l ip:port,ip:port...]
-	                       [-r|--resolve_ip]
-	server_stat            [-t all|meta-server|replica-server] [-l ip:port,ip:port...]
-	                       [-r|--resolve_ip]
-	app_stat               [-a|--app_name str] [-q|--only_qps] [-u|--only_usage] [-j|--json]
-	                       [-o|--output file_name]
-	flush_log              [-t all|meta-server|replica-server]
-	                       [-l ip:port,ip:port...][-r|--resolve_ip]
-	disk_replica           [-n|--node replica_server(ip:port)][-a|-app app_name][-o|--out file_name][-j|--json]
-	disk_capacity          [-n|--node replica_server(ip:port)][-o|--out file_name][-j|-json][-d|--detail]
-	local_get              &lt;db_path&gt; &lt;hash_key&gt; &lt;sort_key&gt;
-	rdb_key_str2hex        &lt;hash_key&gt; &lt;sort_key&gt;
-	rdb_key_hex2str        &lt;rdb_key_in_hex&gt;
-	rdb_value_hex2str      &lt;value_in_hex&gt;
-	sst_dump               [--command=check|scan|none|raw] &lt;--file=data_dir_OR_sst_file&gt;
-	                       [--from=user_key] [--to=user_key] [--read_num=num] [--show_properties]
-	                       [--pegasus_data]
-	mlog_dump              &lt;-i|--input log_dir&gt; [-o|--output file_name] [-d|--detailed]
-	recover                [-f|--node_list_file file_name] [-s|--node_list_str str]
-	                       [-w|--wait_seconds num] [-b|--skip_bad_nodes]
-	                       [-l|--skip_lost_partitions] [-o|--output file_name]
-	add_backup_policy      &lt;-p|--policy_name str&gt; &lt;-b|--backup_provider_type str&gt;
-	                       &lt;-a|--app_ids 1,2...&gt; &lt;-i|--backup_interval_seconds num&gt;
-	                       &lt;-s|--start_time hour:minute&gt; &lt;-c|--backup_history_cnt num&gt;
-	ls_backup_policy
-	query_backup_policy    &lt;-p|--policy_name p1,p2...&gt; [-b|--backup_info_cnt num]
-	modify_backup_policy   &lt;-p|--policy_name str&gt; [-a|--add_app 1,2...] [-r|--remove_app 1,2...]
-	                       [-i|--backup_interval_seconds num] [-c|--backup_history_count num]
-	                       [-s|--start_time hour:minute]
-	disable_backup_policy  &lt;-p|--policy_name str&gt;
-	enable_backup_policy   &lt;-p|--policy_name str&gt;
-	restore_app            &lt;-c|--old_cluster_name str&gt; &lt;-p|--old_policy_name str&gt;
-	                       &lt;-a|--old_app_name str&gt; &lt;-i|--old_app_id id&gt;
-	                       &lt;-t|--timestamp/backup_id timestamp&gt; &lt;-b|--backup_provider_type str&gt;
-	                       [-n|--new_app_name str] [-s|--skip_bad_partition]
-	query_restore_status   &lt;restore_app_id&gt; [-d|--detailed]
-	get_app_envs           [-j|--json]
-	set_app_envs           &lt;key&gt; &lt;value&gt; [key value...]
-	del_app_envs           &lt;key&gt; [key...]
-	clear_app_envs         [-a|--all] [-p|--prefix str]
-	ddd_diagnose           [-g|--gpid appid|appid.pidx] [-d|--diagnose] [-a|--auto_diagnose]
-	                       [-s|--skip_prompt] [-o|--output file_name]
-	exit
-
+        help
+        version
+        cluster_info           [-r|--resolve_ip] [-o|--output file_name] [-j|--json]
+        app                    &lt;app_name&gt; [-d|--detailed] [-r|--resolve_ip] [-o|--output file_name]
+                               [-j|--json]
+        app_disk               &lt;app_name&gt; [-d|--detailed] [-r|--resolve_ip] [-j|--json]
+                               [-o|--output file_name]
+        ls                     [-a|-all] [-d|--detailed] [-j|--json]
+                               [-o|--output file_name][-s|--status all|available|creating|dropping|dropped]
+        nodes                  [-d|--detailed] [-j|--json] [-r|--resolve_ip] [-u|--resource_usage]
+                               [-o|--output file_name] [-s|--status all|alive|unalive] [-q|--qps]
+                               [-p|latency_percentile 50|90|95|99|999]
+        create                 &lt;app_name&gt; [-p|--partition_count num] [-r|--replica_count num]
+                               [-e|--envs k1=v1,k2=v2...]
+        drop                   &lt;app_name&gt; [-r|--reserve_seconds num]
+        recall                 &lt;app_id&gt; [new_app_name]
+        set_meta_level         &lt;stopped|blind|freezed|steady|lively&gt;
+        get_meta_level
+        balance                &lt;-g|--gpid appid.pidx&gt; &lt;-p|--type move_pri|copy_pri|copy_sec&gt;
+                               &lt;-f|--from from_address&gt; &lt;-t|--to to_address&gt;
+        propose                [-f|--force] &lt;-g|--gpid appid.pidx&gt;
+                               &lt;-p|--type ASSIGN_PRIMARY|ADD_SECONDARY|DOWNGRADE_TO_INACTIVE...&gt;
+                               &lt;-t|--target node_to_exec_command&gt; &lt;-n|--node node_to_be_affected&gt;
+        use                    [app_name]
+        cc                     [cluster_name]
+        escape_all             [true|false]
+        timeout                [time_in_ms]
+        hash                   &lt;hash_key&gt; &lt;sort_key&gt;
+        set                    &lt;hash_key&gt; &lt;sort_key&gt; &lt;value&gt; [ttl_in_seconds]
+        multi_set              &lt;hash_key&gt; &lt;sort_key&gt; &lt;value&gt; [sort_key value...]
+        get                    &lt;hash_key&gt; &lt;sort_key&gt;
+        multi_get              &lt;hash_key&gt; [sort_key...]
+        multi_get_range        &lt;hash_key&gt; &lt;start_sort_key&gt; &lt;stop_sort_key&gt;
+                               [-a|--start_inclusive true|false] [-b|--stop_inclusive true|false]
+                               [-s|--sort_key_filter_type anywhere|prefix|postfix]
+                               [-y|--sort_key_filter_pattern str] [-n|--max_count num]
+                               [-i|--no_value] [-r|--reverse]
+        multi_get_sortkeys     &lt;hash_key&gt;
+        del                    &lt;hash_key&gt; &lt;sort_key&gt;
+        multi_del              &lt;hash_key&gt; &lt;sort_key&gt; [sort_key...]
+        multi_del_range        &lt;hash_key&gt; &lt;start_sort_key&gt; &lt;stop_sort_key&gt;
+                               [-a|--start_inclusive true|false] [-b|--stop_inclusive true|false]
+                               [-s|--sort_key_filter_type anywhere|prefix|postfix]
+                               [-y|--sort_key_filter_pattern str] [-o|--output file_name]
+                               [-i|--silent]
+        incr                   &lt;hash_key&gt; &lt;sort_key&gt; [increment]
+        check_and_set          &lt;hash_key&gt; [-c|--check_sort_key str]
+                               [-t|--check_type not_exist|not_exist_or_empty|exist|not_empty]
+                               [match_anywhere|match_prefix|match_postfix]
+                               [bytes_less|bytes_less_or_equal|bytes_equal|bytes_greater_or_equal|bytes_greater]
+                               [int_less|int_less_or_equal|int_equal|int_greater_or_equal|int_greater]
+                               [-o|--check_operand str] [-s|--set_sort_key str] [-v|--set_value str]
+                               [-l|--set_value_ttl_seconds num] [-r|--return_check_value]
+        check_and_mutate       &lt;hash_key&gt; [-c|--check_sort_key str]
+                               [-t|--check_type not_exist|not_exist_or_empty|exist|not_empty]
+                               [match_anywhere|match_prefix|match_postfix]
+                               [bytes_less|bytes_less_or_equal|bytes_equal|bytes_greater_or_equal|bytes_greater]
+                               [int_less|int_less_or_equal|int_equal|int_greater_or_equal|int_greater]
+                               [-o|--check_operand str] [-r|--return_check_value]
+        exist                  &lt;hash_key&gt; &lt;sort_key&gt;
+        count                  &lt;hash_key&gt;
+        ttl                    &lt;hash_key&gt; &lt;sort_key&gt;
+        hash_scan              &lt;hash_key&gt; &lt;start_sort_key&gt; &lt;stop_sort_key&gt;
+                               [-a|--start_inclusive true|false] [-b|--stop_inclusive true|false]
+                               [-s|--sort_key_filter_type anywhere|prefix|postfix]
+                               [-y|--sort_key_filter_pattern str]
+                               [-v|--value_filter_type anywhere|prefix|postfix|exact]
+                               [-z|--value_filter_pattern str] [-o|--output file_name]
+                               [-n|--max_count num] [-t|--timeout_ms num] [-d|--detailed]
+                               [-i|--no_value]
+        full_scan              [-h|--hash_key_filter_type anywhere|prefix|postfix]
+                               [-x|--hash_key_filter_pattern str]
+                               [-s|--sort_key_filter_type anywhere|prefix|postfix|exact]
+                               [-y|--sort_key_filter_pattern str]
+                               [-v|--value_filter_type anywhere|prefix|postfix|exact]
+                               [-z|--value_filter_pattern str] [-o|--output file_name]
+                               [-n|--max_count num] [-t|--timeout_ms num] [-d|--detailed]
+                               [-i|--no_value] [-p|--partition num]
+        copy_data              &lt;-c|--target_cluster_name str&gt; &lt;-a|--target_app_name str&gt;
+                               [-p|--partition num] [-b|--max_batch_count num] [-t|--timeout_ms num]
+                               [-h|--hash_key_filter_type anywhere|prefix|postfix]
+                               [-x|--hash_key_filter_pattern str]
+                               [-s|--sort_key_filter_type anywhere|prefix|postfix|exact]
+                               [-y|--sort_key_filter_pattern str]
+                               [-v|--value_filter_type anywhere|prefix|postfix|exact]
+                               [-z|--value_filter_pattern str] [-m|--max_multi_set_concurrency]
+                               [-o|--scan_option_batch_size] [-n|--no_overwrite] [-i|--no_value]
+                               [-g|--geo_data] [-u|--use_multi_set]
+        clear_data             [-p|--partition num] [-b|--max_batch_count num] [-t|--timeout_ms num]
+                               [-h|--hash_key_filter_type anywhere|prefix|postfix]
+                               [-x|--hash_key_filter_pattern str]
+                               [-s|--sort_key_filter_type anywhere|prefix|postfix|exact]
+                               [-y|--sort_key_filter_pattern str]
+                               [-v|--value_filter_type anywhere|prefix|postfix|exact]
+                               [-z|--value_filter_pattern str] [-f|--force]
+        count_data             [-c|--precise][-p|--partition num]
+                               [-b|--max_batch_count num][-t|--timeout_ms num]
+                               [-h|--hash_key_filter_type anywhere|prefix|postfix]
+                               [-x|--hash_key_filter_pattern str]
+                               [-s|--sort_key_filter_type anywhere|prefix|postfix|exact]
+                               [-y|--sort_key_filter_pattern str]
+                               [-v|--value_filter_type anywhere|prefix|postfix|exact]
+                               [-z|--value_filter_pattern str][-d|--diff_hash_key] [-a|--stat_size]
+                               [-n|--top_count num] [-r|--run_seconds num]
+        remote_command         [-t all|meta-server|replica-server] [-r|--resolve_ip]
+                               [-l ip:port,ip:port...]&lt;command&gt; [arguments...]
+        server_info            [-t all|meta-server|replica-server] [-l ip:port,ip:port...]
+                               [-r|--resolve_ip]
+        server_stat            [-t all|meta-server|replica-server] [-l ip:port,ip:port...]
+                               [-r|--resolve_ip]
+        app_stat               [-a|--app_name str] [-q|--only_qps] [-u|--only_usage] [-j|--json]
+                               [-o|--output file_name]
+        flush_log              [-t all|meta-server|replica-server]
+                               [-l ip:port,ip:port...][-r|--resolve_ip]
+        local_get              &lt;db_path&gt; &lt;hash_key&gt; &lt;sort_key&gt;
+        rdb_key_str2hex        &lt;hash_key&gt; &lt;sort_key&gt;
+        rdb_key_hex2str        &lt;rdb_key_in_hex&gt;
+        rdb_value_hex2str      &lt;value_in_hex&gt;
+        sst_dump               [--command=check|scan|none|raw] &lt;--file=data_dir_OR_sst_file&gt;
+                               [--from=user_key] [--to=user_key] [--read_num=num] [--show_properties]
+                               [--pegasus_data]
+        mlog_dump              &lt;-i|--input log_dir&gt; [-o|--output file_name] [-d|--detailed]
+        recover                [-f|--node_list_file file_name] [-s|--node_list_str str]
+                               [-w|--wait_seconds num] [-b|--skip_bad_nodes]
+                               [-l|--skip_lost_partitions] [-o|--output file_name]
+        add_backup_policy      &lt;-p|--policy_name str&gt; &lt;-b|--backup_provider_type str&gt;
+                               &lt;-a|--app_ids 1,2...&gt; &lt;-i|--backup_interval_seconds num&gt;
+                               &lt;-s|--start_time hour:minute&gt; &lt;-c|--backup_history_cnt num&gt;
+        ls_backup_policy
+        query_backup_policy    &lt;-p|--policy_name p1,p2...&gt; [-b|--backup_info_cnt num]
+        modify_backup_policy   &lt;-p|--policy_name str&gt; [-a|--add_app 1,2...] [-r|--remove_app 1,2...]
+                               [-i|--backup_interval_seconds num] [-c|--backup_history_count num]
+                               [-s|--start_time hour:minute]
+        disable_backup_policy  &lt;-p|--policy_name str&gt;
+        enable_backup_policy   &lt;-p|--policy_name str&gt;
+        restore_app            &lt;-c|--old_cluster_name str&gt; &lt;-p|--old_policy_name str&gt;
+                               &lt;-a|--old_app_name str&gt; &lt;-i|--old_app_id id&gt;
+                               &lt;-t|--timestamp/backup_id timestamp&gt; &lt;-b|--backup_provider_type str&gt;
+                               [-n|--new_app_name str] [-s|--skip_bad_partition]
+        query_restore_status   &lt;restore_app_id&gt; [-d|--detailed]
+        get_app_envs           [-j|--json]
+        set_app_envs           &lt;key&gt; &lt;value&gt; [key value...]
+        del_app_envs           &lt;key&gt; [key...]
+        clear_app_envs         [-a|--all] [-p|--prefix str]
+        ddd_diagnose           [-g|--gpid appid|appid.pidx] [-d|--diagnose] [-a|--auto_diagnose]
+                               [-s|--skip_prompt] [-o|--output file_name]
+        add_dup                &lt;app_name&gt; &lt;remote_cluster_name&gt; [-f|--freezed]
+        query_dup              &lt;app_name&gt; [-d|--detail]
+        remove_dup             &lt;app_name&gt; &lt;dup_id&gt;
+        start_dup              &lt;app_name&gt; &lt;dup_id&gt;
+        pause_dup              &lt;app_name&gt; &lt;dup_id&gt;
+        disk_capacity          [-n|--node replica_server(ip:port)][-o|--out file_name][-j|-json][-d|--detail]
+        disk_replica           [-n|--node replica_server(ip:port)][-a|-app app_name][-o|--out file_name][-j|--json]
+        set_dup_fail_mode      &lt;app_name&gt; &lt;dup_id&gt; &lt;slow|skip&gt;
+        get_replica_count      &lt;app_name&gt;
+        set_replica_count      &lt;app_name&gt; &lt;replica_count&gt;
+        exit
 </code></pre></div></div>
 
-<p>由于子命令很多，为了方便使用，我们根据功能不同进行分类。</p>
+<p>To enhance user-friendliness, we have classified them according to their distinct functionalities.</p>
 
-<h2 id="基本命令">基本命令</h2>
+<h2 id="basic-commands">Basic Commands</h2>
 
 <table>
   <thead>
     <tr>
-      <th>子命令</th>
-      <th>功能</th>
+      <th>Subcommands</th>
+      <th>Functionality</th>
     </tr>
   </thead>
   <tbody>
     <tr>
       <td>help</td>
-      <td>获取帮助信息</td>
+      <td>To obtain assistance and information.</td>
     </tr>
     <tr>
       <td>version</td>
-      <td>获取Shell工具的版本信息</td>
+      <td>Obtain the version details of the Shell tool.</td>
     </tr>
     <tr>
       <td>exit</td>
-      <td>退出shell工具，等同于输入”Ctrl-C”或者”Ctrl-D”</td>
+      <td>Exiting the Shell tool is analogous to entering “Ctrl-C” or “Ctrl-D”.</td>
     </tr>
   </tbody>
 </table>
 
 <h3 id="help">help</h3>
-<p>获取帮助信息。</p>
+
+<p>To obtain assistance and information.</p>
 
 <h3 id="version">version</h3>
-<p>获取Shell工具的版本信息。</p>
+
+<p>Obtain the version details of the Shell tool.</p>
 
 <h3 id="exit">exit</h3>
-<p>退出shell工具，等同于输入”Ctrl-C”或者”Ctrl-D”。</p>
 
-<h2 id="全局属性">全局属性</h2>
+<p>Exiting the Shell tool is analogous to entering “Ctrl-C” or “Ctrl-D”.</p>
+
+<h2 id="global-properties">Global properties</h2>
 
 <table>
   <thead>
     <tr>
-      <th>子命令</th>
-      <th>功能</th>
+      <th>Subcommands</th>
+      <th>Functionality</th>
     </tr>
   </thead>
   <tbody>
     <tr>
       <td>cc</td>
-      <td>change cluster，改变当前使用的集群</td>
+      <td>Full name Change Cluster, altering the presently employed cluster.</td>
     </tr>
     <tr>
       <td>use</td>
-      <td>指定当前使用的表，有的子命令在使用前需要先指定表，譬如数据操作类命令</td>
+      <td>Specify the currently utilized table; certain subcommands require you to designate a table before usage, such as data manipulation commands.</td>
     </tr>
     <tr>
       <td>escape_all</td>
-      <td>输出字节类数据时，选择将”所有字符”转换为十六进制编码还是仅将”不可见字符”转换为十六进制编码，默认为后者</td>
+      <td>When presenting byte-class data, the default behavior is to convert only “invisible characters” into hexadecimal encoding, rather than converting “all characters” to hexadecimal encoding.</td>
     </tr>
     <tr>
       <td>timeout</td>
-      <td>数据操作的默认超时时间</td>
+      <td>The default timeout duration for data operations is set to a specific period.</td>
     </tr>
   </tbody>
 </table>
 
 <h3 id="cc">cc</h3>
-<p>change cluster，改变当前使用的集群。</p>
 
-<p>用法：</p>
-<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>USAGE:  cc                       [cluster_name]
+<p>Full name Change Cluster, altering the presently employed cluster.</p>
+
+<p>Usage:</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>USAGE:  cc                     [cluster_name]
 </code></pre></div></div>
 
-<p>说明：</p>
+<p>Explanation:</p>
+
 <ul>
-  <li>指定的集群名必须在<code class="language-plaintext highlighter-rouge">src/shell/config.ini</code>配置文件的[pegasus.clusters]配置段中可以找到。</li>
-  <li>你可以在[pegasus.clusters]配置段中设置多个集群。</li>
+  <li>The specified cluster name must be present in the [pegasus.clusters] section of the <code class="language-plaintext highlighter-rouge">src/shell/config.ini</code> configuration file.</li>
+  <li>You can configure multiple clusters within the [pegasus.clusters] section.</li>
 </ul>
 
-<p>示例：</p>
+<p>Examples:</p>
+
 <div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>&gt;&gt;&gt; cc my_cluster
 </code></pre></div></div>
-<h3 id="use">use</h3>
-<p>指定当前使用的表，有的子命令在使用前需要先指定表，譬如数据操作类命令。</p>
 
-<p>用法：</p>
-<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>USAGE:  use                      [app_name]
+<h3 id="use">use</h3>
+
+<p>Specify the currently utilized table; certain subcommands require you to designate a table before usage, such as data manipulation commands.</p>
+
+<p>Usage:</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>USAGE:  use                    [app_name]
 </code></pre></div></div>
 
-<p>说明：</p>
+<p>Explanation:</p>
+
 <ul>
-  <li>表必须已经创建才能使用，默认存在temp表。</li>
+  <li>Tables must be created before they can be used. By default, there is a <code class="language-plaintext highlighter-rouge">temp</code> table available.</li>
 </ul>
 
-<p>示例：</p>
+<p>Examples:</p>
+
 <div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>&gt;&gt;&gt; use tmp
 </code></pre></div></div>
 
 <h3 id="escape_all">escape_all</h3>
-<p>输出字节类数据时，选择将”所有字符”转换为十六进制编码还是仅将”不可见字符”转换为十六进制编码，默认为后者。</p>
 
-<p>用法：</p>
-<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>USAGE:  escape_all               [true|false]
+<p>When presenting byte-class data, the default behavior is to convert only “invisible characters” into hexadecimal encoding, rather than converting “all characters” to hexadecimal encoding.</p>
+
+<p>Usage:</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>USAGE:  escape_all             [true|false]
 </code></pre></div></div>
 
-<p>说明：</p>
+<p>Explanation:</p>
+
 <ul>
-  <li>默认为false。</li>
+  <li>The default value is ‘false’.</li>
 </ul>
 
-<p>示例：</p>
+<p>Examples:</p>
+
 <div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>&gt;&gt;&gt; escape_all true
 </code></pre></div></div>
 
 <h3 id="timeout">timeout</h3>
-<p>设置数据操作的默认超时时间，单位ms。</p>
 
-<p>用法：</p>
-<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>USAGE:  timeout                  [time_in_ms]
+<p>Specify the default timeout duration for data operations, in milliseconds (ms).</p>
+
+<p>Usage:</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>USAGE:  timeout                [time_in_ms]
 </code></pre></div></div>
 
-<p>说明：</p>
+<p>Explanation:</p>
+
 <ul>
-  <li>如果不指定[time_in_ms]，则输出当前的超时时间。</li>
+  <li>If you do not specify [time_in_ms], it will display the current timeout duration.</li>
 </ul>
 
-<p>示例：</p>
+<p>Examples:</p>
+
 <div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>&gt;&gt;&gt; timeout 1000
 </code></pre></div></div>
 
-<h2 id="节点管理">节点管理</h2>
+<h2 id="node-management">Node Management</h2>
 
 <table>
   <thead>
     <tr>
-      <th>子命令</th>
-      <th>功能</th>
+      <th>Subcommands</th>
+      <th>Functionality</th>
     </tr>
   </thead>
   <tbody>
     <tr>
       <td>cluster_info</td>
-      <td>获取集群基本信息</td>
+      <td>Obtain Basic Cluster Information.</td>
     </tr>
     <tr>
       <td>nodes</td>
-      <td>获取节点列表，可加<code class="language-plaintext highlighter-rouge">-d</code>选项获取各节点的负载情况</td>
+      <td>Retrieve a List of Nodes; you can include the <code class="language-plaintext highlighter-rouge">-d</code> option to obtain the load status of each node.</td>
     </tr>
     <tr>
       <td>server_info</td>
-      <td>各节点的基本信息，主要是server版本、节点启动时间</td>
+      <td>Obtain essential information about each node, primarily including the server version and node startup time.</td>
     </tr>
     <tr>
       <td>server_stat</td>
-      <td>各节点的统计信息，包含一些关键的统计数据，譬如get和put操作的QPS和延迟、内存和存储使用情况</td>
+      <td>The statistical data for each node includes essential metrics, such as the Queries Per Second (QPS) and latency for <strong>get</strong> and <strong>put</strong> operations, as well as memory and storage utilization.</td>
     </tr>
     <tr>
       <td>remote_command</td>
-      <td>向节点发送<strong>远程命令</strong>，以执行某些特殊操作</td>
+      <td>Dispatch remote commands to the nodes to execute certain specialized operations.</td>
     </tr>
     <tr>
       <td>flush_log</td>
-      <td>向节点发送<strong>远程命令</strong>，将最近缓冲区中的日志数据刷出到日志文件中</td>
+      <td>Transmit remote commands to the nodes to flush log data from the recent buffer into the log files.</td>
     </tr>
     <tr>
       <td>disk_replica</td>
-      <td>各节点的副本在磁盘上的分布</td>
+      <td>The distribution of each node’s replicas across the disks.</td>
     </tr>
     <tr>
       <td>disk_capacity</td>
-      <td>各节点的磁盘空间占用</td>
+      <td>The disk space utilization of each node.</td>
     </tr>
   </tbody>
 </table>
 
 <h3 id="cluster_info">cluster_info</h3>
-<p>获取集群基本信息。</p>
 
-<p>说明：</p>
+<p>Obtain Basic Cluster Information.</p>
+
+<p>Explanation:</p>
+
 <ul>
-  <li>集群信息主要主要包含：
+  <li>The primary components of cluster information primarily encompass:
     <ul>
-      <li>meta_server、zookeeper的节点信息。</li>
-      <li>meta_function_level：负载均衡策略。</li>
-      <li>balance_operation_count：负载均衡操作统计，包括move_pri、move_pri、copy_sec、total。负载均衡信息参见<a href="/administration/rebalance">负载均衡</a>。</li>
-      <li>primary_replica_count_stddev：负载均衡衡量指标。</li>
-      <li>total_replica_count_stddev：负载均衡衡量指标。</li>
+      <li>Information on the nodes for meta_server and zookeeper.</li>
+      <li>Meta_function_level: Strategies for load balancing.</li>
+      <li>balance_operation_count: Statistics for load balancing operations, including <strong>move_pri</strong>, <strong>move_pri</strong>, <strong>copy_sec</strong>, and <strong>total</strong>. For more information on load balancing, refer to <a href="/administration/rebalance">Load balancing</a>.</li>
+      <li>Primary_replica_count_stddev: A metric for measuring load balancing.</li>
+      <li>Total_replica_count_stddev: A metric for measuring load balancing.</li>
     </ul>
   </li>
 </ul>
 
-<h3 id="nodes">nodes</h3>
-<p>获取replica节点列表，默认以IP地址表示各个节点，并输出基本信息。</p>
+<p>Examples:</p>
 
-<p>用法：</p>
-<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>USAGE:  nodes                    [-d|--detailed] [-r|--resolve_ip] [-u|--resource_usage]
-                                 [-o|--output file_name] [-s|--status all|alive|unalive]
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>&gt;&gt;&gt; cluster_info
+[cluster_info]
+meta_servers                  :
+primary_meta_server           :
+zookeeper_hosts               :
+zookeeper_root                :
+meta_function_level           :
+balance_operation_count       :
+primary_replica_count_stddev  :
+total_replica_count_stddev    :
 </code></pre></div></div>
 
-<p>说明：</p>
+<h3 id="nodes">nodes</h3>
+
+<p>Retrieve the list of replica nodes, typically represented by their IP addresses, and display their fundamental information.</p>
+
+<p>Usage:</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>USAGE:  nodes                  [-d|--detailed] [-j|--json] [-r|--resolve_ip] [-u|--resource_usage]
+                               [-o|--output file_name] [-s|--status all|alive|unalive] [-q|--qps]
+                               [-p|latency_percentile 50|90|95|99|999]
+</code></pre></div></div>
+
+<p>Explanation:</p>
+
 <ul>
-  <li><code class="language-plaintext highlighter-rouge">-d</code>选项：如果指定，输出节点的详细信息，如获取各节点的负载情况。</li>
-  <li><code class="language-plaintext highlighter-rouge">-r</code>选项：如果指定，以域名信息表示该节点，并输出基本信息，如果无法找到节点地址对应域名信息，显示UNRESOLVABLE。</li>
-  <li><code class="language-plaintext highlighter-rouge">-u</code>选项：如果指定，输出节点资源使用情况。</li>
-  <li><code class="language-plaintext highlighter-rouge">-o</code>选项：如果指定，输出基本信息到指定文件，默认为当前路径。</li>
-  <li><code class="language-plaintext highlighter-rouge">-s</code>选项：如果指定，输出某种状态的节点信息，包括all、alive、unalive。</li>
+  <li>The <code class="language-plaintext highlighter-rouge">-d</code> option: When specified, it provides detailed information about each node, such as the load conditions of the nodes.</li>
+  <li>The <code class="language-plaintext highlighter-rouge">-r</code> option: When specified, represent the node using domain name information and display its basic details. If the domain name corresponding to the node’s address cannot be found, indicate it as <strong>UNRESOLVABLE</strong>.</li>
+  <li>The <code class="language-plaintext highlighter-rouge">-u</code> option: When specified, display the resource utilization of the nodes.</li>
+  <li>The <code class="language-plaintext highlighter-rouge">-o</code> option: When specified, export basic information to a specified file, defaulting to the current path.</li>
+  <li>The <code class="language-plaintext highlighter-rouge">-s</code> option: When specified, output information of nodes in a specific status, including options like <strong>all</strong>, <strong>alive</strong>, and <strong>unalive</strong>.</li>
+  <li>The <code class="language-plaintext highlighter-rouge">-q</code> option: When specified, display only the QPS information of the specified node.</li>
+  <li>The <code class="language-plaintext highlighter-rouge">-p</code> option: When specified, exhibit the latency levels of the specified node.</li>
 </ul>
 
-<p>示例：</p>
+<p>Examples:</p>
+
 <div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>&gt;&gt;&gt; nodes -s alive
 </code></pre></div></div>
 
 <h3 id="server_info">server_info</h3>
-<p>各节点的基本信息，主要是节点地址、状态、server版本、启动时间等。</p>
 
-<p>用法：</p>
-<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>USAGE:server_info                [-t all|meta-server|replica-server] [-l ip:port,ip:port...]
+<p>Obtain essential information about each node, primarily including the server version and node startup time.</p>
+
+<p>Usage:</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>USAGE:  server_info              [-t all|meta-server|replica-server] [-l ip:port,ip:port...]
 </code></pre></div></div>
 
-<p>说明：</p>
+<p>Explanation:</p>
+
 <ul>
-  <li><code class="language-plaintext highlighter-rouge">-t</code>选项：如果指定，则选择输出服务器节点类别的信息，包含all、meta-server、replica-server。</li>
-  <li><code class="language-plaintext highlighter-rouge">-l</code>选项：如果指定，则选择输出特定IP地址节点的信息，多个节点使用<code class="language-plaintext highlighter-rouge">,</code>连接。</li>
+  <li>The <code class="language-plaintext highlighter-rouge">-t</code> option: When specified, opt to output information regarding the categories of server nodes, including <strong>all</strong>, <strong>meta-server</strong>, and <strong>replica-server</strong>.</li>
+  <li>The <code class="language-plaintext highlighter-rouge">-l</code> option: When specified, choose to output information for nodes with specific IP addresses, connecting multiple nodes with a comma <strong>”,”</strong>.</li>
 </ul>
 
-<p>示例：</p>
+<p>Examples:</p>
+
 <div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>&gt;&gt;&gt; server_info -t meta-server
 </code></pre></div></div>
 
 <h3 id="server_stat">server_stat</h3>
-<p>各节点的统计信息，包含一些关键的统计数据，譬如get和put操作的QPS和延迟、内存和存储使用情况。</p>
 
-<p>用法：</p>
-<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>USAGE:server_stat                [-t all|meta-server|replica-server] [-l ip:port,ip:port...]
+<p>The statistical data for each node includes essential metrics, such as the Queries Per Second (QPS) and latency for <strong>get</strong> and <strong>put</strong> operations, as well as memory and storage utilization.</p>
+
+<p>Usage:</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>USAGE:  server_stat              [-t all|meta-server|replica-server] [-l ip:port,ip:port...]
 </code></pre></div></div>
 
-<p>说明：</p>
+<p>Explanation:</p>
+
 <ul>
-  <li>选项参数说明同<a href="#server_info">server_info</a>。</li>
+  <li>The explanation of option parameters same as <a href="#server_info">server_info</a>。</li>
 </ul>
 
-<p>示例：</p>
+<p>Examples:</p>
+
 <div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>&gt;&gt;&gt; server_stat -t meta-server
 </code></pre></div></div>
 
 <h3 id="remote_command">remote_command</h3>
-<p>向节点发送远程命令，以执行某些特殊操作。</p>
 
-<p>用法：</p>
-<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>USAGE:remote_command             [-t all|meta-server|replica-server] [-l ip:port,ip:port...] &lt;command&gt;
+<p>Dispatch remote commands to the nodes to execute certain specialized operations.</p>
+
+<p>Usage:</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>USAGE:  remote_command           [-t all|meta-server|replica-server] [-l ip:port,ip:port...] &lt;command&gt;
 </code></pre></div></div>
 
-<p>说明：</p>
+<p>Explanation:</p>
+
 <ul>
-  <li><code class="language-plaintext highlighter-rouge">-t</code>、<code class="language-plaintext highlighter-rouge">-l</code>选项：用于选择特定目标机器，参见<a href="#server_info">server_info</a>说明。</li>
-  <li>远程命令详细信息，参见<a href="/administration/remote-commands">远程命令</a>。</li>
+  <li>The <code class="language-plaintext highlighter-rouge">-t</code>、<code class="language-plaintext highlighter-rouge">-l</code> option: Used to select specific target machines,see <a href="#server_info">server_info</a> explanation.</li>
+  <li>Detailed information on remote commands, refer to <a href="/administration/remote-commands">remote commands</a>.</li>
 </ul>
 
-<p>示例：</p>
+<p>Examples:</p>
+
 <div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>&gt;&gt;&gt; recommand -t meta-server server-info
 </code></pre></div></div>
 
 <h3 id="flush_log">flush_log</h3>
-<p>向节点发送远程命令，将最近缓冲区中的日志数据刷出到日志文件中。</p>
 
-<p>用法：</p>
-<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>USAGE:flush_log                  [-t all|meta-server|replica-server] [-l ip:port,ip:port...]
+<p>Transmit remote commands to the nodes to flush log data from the recent buffer into the log files.</p>
+
+<p>Usage:</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>USAGE:  flush_log                [-t all|meta-server|replica-server] [-l ip:port,ip:port...]
 </code></pre></div></div>
 
-<p>说明：</p>
+<p>Explanation:</p>
+
 <ul>
-  <li><code class="language-plaintext highlighter-rouge">-t</code>、<code class="language-plaintext highlighter-rouge">-l</code>选项：用于选择特定目标机器，参见<a href="#server_info">server_info</a>说明。</li>
+  <li>The <code class="language-plaintext highlighter-rouge">-t</code>、<code class="language-plaintext highlighter-rouge">-l</code> option: Used to select specific target machines,see <a href="#server_info">server_info</a> explanation.</li>
 </ul>
 
-<p>示例：</p>
+<p>Examples:</p>
+
 <div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>&gt;&gt;&gt; flush_log -t meta-server
 </code></pre></div></div>
 
 <h3 id="disk_replica">disk_replica</h3>
-<p>查询副本在replica_server节点的磁盘分布，1.12.3版本提供支持</p>
 
-<p>用法：</p>
-<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>USAGE:disk_replica             [-n|--node replica_server(ip:port)][-a|-app app_name][-o|--out file_name][-j|--json]
+<p>The distribution of each node’s replicas across the disks. Version 1.12.3 offers support.</p>
+
+<p>Usage:</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>USAGE:  disk_replica             [-n|--node replica_server(ip:port)][-a|-app app_name][-o|--out file_name][-j|--json]
 </code></pre></div></div>
 
-<p>说明：</p>
+<p>Explanation:</p>
+
 <ul>
-  <li><code class="language-plaintext highlighter-rouge">-n</code>选项：用于查看特定节点磁盘上的副本分布，格式为ip:port</li>
-  <li><code class="language-plaintext highlighter-rouge">-a</code>选项：用于查看某个表的副本在节点磁盘上的分布</li>
-  <li><code class="language-plaintext highlighter-rouge">-o</code>选项：把结果输出到某个文件</li>
-  <li><code class="language-plaintext highlighter-rouge">-j</code>选项：以json格式输出查询结果</li>
+  <li>The <code class="language-plaintext highlighter-rouge">-n</code> option: Utilized to view the distribution of replicas on the disk of a specific node, formatted as ip:port.</li>
+  <li>The <code class="language-plaintext highlighter-rouge">-a</code> option: Used to observe the distribution of a table’s replicas across the disk of a node.</li>
+  <li>The <code class="language-plaintext highlighter-rouge">-o</code> option: Direct the output to a specified file.</li>
+  <li>The <code class="language-plaintext highlighter-rouge">-j</code> option: Output the query results in JSON format.</li>
 </ul>
 
-<p>示例：</p>
+<p>Examples:</p>
+
 <div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>&gt;&gt;&gt; disk_replica -n 127.0.0.1:34608 -a temp
 </code></pre></div></div>
 
 <h3 id="disk_capacity">disk_capacity</h3>
-<p>查询replica_server节点的磁盘空间占用，1.12.3版本提供支持</p>
 
-<p>用法：</p>
-<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>USAGE:disk_capacity            [-n|--node replica_server(ip:port)][-o|--out file_name][-j|-json][-d|--detail]
+<p>Query the disk space utilization of replica_server nodes. Version 1.12.3 offers support.</p>
+
+<p>Usage:</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>USAGE:  disk_capacity            [-n|--node replica_server(ip:port)][-o|--out file_name][-j|-json][-d|--detail]
 </code></pre></div></div>
 
-<p>说明：</p>
+<p>Explanation:</p>
+
 <ul>
-  <li><code class="language-plaintext highlighter-rouge">-n</code>选项：用于查看特定节点磁盘上的副本分布，格式为ip:port</li>
-  <li><code class="language-plaintext highlighter-rouge">-d</code>选项：用于查看节点上每个磁盘的空间占用信息</li>
-  <li><code class="language-plaintext highlighter-rouge">-o</code>选项：把结果输出到某个文件</li>
-  <li><code class="language-plaintext highlighter-rouge">-j</code>选项：以json格式输出查询结果</li>
+  <li>The <code class="language-plaintext highlighter-rouge">-n</code> option: Utilized to view the distribution of replicas on the disk of a specific node, formatted as ip:port.</li>
+  <li>The <code class="language-plaintext highlighter-rouge">-d</code> option: Used to examine the space utilization information for each disk on a node.</li>
+  <li>The <code class="language-plaintext highlighter-rouge">-o</code> option: Direct the results to a specific file.</li>
+  <li>The <code class="language-plaintext highlighter-rouge">-j</code> option: Output the query results in JSON format.</li>
 </ul>
 
-<p>示例：</p>
+<p>Examples:</p>
+
 <div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>&gt;&gt;&gt; disk_capacity -n 127.0.0.1:34608 -d
 </code></pre></div></div>
 
-<h2 id="表管理">表管理</h2>
+<h2 id="table-management">Table management</h2>
 
 <table>
   <thead>
     <tr>
-      <th>子命令</th>
-      <th>功能</th>
+      <th>Subcommands</th>
+      <th>Functionality</th>
     </tr>
   </thead>
   <tbody>
     <tr>
       <td>ls</td>
-      <td>获取所有表的列表，可加<code class="language-plaintext highlighter-rouge">-d</code>选项获取各表的健康状况，可加<code class="language-plaintext highlighter-rouge">-a</code>选项包含已删除表的信息</td>
+      <td>Retrieve a list of all tables, with the option to add <code class="language-plaintext highlighter-rouge">-d</code> to obtain the health status of each table, and <code class="language-plaintext highlighter-rouge">-a</code> to include information on tables that have been deleted.</td>
     </tr>
     <tr>
       <td>app</td>
-      <td>获取某个表的信息，可加<code class="language-plaintext highlighter-rouge">-d</code>选项获取详细信息，包括各partition的分布情况、健康状况</td>
+      <td>Acquire information about a specific table, with the option to add <code class="language-plaintext highlighter-rouge">-d</code> for detailed information, including the distribution and health status of each partition.</td>
     </tr>
     <tr>
       <td>app_stat</td>
-      <td>获取表的读写情况和存储统计信息，可加<code class="language-plaintext highlighter-rouge">-a</code>选项指定单个表，以获取该表各个partition的详细统计信息</td>
+      <td>Obtain the read-write status and storage statistics of tables, with the option to add <code class="language-plaintext highlighter-rouge">-a</code> to specify an individual table and access detailed statistical information for each of its partitions.</td>
     </tr>
     <tr>
       <td>app_disk</td>
-      <td>获取某个表的详细存储信息，可加<code class="language-plaintext highlighter-rouge">-d</code>选项获取各partition的详细存储信息</td>
+      <td>Retrieve detailed storage information for a specific table, with the option to add <code class="language-plaintext highlighter-rouge">-d</code> to obtain comprehensive storage details for each partition.</td>
     </tr>
     <tr>
       <td>create</td>
-      <td>创建表，可加<code class="language-plaintext highlighter-rouge">-p</code>和<code class="language-plaintext highlighter-rouge">-r</code>选项指定分片数和副本数，要求分片数是2的指数倍，不指定 -r 则默认副本数为3（推荐值）</td>
+      <td>Create a table, with the option to add <code class="language-plaintext highlighter-rouge">-p</code> and <code class="language-plaintext highlighter-rouge">-r</code> to specify the number of partitions and replicas, respectively. The number of partitions must be a power of two. If <code class="language-plaintext highlighter-rouge">-r</code> is not specified, the default number of replicas is set to 3 (recommended value).</td>
     </tr>
     <tr>
       <td>drop</td>
-      <td>删除表，参见<a href="/administration/table-soft-delete#使用drop命令删除表">使用drop命令删除表</a></td>
+      <td>Delete a table, refer to <a href="/administration/table-soft-delete#drop_commands">use drop commands to delete a table</a>.</td>
     </tr>
     <tr>
       <td>recall</td>
-      <td>恢复已删除的表，参见<a href="/administration/table-soft-delete#使用recall命令恢复表">使用recall命令恢复表</a></td>
+      <td>Restore a previously deleted table, refer to <a href="/administration/table-soft-delete#recall_commands">use recall commands to recovery table</a>.</td>
     </tr>
     <tr>
       <td>get_app_envs</td>
-      <td>获取表的环境变量，参见<a href="/administration/table-env#get_app_envs">Table环境变量#get_app_envs</a></td>
+      <td>Retrieve the environmental variables of a table, refer to <a href="/administration/table-env#get_app_envs">Table environment#get_app_envs</a>.</td>
     </tr>
     <tr>
       <td>set_app_envs</td>
-      <td>设置表的环境变量，参见<a href="/administration/table-env#set_app_envs">Table环境变量#set_app_envs</a></td>
+      <td>Set the environmental variables for a table, refer to <a href="/administration/table-env#set_app_envs">Table environment#set_app_envs</a>.</td>
     </tr>
     <tr>
       <td>del_app_envs</td>
-      <td>删除表的环境变量，参见<a href="/administration/table-env#del_app_envs">Table环境变量#del_app_envs</a></td>
+      <td>Delete the environmental variables of a table, refer to <a href="/administration/table-env#del_app_envs">Table environment#del_app_envs</a>.</td>
     </tr>
     <tr>
       <td>clear_app_envs</td>
-      <td>清理表的环境变量，参见<a href="/administration/table-env#clear_app_envs">Table环境变量#clear_app_envs</a></td>
+      <td>Clean up the environmental variables of a table, refer to <a href="/administration/table-env#clear_app_envs">Table environment#clear_app_envs</a>.</td>
+    </tr>
+    <tr>
+      <td>add_dup</td>
+      <td>Add a cluster with duplication, refer to <a href="/administration/duplication">duplication</a>.</td>
+    </tr>
+    <tr>
+      <td>query_dup</td>
+      <td>Query the clusters for cross-data center synchronization of a table, refer to <a href="/administration/duplication">duplication</a>.</td>
+    </tr>
+    <tr>
+      <td>remove_dup</td>
+      <td>Remove a cluster with duplication, refer to <a href="/administration/duplication">duplication</a>.</td>
+    </tr>
+    <tr>
+      <td>start_dup</td>
+      <td>Initiate cross-data center synchronization and activate the duplication backup feature, refer to <a href="/administration/duplication">duplication</a>.</td>
+    </tr>
+    <tr>
+      <td>pause_dup</td>
+      <td>Pause cross-data center synchronization and suspend the duplication backup feature, refer to <a href="/administration/duplication">duplication</a>.</td>
+    </tr>
+    <tr>
+      <td>set_dup_fail_mode</td>
+      <td>Configure the handling method for duplication failures, setting it for a specified table and its synchronization cluster, with options to set as <strong>fail</strong> or <strong>skip</strong>.</td>
+    </tr>
+    <tr>
+      <td>get_replica_count</td>
+      <td>Retrieve the replica count parameter value for the table.</td>
+    </tr>
+    <tr>
+      <td>set_replica_count</td>
+      <td>Set the replica count parameter for the table.</td>
     </tr>
   </tbody>
 </table>
 
 <h3 id="ls">ls</h3>
-<p>获取所有表的列表。</p>
 
-<p>用法：</p>
-<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>USAGE:  ls                       [-a|-all] [-d|--detailed] [-o|--output file_name]
-                                 [-s|--status all|available|creating|dropping|dropped]
+<p>Retrieve a list of all tables.</p>
+
+<p>Usage:</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>USAGE:  ls                     [-a|-all] [-d|--detailed] [-o|--output file_name]
+                               [-s|--status all|available|creating|dropping|dropped]
 </code></pre></div></div>
 
-<p>说明：</p>
+<p>Explanation:</p>
+
 <ul>
-  <li><code class="language-plaintext highlighter-rouge">-a</code>选项：如果指定，则显示包括已被删除的所有表。</li>
-  <li><code class="language-plaintext highlighter-rouge">-d</code>选项：如果指定，则显示各个表的详细信息，主要是partition的健康状况。</li>
-  <li><code class="language-plaintext highlighter-rouge">-o</code>选项：如果指定，则将结果输出到参数所指定的文件中。</li>
-  <li><code class="language-plaintext highlighter-rouge">-s</code>选项：如果指定，则只显示符合参数所指定的状态的表。</li>
+  <li>The <code class="language-plaintext highlighter-rouge">-a</code> option: When specified, display all tables, including those that have been deleted.</li>
+  <li>The <code class="language-plaintext highlighter-rouge">-d</code> option: When specified, show detailed information for each table, primarily focusing on the health status of the partitions.</li>
+  <li>The <code class="language-plaintext highlighter-rouge">-o</code> option: When specified, direct the results to the file specified by the parameter.</li>
+  <li>The <code class="language-plaintext highlighter-rouge">-s</code> option: When specified, display only the tables that match the status specified by the parameter.</li>
 </ul>
 
-<p>示例：</p>
+<p>Examples:</p>
+
 <div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>&gt;&gt;&gt; ls -d -o ls.txt
 </code></pre></div></div>
 
 <h3 id="app">app</h3>
-<p>获取某个表的基本信息。</p>
 
-<p>用法：</p>
-<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>USAGE:  app                      &lt;app_name&gt; [-d|--detailed] [-o|--output file_name]
+<p>Acquire information about a specific table.</p>
+
+<p>Usage:</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>USAGE:  app                    &lt;app_name&gt; [-d|--detailed] [-o|--output file_name]
 </code></pre></div></div>
 
-<p>说明：</p>
+<p>Explanation:</p>
+
 <ul>
-  <li><code class="language-plaintext highlighter-rouge">-d</code>选项：如果指定，则显示各个表的详细信息，如partition的分布和健康状况。</li>
-  <li><code class="language-plaintext highlighter-rouge">-o</code>选项：如果指定，则将结果输出到参数所指定的文件中。</li>
+  <li>The <code class="language-plaintext highlighter-rouge">-d</code> option: When specified, display detailed information for each table, such as the distribution and health status of partitions.</li>
+  <li>The <code class="language-plaintext highlighter-rouge">-o</code> option: When specified, output the results to the file designated by the parameter.</li>
 </ul>
 
-<p>示例：</p>
+<p>Examples:</p>
+
 <div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>&gt;&gt;&gt; app temp
 </code></pre></div></div>
 
 <h3 id="app_stat">app_stat</h3>
-<p>获取表的读写和存储统计信息，如get、put、del等。</p>
 
-<p>用法：</p>
-<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>USAGE: app_stat                [-a|--app_name str] [-q|--only_qps] [-u|--only_usage]
+<p>Retrieve the read, write, and storage statistical information of the table, including operations like <strong>get</strong>, <strong>put</strong>, <strong>del</strong>, etc.</p>
+
+<p>Usage:</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>USAGE:  app_stat               [-a|--app_name str] [-q|--only_qps] [-u|--only_usage]
                                [-o|--output file_name]
 </code></pre></div></div>
 
-<p>示例：</p>
+<p>Examples:</p>
+
 <div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>&gt;&gt;&gt; app_stat temp
 </code></pre></div></div>
 
-<p>说明：</p>
+<p>Explanation:</p>
+
 <ul>
-  <li><code class="language-plaintext highlighter-rouge">-a</code>选项：如果指定，则按照指定表的partition分类显示详细信息。</li>
-  <li><code class="language-plaintext highlighter-rouge">-q</code>选项：如果指定，则仅显示指定表的qps信息。</li>
-  <li><code class="language-plaintext highlighter-rouge">-u</code>选项：如果指定，则仅显示指定表的usage信息。</li>
-  <li><code class="language-plaintext highlighter-rouge">-o</code>选项：如果指定，则把结果输出到指定文件中。</li>
+  <li>The <code class="language-plaintext highlighter-rouge">-a</code> option: When specified, display detailed information categorized by the partitions of the specified table.</li>
+  <li>The <code class="language-plaintext highlighter-rouge">-q</code> option: When specified, display only the QPS information of the specified table.</li>
+  <li>The <code class="language-plaintext highlighter-rouge">-u</code> option: When specified, display only the usage information of the specified table.</li>
+  <li>The <code class="language-plaintext highlighter-rouge">-o</code> option: When specified, output the results to the specified file.</li>
 </ul>
 
 <h3 id="app_disk">app_disk</h3>
-<p>获取某个表的详细存储信息。</p>
 
-<p>用法：</p>
-<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>USAGE: app_disk                   &lt;app_name&gt; [-d|--detailed] [-o|--output file_name]
+<p>Retrieve detailed storage information for a specific table.</p>
+
+<p>Usage:</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>USAGE:  app_disk                &lt;app_name&gt; [-d|--detailed] [-o|--output file_name]
 </code></pre></div></div>
 
-<p>说明：</p>
+<p>Explanation:</p>
+
 <ul>
-  <li><code class="language-plaintext highlighter-rouge">-d</code>选项：如果指定，则可以获取表的详细信息，如primary和secondary情况。</li>
-  <li><code class="language-plaintext highlighter-rouge">-o</code>选项：如果指定，则将结果输出到参数所指定的文件中。</li>
+  <li>The <code class="language-plaintext highlighter-rouge">-d</code> option: When specified, will allows for obtaining detailed information about the table, such as the status of primary and secondary elements.</li>
+  <li>The <code class="language-plaintext highlighter-rouge">-o</code> option: When specified, output the results to the specified file.</li>
 </ul>
 
-<p>示例：</p>
+<p>Examples:</p>
+
 <div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>&gt;&gt;&gt; app_disk temp
 </code></pre></div></div>
 
 <h3 id="create">create</h3>
-<p>创建表</p>
 
-<p>用法：</p>
-<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>USAGE: create                    &lt;app_name&gt; [-p|--partition_count num] [-r|--replica_count num]
-                                            [-e|--envs k1=v1,k2=v2...]
+<p>Create table.</p>
+
+<p>Usage:</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>USAGE: create                  &lt;app_name&gt; [-p|--partition_count num] [-r|--replica_count num]
+                                          [-e|--envs k1=v1,k2=v2...]
 </code></pre></div></div>
 
-<p>说明：</p>
+<p>Explanation:</p>
+
 <ul>
-  <li><code class="language-plaintext highlighter-rouge">-p</code>选项：如果指定，则可以设置分片数，要求分片数是2的指数倍。</li>
-  <li><code class="language-plaintext highlighter-rouge">-r</code>选项：如果指定，则可以指定副本数，推荐副本数为3。</li>
-  <li><code class="language-plaintext highlighter-rouge">-e</code>选项：如果指定，则可是设置环境变量，参见<a href="/administration/table-env">Table环境变量</a>。</li>
+  <li>The <code class="language-plaintext highlighter-rouge">-p</code> option: When specified, will allows for setting the number of partitions, with the requirement that the number of partitions be a power of two.</li>
+  <li>The <code class="language-plaintext highlighter-rouge">-r</code> option: When specified, will allows for specifying the number of replicas, with a recommended replica count of 3.</li>
+  <li>The <code class="language-plaintext highlighter-rouge">-e</code> option: When specified, will allows for setting environmental variables, refer to <a href="/administration/table-env">Table environment</a>.</li>
 </ul>
 
-<p>示例：</p>
+<p>Examples:</p>
+
 <div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>&gt;&gt;&gt; create temp
 </code></pre></div></div>
 
 <h3 id="drop">drop</h3>
-<p>删除表</p>
 
-<p>用法：</p>
-<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>USAGE: drop                      &lt;app_name&gt; [-r|--reserve_seconds num]
+<p>Delete table.</p>
+
+<p>Usage:</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>USAGE: drop                    &lt;app_name&gt; [-r|--reserve_seconds num]
 </code></pre></div></div>
 
-<p>说明：</p>
+<p>Explanation:</p>
+
 <ul>
-  <li><code class="language-plaintext highlighter-rouge">-r</code>选项：如果指定，则设置数据的保留时间（删除时间开始计算，单位为秒）。如果不指定，则使用配置文件hold_seconds_for_dropped_app指定的值，默认为7天，参见<a href="/administration/table-soft-delete#使用drop命令删除表">Table软删除#使用drop命令删除表</a>。</li>
+  <li>The <code class="language-plaintext highlighter-rouge">-r</code> option: When specified, will sets the data retention duration (counted from the time of deletion, in seconds). If not specified, it uses the value from the configuration file hold_seconds_for_dropped_app, which defaults to 7 days, refer to <a href="/administration/table-soft-delete#drop_commands">Table soft delete#drop_commands</a>.</li>
 </ul>
 
-<p>示例：</p>
+<p>Examples:</p>
+
 <div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>&gt;&gt;&gt; drop temp
 </code></pre></div></div>
 
 <h3 id="recall">recall</h3>
-<p>恢复已经删除的表。</p>
 
-<p>用法：</p>
-<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>USAGE: recall                    &lt;app_id&gt; [new_app_name]
+<p>Restore a previously deleted table.</p>
+
+<p>Usage:</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>USAGE: recall                  &lt;app_id&gt; [new_app_name]
 </code></pre></div></div>
 
-<p>说明：</p>
+<p>Explanation:</p>
+
 <ul>
-  <li>注意该命令通过app_id进行表恢复。</li>
-  <li><code class="language-plaintext highlighter-rouge">new_app_name</code>参数：如果不指定新表名，则会使用原表名，否则使用指定的新表名，如果原表名已存在（删表后新建了同名表），则必须指定另外一个不同的新表名，否则会失败。</li>
-  <li>详细信息参见<a href="/administration/table-soft-delete#使用recall命令恢复表">Table软删除#使用recall命令恢复表</a>。</li>
+  <li>Note that this command restores tables using the <code class="language-plaintext highlighter-rouge">app_id</code>.</li>
+  <li>The <code class="language-plaintext highlighter-rouge">new_app_name</code> parameter: If a new table name is not specified, the original table name will be used. Otherwise, the specified new table name will be adopted. If the original table name already exists (a new table with the same name was created after the deletion), a different new table name must be specified; otherwise, the operation will fail.</li>
+  <li>For more information please to refer to <a href="/administration/table-soft-delete#recall_commands">Table soft delete#recall_commands</a>.</li>
 </ul>
 
-<p>示例：</p>
+<p>Examples:</p>
+
 <div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>&gt;&gt;&gt; recall 19
 </code></pre></div></div>
 
 <h3 id="get_app_envs">get_app_envs</h3>
-<p>获取表的环境变量，关于环境变量请参见<a href="/administration/table-env">Table环境变量</a>。</p>
 
-<p>用法：</p>
+<p>Retrieve the environmental variables of a table. For more information about environmental variables, please refer to <a href="/administration/table-env">Table environment</a>.</p>
+
+<p>Usage:</p>
+
 <div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>USAGE: get_app_envs
 </code></pre></div></div>
 
-<p>说明：</p>
+<p>Explanation:</p>
+
 <ul>
-  <li>该命令输出当前表的环境变量，使用前请首先使用<code class="language-plaintext highlighter-rouge">use [app_name]</code>选定特定表，参见<a href="/administration/table-env#get_app_envs">get_app_envs</a>。</li>
+  <li>This command outputs the current environmental variables of the table. Please use <code class="language-plaintext highlighter-rouge">use [app_name]</code> to select a specific table before executing this command. For reference, see <a href="/administration/table-env#get_app_envs">get_app_envs</a>.</li>
 </ul>
 
-<p>示例：</p>
+<p>Examples:</p>
+
 <div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>&gt;&gt;&gt; use temp
 &gt;&gt;&gt; get_app_envs
 </code></pre></div></div>
 
 <h3 id="set_app_envs">set_app_envs</h3>
-<p>设置表的环境变量，关于环境变量请参见<a href="/administration/table-env">Table环境变量</a>。</p>
 
-<p>用法：</p>
-<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>USAGE: set_app_envs              &lt;key&gt; &lt;value&gt; [key value...]
+<p>Set the environmental variables for a table. For more information about environmental variables, please refer to <a href="/administration/table-env">Table environment</a>.</p>
+
+<p>Usage:</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>USAGE: set_app_envs            &lt;key&gt; &lt;value&gt; [key value...]
 </code></pre></div></div>
 
-<p>说明：</p>
+<p>Explanation:</p>
+
 <ul>
-  <li>该命令设置当前表的环境变量，使用前请首先使用<code class="language-plaintext highlighter-rouge">use [app_name]</code>选定特定表，参见<a href="/administration/table-env#set_app_envs">set_app_envs</a>。</li>
+  <li>This command will set the current environmental variables of the table. Please use <code class="language-plaintext highlighter-rouge">use [app_name]</code> to select a specific table before executing this command. For reference, see <a href="/administration/table-env#get_app_envs">get_app_envs</a>.</li>
 </ul>
 
-<p>示例：</p>
+<p>Examples:</p>
+
 <div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>&gt;&gt;&gt; use temp
 &gt;&gt;&gt; set_app_envs rocksdb.usage_scenario bulk_load
 </code></pre></div></div>
 
 <h3 id="del_app_envs">del_app_envs</h3>
-<p>删除表的环境变量，关于环境变量请参见<a href="/administration/table-env">Table环境变量</a>。</p>
 
-<p>用法：</p>
-<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>USAGE: del_app_envs              &lt;key&gt; [key...]
+<p>Delete the environmental variables of a table. For more information about environmental variables, please refer to <a href="/administration/table-env">Table environment</a>.</p>
+
+<p>Usage:</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>USAGE: del_app_envs            &lt;key&gt; [key...]
 </code></pre></div></div>
 
-<p>说明：</p>
+<p>Explanation:</p>
+
 <ul>
-  <li>该命令删除当前表的环境变量，使用前请首先使用<code class="language-plaintext highlighter-rouge">use [app_name]</code>选定特定表，参见<a href="/administration/table-env#del_app_envs">del_app_envs</a>。</li>
+  <li>This command delete the environmental variables of the current table. Please use <code class="language-plaintext highlighter-rouge">use [app_name]</code> to select a specific table before executing this command. For reference, see <a href="/administration/table-env#get_app_envs">get_app_envs</a>.</li>
 </ul>
 
-<p>示例：</p>
+<p>Examples:</p>
+
 <div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>&gt;&gt;&gt; use temp
 &gt;&gt;&gt; del_app_envs rocksdb.usage_scenario
 </code></pre></div></div>
 
 <h3 id="clear_app_envs">clear_app_envs</h3>
-<p>清理表的环境变量，关于环境变量请参见<a href="/administration/table-env">Table环境变量</a>。</p>
 
-<p>用法：</p>
-<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>USAGE: clear_app_envs              [-a|--all] [-p|--prefix str]
+<p>Cleanse the environmental variables of the table. For further details regarding environmental variables, kindly refer to <a href="/administration/table-env">Table environment</a>.</p>
+
+<p>Usage:</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>USAGE: clear_app_envs          [-a|--all] [-p|--prefix str]
 </code></pre></div></div>
 
-<p>说明：</p>
+<p>Explanation:</p>
+
 <ul>
-  <li>该命令删除当前表的环境变量，使用前请首先使用<code class="language-plaintext highlighter-rouge">use [app_name]</code>选定特定表，参见<a href="/administration/table-env#clear_app_envs">clear_app_envs</a>。</li>
-  <li><code class="language-plaintext highlighter-rouge">-a</code>选项：如果指定，则清理所有的环境变量。</li>
-  <li><code class="language-plaintext highlighter-rouge">-p</code>选项：如果指定，则可以清理以特定字符串为前缀的环境变量。</li>
+  <li>This command eradicates the present table’s environmental variables. Prior to employment, please ensure to employ <code class="language-plaintext highlighter-rouge">use [app_name]</code> to designate a specific table, as referenced in <a href="/administration/table-env#clear_app_envs">clear_app_envs</a>.</li>
+  <li>The <code class="language-plaintext highlighter-rouge">-a</code> option: When specified, it results in the purging of all environmental variables.</li>
+  <li>The <code class="language-plaintext highlighter-rouge">-p</code> option: When specified, it allows for the elimination of environmental variables with a specific prefix string.</li>
 </ul>
 
-<p>示例：</p>
+<p>Examples:</p>
+
 <div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>&gt;&gt;&gt; use temp
 &gt;&gt;&gt; clear_app_envs -p rocksdb
 </code></pre></div></div>
 
-<h2 id="数据操作">数据操作</h2>
+<h3 id="add_dup">add_dup</h3>
+
+<p>Incorporate a cluster with duplication, as indicated in <a href="/administration/duplication">duplication</a>.</p>
+
+<p>Usage:</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>USAGE: add_dup                 &lt;app_name&gt; &lt;remote_cluster_name&gt;
+</code></pre></div></div>
+
+<p>Explanation:</p>
+
+<ul>
+  <li>Apply the specified duplication cluster to the designated table.</li>
+</ul>
+
+<p>Examples:</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>&gt;&gt;&gt; add_dup temp my_cluster
+</code></pre></div></div>
+
+<h3 id="query_dup">query_dup</h3>
+
+<p>Retrieve the clusters responsible for cross-data center synchronization of the table, as referenced in <a href="/administration/duplication">duplication</a>.</p>
+
+<p>Usage:</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>USAGE: query_dup               &lt;app_name&gt; [-d|--detail]
+</code></pre></div></div>
+
+<p>Explanation:</p>
+
+<ul>
+  <li>The <code class="language-plaintext highlighter-rouge">-d</code> option: When specified, print out the detailed information.</li>
+</ul>
+
+<p>Examples:</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>&gt;&gt;&gt; query_dup temp -d
+</code></pre></div></div>
+
+<h3 id="remove_dup">remove_dup</h3>
+
+<p>Remove a duplication cluster, as specified in <a href="/administration/duplication">duplication</a>.</p>
+
+<p>Usage:</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>USAGE: remove_dup              &lt;app_name&gt; &lt;dup_id&gt;
+</code></pre></div></div>
+
+<p>Examples:</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>&gt;&gt;&gt; remove_dup temp my_cluster:8000
+</code></pre></div></div>
+
+<h3 id="start_dup">start_dup</h3>
+
+<p>Initiate cross-data center synchronization and activate the duplication backup feature, as described in <a href="/administration/duplication">duplication</a>.</p>
+
+<p>Usage:</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>USAGE: start_dup               &lt;app_name&gt; &lt;dup_id&gt;
+</code></pre></div></div>
+
+<p>Examples:</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>&gt;&gt;&gt; start_dup temp my_cluster
+</code></pre></div></div>
+
+<h3 id="pause_dup">pause_dup</h3>
+
+<p>Pause cross-data center synchronization and suspend the duplication backup feature, as outlined in <a href="/administration/duplication">duplication</a>.</p>
+
+<p>Usage:</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>USAGE: pause_dup               &lt;app_name&gt; &lt;dup_id&gt;
+</code></pre></div></div>
+
+<p>Explanation:</p>
+
+<ul>
+  <li>This command pause the present app’s duplication function. Prior to employment, please ensure to employ <code class="language-plaintext highlighter-rouge">use [app_name]</code> to designate a specific table.</li>
+</ul>
+
+<p>Examples:</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>&gt;&gt;&gt; pause_dup temp my_cluster
+&gt;&gt;&gt;
+</code></pre></div></div>
+
+<h3 id="set_dup_fail_mode">set_dup_fail_mode</h3>
+
+<p>Configure the handling method for duplication failures for a specified table and synchronization cluster. Options include <code class="language-plaintext highlighter-rouge">fail</code> and <code class="language-plaintext highlighter-rouge">skip</code>.</p>
+
+<p>Usage:</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>USAGE: set_dup_fail_mode       &lt;app_name&gt; &lt;dup_id&gt; &lt;slow|skip&gt;
+</code></pre></div></div>
+
+<p>Explanation:</p>
+
+<ul>
+  <li>The <code class="language-plaintext highlighter-rouge">slow mode</code> is the default mode. In this mode, it will endlessly retry for any failure.</li>
+  <li>The <code class="language-plaintext highlighter-rouge">skip mode</code> when encountering a failure that persists through multiple retries, it will skip the hot backup for the current batch of data and proceed to replicate the next batch.</li>
+</ul>
+
+<p>Examples:</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>&gt;&gt;&gt; set_dup_fail_mode temp my_cluster slow
+&gt;&gt;&gt; set_dup_fail_mode temp my_cluster skip
+</code></pre></div></div>
+
+<h3 id="get_replica_count">get_replica_count</h3>
+
+<p>Retrieve the parameter value for the number of replicas for the table.</p>
+
+<p>Usage:</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>USAGE:  get_replica_count       &lt;app_name&gt;
+</code></pre></div></div>
+
+<p>Examples:</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>&gt;&gt;&gt; get_replica_count temp
+&gt;&gt;&gt; the replica count of app(temp) is 3
+</code></pre></div></div>
+
+<h3 id="set_replica_count">set_replica_count</h3>
+
+<p>Set the replica count parameter for the table.</p>
+
+<p>Usage:</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>USAGE: set_replica_count       &lt;app_name&gt; &lt;replica_count&gt;
+</code></pre></div></div>
+
+<p>Examples:</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>&gt;&gt;&gt; set_replica_count temp 4
+&gt;&gt;&gt; PLEASE be CAUTIOUS with this operation ! Are you sure to set the replica count of app(temp) to 4 ? [Y/n]: Y
+</code></pre></div></div>
+
+<h2 id="data-manipulation">Data manipulation</h2>
 
 <table>
   <thead>
     <tr>
-      <th>子命令</th>
-      <th>功能</th>
+      <th>Subcommands</th>
+      <th>Functionality</th>
     </tr>
   </thead>
   <tbody>
     <tr>
       <td>set</td>
-      <td>设置单条数据</td>
+      <td>Set a single piece of data.</td>
     </tr>
     <tr>
       <td>multi_set</td>
-      <td>设置同一HashKey下的多条数据</td>
+      <td>Configure multiple pieces of data under the same HashKey.</td>
     </tr>
     <tr>
       <td>get</td>
-      <td>获取单条数据</td>
+      <td>Retrieve a single piece of data.</td>
     </tr>
     <tr>
       <td>multi_get</td>
-      <td>通过指定多个SortKey，获取同一HashKey下的多条数据</td>
+      <td>Retrieve multiple pieces of data under the same HashKey by specifying multiple SortKeys.</td>
     </tr>
     <tr>
       <td>multi_get_range</td>
-      <td>通过指定SortKey的查询范围和过滤条件，获取同一HashKey下的多条数据</td>
+      <td>Retrieve multiple pieces of data under the same HashKey by specifying a query range and filtering criteria for the SortKey.</td>
     </tr>
     <tr>
       <td>multi_get_sortkeys</td>
-      <td>获取同一HashKey下的所有SortKey</td>
+      <td>Retrieve all SortKeys under the same HashKey.</td>
     </tr>
     <tr>
       <td>del</td>
-      <td>删除单条数据</td>
+      <td>Delete a single piece of data.</td>
     </tr>
     <tr>
       <td>multi_del</td>
-      <td>通过指定多个SortKey，删除同一HashKey下的多条数据</td>
+      <td>Delete multiple pieces of data under the same HashKey by specifying multiple SortKeys.</td>
     </tr>
     <tr>
       <td>multi_del_range</td>
-      <td>通过指定SortKey的查询范围和过滤条件，删除同一HashKey下的多条数据</td>
+      <td>Delete multiple pieces of data under the same HashKey by specifying a query range and filtering criteria for the SortKey.</td>
     </tr>
     <tr>
       <td>incr</td>
-      <td><a href="/api/single-atomic#原子增减">原子增减操作</a></td>
+      <td><a href="/api/single-atomic#Atomic-Increment-Decrement">Atomic Increment-Decrement</a>.</td>
     </tr>
     <tr>
       <td>check_and_set</td>
-      <td><a href="/api/single-atomic#cas操作">原子CAS操作</a></td>
+      <td><a href="/api/single-atomic#cas-operation">Atomic CAS operation</a>.</td>
     </tr>
     <tr>
       <td>check_and_mutate</td>
-      <td><a href="/clients/java-client#checkandmutate">原子CAS扩展版本</a></td>
+      <td><a href="/clients/java-client#checkandmutate">Atomic CAS extented version</a>.</td>
     </tr>
     <tr>
       <td>exist</td>
-      <td>查询某条数据是否存在</td>
+      <td>Query whether a specific piece of data exists.</td>
     </tr>
     <tr>
       <td>count</td>
-      <td>获取同一HashKey下的SortKey的个数</td>
+      <td>Retrieve the count of SortKeys under the same HashKey.</td>
     </tr>
     <tr>
       <td>ttl</td>
-      <td>查询某条数据的TTL（Time To Live）时间，返回剩余的live时间，单位为秒；返回Infinite表示没有TTL限制</td>
+      <td>Inquire about the TTL (Time To Live) duration for a specific piece of data, returning the remaining live time in seconds. If “Infinite” is returned, it indicates there is no TTL limit.</td>
     </tr>
     <tr>
       <td>hash</td>
-      <td>计算键值的哈希值</td>
+      <td>Compute the hash value of the key.</td>
     </tr>
     <tr>
       <td>hash_scan</td>
-      <td>逐条扫描同一HashKey下的数据，可指定SortKey的查询范围和过滤条件，结果按照SortKey排序</td>
+      <td>Scan the data under the same HashKey one item at a time, with the option to specify a query range and filtering criteria for the SortKey. The results will be sorted by SortKey.</td>
     </tr>
     <tr>
       <td>full_scan</td>
-      <td>对表进行全扫描，可指定HashKey、SortKey和Value的过滤条件，同一HashKey的结果按照SortKey排序，HashKey之间无顺序保证</td>
+      <td>Perform a full scan of the table, with the option to specify filtering conditions for HashKey, SortKey, and Value. Results under the same HashKey will be sorted by SortKey. There is no guaranteed order between HashKeys.</td>
     </tr>
     <tr>
       <td>copy_data</td>
-      <td>将一个表的数据逐条插入到另外一个表，源表通过<code class="language-plaintext highlighter-rouge">use</code>命令指定，目标表通过<code class="language-plaintext highlighter-rouge">-c</code>和<code class="language-plaintext highlighter-rouge">-a</code>命令执行，目标表可以在另外一个集群，详细用法参见<a href="/administration/table-migration#copy_data迁移">Table迁移#copy_data迁移</a>，可指定HashKey、SortKey和Value的过滤条件</td>
+      <td>Insert the data from one table into another table one item at a time. Specify the source table using the <code class="language-plaintext highlighter-rouge">use</code> command and the target table using the <code class="language-plaintext highlighter-rouge">-c</code> and <code class="language-plaintext highlighter-rouge">-a</code> commands. The target table can be in another cluster. For detailed usage, refer to <a href="/administration/table-migration#copy-data-migration">Table Migration#copy_data_migration</a>. You can specify filtering conditions for HashKey, SortKey, and Value.</td>
     </tr>
     <tr>
       <td>clear_data</td>
-      <td>将一个表的数据逐条删除，实际上就是先扫描数据，然后对每一条数据执行删除操作，可指定HashKey、SortKey和Value的过滤条件</td>
+      <td>Delete the data from one table one item at a time, which involves scanning the data and performing deletion for each item. You can specify filtering conditions for HashKey, SortKey, and Value.</td>
     </tr>
     <tr>
       <td>count_data</td>
-      <td>统计一个表的数据条数，可加<code class="language-plaintext highlighter-rouge">-z</code>选项统计数据大小，可指定HashKey、SortKey和Value的过滤条件</td>
+      <td>Count the number of data items in a table, with the option to add <code class="language-plaintext highlighter-rouge">-z</code> to calculate the data size. You can also specify filtering conditions for HashKey, SortKey, and Value.</td>
     </tr>
   </tbody>
 </table>
 
 <h3 id="set">set</h3>
-<p>设置单条数据。</p>
 
-<p>用法：</p>
+<p>Set a single piece of data.</p>
+
+<p>Usage:</p>
+
 <div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>USAGE:  set                    &lt;hash_key&gt; &lt;sort_key&gt; &lt;value&gt; [ttl_in_seconds]
 </code></pre></div></div>
 
-<p>说明：</p>
+<p>Explanation:</p>
+
 <ul>
-  <li>写入数据的格式必须为<code class="language-plaintext highlighter-rouge">hash_key</code>+<code class="language-plaintext highlighter-rouge">sort_key</code>+<code class="language-plaintext highlighter-rouge">value</code>。</li>
-  <li><code class="language-plaintext highlighter-rouge">ttl_in_seconds</code>参数：如果指定，则设置该条数据的存活时间，单位为秒。</li>
+  <li>The data format for writing must follow the pattern <code class="language-plaintext highlighter-rouge">hash_key</code> + <code class="language-plaintext highlighter-rouge">sort_key</code> + <code class="language-plaintext highlighter-rouge">value</code>.</li>
+  <li>The <code class="language-plaintext highlighter-rouge">ttl_in_seconds</code> parameter: When specified, it sets the lifespan of the data item in seconds.</li>
 </ul>
 
-<p>示例：</p>
-<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>&gt;&gt;&gt; set xiaomi cloud 000
+<p>Examples:</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>&gt;&gt;&gt; set pegasus cloud 000
 </code></pre></div></div>
 
 <h3 id="multi_set">multi_set</h3>
-<p>设置同一hash_key下的多条数据。</p>
 
-<p>用法：</p>
-<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>USAGE:  multi_set                    &lt;hash_key&gt; &lt;sort_key&gt; &lt;value&gt; [sort_key value...]
+<p>Configure multiple pieces of data under the same <strong>HashKey</strong>.</p>
+
+<p>Usage:</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>USAGE:  multi_set              &lt;hash_key&gt; &lt;sort_key&gt; &lt;value&gt; [sort_key value...]
 </code></pre></div></div>
 
-<p>说明：</p>
+<p>Explanation:</p>
+
 <ul>
-  <li>sort_key是pegasus定义的一种数据模型，详细信息参见<a href="/overview/data-model">数据模型</a>。</li>
-  <li>不同的sort_key名字必须不同，否则会输出“ERROR: duplicate sort key <sort_key>”。</sort_key></li>
+  <li>Sort_key is a data model defined by Pegasus. For detailed information, please refer to the <a href="/overview/data-model">Data Model</a>.</li>
+  <li>Different sort_key names must be distinct; otherwise, an “ERROR: duplicate sort key <sort_key>" will be generated.</sort_key></li>
 </ul>
 
-<p>示例：</p>
-<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>&gt;&gt;&gt; multi_set xiaomi cloud0 000 cloud1 001
+<p>Examples:</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>&gt;&gt;&gt; multi_set pegasus cloud0 000 cloud1 001
 </code></pre></div></div>
 
 <h3 id="get">get</h3>
-<p>获取单条数据。</p>
 
-<p>用法：</p>
+<p>Retrieve a single piece of data.</p>
+
+<p>Usage:</p>
+
 <div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>USAGE:  get                    &lt;hash_key&gt; &lt;sort_key&gt;
 </code></pre></div></div>
 
-<p>示例：</p>
-<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>&gt;&gt;&gt; get xiaomi cloud
+<p>Examples:</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>&gt;&gt;&gt; get pegasus cloud
 </code></pre></div></div>
 
 <h3 id="multi_get">multi_get</h3>
-<p>通过指定多个SortKey，获取同一HashKey下的多条数据。</p>
 
-<p>用法：</p>
+<p>Retrieve multiple pieces of data under the same <strong>HashKey</strong> by specifying multiple SortKeys.</p>
+
+<p>Usage:</p>
+
 <div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>USAGE:  multi_get              &lt;hash_key&gt; [sort_key...]
 </code></pre></div></div>
 
-<p>示例：</p>
-<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>&gt;&gt;&gt; multi_get xiaomi cloud0 cloud1
+<p>Examples:</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>&gt;&gt;&gt; multi_get pegasus cloud0 cloud1
 </code></pre></div></div>
 
 <h3 id="multi_get_range">multi_get_range</h3>
-<p>通过指定SortKey的查询范围和过滤条件，获取同一HashKey下的多条数据。</p>
 
-<p>用法：</p>
+<p>Retrieve multiple pieces of data under the same <strong>HashKey</strong> by specifying a query range and filtering criteria for the <strong>SortKey</strong>.</p>
+
+<p>Usage:</p>
+
 <div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>USAGE:  multi_get_range        &lt;hash_key&gt; &lt;start_sort_key&gt; &lt;stop_sort_key&gt;
                                [-a|--start_inclusive true|false] [-b|--stop_inclusive true|false]
                                [-s|--sort_key_filter_type anywhere|prefix|postfix]
@@ -1642,58 +1958,71 @@ Options for subcommand 'shell':
                                [-i|--no_value] [-r|--reverse]
 </code></pre></div></div>
 
-<p>说明：</p>
+<p>Explanation:</p>
+
 <ul>
-  <li><code class="language-plaintext highlighter-rouge">-a|--start_inclusive</code>参数：指定是否包含StartSortKey，默认为true。</li>
-  <li><code class="language-plaintext highlighter-rouge">-b|--stop_inclusive</code>参数：指定是否包含StopSortKey，默认为false。</li>
-  <li><code class="language-plaintext highlighter-rouge">-s|--sort_key_filter_type</code>参数：指定SortKey的过滤类型，包括无过滤、任意位置匹配、前缀匹配和后缀匹配，默认无过滤。</li>
-  <li><code class="language-plaintext highlighter-rouge">-y|--sort_key_filter_pattern</code>参数：指定SortKey的过滤模式串，空串相当于无过滤。</li>
-  <li><code class="language-plaintext highlighter-rouge">-n|--max_count</code>参数：指定最多读取的数据条数。</li>
-  <li><code class="language-plaintext highlighter-rouge">-i|--no_value</code>参数：指定是否只返回HashKey和SortKey，不返回Value数据，默认为false。</li>
-  <li><code class="language-plaintext highlighter-rouge">-r|--reverse</code>参数：是否逆向扫描数据库，从后往前查找数据，但是查找得到的结果在list中还是按照SortKey从小到大顺序存放。该参数从<a href="https://github.com/apache/incubator-pegasus/releases/tag/v1.8.0">v1.8.0版本</a>开始支持。</li>
+  <li><code class="language-plaintext highlighter-rouge">-a|--start_inclusive</code>: Specifies whether to include the StartSortKey. Default is true.</li>
+  <li><code class="language-plaintext highlighter-rouge">-b|--stop_inclusive</code>: Specifies whether to include the StopSortKey. Default is false.</li>
+  <li><code class="language-plaintext highlighter-rouge">-s|--sort_key_filter_type</code>: Specifies the filter type for <strong>SortKey</strong>, including no filter, any position match, prefix match, and suffix match. Default is no filter.</li>
+  <li><code class="language-plaintext highlighter-rouge">-y|--sort_key_filter_pattern</code>: Specifies the filter pattern for <strong>SortKey</strong>. An empty string is equivalent to no filter.</li>
+  <li><code class="language-plaintext highlighter-rouge">-n|--max_count</code>: Specifies the maximum number of data items to read.</li>
+  <li><code class="language-plaintext highlighter-rouge">-i|--no_value</code>: Specifies whether to only return <strong>HashKey</strong> and <strong>SortKey</strong> without returning <strong>Value</strong> data. Default is false.</li>
+  <li><code class="language-plaintext highlighter-rouge">-r|--reverse</code>: Specifies whether to scan the database in reverse order, from the end to the beginning while returning results in ascending <strong>SortKey</strong> order. This parameter is supported from <a href="https://github.com/apache/incubator-pegasus/releases/tag/v1.8.0">v1.8.0 version</a> onward.</li>
 </ul>
 
-<p>示例：</p>
-<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>&gt;&gt;&gt; multi_get_range xioami cloud0 cloud5 -a true -b true -s prefix -y str -n 100 -i false -r false
+<p>Examples:</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>&gt;&gt;&gt; multi_get_range pegasus cloud0 cloud5 -a true -b true -s prefix -y str -n 100 -i false -r false
 </code></pre></div></div>
 
 <h3 id="multi_get_sortkeys">multi_get_sortkeys</h3>
-<p>获取同一HashKey下的所有SortKey。</p>
 
-<p>用法：</p>
+<p>Retrieve all SortKeys under the same <strong>HashKey</strong>.</p>
+
+<p>Usage:</p>
+
 <div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>USAGE:  multi_get_sortkeys     &lt;hash_key&gt;
 </code></pre></div></div>
 
-<p>示例：</p>
-<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>&gt;&gt;&gt; multi_get_sortkeys xiaomi
+<p>Examples:</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>&gt;&gt;&gt; multi_get_sortkeys pegasus
 </code></pre></div></div>
 
 <h3 id="del">del</h3>
-<p>删除单条数据。</p>
 
-<p>用法：</p>
+<p>Delete a single piece of data.</p>
+
+<p>Usage:</p>
+
 <div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>USAGE:  del                    &lt;hash_key&gt; &lt;sort_key&gt;
 </code></pre></div></div>
 
-<p>示例：</p>
-<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>&gt;&gt;&gt; del xiaomi cloud0
+<p>Examples:</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>&gt;&gt;&gt; del pegasus cloud0
 </code></pre></div></div>
 
 <h3 id="multi_del">multi_del</h3>
-<p>通过指定多个SortKey，删除同一HashKey下的多条数据。</p>
 
-<p>用法：</p>
+<p>Delete multiple pieces of data under the same <strong>HashKey</strong> by specifying multiple <strong>SortKey</strong>s.</p>
+
+<p>Usage:</p>
+
 <div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>USAGE:  multi_del              &lt;hash_key&gt; &lt;sort_key&gt; [sort_key...]
 </code></pre></div></div>
 
-<p>示例：</p>
-<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>&gt;&gt;&gt; multi_del del xiaomi cloud0 cloud1
+<p>Examples:</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>&gt;&gt;&gt; multi_del del pegasus cloud0 cloud1
 </code></pre></div></div>
 
 <h3 id="multi_del_range">multi_del_range</h3>
-<p>通过指定SortKey的查询范围和过滤条件，删除同一HashKey下的多条数据。</p>
 
-<p>用法：</p>
+<p>Delete multiple pieces of data under the same <strong>HashKey</strong> by specifying a query range and filtering criteria for the <strong>SortKey</strong>.</p>
+
+<p>Usage:</p>
+
 <div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>USAGE:  multi_del_range        &lt;hash_key&gt; &lt;start_sort_key&gt; &lt;stop_sort_key&gt;
                                [-a|--start_inclusive true|false] [-b|--stop_inclusive true|false]
                                [-s|--sort_key_filter_type anywhere|prefix|postfix]
@@ -1701,36 +2030,44 @@ Options for subcommand 'shell':
                                [-i|--silent]
 </code></pre></div></div>
 
-<p>说明：</p>
+<p>Explanation:</p>
+
 <ul>
-  <li><code class="language-plaintext highlighter-rouge">-i|--silent</code>参数：如果为<code class="language-plaintext highlighter-rouge">true</code>表示不打印删除时的日志。</li>
-  <li>其余参数，参见<a href="#multi_get_range">multi_get_range</a>说明。</li>
+  <li>The <code class="language-plaintext highlighter-rouge">-i|--silent</code> parameter: If set to <code class="language-plaintext highlighter-rouge">true</code>, it means not to print logs during deletion.</li>
+  <li>The rest of the parameters are explained in the <a href="#multi_get_range">multi_get_range</a> section.</li>
 </ul>
 
-<p>示例：</p>
-<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>&gt;&gt;&gt; multi_del_range xioami cloud0 cloud5 -a true -b true -s prefix -y str -n 100 -i false -r false
+<p>Examples:</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>&gt;&gt;&gt; multi_del_range pegasus cloud0 cloud5 -a true -b true -s prefix -y str -n 100 -i false -r false
 </code></pre></div></div>
 
 <h3 id="incr">incr</h3>
-<p>原子增减操作。</p>
 
-<p>用法：</p>
-<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>USAGE:  incr                 &lt;hash_key&gt; &lt;sort_key&gt; [increment]
+<p>Atomic increment and decrement operations.</p>
+
+<p>Usage:</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>USAGE:  incr                   &lt;hash_key&gt; &lt;sort_key&gt; [increment]
 </code></pre></div></div>
 
-<p>说明：</p>
+<p>Explanation:</p>
+
 <ul>
-  <li>操作数increment可以为正数也可以为负数，所以一个incr接口就可以实现原子增或者原子减，详情参照<a href="/api/single-atomic#原子增减">原子增减</a>。</li>
+  <li>The operand “increment” can be either positive or negative, so a single “incr” interface can be used to achieve both atomic increment and atomic decrement. For more details, please refer to <a href="/api/single-atomic#Atomic-Increment-Decrement">Atomic Increment/Decrement</a>.</li>
 </ul>
 
-<p>示例：</p>
-<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>&gt;&gt;&gt; incr  cloud0 xiaomi 1
+<p>Examples:</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>&gt;&gt;&gt; incr  cloud0 pegasus 1
 </code></pre></div></div>
 
 <h3 id="check_and_set">check_and_set</h3>
-<p>原子CAS操作。</p>
 
-<p>用法：</p>
+<p>Atomic Compare-And-Swap (CAS) Operation.</p>
+
+<p>Usage:</p>
+
 <div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>USAGE:  check_and_set          &lt;hash_key&gt; [-c|--check_sort_key str]
                                [-t|--check_type not_exist|not_exist_or_empty|exist|not_empty]
                                [match_anywhere|match_prefix|match_postfix]
@@ -1740,20 +2077,24 @@ Options for subcommand 'shell':
                                [-l|--set_value_ttl_seconds num] [-r|--return_check_value]
 </code></pre></div></div>
 
-<p>说明：</p>
+<p>Explanation:</p>
+
 <ul>
-  <li>对比交换，最初是表示一条CPU的原子指令，其作用是让CPU先进行比较两个值是否相等，然后原子地更新某个位置的值。参照<a href="/api/single-atomic#cas操作">CAS操作</a>。</li>
+  <li>Compare-And-Swap (CAS) is originally a term used to describe a CPU’s atomic instruction. Its purpose is to compare two values and then atomically update a location if they are equal. Please refer to <a href="/api/single-atomic#cas-operations">Atomic CAS</a>.</li>
 </ul>
 
-<p>示例：
-该命令检查hashKey=cloud的数据，若sortKey=90的value存在，则将sortKey=91的value设置为92，且返回sortKey=90的value值。</p>
+<p>Examples:
+Like the below command checks data with hashKey “cloud.” If the value with sortKey “90” exists, it sets the value of sortKey “91” to “92” and returns the value of sortKey “90”.</p>
+
 <div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>&gt;&gt;&gt; check_and_set cloud -c 90 -t exist -s 91 -v 92 -r
 </code></pre></div></div>
 
 <h3 id="check_and_mutate">check_and_mutate</h3>
-<p>原子CAS扩展版本，参见<a href="/clients/java-client#checkandmutate">原子CAS扩展版本</a>。</p>
 
-<p>用法：</p>
+<p>The extended version of the atomic CAS for more information please refer to <a href="/clients/java-client#checkandmutate">Atomic CAS Extended Version</a>.</p>
+
+<p>Usage:</p>
+
 <div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>USAGE:  check_and_mutate       &lt;hash_key&gt; [-c|--check_sort_key str]
                                [-t|--check_type not_exist|not_exist_or_empty|exist|not_empty]
                                [match_anywhere|match_prefix|match_postfix]
@@ -1763,322 +2104,352 @@ Options for subcommand 'shell':
 </code></pre></div></div>
 
 <h3 id="exist">exist</h3>
-<p>查询某条数据是否存在。</p>
 
-<p>用法：</p>
+<p>Query whether a specific piece of data exists.</p>
+
+<p>Usage:</p>
+
 <div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>USAGE:  exist &lt;hash_key&gt; &lt;sort_key&gt;
 </code></pre></div></div>
 
-<p>示例：</p>
-<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>&gt;&gt;&gt; exist xiaomi cloud0
+<p>Examples:</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>&gt;&gt;&gt; exist pegasus cloud0
 </code></pre></div></div>
 
 <h3 id="count">count</h3>
-<p>获取同一HashKey下的SortKey的个数。</p>
 
-<p>用法：</p>
+<p>Retrieve the count of SortKeys under the same <strong>HashKey</strong>.</p>
+
+<p>Usage:</p>
+
 <div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>USAGE:  count &lt;hash_key&gt;
 </code></pre></div></div>
 
-<p>示例：</p>
-<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>&gt;&gt;&gt; count xiaomi
+<p>Examples:</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>&gt;&gt;&gt; count pegasus
 </code></pre></div></div>
 
 <h3 id="ttl">ttl</h3>
-<p>查询某条数据的TTL（Time To Live）时间，返回剩余的live时间，单位为秒；返回Infinite表示没有TTL限制。</p>
 
-<p>用法：</p>
-<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>USAGE:  ttl &lt;hash_key&gt; &lt;sort_key&gt;
+<p>Inquire about the TTL (Time To Live) duration for a specific piece of data, returning the remaining live time in seconds. If “Infinite” is returned, it indicates there is no TTL limit.</p>
+
+<p>Usage:</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>USAGE:  ttl                    &lt;hash_key&gt; &lt;sort_key&gt;
 </code></pre></div></div>
 
-<p>示例：</p>
-<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>&gt;&gt;&gt; ttl xiaomi cloud
+<p>Examples:</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>&gt;&gt;&gt; ttl pegasus cloud
 </code></pre></div></div>
 
 <h3 id="hash">hash</h3>
-<p>查询某条数据的hash值，返回hash值的整数形式。</p>
 
-<p>如果在使用该命令前通过<code class="language-plaintext highlighter-rouge">use [app_name]</code>选定了特定表，还会根据hash值计算数据所对应的partition_id，并返回当前服务该partition的primary和secondary节点信息。</p>
+<p>Retrieve the hash value of a specific piece of data and return it in integer form.
+If a specific table is selected using <code class="language-plaintext highlighter-rouge">use [app_name]</code> before using this command, it will also calculate the partition_id based on the hash value of the data, and return information about the primary and secondary nodes currently serving that partition.</p>
 
-<p>用法：</p>
+<p>Usage:</p>
+
 <div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>USAGE:  hash &lt;hash_key&gt; &lt;sort_key&gt;
 </code></pre></div></div>
 
-<p>示例：</p>
-<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>&gt;&gt;&gt; hash xiaomi cloud
+<p>Examples:</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>&gt;&gt;&gt; hash pegasus cloud
 </code></pre></div></div>
 
 <h3 id="hash_scan">hash_scan</h3>
-<p>逐条扫描同一HashKey下的数据，可指定SortKey的查询范围和过滤条件，结果按照SortKey排序。</p>
 
-<p>用法：</p>
-<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>USAGE:  hash_scan     &lt;hash_key&gt; &lt;start_sort_key&gt; &lt;stop_sort_key&gt;
-                      [-a|--start_inclusive true|false]
-                      [-b|--stop_inclusive true|false]
-                      [-s|--sort_key_filter_type anywhere|prefix]
-                      [-y|--sort_key_filter_pattern str]
-                      [-v|--value_filter_type anywhere|prefix|postfix|exact
-                      [-z|--value_filter_pattern str]
-                      [-o|--output file_name]
-                      [-n|--max_count num]
-                      [-t|--timeout_ms num]
-                      [-d|--detailed]
-                      [-i|--no_value]
+<p>Scan the data under the same <strong>HashKey</strong> one item at a time, with the option to specify a query range and filtering criteria for the <strong>SortKey</strong>. The results will be sorted by <strong>SortKey</strong>.</p>
+
+<p>Usage:</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>USAGE:  hash_scan              &lt;hash_key&gt; &lt;start_sort_key&gt; &lt;stop_sort_key&gt;
+                               [-a|--start_inclusive true|false]
+                               [-b|--stop_inclusive true|false]
+                               [-s|--sort_key_filter_type anywhere|prefix]
+                               [-y|--sort_key_filter_pattern str]
+                               [-v|--value_filter_type anywhere|prefix|postfix|exact
+                               [-z|--value_filter_pattern str]
+                               [-o|--output file_name]
+                               [-n|--max_count num]
+                               [-t|--timeout_ms num]
+                               [-d|--detailed]
+                               [-i|--no_value]
 </code></pre></div></div>
 
-<p>说明：</p>
+<p>Explanation:</p>
+
 <ul>
-  <li><code class="language-plaintext highlighter-rouge">-a|--start_inclusive</code>参数：指定是否包含StartSortKey，默认为true。</li>
-  <li><code class="language-plaintext highlighter-rouge">-b|--stop_inclusive</code>参数：指定是否包含StopSortKey，默认为false。</li>
-  <li><code class="language-plaintext highlighter-rouge">-s|--sort_key_filter_type</code>参数：指定SortKey的过滤类型，包括无过滤、任意位置匹配、前缀匹配和后缀匹配，默认无过滤。</li>
-  <li><code class="language-plaintext highlighter-rouge">-y|--sort_key_filter_pattern</code>参数：指定SortKey的过滤模式串，空串相当于无过滤。</li>
-  <li><code class="language-plaintext highlighter-rouge">-v|--value_filter_type</code>参数：指定value过滤类型，包括任意位置匹配、前缀匹配、后缀匹配等。</li>
-  <li><code class="language-plaintext highlighter-rouge">-z|--value_filter_pattern str</code>参数：指定value的过滤模式串，空串相当于无过滤。</li>
-  <li><code class="language-plaintext highlighter-rouge">-o|--output file_name</code>参数：指定输出结果存入的文件名。</li>
-  <li><code class="language-plaintext highlighter-rouge">-n|--max_count num</code>参数：指定获取值的最大数量。</li>
-  <li><code class="language-plaintext highlighter-rouge">-t|--timeout_ms num</code>参数：指定获取数据的超时时间。</li>
-  <li><code class="language-plaintext highlighter-rouge">-d|--detailed</code>参数：输出数据的详细存储信息，包括app_id、partition_index、server_ip。</li>
-  <li><code class="language-plaintext highlighter-rouge">-i|--no_value</code>参数：不获取value值，仅输出hash_key和sort_key。</li>
+  <li>Parameter <code class="language-plaintext highlighter-rouge">-a|--start_inclusive</code>: Specifies whether to include StartSortKey, defaulting to true.</li>
+  <li>Parameter <code class="language-plaintext highlighter-rouge">-b|--stop_inclusive</code>: Specifies whether to include StopSortKey, defaulting to false.</li>
+  <li>Parameter <code class="language-plaintext highlighter-rouge">-s|--sort_key_filter_type</code>: Specifies the filtering type for SortKey, including no filtering, any position match, prefix match, and suffix match, with the default being no filtering.</li>
+  <li>Parameter <code class="language-plaintext highlighter-rouge">-y|--sort_key_filter_pattern</code>: Specifies the filtering pattern for SortKey, where an empty string is equivalent to no filtering.</li>
+  <li>Parameter <code class="language-plaintext highlighter-rouge">-v|--value_filter_type</code>: Specifies the value filtering type, including any position match, prefix match, suffix match, etc.</li>
+  <li>Parameter <code class="language-plaintext highlighter-rouge">-z|--value_filter_pattern str</code>: Specifies the filtering pattern for the value, where an empty string is equivalent to no filtering.</li>
+  <li>Parameter <code class="language-plaintext highlighter-rouge">-o|--output file_name</code>: Specifies the filename for storing the output results.</li>
+  <li>Parameter <code class="language-plaintext highlighter-rouge">-n|--max_count num</code>: Specifies the maximum number of values to retrieve.</li>
+  <li>Parameter <code class="language-plaintext highlighter-rouge">-t|--timeout_ms num</code>: Specifies the timeout duration for data retrieval.</li>
+  <li>Parameter <code class="language-plaintext highlighter-rouge">-d|--detailed</code>: Outputs detailed storage information for the data, including app_id, partition_index, and server_ip.</li>
+  <li>Parameter <code class="language-plaintext highlighter-rouge">-i|--no_value</code>: Retrieves only hash_key and sort_key without fetching the value.</li>
 </ul>
 
-<p>示例：</p>
-<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>&gt;&gt;&gt; hash_scan xiaomi cloud00 cloud01
+<p>Examples:</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>&gt;&gt;&gt; hash_scan pegasus cloud00 cloud01
 </code></pre></div></div>
 
 <h3 id="full_scan">full_scan</h3>
-<p>对表进行全扫描，可指定HashKey、SortKey和Value的过滤条件，同一HashKey的结果按照SortKey排序，HashKey之间无顺序保证。</p>
 
-<p>用法：</p>
-<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>USAGE: full_scan      [-h|--hash_key_filter_type anywhere|prefix|postfix]
-                      [-x|--hash_key_filter_pattern str]
-                      [-s|--sort_key_filter_type anywhere|prefix]
-                      [-y|--sort_key_filter_pattern str]
-                      [-v|--value_filter_type anywhere|prefix|postfix|exact
-                      [-z|--value_filter_pattern str]
-                      [-o|--output file_name]
-                      [-n|--max_count num]
-                      [-t|--timeout_ms num]
-                      [-d|--detailed]
-                      [-i|--no_value]
+<p>Perform a full scan of the table, with the option to specify filtering conditions for <strong>HashKey</strong>, <strong>SortKey</strong>, and <strong>Value</strong>. Results under the same <strong>HashKey</strong> will be sorted by <strong>SortKey</strong>. There is no guaranteed order between HashKeys.</p>
+
+<p>Usage:</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>USAGE: full_scan               [-h|--hash_key_filter_type anywhere|prefix|postfix]
+                               [-x|--hash_key_filter_pattern str]
+                               [-s|--sort_key_filter_type anywhere|prefix]
+                               [-y|--sort_key_filter_pattern str]
+                               [-v|--value_filter_type anywhere|prefix|postfix|exact
+                               [-z|--value_filter_pattern str]
+                               [-o|--output file_name]
+                               [-n|--max_count num]
+                               [-t|--timeout_ms num]
+                               [-d|--detailed]
+                               [-i|--no_value]
 </code></pre></div></div>
-<p>说明：</p>
+
+<p>Explanation:</p>
+
 <ul>
-  <li>参数说明参见<a href="#hashKey_scan">hash_scan</a>。</li>
+  <li>Please refer to the parameter explanations for more details <a href="#hash_scan">hash scan</a>.</li>
 </ul>
 
-<p>实例：</p>
+<p>Examples:</p>
+
 <div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>&gt;&gt;&gt; full_scan
 </code></pre></div></div>
 
 <h3 id="copy_data">copy_data</h3>
-<p>将一个表的数据逐条插入到另外一个表。</p>
 
-<p>用法：</p>
-<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>USAGE:  copy_data     &lt;-c|--target_cluster_name str&gt; &lt;-a|--target_app_name str&gt;
-                      [-s|--max_split_count num]
-                      [-p|--partition num]
-                      [-b|--max_batch_count num]
-	                  [-t|--timeout_ms num]
-                      [-h|--hash_key_filter_type anywhere|prefix|postfix]
-                      [-x|--hash_key_filter_pattern str]
-                      [-s|--sort_key_filter_type anywhere|prefix|postfix|exact]
-                      [-y|--sort_key_filter_pattern str]
-                      [-v|--value_filter_type anywhere|prefix|postfix|exact]
-                      [-z|--value_filter_pattern str]
-                      [-n|--no_overwrite] [-i|--no_value] [-g|--geo_data]
+<p>Insert the data from one table into another table one item at a time.</p>
 
+<p>Usage:</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>USAGE:  copy_data              &lt;-c|--target_cluster_name str&gt; &lt;-a|--target_app_name str&gt;
+                               [-p|--partition num] [-b|--max_batch_count num] [-t|--timeout_ms num]
+                               [-h|--hash_key_filter_type anywhere|prefix|postfix]
+                               [-x|--hash_key_filter_pattern str]
+                               [-s|--sort_key_filter_type anywhere|prefix|postfix|exact]
+                               [-y|--sort_key_filter_pattern str]
+                               [-v|--value_filter_type anywhere|prefix|postfix|exact]
+                               [-z|--value_filter_pattern str] [-m|--max_multi_set_concurrency]
+                               [-o|--scan_option_batch_size] [-n|--no_overwrite] [-i|--no_value]
+                               [-g|--geo_data] [-u|--use_multi_set]
 </code></pre></div></div>
 
-<p>说明：</p>
+<p>Explanation:</p>
+
 <ul>
-  <li>源表通过use命令指定，目标表通过-c和-a命令执行，目标表可以在另外一个集群，详细用法参见<a href="/administration/table-migration#copy_data迁移">Table迁移#copy_data迁移</a>，可指定HashKey、SortKey和Value的过滤条件。</li>
+  <li>The source table is specified using the <code class="language-plaintext highlighter-rouge">use</code> command, and the target table is executed using the <code class="language-plaintext highlighter-rouge">-c</code> and <code class="language-plaintext highlighter-rouge">-a</code> commands. The target table can be in another cluster. For detailed usage, refer to <a href="/administration/table-migration#copy-data-migration">Table Migration#copy_data_migration</a>. You can specify filtering conditions for <strong>HashKey</strong>, <strong>SortKey</strong>, and <strong>Value</strong>.</li>
 </ul>
 
-<p>示例：</p>
+<p>Examples:</p>
+
 <div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>&gt;&gt;&gt; copy_data -c ClusterB -a TableB -t 10000
 </code></pre></div></div>
 
 <h3 id="clear_data">clear_data</h3>
-<p>将一个表的数据逐条删除，实际上就是先扫描数据，然后对每一条数据执行删除操作，可指定HashKey、SortKey和Value的过滤条件。</p>
 
-<p>用法：</p>
-<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>USAGE:  clear_data    [-p|--partition num]
-                      [-b|--max_batch_count num]
-                      [-t|--timeout_ms num]
-                      [-h|--hash_key_filter_type anywhere|prefix|postfix]
-                      [-x|--hash_key_filter_pattern str]
-                      [-s|--sort_key_filter_type anywhere|prefix|postfix|exact]
-                      [-y|--sort_key_filter_pattern str]
-                      [-v|--value_filter_type anywhere|prefix|postfix|exact]
-                      [-z|--value_filter_pattern str]
-                      [-f|--force]
+<p>Deleting the data from one table item by item essentially involves scanning the data and then performing a delete operation on each data item. You can specify filtering conditions for <strong>HashKey</strong>, <strong>SortKey</strong>, and <strong>Value</strong>.</p>
+
+<p>Usage:</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>USAGE:  clear_data             [-p|--partition num]
+                               [-b|--max_batch_count num]
+                               [-t|--timeout_ms num]
+                               [-h|--hash_key_filter_type anywhere|prefix|postfix]
+                               [-x|--hash_key_filter_pattern str]
+                               [-s|--sort_key_filter_type anywhere|prefix|postfix|exact]
+                               [-y|--sort_key_filter_pattern str]
+                               [-v|--value_filter_type anywhere|prefix|postfix|exact]
+                               [-z|--value_filter_pattern str]
+                               [-f|--force]
 </code></pre></div></div>
 
-<p>说明：</p>
+<p>Explanation:</p>
+
 <ul>
-  <li><code class="language-plaintext highlighter-rouge">-p|--partition num</code>参数：指定删除的分片。</li>
-  <li><code class="language-plaintext highlighter-rouge">-b|--max_batch_count num</code>参数：指定一次性删除的最大数量。</li>
-  <li><code class="language-plaintext highlighter-rouge">-f|--force</code>参数：如果为true，则表示删除，否则无法删除并打印再次确认信息“ERROR: be careful to clear data!!! Please specify –force if you are determined to do”。</li>
-  <li>其余参数均为过滤条件，参见<a href="#multi_get_range">multi_get_range</a>。</li>
+  <li>Parameter <code class="language-plaintext highlighter-rouge">-p|--partition num</code>: Specifies the partition to delete.</li>
+  <li>Parameter <code class="language-plaintext highlighter-rouge">-b|--max_batch_count num</code>: Specifies the maximum number to delete at once.</li>
+  <li>Parameter <code class="language-plaintext highlighter-rouge">-f|--force</code>: If set to true, it indicates deletion; otherwise, it cannot be deleted, and it prints a confirmation message “ERROR: be careful to clear data!!! Please specify –force if you are determined to do so.”.</li>
+  <li>The rest of the parameters are filtering conditions, refer to <a href="#multi_get_range">multi_get_range</a>.</li>
 </ul>
 
-<p>示例：</p>
+<p>Examples:</p>
+
 <div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>&gt;&gt;&gt; clear_data
 </code></pre></div></div>
 
 <h3 id="count_data">count_data</h3>
-<p>统计一个表的数据条数，可指定HashKey、SortKey和Value的过滤条件。</p>
 
-<p>用法：</p>
-<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>USAGE:  count_data    [-p|--partition num] [-b|--max_batch_count num] [-t|--timeout_ms num]
-                      [-h|--hash_key_filter_type anywhere|prefix|postfix]
-                      [-x|--hash_key_filter_pattern str]
-                      [-s|--sort_key_filter_type anywhere|prefix|postfix|exact]
-                      [-y|--sort_key_filter_pattern str]
-                      [-v|--value_filter_type anywhere|prefix|postfix|exact]
-                      [-z|--value_filter_pattern str] [-d|--diff_hash_key] [-a|--stat_size]
-                      [-n|--top_count num] [-r|--run_seconds num]
+<p>Count the number of data items in a table. You can specify filtering conditions for <strong>HashKey</strong>, <strong>SortKey</strong>, and <strong>Value</strong>.</p>
+
+<p>Usage:</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>USAGE:  count_data             [-c|--precise][-p|--partition num]
+                               [-b|--max_batch_count num][-t|--timeout_ms num]
+                               [-h|--hash_key_filter_type anywhere|prefix|postfix]
+                               [-x|--hash_key_filter_pattern str]
+                               [-s|--sort_key_filter_type anywhere|prefix|postfix|exact]
+                               [-y|--sort_key_filter_pattern str]
+                               [-v|--value_filter_type anywhere|prefix|postfix|exact]
+                               [-z|--value_filter_pattern str][-d|--diff_hash_key] [-a|--stat_size]
+                               [-n|--top_count num] [-r|--run_seconds num]
 </code></pre></div></div>
 
-<p>说明：</p>
+<p>Explanation:</p>
+
 <ul>
-  <li><code class="language-plaintext highlighter-rouge">-p|--partition</code>参数：指定删除的分片。</li>
-  <li><code class="language-plaintext highlighter-rouge">-b|--max_batch_count</code>参数：指定一次性删除的最大数量。</li>
-  <li><code class="language-plaintext highlighter-rouge">-d|--diff_hash_key</code>参数：统计hashKey数量。</li>
-  <li><code class="language-plaintext highlighter-rouge">-n|--top_count</code>参数：仅展示指定数量的数据。</li>
-  <li><code class="language-plaintext highlighter-rouge">-a|--stat_size</code>参数：统计当前value的大小，单位字节。</li>
-  <li><code class="language-plaintext highlighter-rouge">-r|--run_seconds num</code>参数：仅运行指定时间进行统计。</li>
-  <li>其余参数均为过滤条件，参见<a href="#multi_get_range">multi_get_range</a>。</li>
+  <li>Parameter <code class="language-plaintext highlighter-rouge">-c|--precise</code>: Specifies detailed data for the table.</li>
+  <li>Parameter <code class="language-plaintext highlighter-rouge">-p|--partition</code>: Specifies the partition to delete.</li>
+  <li>Parameter <code class="language-plaintext highlighter-rouge">-b|--max_batch_count</code>: Specifies the maximum number to delete at once.</li>
+  <li>Parameter <code class="language-plaintext highlighter-rouge">-d|--diff_hash_key</code>: Counts the number of hashKeys.</li>
+  <li>Parameter <code class="language-plaintext highlighter-rouge">-n|--top_count</code>: Displays only the specified number of data items.</li>
+  <li>Parameter <code class="language-plaintext highlighter-rouge">-a|--stat_size</code>: Calculates the current size of the value in bytes.</li>
+  <li>Parameter <code class="language-plaintext highlighter-rouge">-r|--run_seconds num</code>: Performs statistics for the specified time duration.</li>
+  <li>The rest of the parameters are filtering conditions, refer to <a href="#multi_get_range">multi_get_range</a>.</li>
 </ul>
 
-<p>示例：</p>
+<p>Examples:</p>
+
 <div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>&gt;&gt;&gt; count_data
 </code></pre></div></div>
 
-<h2 id="负载均衡">负载均衡</h2>
+<h2 id="load-balancing">Load balancing</h2>
 
 <table>
   <thead>
     <tr>
-      <th>子命令</th>
-      <th>功能</th>
+      <th>Subcommands</th>
+      <th>Functionality</th>
     </tr>
   </thead>
   <tbody>
     <tr>
       <td>set_meta_level</td>
-      <td>设置集群的负载均衡级别，包括stopped、blind、freezed、steady、lively。集群默认为steady，表示不进行自动负载均衡；设置为lively可以开启自动负载均衡</td>
+      <td>Set the cluster’s load balancing level, including stopped, blind, freezed, steady, lively. The cluster default is steady, which means no automatic load balancing; setting it to lively enables automatic load balancing.</td>
     </tr>
     <tr>
       <td>get_meta_level</td>
-      <td>获取集群的负载均衡级别</td>
+      <td>Retrieve the cluster’s load balancing level.</td>
     </tr>
     <tr>
       <td>propose</td>
-      <td>发送partition操作，包括ASSIGN_PRIMARY、ADD_SECONDARY、DOWNGRADE_TO_INACTIVE等</td>
+      <td>Send partition operations, including ASSIGN_PRIMARY, ADD_SECONDARY, DOWNGRADE_TO_INACTIVE, and more.</td>
     </tr>
     <tr>
       <td>balance</td>
-      <td>发送balance操作，包括move_pri、copy_pri、copy_sec等</td>
+      <td>Send balance operations, including move_pri, copy_pri, copy_sec, and more.</td>
     </tr>
   </tbody>
 </table>
 
-<p>关于负载均衡的详细文档，请参考<a href="/administration/rebalance">负载均衡</a>。</p>
+<p>For detailed documentation on load balancing, please refer to the following resources <a href="/administration/rebalance">load balance</a>.</p>
 
-<h2 id="数据恢复">数据恢复</h2>
+<h2 id="data-recovery">Data recovery</h2>
 
 <table>
   <thead>
     <tr>
-      <th>子命令</th>
-      <th>功能</th>
+      <th>Subcommands</th>
+      <th>Functionality</th>
     </tr>
   </thead>
   <tbody>
     <tr>
       <td>recover</td>
-      <td>启动数据恢复流程，通过向ReplicaServer收集和学习，重新构建Zookeeper上的元数据信息，参见<a href="/administration/meta-recovery">元数据恢复</a></td>
+      <td>To initiate the data recovery process and rebuild metadata information on Zookeeper, please refer to <a href="/administration/meta-recovery">Meta recovery</a>.</td>
     </tr>
     <tr>
       <td>ddd_diagnose</td>
-      <td>DDD自动诊断工具，用于恢复所有备份全部不可用的partition，参见<a href="/administration/replica-recovery">Replica数据恢复</a></td>
+      <td>To use the DDD automatic diagnostic tool for recovering all backup-unavailable partitions, please refer to <a href="/administration/replica-recovery">Replica recovery</a>.</td>
     </tr>
   </tbody>
 </table>
 
-<h2 id="冷备份管理">冷备份管理</h2>
+<h2 id="cold-backup-management">Cold backup management</h2>
 
 <table>
   <thead>
     <tr>
-      <th>子命令</th>
-      <th>功能</th>
+      <th>Subcommands</th>
+      <th>Functionality</th>
     </tr>
   </thead>
   <tbody>
     <tr>
       <td>add_backup_policy</td>
-      <td>增加冷备份策略</td>
+      <td>Implementing a cold backup strategy.</td>
     </tr>
     <tr>
       <td>ls_backup_policy</td>
-      <td>查询冷备份策略</td>
+      <td>Inquiring about the cold backup strategy.</td>
     </tr>
     <tr>
       <td>modify_backup_policy</td>
-      <td>修改冷备份策略</td>
+      <td>Modifying the cold backup strategy.</td>
     </tr>
     <tr>
       <td>disable_backup_policy</td>
-      <td>禁用冷备份策略</td>
+      <td>Disabling the cold backup strategy.</td>
     </tr>
     <tr>
       <td>enable_backup_policy</td>
-      <td>启用冷备份策略</td>
+      <td>Enabling the cold backup strategy.</td>
     </tr>
     <tr>
       <td>restore_app</td>
-      <td>从冷备份中恢复表</td>
+      <td>Restoring a table from cold backup.</td>
     </tr>
     <tr>
       <td>query_backup_policy</td>
-      <td>查询备份策略和上次备份信息</td>
+      <td>Retrieve backup policies and the last backup information.</td>
     </tr>
     <tr>
       <td>query_restore_status</td>
-      <td>查询冷备份恢复进度</td>
+      <td>Inquire about the progress of cold backup restoration.</td>
     </tr>
   </tbody>
 </table>
 
-<p>关于冷备份的详细文档，请参考<a href="/administration/cold-backup">冷备份</a>。</p>
+<p>For detailed documentation on cold backups, please refer to <a href="/administration/cold-backup">cold backup management</a>.</p>
 
-<h2 id="调试工具">调试工具</h2>
+<h2 id="debugging-tools">Debugging tools</h2>
 
 <table>
   <thead>
     <tr>
-      <th>子命令</th>
-      <th>功能</th>
+      <th>Subcommands</th>
+      <th>Functionality</th>
     </tr>
   </thead>
   <tbody>
     <tr>
       <td>sst_dump</td>
-      <td>使用RocksDB的<code class="language-plaintext highlighter-rouge">sst_dump</code>工具，将rocksdb的二进制sstable数据转换为可读的文本数据</td>
+      <td>Utilize the <code class="language-plaintext highlighter-rouge">sst_dump</code> tool from RocksDB to convert binary sstable data into readable text data.</td>
     </tr>
     <tr>
       <td>mlog_dump</td>
-      <td>将Pegasus的二进制commit log数据转换为可读的文本数据</td>
+      <td>Transform Pegasus’ binary commit log data into human-readable text data.</td>
     </tr>
     <tr>
       <td>local_get</td>
-      <td>从本地数据库获取值（原来的调试工具）</td>
+      <td>Retrieve values from the local database.</td>
     </tr>
   </tbody>
 </table>
-
 
                 </div>
             </section>
@@ -2122,17 +2493,17 @@ Options for subcommand 'shell':
     Table of contents
 </p>
 <ul class="menu-list">
-  <li><a href="#工具获取">工具获取</a></li>
-  <li><a href="#工具使用">工具使用</a>
+  <li><a href="#obtaining-the-tool">Obtaining the tool</a></li>
+  <li><a href="#introduction-to-tool-usage">Introduction to Tool Usage</a>
     <ul>
-      <li><a href="#基本命令">基本命令</a>
+      <li><a href="#basic-commands">Basic Commands</a>
         <ul>
           <li><a href="#help">help</a></li>
           <li><a href="#version">version</a></li>
           <li><a href="#exit">exit</a></li>
         </ul>
       </li>
-      <li><a href="#全局属性">全局属性</a>
+      <li><a href="#global-properties">Global properties</a>
         <ul>
           <li><a href="#cc">cc</a></li>
           <li><a href="#use">use</a></li>
@@ -2140,7 +2511,7 @@ Options for subcommand 'shell':
           <li><a href="#timeout">timeout</a></li>
         </ul>
       </li>
-      <li><a href="#节点管理">节点管理</a>
+      <li><a href="#node-management">Node Management</a>
         <ul>
           <li><a href="#cluster_info">cluster_info</a></li>
           <li><a href="#nodes">nodes</a></li>
@@ -2152,7 +2523,7 @@ Options for subcommand 'shell':
           <li><a href="#disk_capacity">disk_capacity</a></li>
         </ul>
       </li>
-      <li><a href="#表管理">表管理</a>
+      <li><a href="#table-management">Table management</a>
         <ul>
           <li><a href="#ls">ls</a></li>
           <li><a href="#app">app</a></li>
@@ -2165,9 +2536,17 @@ Options for subcommand 'shell':
           <li><a href="#set_app_envs">set_app_envs</a></li>
           <li><a href="#del_app_envs">del_app_envs</a></li>
           <li><a href="#clear_app_envs">clear_app_envs</a></li>
+          <li><a href="#add_dup">add_dup</a></li>
+          <li><a href="#query_dup">query_dup</a></li>
+          <li><a href="#remove_dup">remove_dup</a></li>
+          <li><a href="#start_dup">start_dup</a></li>
+          <li><a href="#pause_dup">pause_dup</a></li>
+          <li><a href="#set_dup_fail_mode">set_dup_fail_mode</a></li>
+          <li><a href="#get_replica_count">get_replica_count</a></li>
+          <li><a href="#set_replica_count">set_replica_count</a></li>
         </ul>
       </li>
-      <li><a href="#数据操作">数据操作</a>
+      <li><a href="#data-manipulation">Data manipulation</a>
         <ul>
           <li><a href="#set">set</a></li>
           <li><a href="#multi_set">multi_set</a></li>
@@ -2192,10 +2571,10 @@ Options for subcommand 'shell':
           <li><a href="#count_data">count_data</a></li>
         </ul>
       </li>
-      <li><a href="#负载均衡">负载均衡</a></li>
-      <li><a href="#数据恢复">数据恢复</a></li>
-      <li><a href="#冷备份管理">冷备份管理</a></li>
-      <li><a href="#调试工具">调试工具</a></li>
+      <li><a href="#load-balancing">Load balancing</a></li>
+      <li><a href="#data-recovery">Data recovery</a></li>
+      <li><a href="#cold-backup-management">Cold backup management</a></li>
+      <li><a href="#debugging-tools">Debugging tools</a></li>
     </ul>
   </li>
 </ul>
