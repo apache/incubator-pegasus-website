@@ -11,7 +11,7 @@ version: master
 ## 环境要求
 
 - GCC 5.4.0+
-- CMake 3.11.0+
+- CMake 3.24.0+
 
 ## Linux环境配置
 
