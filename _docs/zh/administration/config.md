@@ -4,9 +4,29 @@ permalink: administration/config
 
 # 配置组成部分
 
-Pegasus 的配置为 ini 格式，主要有以下组成部分：
+Pegasus 的配置为 ini 格式，主要有以下 section ：
 
-* core：一个 Pegasus Service 内核引擎运行时的相关参数配置。
+## [apps..default]
+
+各个 app 配置项的默认模板
+
+## [apps.meta]
+
+Pegasus Meta Server 的配置
+
+## [apps.replica]
+
+Pegasus Replica Server 的配置
+
+## [apps.collector]
+
+Pegasus Collector 的配置（2.6 版本开始已废弃）
+
+## [core]
+
+一个 Pegasus Service 内核引擎运行时的相关参数配置
+
+
 * network：RPC 组件的相关参数配置。
 * 线程池相关：Pegasus 进程中启动的各个线程池的相关参数配置。
 * app 相关：app 是 rDSN 中的一个概念，可以理解成分布式系统中的 “组件” 或者 “job”，例如 Pegasus 中的 MetaServer、ReplicaServer 就各是一个 app。一个进程内可以启动多个 app，针对每个 app，可以分别配置其行为，譬如名字、端口、线程池等。
@@ -22,55 +42,6 @@ Pegasus 的配置为 ini 格式，主要有以下组成部分：
 # 配置文件部分说明
 
 ```ini
-;;;; 各个 app 配置项的默认模板
-[apps..default]
-run = true
-count = 1
-
-;;;; meta app 的配置项
-[apps.meta]
-type = meta
-name = meta
-arguments =
-; meta 的运行端口
-ports = 34601
-
-; meta app 运行时需要的线程池
-pools = THREAD_POOL_DEFAULT,THREAD_POOL_META_SERVER,THREAD_POOL_META_STATE,THREAD_POOL_FD,THREAD_POOL_DLOCK,THREAD_POOL_FDS_SERVICE
-run = true
-; meta app 的实例个数，每个实例的运行端口依次为 ports, ports+1...
-; 可以用参数 - app_list meta@1 的方式启动指定的 app
-count = 3
-
-;;;; replica app 的配置项目
-[apps.replica]
-type = replica
-name = replica
-arguments =
-ports = 34801
-pools = THREAD_POOL_DEFAULT,THREAD_POOL_REPLICATION_LONG,THREAD_POOL_REPLICATION,THREAD_POOL_LOCAL_APP,THREAD_POOL_FD,THREAD_POOL_FDS_SERVICE,THREAD_POOL_COMPACT
-run = true
-count = 1
-
-;;;; pegasus 内核引擎运行参数
-[core]
-; rDSN 相关概念，参见 rDSN 文档
-tool = nativerun
-; rDSN 相关概念，参见 rDSN 文档
-toollets = profiler
-; 启动时是否暂停以等待交互输入
-pause_on_start = false
-
-; logging 级别
-logging_start_level = LOG_LEVEL_DEBUG
-; logging 的实现类
-logging_factory_name = dsn::tools::simple_logger
-; 进程退出时是否将缓存的日志数据刷出到文件系统
-logging_flush_on_exit = true
-
-; 默认的数据目录
-data_dir = /home/work/data/pegasus/@cluster@
-
 ;;;; 网络相关配置
 [network]
 ; 负责网络 IO 的线程个数
