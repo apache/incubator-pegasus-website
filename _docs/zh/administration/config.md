@@ -8,13 +8,19 @@ Pegasus 的配置为 ini 格式，主要有以下 section ：
 
 ## [apps..default]
 
-各个 app 配置项的默认模板
+各个 app 相关配置的默认模板。如果具体的 apps.XXX 配置中未显式指定某个配置型，则使用该 section 中的配置。
 
 ## [apps.meta]
+
+meta app 的相关配置
+
+[meta_server]
 
 Pegasus Meta Server 的配置
 
 ## [apps.replica]
+
+replica app 的相关配置
 
 Pegasus Replica Server 的配置
 
@@ -24,12 +30,24 @@ Pegasus Collector 的配置（2.6 版本开始已废弃）
 
 ## [core]
 
-一个 Pegasus Service 内核引擎运行时的相关参数配置
+Pegasus server 内核引擎运行时的相关参数配置
 
+## [network]
 
-* network：RPC 组件的相关参数配置。
-* 线程池相关：Pegasus 进程中启动的各个线程池的相关参数配置。
-* app 相关：app 是 rDSN 中的一个概念，可以理解成分布式系统中的 “组件” 或者 “job”，例如 Pegasus 中的 MetaServer、ReplicaServer 就各是一个 app。一个进程内可以启动多个 app，针对每个 app，可以分别配置其行为，譬如名字、端口、线程池等。
+网络相关配置参数
+
+## [threadpool..default]
+
+线程池相关配置的默认模板。如果具体的 THREAD_POOL_XXX 配置中未显式指定某个配置型，则使用该 section 中的配置。
+
+## [threadpool.THREAD_POOL_XXX]
+
+线程池 THREAD_POOL_XXX 的配置
+
+## [replication.app]
+
+集群在 bootstrap 时默认要创建的表
+
 * task 相关：task 也是 rDSN 中的一个概念，可以理解成 “异步任务”。比如一个 RPC 异步调用、一个异步文件 IO 操作、一个超时事件，都是一个 task。每种 task 都有定义一个唯一的名字。针对每种 task，都可以配置其相关的行为，譬如 trace、profiler 等。
 * 一致性协议相关：一致性 replication 协议的相关参数配置。
 * RocksDB 相关：Pegasus 所依赖的 RocksDB 的参数配置。
@@ -42,68 +60,7 @@ Pegasus Collector 的配置（2.6 版本开始已废弃）
 # 配置文件部分说明
 
 ```ini
-;;;; 网络相关配置
-[network]
-; 负责网络 IO 的线程个数
-io_service_worker_count = 4
-; 每个客户端 IP 限制的连接数
-conn_threshold_per_ip = 0
-
-;;;; 线程池相关配置的默认模板
-[threadpool..default]
-; 线程池的默认线程数
-worker_count = 4
-
-;;;; 线程池 THREAD_POOL_REPLICATION 的配置
-[threadpool.THREAD_POOL_REPLICATION]
-; 线程池名称
-name = replica
-; rDSN 相关概念，partitioned = ture 表示每个线程有一个自己的任务队列，且 task 会根据 hash 规则分派到特定的线程执行
-partitioned = true
-; 线程在 OS 中的调度优先级
-worker_priority = THREAD_xPRIORITY_NORMAL
-; 线程池中的线程数，如果没有配置则使用默认模板的值
-worker_count = 23
-
-;;;; 线程池 XXXXX 的相关配置
-[threadpool.XXXXX]
-.....
-
-;;;; meta_server 的相关配置
-[meta_server]
-; MetaServer 的地址列表
-server_list = 127.0.0.1:34601,127.0.0.1:34602,127.0.0.1:34603; MetaServer 在元数据存储服务上的根目录，一个集群的不同 meta_server 要配成相同的值，不同的集群用不同的值
-cluster_root = /pegasus/my-cluster
-; 元数据存储服务的实现类
-meta_state_service_type = meta_state_service_zookeeper
-; 元数据存储服务的初始化参数
-meta_state_service_parameters =
-; 分布式锁服务的实现类
-distributed_lock_service_type = distributed_lock_service_zookeeper
-; 分布式锁服务的初始化参数
-distributed_lock_service_parameters = /pegasus/onebox/127.0.0.1
-; 判断一个 ReplicaServer 是不是稳定运行的时间阈值
-stable_rs_min_running_seconds = 600
-; 一个 ReplicaServer 最多可以崩溃的次数，如果崩溃太频繁，就会上 MetaServer 的黑名单
-max_succssive_unstable_restart = 5
-; 负载均衡器的实现类
-server_load_balancer_type = greedy_load_balancer
-; 当一个 secondary 被移除后，等待它回来的最长时间阈值
-replica_assign_delay_ms_for_dropouts = 300000
-; 如果不可用节点比例太高，MetaServer 会进入 freezed 的保护状态
-node_live_percentage_threshold_for_update = 50
-; 如果不可用的节点个数太少，MetaServer 也会进入 freezed 的保护状态
-min_live_node_count_for_unfreeze = 3
-; 表删除后在回收站中默认的保留时间
-hold_seconds_for_dropped_app = 604800
-; MetaServer 启动时的默认 function_level 状态。steady 表示不进行负载均衡的稳定状态
-meta_function_level_on_start = steady
-; 如果为 true, 集群启动时就会进入 “元数据恢复” 流程
-recover_from_replica_server = false
-; 一个 replica group 中最多保留的副本数 (可用副本 + 尸体)
-max_replicas_in_group = 4
-
-;;;; 集群在 bootstrap 时默认要创建的表
+;;;; 
 [replication.app]
 ; 表名
 app_name = temp
