@@ -39,7 +39,7 @@ count = 1
 
 ## HTTP API
 
-可以通过 [HTTP接口](http) 的 `/config` 或 `/configs` 路径获取 Pegasus server 的 **部分** 配置，输出格式为 JSON 格式，包括 section，key，当前的配置值，值类型，tags（例如是否可以动态修改），以及简要说明。
+可以通过 [HTTP接口](/api/http) 的 `/config` 或 `/configs` 路径获取 Pegasus server 的 **部分** 配置，输出格式为 JSON 格式，包括 section，key，当前的配置值，值类型，tags（例如是否可以动态修改），以及简要说明。
 
 > 只有通过 `DSN_DEFINE_xxx` 方式注册的配置，才可以通过 HTTP 接口获取。
 
@@ -92,7 +92,7 @@ $ curl 127.0.0.1:34601/configs
 
 ## HTTP API
 
-可以通过 [HTTP接口](http) 的 `/updateConfig` 路径动态修改 Pegasus server 的 **部分** 配置。只有 tag 包含 `flag_tag::FT_MUTABLE` 的配置项才可以动态修改。
+可以通过 [HTTP接口](/api/http) 的 `/updateConfig` 路径动态修改 Pegasus server 的 **部分** 配置。只有 tag 包含 `flag_tag::FT_MUTABLE` 的配置项才可以动态修改。
 
 > 通过 HTTP 接口修改的配置不会被持久化到 ini 文件中，这意味着配置项会被重置为默认值（如果 ini 文件中已指定该配置项，则会重置为该配置值）。
 

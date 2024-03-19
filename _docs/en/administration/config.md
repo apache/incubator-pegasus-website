@@ -39,7 +39,7 @@ count = 1
 
 ## HTTP API
 
-You can obtain **partial** configurations of Pegasus server through the `/config` or `/configs` path of [HTTP API](http), the output is in _JSON_ format, including section, key, current configuration value, value type, tags (such as whether it can be dynamically modified), and a brief description.
+You can obtain **partial** configurations of Pegasus server through the `/config` or `/configs` path of [HTTP API](/api/http), the output is in _JSON_ format, including section, key, current configuration value, value type, tags (such as whether it can be dynamically modified), and a brief description.
 
 > Only configurations registered through method `DSN_DEFINE_xxx` can be obtained through the HTTP API.
 
@@ -92,7 +92,7 @@ By modifying the ini configuration file, the server needs to be restarted to tak
 
 ## HTTP API
 
-**Partial** configuration of Pegasus server can be dynamically modified through the `/updateConfig` path of [HTTP API](http). Only configuration items with tag `flag_tag::FT_MUTABLE` can be dynamically modified.
+**Partial** configuration of Pegasus server can be dynamically modified through the `/updateConfig` path of [HTTP API](/api/http). Only configuration items with tag `flag_tag::FT_MUTABLE` can be dynamically modified.
 
 > The configuration modified through the HTTP API will not be persisted to the ini file, which means that the configuration item will be reset to the default value (or the value in the configuration file if specified).
 
