@@ -16,15 +16,15 @@
 <meta name="generator" content="Jekyll v4.3.3" />
 <meta property="og:title" content="Config" />
 <meta property="og:locale" content="en_US" />
-<meta name="description" content="TRANSLATING" />
-<meta property="og:description" content="TRANSLATING" />
+<meta name="description" content="Get Configurations" />
+<meta property="og:description" content="Get Configurations" />
 <meta property="og:site_name" content="Pegasus" />
 <meta property="og:type" content="article" />
-<meta property="article:published_time" content="2024-03-12T09:03:58+00:00" />
+<meta property="article:published_time" content="2024-03-19T12:53:22+00:00" />
 <meta name="twitter:card" content="summary" />
 <meta property="twitter:title" content="Config" />
 <script type="application/ld+json">
-{"@context":"https://schema.org","@type":"BlogPosting","dateModified":"2024-03-12T09:03:58+00:00","datePublished":"2024-03-12T09:03:58+00:00","description":"TRANSLATING","headline":"Config","mainEntityOfPage":{"@type":"WebPage","@id":"/administration/config"},"url":"/administration/config"}</script>
+{"@context":"https://schema.org","@type":"BlogPosting","dateModified":"2024-03-19T12:53:22+00:00","datePublished":"2024-03-19T12:53:22+00:00","description":"Get Configurations","headline":"Config","mainEntityOfPage":{"@type":"WebPage","@id":"/administration/config"},"url":"/administration/config"}</script>
 <!-- End Jekyll SEO tag -->
 </head>
 
@@ -733,7 +733,190 @@
             </section>
             <section class="section" style="padding-top: 2rem;">
                 <div class="content">
-                    <p>TRANSLATING</p>
+                    <h1 id="get-configurations">Get Configurations</h1>
+
+<h2 id="remote-command">Remote command</h2>
+
+<p>You can obtain <strong>all</strong> the configurations of Pegasus server through the <code class="language-plaintext highlighter-rouge">config-dump</code> command of <a href="remote-commands">Remote commands</a>, the output is in <em>ini</em> file format, including section, key, current configuration values, and a brief description.</p>
+
+<p>For example, the following output fragment:</p>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>&gt;&gt;&gt; remote_command -l 127.0.0.1:34601 config-dump
+COMMAND: config-dump
+
+CALL [user-specified] [127.0.0.1:34601] succeed:
+[apps..default]
+; arguments for the app instances
+arguments =
+
+; delay seconds for when the apps should be started
+delay_seconds = 0
+
+; Thread pools needed to be started for this app
+pools =
+
+; RPC server listening ports needed for this app
+ports =
+
+; The app type name, as given when registering by dsn::service_app::register_factory&lt;T&gt;("&lt;type&gt;")
+type =
+
+; Whether to run the app instances or not
+run = true
+
+; The count of app instances for this type (ports are automatically calculated accordingly to avoid conflict, i.e., ports, ports+1, ports+2, ...)
+count = 1
+</code></pre></div></div>
+
+<h2 id="http-api">HTTP API</h2>
+
+<p>You can obtain <strong>partial</strong> configurations of Pegasus server through the <code class="language-plaintext highlighter-rouge">/config</code> or <code class="language-plaintext highlighter-rouge">/configs</code> path of <a href="/api/http">HTTP API</a>, the output is in <em>JSON</em> format, including section, key, current configuration value, value type, tags (such as whether it can be dynamically modified), and a brief description.</p>
+
+<blockquote>
+  <p>Only configurations registered through method <code class="language-plaintext highlighter-rouge">DSN_DEFINE_xxx</code> can be obtained through the HTTP API.</p>
+</blockquote>
+
+<p>For example, the following output fragment:</p>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>$ curl 127.0.0.1:34601/config?name=update_ranger_policy_interval_sec
+{
+    "name": "update_ranger_policy_interval_sec",
+    "section": "security",
+    "type": "FV_UINT32",
+    "tags": "",
+    "description": "The interval seconds of meta server to pull the latest access control policy from Ranger service.",
+    "value": "5"
+}
+$ curl 127.0.0.1:34601/configs
+{
+    "abnormal_write_trace_latency_threshold": {
+        "name": "abnormal_write_trace_latency_threshold",
+        "section": "replication",
+        "type": "FV_UINT64",
+        "tags": "flag_tag::FT_MUTABLE",
+        "description": "Latency trace will be logged when exceed the write latency threshold, in nanoseconds",
+        "value": "1000000000"
+    },
+    "add_secondary_enable_flow_control": {
+        "name": "add_secondary_enable_flow_control",
+        "section": "meta_server",
+        "type": "FV_BOOL",
+        "tags": "",
+        "description": "enable flow control for add secondary proposal",
+        "value": "false"
+    },
+    "add_secondary_max_count_for_one_node": {
+        "name": "add_secondary_max_count_for_one_node",
+        "section": "meta_server",
+        "type": "FV_INT32",
+        "tags": "",
+        "description": "add secondary max count for one node when flow control enabled",
+        "value": "10"
+    }
+    ...
+}
+</code></pre></div></div>
+
+<h1 id="modify-configuration">Modify Configuration</h1>
+
+<h2 id="configuration-file">Configuration file</h2>
+
+<p>By modifying the ini configuration file, the server needs to be restarted to take effect.</p>
+
+<h2 id="http-api-1">HTTP API</h2>
+
+<p><strong>Partial</strong> configuration of Pegasus server can be dynamically modified through the <code class="language-plaintext highlighter-rouge">/updateConfig</code> path of <a href="/api/http">HTTP API</a>. Only configuration items with tag <code class="language-plaintext highlighter-rouge">flag_tag::FT_MUTABLE</code> can be dynamically modified.</p>
+
+<blockquote>
+  <p>The configuration modified through the HTTP API will not be persisted to the ini file, which means that the configuration item will be reset to the default value (or the value in the configuration file if specified).</p>
+</blockquote>
+
+<p>For example:</p>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>$ curl 127.0.0.1:34601/updateConfig?abnormal_write_trace_latency_threshold=2000000000
+{"update_status":"ERR_OK"}
+</code></pre></div></div>
+
+<h1 id="configuration-components">Configuration Components</h1>
+
+<p>The configuration of Pegasus is in <em>ini</em> format, which mainly includes the following sections:</p>
+
+<h2 id="appsdefault">[apps..default]</h2>
+
+<p>The default templates for various <code class="language-plaintext highlighter-rouge">app</code> related configurations. If a specific configuration type is not explicitly specified in the <code class="language-plaintext highlighter-rouge">apps.XXX</code> section, use the configuration in this section.</p>
+
+<h2 id="appsmeta">[apps.meta]</h2>
+
+<p>The relevant configuration of the <code class="language-plaintext highlighter-rouge">meta</code> app.</p>
+
+<h2 id="meta_server">[meta_server]</h2>
+
+<p>The relevant configuration of the Pegasus Meta Server.</p>
+
+<h2 id="appsreplica">[apps.replica]</h2>
+
+<p>The relevant configuration of the <code class="language-plaintext highlighter-rouge">replica</code> app, i.e. the relevant configuration of the Pegasus Replica Server.</p>
+
+<h2 id="appscollector">[apps.collector]</h2>
+
+<p>The relevant configuration of the Pegasus Collector (removed since Pegasus 2.6).</p>
+
+<h2 id="core">[core]</h2>
+
+<p>Pegasus server kernel engine related configurations.</p>
+
+<h2 id="network">[network]</h2>
+
+<p>Network related configurations.</p>
+
+<h2 id="threadpooldefault">[threadpool..default]</h2>
+
+<p>The default template for various thread-pool related configurations. If a specific configuration type is not explicitly specified in the <code class="language-plaintext highlighter-rouge">THREAD_POOL_XXX</code> section, use the configuration in this section.</p>
+
+<h2 id="threadpoolthread_pool_xxx">[threadpool.THREAD_POOL_XXX]</h2>
+
+<p>The relevant configuration of the <code class="language-plaintext highlighter-rouge">THREAD_POOL_XXX</code> thread-pool.</p>
+
+<h2 id="meta_serverapps">[meta_server.apps.<app_unique_string>]</app_unique_string></h2>
+
+<p>Tables will be created in the cluster when starting. Depending on <code class="language-plaintext highlighter-rouge">&lt;app_unique_string&gt;</code>, multiple tables can be created.</p>
+
+<h2 id="replicationapp">[replication.app]</h2>
+
+<p>Ditto, but only 1 table can be specified.</p>
+
+<h2 id="replication">[replication]</h2>
+
+<p>Consistency protocol related configurations, many concepts are related to <em>PacificA</em>.</p>
+
+<h2 id="pegasusserver">[pegasus.server]</h2>
+
+<p>The relevant configuration of the Pegasus Replica Server.</p>
+
+<h2 id="taskdefault">[task..default]</h2>
+
+<p>The default template for various <code class="language-plaintext highlighter-rouge">task</code> related configurations. If a specific configuration type is not explicitly specified in the <code class="language-plaintext highlighter-rouge">task.XXX</code> section, use the configuration in this section.</p>
+
+<p><code class="language-plaintext highlighter-rouge">task</code> is a concept in rDSN, which can be understood as <em>asynchronous task</em>. For example, an RPC asynchronous call, an asynchronous file IO operation, a timeout event, etc., are all tasks.
+Each task has a unique name defined. For each task, its related behavior can be configured, such as <code class="language-plaintext highlighter-rouge">trace</code>, <code class="language-plaintext highlighter-rouge">profiler</code>, etc.</p>
+
+<h2 id="taskrpc_xxx">[task.RPC_XXX]</h2>
+
+<p>The relevant configuration of the <code class="language-plaintext highlighter-rouge">RPC_XXX</code> task.</p>
+
+<h2 id="zookeeper">[zookeeper]</h2>
+
+<p>The relevant configuration of Zookeeper。</p>
+
+<h2 id="toolssimple_logger">[tools.simple_logger]</h2>
+
+<p>The <em>simple-logger</em> implementation class, it print logs to files.</p>
+
+<h1 id="configuration-suggestions">Configuration suggestions</h1>
+
+<ul>
+  <li>It is recommended to use IP addresses for the configuration items that require the use of server addresses.</li>
+  <li>For most configuration items, it is recommended to use default values.</li>
+  <li>Under the premise of understanding the role and impact of configuration items, you can change the configuration values as needed.</li>
+  <li>For further understanding of configuration items, you can refer to the source code.</li>
+</ul>
 
                 </div>
             </section>
@@ -776,7 +959,42 @@
     </span>
     Table of contents
 </p>
-
+<ul class="menu-list">
+  <li><a href="#get-configurations">Get Configurations</a>
+    <ul>
+      <li><a href="#remote-command">Remote command</a></li>
+      <li><a href="#http-api">HTTP API</a></li>
+    </ul>
+  </li>
+  <li><a href="#modify-configuration">Modify Configuration</a>
+    <ul>
+      <li><a href="#configuration-file">Configuration file</a></li>
+      <li><a href="#http-api-1">HTTP API</a></li>
+    </ul>
+  </li>
+  <li><a href="#configuration-components">Configuration Components</a>
+    <ul>
+      <li><a href="#appsdefault">[apps..default]</a></li>
+      <li><a href="#appsmeta">[apps.meta]</a></li>
+      <li><a href="#meta_server">[meta_server]</a></li>
+      <li><a href="#appsreplica">[apps.replica]</a></li>
+      <li><a href="#appscollector">[apps.collector]</a></li>
+      <li><a href="#core">[core]</a></li>
+      <li><a href="#network">[network]</a></li>
+      <li><a href="#threadpooldefault">[threadpool..default]</a></li>
+      <li><a href="#threadpoolthread_pool_xxx">[threadpool.THREAD_POOL_XXX]</a></li>
+      <li><a href="#meta_serverapps">[meta_server.apps.]</a></li>
+      <li><a href="#replicationapp">[replication.app]</a></li>
+      <li><a href="#replication">[replication]</a></li>
+      <li><a href="#pegasusserver">[pegasus.server]</a></li>
+      <li><a href="#taskdefault">[task..default]</a></li>
+      <li><a href="#taskrpc_xxx">[task.RPC_XXX]</a></li>
+      <li><a href="#zookeeper">[zookeeper]</a></li>
+      <li><a href="#toolssimple_logger">[tools.simple_logger]</a></li>
+    </ul>
+  </li>
+  <li><a href="#configuration-suggestions">Configuration suggestions</a></li>
+</ul>
 
         </div>
     </div>
