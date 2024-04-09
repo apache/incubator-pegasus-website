@@ -16,15 +16,15 @@
 <meta name="generator" content="Jekyll v4.3.3" />
 <meta property="og:title" content="Http" />
 <meta property="og:locale" content="en_US" />
-<meta name="description" content="功能介绍" />
-<meta property="og:description" content="功能介绍" />
+<meta name="description" content="介绍" />
+<meta property="og:description" content="介绍" />
 <meta property="og:site_name" content="Pegasus" />
 <meta property="og:type" content="article" />
-<meta property="article:published_time" content="2024-03-19T12:53:22+00:00" />
+<meta property="article:published_time" content="2024-04-09T06:31:10+00:00" />
 <meta name="twitter:card" content="summary" />
 <meta property="twitter:title" content="Http" />
 <script type="application/ld+json">
-{"@context":"https://schema.org","@type":"BlogPosting","dateModified":"2024-03-19T12:53:22+00:00","datePublished":"2024-03-19T12:53:22+00:00","description":"功能介绍","headline":"Http","mainEntityOfPage":{"@type":"WebPage","@id":"/api/http"},"url":"/api/http"}</script>
+{"@context":"https://schema.org","@type":"BlogPosting","dateModified":"2024-04-09T06:31:10+00:00","datePublished":"2024-04-09T06:31:10+00:00","description":"介绍","headline":"Http","mainEntityOfPage":{"@type":"WebPage","@id":"/api/http"},"url":"/api/http"}</script>
 <!-- End Jekyll SEO tag -->
 </head>
 
@@ -737,490 +737,73 @@
             </section>
             <section class="section" style="padding-top: 2rem;">
                 <div class="content">
-                    <h2 id="功能介绍">功能介绍</h2>
+                    <h1 id="介绍">介绍</h1>
 
-<p>Pegasus为MetaServer，ReplicaServer和Collector都提供了HTTP接口，用于查看集群相关信息，查询服务状态等。</p>
+<p>Pegasus 为 MetaServer，ReplicaServer 提供了 HTTP 接口，用于查看集群信息，修改配置等。</p>
 
-<p><strong>注意</strong></p>
+<blockquote>
+  <p>由于集群元数据由主 MetaServer 维护，当访问备 MetaServer 的元数据查询接口时，会自动重定向至主 MetaServer 对应的接口。
+举个例子，假设 <code class="language-plaintext highlighter-rouge">127.0.0.1:34601</code> 和 <code class="language-plaintext highlighter-rouge">127.0.0.1:34602</code> 分别是主备 MetaServer，当访问 <code class="language-plaintext highlighter-rouge">127.0.0.1:34602/meta/cluster</code>时，
+会自动跳转（通过 HTTP code 307）到 <code class="language-plaintext highlighter-rouge">127.0.0.1:34601/meta/cluster</code>。</p>
+</blockquote>
 
-<ul>
-  <li>由于最新数据由主MetaServer维护，当访问备用MetaServer的元数据查询接口时，会自动重定向至主MetaServer对应的接口。
-举个例子，假设 <code class="language-plaintext highlighter-rouge">127.0.0.1:34601</code> 和 <code class="language-plaintext highlighter-rouge">127.0.0.1:34602</code> 分别是主备MetaServer，访问 <code class="language-plaintext highlighter-rouge">127.0.0.1:34602/meta/cluster</code>
-会自动跳转到 <code class="language-plaintext highlighter-rouge">127.0.0.1:34601/meta/cluster</code>。</li>
-</ul>
+<h1 id="接口">接口</h1>
 
-<h2 id="接口介绍">接口介绍</h2>
+<p>所有接口的结果都以 JSON 格式返回。使用浏览器查看结果时，建议使用 <a href="https://chromewebstore.google.com/detail/json-viewer/gbmdgpbipfallnflgajpaliibnhdgobh">Chrome 插件 JSON Viewer</a> 提升阅读体验。</p>
 
-<p>所有接口均返回JSON格式。使用浏览器查看JSON时，建议使用<a href="https://chrome.google.com/webstore/detail/json-formatter/bcjindcccaagfpapjjmafapmmgkkhgoa">Chrome插件json-formatter</a>以优化阅读体验。</p>
+<h2 id="metaserver">MetaServer</h2>
 
-<h3><code class="language-plaintext highlighter-rouge">/</code></h3>
+<p>通过根 path 可以获取到 MetaServer 支持的所有接口，例如：<code class="language-plaintext highlighter-rouge">curl 127.0.0.1:34601/</code>，结果如下所示：</p>
 
-<p><strong>功能：</strong> 主页面，获取所有接口的使用帮助</p>
-
-<p><strong>示例：</strong><code class="language-plaintext highlighter-rouge">127.0.0.1:34801</code></p>
-
-<p><strong>返回：</strong></p>
-
-<div class="language-json highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="p">{</span><span class="w">
-    </span><span class="nl">"/"</span><span class="p">:</span><span class="w"> </span><span class="s2">"ip:port/"</span><span class="p">,</span><span class="w">
-    </span><span class="nl">"/meta/app"</span><span class="p">:</span><span class="w"> </span><span class="s2">"ip:port/meta/app?app_name=temp"</span><span class="p">,</span><span class="w">
-    </span><span class="nl">"/meta/app/duplication"</span><span class="p">:</span><span class="w"> </span><span class="s2">"ip:port/meta/app/duplication?name=&lt;app_name&gt;"</span><span class="p">,</span><span class="w">
-    </span><span class="nl">"/meta/app_envs"</span><span class="p">:</span><span class="w"> </span><span class="s2">"ip:port/meta/app_envs?name=temp"</span><span class="p">,</span><span class="w">
-    </span><span class="nl">"/meta/apps"</span><span class="p">:</span><span class="w"> </span><span class="s2">"ip:port/meta/apps"</span><span class="p">,</span><span class="w">
-    </span><span class="nl">"/meta/backup_policy"</span><span class="p">:</span><span class="w"> </span><span class="s2">"ip:port/meta/backup_policy"</span><span class="p">,</span><span class="w">
-    </span><span class="nl">"/meta/cluster"</span><span class="p">:</span><span class="w"> </span><span class="s2">"ip:port/meta/cluster"</span><span class="p">,</span><span class="w">
-    </span><span class="nl">"/meta/nodes"</span><span class="p">:</span><span class="w"> </span><span class="s2">"ip:port/meta/nodes"</span><span class="p">,</span><span class="w">
-    </span><span class="nl">"/perfCounter"</span><span class="p">:</span><span class="w"> </span><span class="s2">"ip:port/perfCounter?name={perf_counter_name}"</span><span class="p">,</span><span class="w">
-    </span><span class="nl">"/pprof/cmdline"</span><span class="p">:</span><span class="w"> </span><span class="s2">"ip:port/pprof/cmdline"</span><span class="p">,</span><span class="w">
-    </span><span class="nl">"/pprof/growth"</span><span class="p">:</span><span class="w"> </span><span class="s2">"ip:port/pprof/growth"</span><span class="p">,</span><span class="w">
-    </span><span class="nl">"/pprof/heap"</span><span class="p">:</span><span class="w"> </span><span class="s2">"ip:port/pprof/heap"</span><span class="p">,</span><span class="w">
-    </span><span class="nl">"/pprof/profile"</span><span class="p">:</span><span class="w"> </span><span class="s2">"ip:port/pprof/profile"</span><span class="p">,</span><span class="w">
-    </span><span class="nl">"/pprof/symbol"</span><span class="p">:</span><span class="w"> </span><span class="s2">"ip:port/pprof/symbol"</span><span class="p">,</span><span class="w">
-    </span><span class="nl">"/recentStartTime"</span><span class="p">:</span><span class="w"> </span><span class="s2">"ip:port/recentStartTime"</span><span class="p">,</span><span class="w">
-    </span><span class="nl">"/version"</span><span class="p">:</span><span class="w"> </span><span class="s2">"ip:port/version"</span><span class="w">
-</span><span class="p">}</span><span class="w">
-</span></code></pre></div></div>
-
-<h3 id="version"><code class="language-plaintext highlighter-rouge">/version</code></h3>
-
-<p><strong>功能：</strong> 获取应用的版本</p>
-
-<p><strong>示例：</strong><code class="language-plaintext highlighter-rouge">127.0.0.1:34801/version</code></p>
-
-<p><strong>返回：</strong></p>
-
-<div class="language-json highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="p">{</span><span class="w">
-    </span><span class="nl">"GitCommit"</span><span class="p">:</span><span class="w"> </span><span class="s2">"cf428dc0ef995b961809df860e783417de7757fc"</span><span class="p">,</span><span class="w">
-    </span><span class="nl">"Version"</span><span class="p">:</span><span class="w"> </span><span class="s2">"1.12.SNAPSHOT"</span><span class="w">
-</span><span class="p">}</span><span class="w">
-</span></code></pre></div></div>
-
-<h3 id="recentstarttime"><code class="language-plaintext highlighter-rouge">/recentStartTime</code></h3>
-
-<p><strong>功能：</strong> 获取进程启动时间</p>
-
-<p><strong>示例：</strong><code class="language-plaintext highlighter-rouge">127.0.0.1:34801/recentStartTime</code></p>
-
-<p><strong>返回：</strong></p>
-
-<div class="language-json highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="p">{</span><span class="w">
-    </span><span class="nl">"RecentStartTime"</span><span class="p">:</span><span class="w"> </span><span class="s2">"2019-08-14 00:22:00"</span><span class="w">
-</span><span class="p">}</span><span class="w">
-</span></code></pre></div></div>
-
-<h3 id="pprofprofile"><code class="language-plaintext highlighter-rouge">/pprof/profile</code></h3>
-
-<p><strong>功能：</strong> 获取server的cpu采样</p>
-
-<p><strong>示例1：</strong><code class="language-plaintext highlighter-rouge">127.0.0.1:34801/pprof/profile?seconds=10</code></p>
-
-<p><strong>返回：</strong> profile文件</p>
-
-<p><strong>示例2：</strong> 推荐使用google/pprof Web UI</p>
-
-<p><code class="language-plaintext highlighter-rouge">pprof --http=:8080 http://127.0.0.1:34801/pprof/heap</code></p>
-
-<h3 id="pprofsymbol"><code class="language-plaintext highlighter-rouge">/pprof/symbol</code></h3>
-
-<p><strong>功能：</strong> 获取symbol信息</p>
-
-<p><strong>示例1：</strong><code class="language-plaintext highlighter-rouge">127.0.0.1:34801/pprof/symbol</code></p>
-
-<p><strong>返回：</strong> 非post请求，返回symbol个数</p>
-<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>num_symbols: 46225
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>{
+    "/": "List all supported calls.",
+    "/config": "name=&lt;config_name&gt;. Gets the details of a specified config. Only the configs which are registered by DSN_DEFINE_xxx macro can be queried.",
+    "/configs": "List all configs. Only the configs which are registered by DSN_DEFINE_xxx macro can be queried.",
+    "/meta/app": "name=&lt;app_name&gt;[&amp;detail]. Query app info.",
+    "/meta/app/duplication": "name=&lt;app_name&gt;. Query app duplication info.",
+    "/meta/app/query_bulk_load": "name=&lt;app_name&gt;. Query app bulk load info.",
+    "/meta/app/start_bulk_load": "A JSON format of start_bulk_load_request structure. Start bulk load on an app.",
+    "/meta/app/start_compaction": "A JSON format of manual_compaction_info structure. Start compaction for an app.",
+    "/meta/app/usage_scenario": "A JSON format of usage_scenario_info structure. Update usage scenario of an app.",
+    "/meta/app_envs": "name=&lt;app_name&gt;. Query app environments.",
+    "/meta/apps": "[detail]. List all apps in the cluster.",
+    "/meta/backup_policy": "name=&lt;app_name1&gt;&amp;name=&lt;app_name2&gt;. Query backup policy by policy names.",
+    "/meta/cluster": "Query the cluster info.",
+    "/meta/nodes": "[detail]. Query the replica servers info.",
+    "/metrics": "[with_metric_fields=field1,field2,...][&amp;types=type1,type2,...][&amp;ids=id1,id2,...][&amp;attributes=attr1,value1,attr2,value2,...][&amp;metrics=metric1,metric2,...][&amp;detail=true|false]Query the node metrics.",
+    "/pprof/cmdline": "Query the process' cmdline.",
+    "/pprof/growth": "Query the stack traces that caused growth in the address space size.",
+    "/pprof/heap": "[seconds=&lt;heap_profile_seconds&gt;]. Query a sample of live objects and the stack traces that allocated these objects (an environment variable TCMALLOC_SAMPLE_PARAMETER should set to a positive value, such as 524288), or the current heap profiling information if 'seconds' parameter is specified.",
+    "/pprof/profile": "[seconds=&lt;cpu_profile_seconds&gt;]. Query the CPU profile. 'seconds' is 60 if not specified.",
+    "/pprof/symbol": "[symbol_address]. Query the process' symbols. Return the symbol count of the process if using GET, return the symbol of the 'symbol_address' if using POST.",
+    "/recentStartTime": "Get the server start time.",
+    "/updateConfig": "&lt;key&gt;=&lt;new_value&gt;. Update the config to the new value.",
+    "/version": "Get the server version."
+}
 </code></pre></div></div>
 
-<p><strong>示例2：</strong><code class="language-plaintext highlighter-rouge">curl 127.0.0.1:34801/pprof/symbol -X POST -d "123455"</code></p>
+<h2 id="replicaserver">ReplicaServer</h2>
 
-<p><strong>返回：</strong> post请求，返回输入地址对应的symbol</p>
-<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>0x00123455      boost::asio::detail::keyword_tss_ptr
+<p>通过根 path 可以获取到 ReplicaServer 支持的所有接口，例如：<code class="language-plaintext highlighter-rouge">curl 127.0.0.1:34801/</code>，结果如下所示：</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>{
+    "/": "List all supported calls.",
+    "/config": "name=&lt;config_name&gt;. Gets the details of a specified config. Only the configs which are registered by DSN_DEFINE_xxx macro can be queried.",
+    "/configs": "List all configs. Only the configs which are registered by DSN_DEFINE_xxx macro can be queried.",
+    "/metrics": "[with_metric_fields=field1,field2,...][&amp;types=type1,type2,...][&amp;ids=id1,id2,...][&amp;attributes=attr1,value1,attr2,value2,...][&amp;metrics=metric1,metric2,...][&amp;detail=true|false]Query the node metrics.",
+    "/pprof/cmdline": "Query the process' cmdline.",
+    "/pprof/growth": "Query the stack traces that caused growth in the address space size.",
+    "/pprof/heap": "[seconds=&lt;heap_profile_seconds&gt;]. Query a sample of live objects and the stack traces that allocated these objects (an environment variable TCMALLOC_SAMPLE_PARAMETER should set to a positive value, such as 524288), or the current heap profiling information if 'seconds' parameter is specified.",
+    "/pprof/profile": "[seconds=&lt;cpu_profile_seconds&gt;]. Query the CPU profile. 'seconds' is 60 if not specified.",
+    "/pprof/symbol": "[symbol_address]. Query the process' symbols. Return the symbol count of the process if using GET, return the symbol of the 'symbol_address' if using POST.",
+    "/recentStartTime": "Get the server start time.",
+    "/replica/data_version": "app_id=&lt;app_id&gt;. Query the data version of an app.",
+    "/replica/duplication": "appid=&lt;appid&gt;. Query the duplication status of an app.",
+    "/replica/manual_compaction": "app_id=&lt;app_id&gt;. Query the manual compaction status of an app.",
+    "/updateConfig": "&lt;key&gt;=&lt;new_value&gt;. Update the config to the new value.",
+    "/version": "Get the server version."
+}
 </code></pre></div></div>
-
-<h3 id="pprofheap"><code class="language-plaintext highlighter-rouge">/pprof/heap</code></h3>
-
-<p><strong>功能：</strong> 获取server的内存采样</p>
-
-<p><strong>示例1：</strong><code class="language-plaintext highlighter-rouge">127.0.0.1:34801/pprof/heap</code></p>
-
-<p><strong>返回：</strong> heap profile文本</p>
-
-<p><strong>示例2：</strong> 推荐使用google/pprof Web UI</p>
-
-<p><code class="language-plaintext highlighter-rouge">pprof --http=:8080 http://127.0.0.1:34801/pprof/heap</code></p>
-
-<p><strong>注意：</strong> 需在被采样server所在机器设置环境变量<code class="language-plaintext highlighter-rouge">TCMALLOC_SAMPLE_PARAMETER</code></p>
-
-<h3 id="pprofcmdline"><code class="language-plaintext highlighter-rouge">/pprof/cmdline</code></h3>
-
-<p><strong>功能：</strong> 获取/proc/self/cmdline内容</p>
-
-<p><strong>示例：</strong><code class="language-plaintext highlighter-rouge">127.0.0.1:34801/pprof/cmdline</code></p>
-
-<p><strong>返回：</strong></p>
-<div class="language-json highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="err">/somepath/pegasus/onebox/replica</span><span class="mi">1</span><span class="err">/pegasus_server</span><span class="w">
-</span><span class="err">config.ini</span><span class="w">
-</span><span class="err">-app_list</span><span class="w">
-</span><span class="err">replica</span><span class="w">
-</span></code></pre></div></div>
-<h3 id="pprofgrowth"><code class="language-plaintext highlighter-rouge">/pprof/growth</code></h3>
-
-<p><strong>功能：</strong> 获取growth profile</p>
-
-<p><strong>示例：</strong><code class="language-plaintext highlighter-rouge">127.0.0.1:34801/pprof/growth</code></p>
-
-<p><strong>返回：</strong> growth profile文本</p>
-
-<h3 id="metaappnameapp_name"><code class="language-plaintext highlighter-rouge">/meta/app?name=&lt;app_name&gt;</code></h3>
-
-<p><strong>功能：</strong> 获取某个表的基本信息。</p>
-
-<p><strong>参数：</strong></p>
-
-<ul>
-  <li>name： 待查的表名</li>
-  <li>detail：是否打印详细信息</li>
-</ul>
-
-<p><strong>示例：</strong><code class="language-plaintext highlighter-rouge">127.0.0.1:34601/meta/app?name=stat&amp;detail</code></p>
-
-<p><strong>返回：</strong></p>
-
-<div class="language-json highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="p">{</span><span class="w">
-    </span><span class="nl">"general"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
-        </span><span class="nl">"app_id"</span><span class="p">:</span><span class="w"> </span><span class="s2">"1"</span><span class="p">,</span><span class="w">
-        </span><span class="nl">"app_name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"stat"</span><span class="p">,</span><span class="w">
-        </span><span class="nl">"max_replica_count"</span><span class="p">:</span><span class="w"> </span><span class="s2">"3"</span><span class="p">,</span><span class="w">
-        </span><span class="nl">"partition_count"</span><span class="p">:</span><span class="w"> </span><span class="s2">"4"</span><span class="w">
-    </span><span class="p">},</span><span class="w">
-    </span><span class="nl">"healthy"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
-        </span><span class="nl">"fully_healthy_partition_count"</span><span class="p">:</span><span class="w"> </span><span class="s2">"0"</span><span class="p">,</span><span class="w">
-        </span><span class="nl">"read_unhealthy_partition_count"</span><span class="p">:</span><span class="w"> </span><span class="s2">"0"</span><span class="p">,</span><span class="w">
-        </span><span class="nl">"unhealthy_partition_count"</span><span class="p">:</span><span class="w"> </span><span class="s2">"4"</span><span class="p">,</span><span class="w">
-        </span><span class="nl">"write_unhealthy_partition_count"</span><span class="p">:</span><span class="w"> </span><span class="s2">"0"</span><span class="w">
-    </span><span class="p">},</span><span class="w">
-    </span><span class="nl">"nodes"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
-        </span><span class="nl">"127.0.0.1:34801"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
-            </span><span class="nl">"node"</span><span class="p">:</span><span class="w"> </span><span class="s2">"127.0.0.1:34801"</span><span class="p">,</span><span class="w">
-            </span><span class="nl">"primary"</span><span class="p">:</span><span class="w"> </span><span class="s2">"2"</span><span class="p">,</span><span class="w">
-            </span><span class="nl">"secondary"</span><span class="p">:</span><span class="w"> </span><span class="s2">"2"</span><span class="p">,</span><span class="w">
-            </span><span class="nl">"total"</span><span class="p">:</span><span class="w"> </span><span class="s2">"4"</span><span class="w">
-        </span><span class="p">},</span><span class="w">
-        </span><span class="nl">"127.0.0.1:34802"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
-            </span><span class="nl">"node"</span><span class="p">:</span><span class="w"> </span><span class="s2">"127.0.0.1:34802"</span><span class="p">,</span><span class="w">
-            </span><span class="nl">"primary"</span><span class="p">:</span><span class="w"> </span><span class="s2">"2"</span><span class="p">,</span><span class="w">
-            </span><span class="nl">"secondary"</span><span class="p">:</span><span class="w"> </span><span class="s2">"2"</span><span class="p">,</span><span class="w">
-            </span><span class="nl">"total"</span><span class="p">:</span><span class="w"> </span><span class="s2">"4"</span><span class="w">
-        </span><span class="p">},</span><span class="w">
-        </span><span class="nl">"total"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
-            </span><span class="nl">"node"</span><span class="p">:</span><span class="w"> </span><span class="s2">"total"</span><span class="p">,</span><span class="w">
-            </span><span class="nl">"primary"</span><span class="p">:</span><span class="w"> </span><span class="s2">"4"</span><span class="p">,</span><span class="w">
-            </span><span class="nl">"secondary"</span><span class="p">:</span><span class="w"> </span><span class="s2">"4"</span><span class="p">,</span><span class="w">
-            </span><span class="nl">"total"</span><span class="p">:</span><span class="w"> </span><span class="s2">"8"</span><span class="w">
-        </span><span class="p">}</span><span class="w">
-    </span><span class="p">},</span><span class="w">
-    </span><span class="nl">"replicas"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
-        </span><span class="nl">"0"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
-            </span><span class="nl">"ballot"</span><span class="p">:</span><span class="w"> </span><span class="s2">"2"</span><span class="p">,</span><span class="w">
-            </span><span class="nl">"pidx"</span><span class="p">:</span><span class="w"> </span><span class="s2">"0"</span><span class="p">,</span><span class="w">
-            </span><span class="nl">"primary"</span><span class="p">:</span><span class="w"> </span><span class="s2">"127.0.0.1:34801"</span><span class="p">,</span><span class="w">
-            </span><span class="nl">"replica_count"</span><span class="p">:</span><span class="w"> </span><span class="s2">"2/3"</span><span class="p">,</span><span class="w">
-            </span><span class="nl">"secondaries"</span><span class="p">:</span><span class="w"> </span><span class="s2">"[127.0.0.1:34802]"</span><span class="w">
-        </span><span class="p">},</span><span class="w">
-        </span><span class="nl">"1"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
-            </span><span class="nl">"ballot"</span><span class="p">:</span><span class="w"> </span><span class="s2">"2"</span><span class="p">,</span><span class="w">
-            </span><span class="nl">"pidx"</span><span class="p">:</span><span class="w"> </span><span class="s2">"1"</span><span class="p">,</span><span class="w">
-            </span><span class="nl">"primary"</span><span class="p">:</span><span class="w"> </span><span class="s2">"127.0.0.1:34802"</span><span class="p">,</span><span class="w">
-            </span><span class="nl">"replica_count"</span><span class="p">:</span><span class="w"> </span><span class="s2">"2/3"</span><span class="p">,</span><span class="w">
-            </span><span class="nl">"secondaries"</span><span class="p">:</span><span class="w"> </span><span class="s2">"[127.0.0.1:34801]"</span><span class="w">
-        </span><span class="p">},</span><span class="w">
-        </span><span class="nl">"2"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
-            </span><span class="nl">"ballot"</span><span class="p">:</span><span class="w"> </span><span class="s2">"2"</span><span class="p">,</span><span class="w">
-            </span><span class="nl">"pidx"</span><span class="p">:</span><span class="w"> </span><span class="s2">"2"</span><span class="p">,</span><span class="w">
-            </span><span class="nl">"primary"</span><span class="p">:</span><span class="w"> </span><span class="s2">"127.0.0.1:34801"</span><span class="p">,</span><span class="w">
-            </span><span class="nl">"replica_count"</span><span class="p">:</span><span class="w"> </span><span class="s2">"2/3"</span><span class="p">,</span><span class="w">
-            </span><span class="nl">"secondaries"</span><span class="p">:</span><span class="w"> </span><span class="s2">"[127.0.0.1:34802]"</span><span class="w">
-        </span><span class="p">},</span><span class="w">
-        </span><span class="nl">"3"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
-            </span><span class="nl">"ballot"</span><span class="p">:</span><span class="w"> </span><span class="s2">"2"</span><span class="p">,</span><span class="w">
-            </span><span class="nl">"pidx"</span><span class="p">:</span><span class="w"> </span><span class="s2">"3"</span><span class="p">,</span><span class="w">
-            </span><span class="nl">"primary"</span><span class="p">:</span><span class="w"> </span><span class="s2">"127.0.0.1:34802"</span><span class="p">,</span><span class="w">
-            </span><span class="nl">"replica_count"</span><span class="p">:</span><span class="w"> </span><span class="s2">"2/3"</span><span class="p">,</span><span class="w">
-            </span><span class="nl">"secondaries"</span><span class="p">:</span><span class="w"> </span><span class="s2">"[127.0.0.1:34801]"</span><span class="w">
-        </span><span class="p">}</span><span class="w">
-    </span><span class="p">}</span><span class="w">
-</span><span class="p">}</span><span class="w">
-</span></code></pre></div></div>
-
-<h3 id="metaapps"><code class="language-plaintext highlighter-rouge">/meta/apps</code></h3>
-
-<p><strong>功能：</strong> 获取所有表的列表。</p>
-
-<p><strong>参数：</strong></p>
-
-<ul>
-  <li>detail：是否打印详细信息</li>
-</ul>
-
-<p><strong>示例：</strong><code class="language-plaintext highlighter-rouge">127.0.0.1:34601/meta/apps?detail</code></p>
-
-<p><strong>返回：</strong></p>
-
-<div class="language-json highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="p">{</span><span class="w">
-    </span><span class="nl">"general_info"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
-        </span><span class="nl">"1"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
-            </span><span class="nl">"app_id"</span><span class="p">:</span><span class="w"> </span><span class="s2">"1"</span><span class="p">,</span><span class="w">
-            </span><span class="nl">"app_name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"stat"</span><span class="p">,</span><span class="w">
-            </span><span class="nl">"app_type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"pegasus"</span><span class="p">,</span><span class="w">
-            </span><span class="nl">"create_time"</span><span class="p">:</span><span class="w"> </span><span class="s2">"2019-08-15 12:34:15.000"</span><span class="p">,</span><span class="w">
-            </span><span class="nl">"drop_expire"</span><span class="p">:</span><span class="w"> </span><span class="s2">"-"</span><span class="p">,</span><span class="w">
-            </span><span class="nl">"drop_time"</span><span class="p">:</span><span class="w"> </span><span class="s2">"-"</span><span class="p">,</span><span class="w">
-            </span><span class="nl">"envs_count"</span><span class="p">:</span><span class="w"> </span><span class="s2">"0"</span><span class="p">,</span><span class="w">
-            </span><span class="nl">"is_stateful"</span><span class="p">:</span><span class="w"> </span><span class="s2">"true"</span><span class="p">,</span><span class="w">
-            </span><span class="nl">"partition_count"</span><span class="p">:</span><span class="w"> </span><span class="s2">"4"</span><span class="p">,</span><span class="w">
-            </span><span class="nl">"replica_count"</span><span class="p">:</span><span class="w"> </span><span class="s2">"3"</span><span class="p">,</span><span class="w">
-            </span><span class="nl">"status"</span><span class="p">:</span><span class="w"> </span><span class="s2">"AVAILABLE"</span><span class="w">
-        </span><span class="p">},</span><span class="w">
-        </span><span class="nl">"2"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
-            </span><span class="nl">"app_id"</span><span class="p">:</span><span class="w"> </span><span class="s2">"2"</span><span class="p">,</span><span class="w">
-            </span><span class="nl">"app_name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"temp"</span><span class="p">,</span><span class="w">
-            </span><span class="nl">"app_type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"pegasus"</span><span class="p">,</span><span class="w">
-            </span><span class="nl">"create_time"</span><span class="p">:</span><span class="w"> </span><span class="s2">"2019-08-15 12:34:15.000"</span><span class="p">,</span><span class="w">
-            </span><span class="nl">"drop_expire"</span><span class="p">:</span><span class="w"> </span><span class="s2">"-"</span><span class="p">,</span><span class="w">
-            </span><span class="nl">"drop_time"</span><span class="p">:</span><span class="w"> </span><span class="s2">"-"</span><span class="p">,</span><span class="w">
-            </span><span class="nl">"envs_count"</span><span class="p">:</span><span class="w"> </span><span class="s2">"0"</span><span class="p">,</span><span class="w">
-            </span><span class="nl">"is_stateful"</span><span class="p">:</span><span class="w"> </span><span class="s2">"true"</span><span class="p">,</span><span class="w">
-            </span><span class="nl">"partition_count"</span><span class="p">:</span><span class="w"> </span><span class="s2">"8"</span><span class="p">,</span><span class="w">
-            </span><span class="nl">"replica_count"</span><span class="p">:</span><span class="w"> </span><span class="s2">"3"</span><span class="p">,</span><span class="w">
-            </span><span class="nl">"status"</span><span class="p">:</span><span class="w"> </span><span class="s2">"AVAILABLE"</span><span class="w">
-        </span><span class="p">}</span><span class="w">
-    </span><span class="p">},</span><span class="w">
-    </span><span class="nl">"healthy_info"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
-        </span><span class="nl">"1"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
-            </span><span class="nl">"app_id"</span><span class="p">:</span><span class="w"> </span><span class="s2">"1"</span><span class="p">,</span><span class="w">
-            </span><span class="nl">"app_name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"stat"</span><span class="p">,</span><span class="w">
-            </span><span class="nl">"fully_healthy"</span><span class="p">:</span><span class="w"> </span><span class="s2">"0"</span><span class="p">,</span><span class="w">
-            </span><span class="nl">"partition_count"</span><span class="p">:</span><span class="w"> </span><span class="s2">"4"</span><span class="p">,</span><span class="w">
-            </span><span class="nl">"read_unhealthy"</span><span class="p">:</span><span class="w"> </span><span class="s2">"0"</span><span class="p">,</span><span class="w">
-            </span><span class="nl">"unhealthy"</span><span class="p">:</span><span class="w"> </span><span class="s2">"4"</span><span class="p">,</span><span class="w">
-            </span><span class="nl">"write_unhealthy"</span><span class="p">:</span><span class="w"> </span><span class="s2">"4"</span><span class="w">
-        </span><span class="p">},</span><span class="w">
-        </span><span class="nl">"2"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
-            </span><span class="nl">"app_id"</span><span class="p">:</span><span class="w"> </span><span class="s2">"2"</span><span class="p">,</span><span class="w">
-            </span><span class="nl">"app_name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"temp"</span><span class="p">,</span><span class="w">
-            </span><span class="nl">"fully_healthy"</span><span class="p">:</span><span class="w"> </span><span class="s2">"0"</span><span class="p">,</span><span class="w">
-            </span><span class="nl">"partition_count"</span><span class="p">:</span><span class="w"> </span><span class="s2">"8"</span><span class="p">,</span><span class="w">
-            </span><span class="nl">"read_unhealthy"</span><span class="p">:</span><span class="w"> </span><span class="s2">"0"</span><span class="p">,</span><span class="w">
-            </span><span class="nl">"unhealthy"</span><span class="p">:</span><span class="w"> </span><span class="s2">"8"</span><span class="p">,</span><span class="w">
-            </span><span class="nl">"write_unhealthy"</span><span class="p">:</span><span class="w"> </span><span class="s2">"8"</span><span class="w">
-        </span><span class="p">}</span><span class="w">
-    </span><span class="p">},</span><span class="w">
-    </span><span class="nl">"summary"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
-        </span><span class="nl">"fully_healthy_app_count"</span><span class="p">:</span><span class="w"> </span><span class="s2">"0"</span><span class="p">,</span><span class="w">
-        </span><span class="nl">"read_unhealthy_app_count"</span><span class="p">:</span><span class="w"> </span><span class="s2">"0"</span><span class="p">,</span><span class="w">
-        </span><span class="nl">"total_app_count"</span><span class="p">:</span><span class="w"> </span><span class="s2">"2"</span><span class="p">,</span><span class="w">
-        </span><span class="nl">"unhealthy_app_count"</span><span class="p">:</span><span class="w"> </span><span class="s2">"2"</span><span class="p">,</span><span class="w">
-        </span><span class="nl">"write_unhealthy_app_count"</span><span class="p">:</span><span class="w"> </span><span class="s2">"2"</span><span class="w">
-    </span><span class="p">}</span><span class="w">
-</span><span class="p">}</span><span class="w">
-</span></code></pre></div></div>
-
-<h3 id="metacluster"><code class="language-plaintext highlighter-rouge">/meta/cluster</code></h3>
-
-<p><strong>功能：</strong> 获取集群基本信息。</p>
-
-<p><strong>示例：</strong><code class="language-plaintext highlighter-rouge">127.0.0.1:34601/meta/cluster</code></p>
-
-<p><strong>返回：</strong></p>
-
-<div class="language-json highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="p">{</span><span class="w">
-    </span><span class="nl">"balance_operation_count"</span><span class="p">:</span><span class="w"> </span><span class="s2">"move_pri=0,copy_pri=0,copy_sec=0,total=0"</span><span class="p">,</span><span class="w">
-    </span><span class="nl">"meta_function_level"</span><span class="p">:</span><span class="w"> </span><span class="s2">"steady"</span><span class="p">,</span><span class="w">
-    </span><span class="nl">"meta_servers"</span><span class="p">:</span><span class="w"> </span><span class="s2">"127.0.0.1:34601,127.0.0.1:34602,127.0.0.1:34603"</span><span class="p">,</span><span class="w">
-    </span><span class="nl">"primary_meta_server"</span><span class="p">:</span><span class="w"> </span><span class="s2">"127.0.0.1:34601"</span><span class="p">,</span><span class="w">
-    </span><span class="nl">"primary_replica_count_stddev"</span><span class="p">:</span><span class="w"> </span><span class="s2">"0.00"</span><span class="p">,</span><span class="w">
-    </span><span class="nl">"total_replica_count_stddev"</span><span class="p">:</span><span class="w"> </span><span class="s2">"0.00"</span><span class="p">,</span><span class="w">
-    </span><span class="nl">"zookeeper_hosts"</span><span class="p">:</span><span class="w"> </span><span class="s2">"127.0.0.1:22181"</span><span class="p">,</span><span class="w">
-    </span><span class="nl">"zookeeper_root"</span><span class="p">:</span><span class="w"> </span><span class="s2">"/pegasus/onebox/127.0.0.1"</span><span class="w">
-</span><span class="p">}</span><span class="w">
-</span></code></pre></div></div>
-
-<h3 id="metanodes"><code class="language-plaintext highlighter-rouge">/meta/nodes</code></h3>
-
-<p><strong>功能：</strong> 获取replica节点列表，以IP地址表示各个节点，并输出基本信息。</p>
-
-<p><strong>参数：</strong></p>
-
-<ul>
-  <li>detail：是否打印详细信息</li>
-</ul>
-
-<p><strong>示例：</strong><code class="language-plaintext highlighter-rouge">127.0.0.1:34601/meta/nodes?detail</code></p>
-
-<p><strong>返回：</strong></p>
-
-<div class="language-json highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="p">{</span><span class="w">
-    </span><span class="nl">"details"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
-        </span><span class="nl">"127.0.0.1:34801"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
-            </span><span class="nl">"address"</span><span class="p">:</span><span class="w"> </span><span class="s2">"127.0.0.1:34801"</span><span class="p">,</span><span class="w">
-            </span><span class="nl">"primary_count"</span><span class="p">:</span><span class="w"> </span><span class="s2">"6"</span><span class="p">,</span><span class="w">
-            </span><span class="nl">"replica_count"</span><span class="p">:</span><span class="w"> </span><span class="s2">"12"</span><span class="p">,</span><span class="w">
-            </span><span class="nl">"secondary_count"</span><span class="p">:</span><span class="w"> </span><span class="s2">"6"</span><span class="p">,</span><span class="w">
-            </span><span class="nl">"status"</span><span class="p">:</span><span class="w"> </span><span class="s2">"ALIVE"</span><span class="w">
-        </span><span class="p">},</span><span class="w">
-        </span><span class="nl">"127.0.0.1:34802"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
-            </span><span class="nl">"address"</span><span class="p">:</span><span class="w"> </span><span class="s2">"127.0.0.1:34802"</span><span class="p">,</span><span class="w">
-            </span><span class="nl">"primary_count"</span><span class="p">:</span><span class="w"> </span><span class="s2">"6"</span><span class="p">,</span><span class="w">
-            </span><span class="nl">"replica_count"</span><span class="p">:</span><span class="w"> </span><span class="s2">"12"</span><span class="p">,</span><span class="w">
-            </span><span class="nl">"secondary_count"</span><span class="p">:</span><span class="w"> </span><span class="s2">"6"</span><span class="p">,</span><span class="w">
-            </span><span class="nl">"status"</span><span class="p">:</span><span class="w"> </span><span class="s2">"ALIVE"</span><span class="w">
-        </span><span class="p">}</span><span class="w">
-    </span><span class="p">},</span><span class="w">
-    </span><span class="nl">"summary"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
-        </span><span class="nl">"alive_node_count"</span><span class="p">:</span><span class="w"> </span><span class="s2">"2"</span><span class="p">,</span><span class="w">
-        </span><span class="nl">"total_node_count"</span><span class="p">:</span><span class="w"> </span><span class="s2">"2"</span><span class="p">,</span><span class="w">
-        </span><span class="nl">"unalive_node_count"</span><span class="p">:</span><span class="w"> </span><span class="s2">"0"</span><span class="w">
-    </span><span class="p">}</span><span class="w">
-</span><span class="p">}</span><span class="w">
-</span></code></pre></div></div>
-
-<h3 id="metaapp_envsnameapp_name"><code class="language-plaintext highlighter-rouge">/meta/app_envs?name=&lt;app_name&gt;</code></h3>
-
-<p><strong>功能：</strong> 获取某个表的所有环境变量。</p>
-
-<p><strong>参数：</strong></p>
-
-<ul>
-  <li>name： 待查的表名</li>
-</ul>
-
-<p><strong>示例：</strong><code class="language-plaintext highlighter-rouge">127.0.0.1:34601/meta/app_envs?name=temp</code></p>
-
-<p><strong>返回：</strong></p>
-
-<div class="language-json highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="p">{</span><span class="w">
-    </span><span class="nl">"replica.enable_slow_query_log"</span><span class="p">:</span><span class="w"> </span><span class="s2">"true"</span><span class="p">,</span><span class="w">
-    </span><span class="nl">"replica.slow_query_threshold"</span><span class="p">:</span><span class="w"> </span><span class="s2">"20"</span><span class="w">
-</span><span class="p">}</span><span class="w">
-</span></code></pre></div></div>
-
-<h3 id="metaappduplicationnameapp_name"><code class="language-plaintext highlighter-rouge">/meta/app/duplication?name=&lt;app_name&gt;</code></h3>
-
-<p><strong>功能：</strong> 查询某个表的热备份情况</p>
-
-<p><strong>添加自</strong>：版本 2.0.0</p>
-
-<p><strong>参数：</strong></p>
-
-<ul>
-  <li>name： 待查的表名</li>
-</ul>
-
-<p><strong>示例：</strong><code class="language-plaintext highlighter-rouge">http://0.0.0.0:34602/meta/app/duplication?name=temp</code></p>
-
-<p><strong>返回：</strong></p>
-
-<ul>
-  <li><code class="language-plaintext highlighter-rouge">create_ts</code>：热备份的创建时间</li>
-  <li><code class="language-plaintext highlighter-rouge">dupid</code>：热备份的ID</li>
-  <li><code class="language-plaintext highlighter-rouge">not_confirmed_mutations_num</code>：各个分片当前有多少数据写尚未复制到目的集群，并且进度被同步至MetaServer</li>
-  <li><code class="language-plaintext highlighter-rouge">remote</code>：热备份远端集群的名字</li>
-  <li><code class="language-plaintext highlighter-rouge">status</code>：当前热备份的状态</li>
-</ul>
-
-<div class="language-json highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="p">{</span><span class="w">
-    </span><span class="nl">"1"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
-        </span><span class="nl">"create_ts"</span><span class="p">:</span><span class="w"> </span><span class="s2">"2020-03-09 18:13:50"</span><span class="p">,</span><span class="w">
-        </span><span class="nl">"dupid"</span><span class="p">:</span><span class="w"> </span><span class="mi">1583748830</span><span class="p">,</span><span class="w">
-        </span><span class="nl">"not_confirmed_mutations_num"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
-            </span><span class="nl">"0"</span><span class="p">:</span><span class="w"> </span><span class="mi">4964</span><span class="p">,</span><span class="w">
-            </span><span class="nl">"1"</span><span class="p">:</span><span class="w"> </span><span class="mi">5144</span><span class="p">,</span><span class="w">
-            </span><span class="nl">"2"</span><span class="p">:</span><span class="w"> </span><span class="mi">5123</span><span class="p">,</span><span class="w">
-            </span><span class="nl">"3"</span><span class="p">:</span><span class="w"> </span><span class="mi">5148</span><span class="p">,</span><span class="w">
-            </span><span class="nl">"4"</span><span class="p">:</span><span class="w"> </span><span class="mi">5208</span><span class="p">,</span><span class="w">
-            </span><span class="nl">"5"</span><span class="p">:</span><span class="w"> </span><span class="mi">5289</span><span class="p">,</span><span class="w">
-            </span><span class="nl">"6"</span><span class="p">:</span><span class="w"> </span><span class="mi">5253</span><span class="p">,</span><span class="w">
-            </span><span class="nl">"7"</span><span class="p">:</span><span class="w"> </span><span class="mi">5148</span><span class="w">
-        </span><span class="p">},</span><span class="w">
-        </span><span class="nl">"remote"</span><span class="p">:</span><span class="w"> </span><span class="s2">"onebox2"</span><span class="p">,</span><span class="w">
-        </span><span class="nl">"status"</span><span class="p">:</span><span class="w"> </span><span class="s2">"DS_PAUSE"</span><span class="w">
-    </span><span class="p">},</span><span class="w">
-    </span><span class="nl">"appid"</span><span class="p">:</span><span class="w"> </span><span class="mi">2</span><span class="w">
-</span><span class="p">}</span><span class="w">
-</span></code></pre></div></div>
-
-<h3 id="perfcounternameperf_counter_name"><code class="language-plaintext highlighter-rouge">/perfCounter?name=&lt;perf_counter_name&gt;</code></h3>
-
-<p><strong>功能：</strong> 获取某个perf counter的详细信息。如果perf counter名字中含有特殊字符时，需要先对其进行uri编码。</p>
-
-<p><strong>参数：</strong></p>
-
-<ul>
-  <li>name： 待查的perf counter名字</li>
-</ul>
-
-<p><strong>示例：</strong><code class="language-plaintext highlighter-rouge">127.0.0.1:34101/perfCounter?name=collector*app.pegasus*app.stat.read_qps%23_all_</code></p>
-
-<p><strong>返回：</strong></p>
-
-<div class="language-json highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="p">{</span><span class="w">
-    </span><span class="nl">"name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"collector*app.pegasus*app.stat.read_qps#_all_"</span><span class="p">,</span><span class="w">
-    </span><span class="nl">"value"</span><span class="p">:</span><span class="w"> </span><span class="s2">"0.00"</span><span class="p">,</span><span class="w">
-    </span><span class="nl">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"NUMBER"</span><span class="p">,</span><span class="w">
-    </span><span class="nl">"description"</span><span class="p">:</span><span class="w"> </span><span class="s2">"statistic the read_qps of app _all_"</span><span class="w">
-</span><span class="p">}</span><span class="w">
-</span></code></pre></div></div>
-
-<p><strong>NOTE:</strong> http中的字符<code class="language-plaintext highlighter-rouge">#</code>代表锚，是一种特殊字符，所以对于perf counter名字中包含’#’字符的需要转换成<code class="language-plaintext highlighter-rouge">%23</code></p>
-
-<h3 id="replicaduplicationappidappid"><code class="language-plaintext highlighter-rouge">/replica/duplication?appid=&lt;appid&gt;</code></h3>
-
-<p><strong>功能：</strong> 查询ReplicaServer上某个表各个分片的热备份情况。</p>
-
-<p><strong>添加自</strong>：版本 2.0.0</p>
-
-<p><strong>参数：</strong></p>
-
-<ul>
-  <li>appid： 待查的表的ID</li>
-</ul>
-
-<p><strong>示例：</strong><code class="language-plaintext highlighter-rouge">http://127.0.0.1:34801/replica/duplication?appid=2</code></p>
-
-<p><strong>返回：</strong></p>
-
-<ul>
-  <li><code class="language-plaintext highlighter-rouge">duplicating</code>：表示该分片是否正在运行热备份</li>
-  <li><code class="language-plaintext highlighter-rouge">not_confirmed_mutations_num</code>：当前有多少数据写尚未复制到目的集群，并且进度被同步至MetaServer</li>
-  <li><code class="language-plaintext highlighter-rouge">not_duplicated_mutations_num</code>：当前有多少数据写尚未复制到目的集群</li>
-</ul>
-
-<p><strong>NOTE：</strong><code class="language-plaintext highlighter-rouge">not_duplicated_mutations_num &lt;= not_confirmed_mutations_num</code></p>
-
-<div class="language-json highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="p">{</span><span class="w">
-    </span><span class="nl">"1583820008"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
-        </span><span class="nl">"2.1"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
-            </span><span class="nl">"duplicating"</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span><span class="w">
-            </span><span class="nl">"not_confirmed_mutations_num"</span><span class="p">:</span><span class="w"> </span><span class="mi">3</span><span class="p">,</span><span class="w">
-            </span><span class="nl">"not_duplicated_mutations_num"</span><span class="p">:</span><span class="w"> </span><span class="mi">3</span><span class="w">
-        </span><span class="p">},</span><span class="w">
-        </span><span class="nl">"2.3"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
-            </span><span class="nl">"duplicating"</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span><span class="w">
-            </span><span class="nl">"not_confirmed_mutations_num"</span><span class="p">:</span><span class="w"> </span><span class="mi">2</span><span class="p">,</span><span class="w">
-            </span><span class="nl">"not_duplicated_mutations_num"</span><span class="p">:</span><span class="w"> </span><span class="mi">1</span><span class="w">
-        </span><span class="p">},</span><span class="w">
-        </span><span class="nl">"2.4"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
-            </span><span class="nl">"duplicating"</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span><span class="w">
-            </span><span class="nl">"not_confirmed_mutations_num"</span><span class="p">:</span><span class="w"> </span><span class="mi">2</span><span class="p">,</span><span class="w">
-            </span><span class="nl">"not_duplicated_mutations_num"</span><span class="p">:</span><span class="w"> </span><span class="mi">2</span><span class="w">
-        </span><span class="p">},</span><span class="w">
-        </span><span class="nl">"2.7"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
-            </span><span class="nl">"duplicating"</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span><span class="w">
-            </span><span class="nl">"not_confirmed_mutations_num"</span><span class="p">:</span><span class="w"> </span><span class="mi">3</span><span class="p">,</span><span class="w">
-            </span><span class="nl">"not_duplicated_mutations_num"</span><span class="p">:</span><span class="w"> </span><span class="mi">2</span><span class="w">
-        </span><span class="p">}</span><span class="w">
-    </span><span class="p">}</span><span class="w">
-</span><span class="p">}</span><span class="w">
-</span></code></pre></div></div>
 
                 </div>
             </section>
@@ -1264,25 +847,11 @@
     本页导航
 </p>
 <ul class="menu-list">
-  <li><a href="#功能介绍">功能介绍</a></li>
-  <li><a href="#接口介绍">接口介绍</a>
+  <li><a href="#介绍">介绍</a></li>
+  <li><a href="#接口">接口</a>
     <ul>
-      <li><a href="#">/</a></li>
-      <li><a href="#version">/version</a></li>
-      <li><a href="#recentstarttime">/recentStartTime</a></li>
-      <li><a href="#pprofprofile">/pprof/profile</a></li>
-      <li><a href="#pprofsymbol">/pprof/symbol</a></li>
-      <li><a href="#pprofheap">/pprof/heap</a></li>
-      <li><a href="#pprofcmdline">/pprof/cmdline</a></li>
-      <li><a href="#pprofgrowth">/pprof/growth</a></li>
-      <li><a href="#metaappnameapp_name">/meta/app?name=&lt;app_name&gt;</a></li>
-      <li><a href="#metaapps">/meta/apps</a></li>
-      <li><a href="#metacluster">/meta/cluster</a></li>
-      <li><a href="#metanodes">/meta/nodes</a></li>
-      <li><a href="#metaapp_envsnameapp_name">/meta/app_envs?name=&lt;app_name&gt;</a></li>
-      <li><a href="#metaappduplicationnameapp_name">/meta/app/duplication?name=&lt;app_name&gt;</a></li>
-      <li><a href="#perfcounternameperf_counter_name">/perfCounter?name=&lt;perf_counter_name&gt;</a></li>
-      <li><a href="#replicaduplicationappidappid">/replica/duplication?appid=&lt;appid&gt;</a></li>
+      <li><a href="#metaserver">MetaServer</a></li>
+      <li><a href="#replicaserver">ReplicaServer</a></li>
     </ul>
   </li>
 </ul>
