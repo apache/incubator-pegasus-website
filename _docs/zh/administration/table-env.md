@@ -106,6 +106,7 @@ rocksdb.usage_scenario  : bulk_load
 # 支持列表
 
 可通过 meta server 的 [HTTP 接口](/api/http) `/envs/list` 获取所有支持的 table 环境变量。
+例如，2.6 版本支持的环境变量如下：
 
 ```
 $ curl 127.0.0.1:34601/envs/list
