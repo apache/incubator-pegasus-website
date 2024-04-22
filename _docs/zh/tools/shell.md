@@ -505,10 +505,10 @@ USAGE:disk_capacity            [-n|--node replica_server(ip:port)][-o|--out file
 | create            | 创建表，可加`-p`和`-r`选项指定分片数和副本数，要求分片数是 2 的指数倍，不指定 -r 则默认副本数为 3（推荐值）|
 | drop              | 删除表，参见[使用 drop 命令删除表](/administration/table-soft-delete#使用drop命令删除表)                   |
 | recall            | 恢复已删除的表，参见[使用 recall 命令恢复表](/administration/table-soft-delete#使用recall命令恢复表)       |
-| get_app_envs      | 获取表的环境变量，参见 [Table 环境变量#get_app_envs](/administration/table-env#get_app_envs)               |
-| set_app_envs      | 设置表的环境变量，参见 [Table 环境变量#set_app_envs](/administration/table-env#set_app_envs)               |
-| del_app_envs      | 删除表的环境变量，参见 [Table 环境变量#del_app_envs](/administration/table-env#del_app_envs)               |
-| clear_app_envs    | 清理表的环境变量，参见 [Table 环境变量#clear_app_envs](/administration/table-env#clear_app_envs)           |
+| get_app_envs      | 获取表的环境变量               |
+| set_app_envs      | 设置表的环境变量               |
+| del_app_envs      | 删除表的环境变量               |
+| clear_app_envs    | 清理表的环境变量           |
 | add_dup           | 添加 duplication 的集群，参见[跨机房同步](/administration/duplication)                                     |
 | query_dup         | 查询表的跨机房同步的集群, 参加[跨机房同步](/administration/duplication)                                    |
 | remove_dup        | 移除 duplication 的集群, 参见[跨机房同步](/administration/duplication)                                     |
@@ -685,13 +685,16 @@ USAGE: get_app_envs
 
 说明：
 
-- 该命令输出当前表的环境变量，使用前请首先使用`use [app_name]`选定特定表，参见 [get_app_envs](/administration/table-env#get_app_envs)。
+- 该命令输出当前表的环境变量，使用前请首先使用`use [app_name]`选定特定表。
 
 示例：
 
 ```
 >>> use temp
+OK
 >>> get_app_envs
+[app_envs]
+rocksdb.usage_scenario  : normal
 ```
 
 ### set_app_envs
@@ -706,13 +709,15 @@ USAGE: set_app_envs              <key> <value> [key value...]
 
 说明：
 
-- 该命令设置当前表的环境变量，使用前请首先使用`use [app_name]`选定特定表，参见 [set_app_envs](/administration/table-env#set_app_envs)。
+- 该命令设置当前表的环境变量，使用前请首先使用`use [app_name]`选定特定表。
 
 示例：
 
 ```
 >>> use temp
+OK
 >>> set_app_envs rocksdb.usage_scenario bulk_load
+set app envs succeed
 ```
 
 ### del_app_envs
@@ -727,13 +732,21 @@ USAGE: del_app_envs              <key> [key...]
 
 说明：
 
-- 该命令删除当前表的环境变量，使用前请首先使用`use [app_name]`选定特定表，参见 [del_app_envs](/administration/table-env#del_app_envs)。
+- 该命令删除当前表的环境变量，使用前请首先使用`use [app_name]`选定特定表。
 
 示例：
 
 ```
 >>> use temp
+OK
+>>> set_app_envs rocksdb.usage_scenario bulk_load
+set app envs succeed
 >>> del_app_envs rocksdb.usage_scenario
+del app envs succeed
+=============================
+deleted keys:
+    rocksdb.usage_scenario
+=============================
 ```
 
 ### clear_app_envs
@@ -748,7 +761,7 @@ USAGE: clear_app_envs              [-a|--all] [-p|--prefix str]
 
 说明：
 
-- 该命令删除当前表的环境变量，使用前请首先使用`use [app_name]`选定特定表，参见 [clear_app_envs](/administration/table-env#clear_app_envs)。
+- 该命令删除当前表的环境变量，使用前请首先使用`use [app_name]`选定特定表。
 - `-a`选项：如果指定，则清理所有的环境变量。
 - `-p`选项：如果指定，则可以清理以特定字符串为前缀的环境变量。
 
@@ -756,7 +769,26 @@ USAGE: clear_app_envs              [-a|--all] [-p|--prefix str]
 
 ```
 >>> use temp
->>> clear_app_envs -p rocksdb
+OK
+>>> set_app_envs manual_compact.once.trigger_time 1713700000
+set app envs succeed
+>>> set_app_envs manual_compact.once.target_level -1
+set app envs succeed
+>>> set_app_envs manual_compact.once.bottommost_level_compaction force
+set app envs succeed
+>>> set_app_envs rocksdb.usage_scenario bulk_load
+set app envs succeed
+>>> clear_app_envs -p manual_compact
+clear app envs succeed
+=============================
+deleted keys:
+    manual_compact.once.bottommost_level_compaction
+    manual_compact.once.target_level
+    manual_compact.once.trigger_time
+=============================
+>>> get_app_envs
+[app_envs]
+rocksdb.usage_scenario  : bulk_load
 ```
 
 ### add_dup
