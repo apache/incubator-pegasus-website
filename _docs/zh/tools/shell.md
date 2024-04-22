@@ -409,23 +409,25 @@ USAGE:server_stat                [-t all|meta-server|replica-server] [-l ip:port
 
 ### remote_command
 
-向节点发送远程命令，以执行某些特殊操作。
+向指定的一个或者多个远程进程发送远程命令。参见[远程命令](/administration/remote-commands)。
 
 用法：
 
 ```
-USAGE:remote_command             [-t all|meta-server|replica-server] [-l ip:port,ip:port...] <command>
+USAGE:  remote_command          [-t all|meta-server|replica-server] [-r|--resolve_ip]
+                                [-l ip:port,ip:port...] <command> [arguments...]
 ```
 
 说明：
 
-- `-t`、`-l`选项：用于选择特定目标机器，参见 [server_info](#server_info) 说明。
-- 远程命令详细信息，参见[远程命令](/administration/remote-commands)。
+* `-t`：只向指定角色的所有进程发送。
+* `-l`：只向指定的地址发送，可以通过列表指定多个地址。
+* 如果不指定，则会向集群中的所有节点发送指令。
 
 示例：
 
 ```
->>> recommand -t meta-server server-info
+>>> remote_command -t meta-server server-info
 ```
 
 ### flush_log
