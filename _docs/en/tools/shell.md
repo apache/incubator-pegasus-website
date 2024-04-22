@@ -424,23 +424,25 @@ Examples:
 
 ### remote_command
 
-Dispatch remote commands to the nodes to execute certain specialized operations.
+Send remote commands to one or more specified remote processes. See [remote-commands](/administration/remote-commands).
 
 Usage:
 
 ```
-USAGE:  remote_command           [-t all|meta-server|replica-server] [-l ip:port,ip:port...] <command>
+USAGE:  remote_command          [-t all|meta-server|replica-server] [-r|--resolve_ip]
+                                [-l ip:port,ip:port...] <command> [arguments...]
 ```
 
 Explanation:
 
-- The `-t`、`-l` option: Used to select specific target machines,see [server_info](#server_info) explanation.
-- Detailed information on remote commands, refer to [remote commands](/administration/remote-commands).
+* `-t`: Only send to all processes of the specified role.
+* `-l`: Only send to the specified address, multiple addresses can be specified through a list.
+* If not specified, instructions will be sent to all nodes in the cluster.
 
 Examples:
 
 ```
->>> recommand -t meta-server server-info
+>>> remote_command -t meta-server server-info
 ```
 
 ### flush_log
