@@ -20,11 +20,11 @@
 <meta property="og:description" content="Pegasus offers a comprehensive Shell utility designed for perusing cluster-related data, crafting and eliminating tables, and orchestrating data operations, among other functions. This document base on version 2.5.0." />
 <meta property="og:site_name" content="Pegasus" />
 <meta property="og:type" content="article" />
-<meta property="article:published_time" content="2024-04-22T06:39:52+00:00" />
+<meta property="article:published_time" content="2024-04-22T13:02:52+00:00" />
 <meta name="twitter:card" content="summary" />
 <meta property="twitter:title" content="Shell" />
 <script type="application/ld+json">
-{"@context":"https://schema.org","@type":"BlogPosting","dateModified":"2024-04-22T06:39:52+00:00","datePublished":"2024-04-22T06:39:52+00:00","description":"Pegasus offers a comprehensive Shell utility designed for perusing cluster-related data, crafting and eliminating tables, and orchestrating data operations, among other functions. This document base on version 2.5.0.","headline":"Shell","mainEntityOfPage":{"@type":"WebPage","@id":"/docs/tools/shell/"},"url":"/docs/tools/shell/"}</script>
+{"@context":"https://schema.org","@type":"BlogPosting","dateModified":"2024-04-22T13:02:52+00:00","datePublished":"2024-04-22T13:02:52+00:00","description":"Pegasus offers a comprehensive Shell utility designed for perusing cluster-related data, crafting and eliminating tables, and orchestrating data operations, among other functions. This document base on version 2.5.0.","headline":"Shell","mainEntityOfPage":{"@type":"WebPage","@id":"/docs/tools/shell/"},"url":"/docs/tools/shell/"}</script>
 <!-- End Jekyll SEO tag -->
 </head>
 
@@ -1222,23 +1222,25 @@ total_replica_count_stddev    :
 
 <h3 id="remote_command">remote_command</h3>
 
-<p>Dispatch remote commands to the nodes to execute certain specialized operations.</p>
+<p>Send remote commands to one or more specified remote processes. See <a href="/administration/remote-commands">remote-commands</a>.</p>
 
 <p>Usage:</p>
 
-<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>USAGE:  remote_command           [-t all|meta-server|replica-server] [-l ip:port,ip:port...] &lt;command&gt;
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>USAGE:  remote_command          [-t all|meta-server|replica-server] [-r|--resolve_ip]
+                                [-l ip:port,ip:port...] &lt;command&gt; [arguments...]
 </code></pre></div></div>
 
 <p>Explanation:</p>
 
 <ul>
-  <li>The <code class="language-plaintext highlighter-rouge">-t</code>、<code class="language-plaintext highlighter-rouge">-l</code> option: Used to select specific target machines,see <a href="#server_info">server_info</a> explanation.</li>
-  <li>Detailed information on remote commands, refer to <a href="/administration/remote-commands">remote commands</a>.</li>
+  <li><code class="language-plaintext highlighter-rouge">-t</code>: Only send to all processes of the specified role.</li>
+  <li><code class="language-plaintext highlighter-rouge">-l</code>: Only send to the specified address, multiple addresses can be specified through a list.</li>
+  <li>If not specified, instructions will be sent to all nodes in the cluster.</li>
 </ul>
 
 <p>Examples:</p>
 
-<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>&gt;&gt;&gt; recommand -t meta-server server-info
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>&gt;&gt;&gt; remote_command -t meta-server server-info
 </code></pre></div></div>
 
 <h3 id="flush_log">flush_log</h3>
