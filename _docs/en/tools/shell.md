@@ -520,10 +520,10 @@ Examples:
 | create            | Create a table, with the option to add `-p` and `-r` to specify the number of partitions and replicas, respectively. The number of partitions must be a power of two. If `-r` is not specified, the default number of replicas is set to 3 (recommended value).                                                                                                                                                                                                              |
 | drop              | Delete a table, refer to [use drop commands to delete a table](/administration/table-soft-delete#drop_commands).                                                                                                        |
 | recall            | Restore a previously deleted table, refer to [use recall commands to recovery table](/administration/table-soft-delete#recall_commands).                                                                                |
-| get_app_envs      | Retrieve the environmental variables of a table, refer to [Table environment#get_app_envs](/administration/table-env#get_app_envs).                                                                                     |
-| set_app_envs      | Set the environmental variables for a table, refer to [Table environment#set_app_envs](/administration/table-env#set_app_envs).                                                                                         |
-| del_app_envs      | Delete the environmental variables of a table, refer to [Table environment#del_app_envs](/administration/table-env#del_app_envs).                                                                                       |
-| clear_app_envs    | Clean up the environmental variables of a table, refer to [Table environment#clear_app_envs](/administration/table-env#clear_app_envs).                                                                                 |
+| get_app_envs      | Retrieve the environmental variables of a table.                                                                                     |
+| set_app_envs      | Set the environmental variables for a table.                                                                                         |
+| del_app_envs      | Delete the environmental variables of a table.                                                                                       |
+| clear_app_envs    | Clean up the environmental variables of a table.                                                                                 |
 | add_dup           | Add a cluster with duplication, refer to [duplication](/administration/duplication).                                                                                                                                    |
 | query_dup         | Query the clusters for cross-data center synchronization of a table, refer to [duplication](/administration/duplication).                                                                                               |
 | remove_dup        | Remove a cluster with duplication, refer to [duplication](/administration/duplication).                                                                                                                                 |
@@ -700,13 +700,16 @@ USAGE: get_app_envs
 
 Explanation:
 
-- This command outputs the current environmental variables of the table. Please use `use [app_name]` to select a specific table before executing this command. For reference, see [get_app_envs](/administration/table-env#get_app_envs).
+- This command outputs the current environmental variables of the table. Please use `use [app_name]` to select a specific table before executing this command.
 
 Examples:
 
 ```
 >>> use temp
+OK
 >>> get_app_envs
+[app_envs]
+rocksdb.usage_scenario  : normal
 ```
 
 ### set_app_envs
@@ -721,13 +724,15 @@ USAGE: set_app_envs            <key> <value> [key value...]
 
 Explanation:
 
-- This command will set the current environmental variables of the table. Please use `use [app_name]` to select a specific table before executing this command. For reference, see [get_app_envs](/administration/table-env#get_app_envs).
+- This command will set the current environmental variables of the table. Please use `use [app_name]` to select a specific table before executing this command.
 
 Examples:
 
 ```
 >>> use temp
+OK
 >>> set_app_envs rocksdb.usage_scenario bulk_load
+set app envs succeed
 ```
 
 ### del_app_envs
@@ -742,13 +747,21 @@ USAGE: del_app_envs            <key> [key...]
 
 Explanation:
 
-- This command delete the environmental variables of the current table. Please use `use [app_name]` to select a specific table before executing this command. For reference, see [get_app_envs](/administration/table-env#get_app_envs).
+- This command deletes the environmental variables of the current table. Please use `use [app_name]` to select a specific table before executing this command.
 
 Examples:
 
 ```
 >>> use temp
+OK
+>>> set_app_envs rocksdb.usage_scenario bulk_load
+set app envs succeed
 >>> del_app_envs rocksdb.usage_scenario
+del app envs succeed
+=============================
+deleted keys:
+    rocksdb.usage_scenario
+=============================
 ```
 
 ### clear_app_envs
@@ -763,7 +776,7 @@ USAGE: clear_app_envs          [-a|--all] [-p|--prefix str]
 
 Explanation:
 
-- This command eradicates the present table's environmental variables. Prior to employment, please ensure to employ `use [app_name]` to designate a specific table, as referenced in [clear_app_envs](/administration/table-env#clear_app_envs).
+- This command eradicates the present table's environmental variables. Prior to employment, please ensure to employ `use [app_name]` to designate a specific table.
 - The `-a` option: When specified, it results in the purging of all environmental variables.
 - The `-p` option: When specified, it allows for the elimination of environmental variables with a specific prefix string.
 
@@ -771,7 +784,26 @@ Examples:
 
 ```
 >>> use temp
->>> clear_app_envs -p rocksdb
+OK
+>>> set_app_envs manual_compact.once.trigger_time 1713700000
+set app envs succeed
+>>> set_app_envs manual_compact.once.target_level -1
+set app envs succeed
+>>> set_app_envs manual_compact.once.bottommost_level_compaction force
+set app envs succeed
+>>> set_app_envs rocksdb.usage_scenario bulk_load
+set app envs succeed
+>>> clear_app_envs -p manual_compact
+clear app envs succeed
+=============================
+deleted keys:
+    manual_compact.once.bottommost_level_compaction
+    manual_compact.once.target_level
+    manual_compact.once.trigger_time
+=============================
+>>> get_app_envs
+[app_envs]
+rocksdb.usage_scenario  : bulk_load
 ```
 
 ### add_dup

@@ -21,8 +21,8 @@ If you want to view specific table environment variables, you need to use the [g
 Table environment variables have the following characteristics:
 * Persist the metadata of the table onto Apache Zookeeper.
 * It can be dynamically modified through the command line, and once the modification is successful, it will be immediately updated to Zookeeper.
-* Synchronize the variables though the periodic synchronization message `config_sync` between the meta server and the replica server to take effect on each replica server.
-> Due to periodic synchronization, the updated environment variables may not take immediate effect on the replica server, but rather have a delay. This delay time depends on the value of the configuration 'config_sync_interval_ms', which defaults to 30 seconds.
+* Synchronize the variables though the periodic synchronization message `config_sync` between the Meta Server and the Replica Server to take effect on each Replica Server.
+> Due to periodic synchronization, the updated environment variables may not take immediate effect on the Replica Server, but rather have a delay. This delay time depends on the value of the configuration 'config_sync_interval_ms', which defaults to 30 seconds.
 * The key of environmental variables is usually separated by `.` for easy classification.
 
 The functions currently supported through table environment variables include:
@@ -36,79 +36,19 @@ Pegasus provides [Shell commands](/docs/tools/shell/) for manipulating table env
 
 ## get_app_envs
 
-Get a list of environment variables, usage: `get_app_envs [-j|--json]`
-
-示例：
-```
->>> use temp
-OK
->>> get_app_envs
-[app_envs]
-rocksdb.usage_scenario  : normal
-```
+Refer to: [`get_app_envs` command](/docs/tools/shell/#get_app_envs)
 
 ## set_app_envs
 
-设置环境变量，用法：`set_app_envs <key> <value> [key value...]`
-
-示例：
-```
->>> use temp
-OK
->>> set_app_envs rocksdb.usage_scenario bulk_load
-set app envs succeed
-```
+Refer to: [`set_app_envs` command](/docs/tools/shell/#set_app_envs)
 
 ## del_app_envs
 
-删除环境变量，用法：`del_app_envs <key> [key...]`
-
-示例：
-```
->>> use temp
-OK
->>> set_app_envs rocksdb.usage_scenario bulk_load
-set app envs succeed
->>> del_app_envs rocksdb.usage_scenario
-del app envs succeed
-=============================
-deleted keys:
-    rocksdb.usage_scenario
-=============================
-```
+Refer to: [`del_app_envs` command](/docs/tools/shell/#del_app_envs)
 
 ## clear_app_envs
 
-清空环境变量，或者叫批量删除环境变量，用法：`clear_app_envs <-a|--all> <-p|--prefix str>`
-
-支持两种方式：
-* 全部清理：使用 `-a` 选项。
-* 通过前缀清理：使用 `-p` 选项指定前缀，匹配时会先自动在前缀后面加上 `.`，然后按照字符串前缀匹配。
-
-譬如：
-```
->>> use temp
-OK
->>> set_app_envs manual_compact.once.trigger_time 1713700000
-set app envs succeed
->>> set_app_envs manual_compact.once.target_level -1
-set app envs succeed
->>> set_app_envs manual_compact.once.bottommost_level_compaction force
-set app envs succeed
->>> set_app_envs rocksdb.usage_scenario bulk_load
-set app envs succeed
->>> clear_app_envs -p manual_compact
-clear app envs succeed
-=============================
-deleted keys:
-    manual_compact.once.bottommost_level_compaction
-    manual_compact.once.target_level
-    manual_compact.once.trigger_time
-=============================
->>> get_app_envs
-[app_envs]
-rocksdb.usage_scenario  : bulk_load
-```
+Refer to: [`clear_app_envs` command](/docs/tools/shell/#clear_app_envs)
 
 # Supported environment variables
 

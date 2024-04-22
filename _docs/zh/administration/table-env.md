@@ -21,8 +21,8 @@ app_id  status     app_name  app_type  partition_count  replica_count  is_statef
 Table 环境变量具有如下特性：
 * 作为 table 的元数据持久化到 Apache Zookeeper 上。
 * 可以通过命令行动态修改，修改成功后会立即更新到 Apache Zookeeper 上。
-* 通过 meta server 和 replica server 的周期性同步消息 `config_sync` 同步给各个 replica server 生效。
-> 由于是周期性同步，所以环境变量更新后可能不会在 replica server 上立即生效，而是有一个延迟。这个延迟时间依赖于配置 `config_sync_interval_ms` 的值，默认是 30 秒。
+* 通过 Meta Server 和 Replica Server 的周期性同步消息 `config_sync` 同步给各个 Replica Server 生效。
+> 由于是周期性同步，所以环境变量更新后可能不会在 Replica Server 上立即生效，而是有一个延迟。这个延迟时间依赖于配置 `config_sync_interval_ms` 的值，默认是 30 秒。
 * 环境变量的 key 通常使用 `.` 分隔，方便分类。
 
 目前通过 table 环境变量支持的功能如：
@@ -35,83 +35,23 @@ Pegasus 的 [Shell 工具](/docs/tools/shell/) 中提供了操作 table 环境�
 
 ## get_app_envs
 
-获取环境变量列表，用法：`get_app_envs [-j|--json]`
-
-示例：
-```
->>> use temp
-OK
->>> get_app_envs
-[app_envs]
-rocksdb.usage_scenario  : normal
-```
+参考：[`get_app_envs` 命令](/docs/tools/shell/#get_app_envs)
 
 ## set_app_envs
 
-设置环境变量，用法：`set_app_envs <key> <value> [key value...]`
-
-示例：
-```
->>> use temp
-OK
->>> set_app_envs rocksdb.usage_scenario bulk_load
-set app envs succeed
-```
+参考：[`set_app_envs` 命令](/docs/tools/shell/#set_app_envs)
 
 ## del_app_envs
 
-删除环境变量，用法：`del_app_envs <key> [key...]`
-
-示例：
-```
->>> use temp
-OK
->>> set_app_envs rocksdb.usage_scenario bulk_load
-set app envs succeed
->>> del_app_envs rocksdb.usage_scenario
-del app envs succeed
-=============================
-deleted keys:
-    rocksdb.usage_scenario
-=============================
-```
+参考：[`del_app_envs` 命令](/docs/tools/shell/#del_app_envs)
 
 ## clear_app_envs
 
-清空环境变量，或者叫批量删除环境变量，用法：`clear_app_envs <-a|--all> <-p|--prefix str>`
-
-支持两种方式：
-* 全部清理：使用 `-a` 选项。
-* 通过前缀清理：使用 `-p` 选项指定前缀，匹配时会先自动在前缀后面加上 `.`，然后按照字符串前缀匹配。
-
-譬如：
-```
->>> use temp
-OK
->>> set_app_envs manual_compact.once.trigger_time 1713700000
-set app envs succeed
->>> set_app_envs manual_compact.once.target_level -1
-set app envs succeed
->>> set_app_envs manual_compact.once.bottommost_level_compaction force
-set app envs succeed
->>> set_app_envs rocksdb.usage_scenario bulk_load
-set app envs succeed
->>> clear_app_envs -p manual_compact
-clear app envs succeed
-=============================
-deleted keys:
-    manual_compact.once.bottommost_level_compaction
-    manual_compact.once.target_level
-    manual_compact.once.trigger_time
-=============================
->>> get_app_envs
-[app_envs]
-rocksdb.usage_scenario  : bulk_load
-```
+参考：[`clear_app_envs` 命令](/docs/tools/shell/#clear_app_envs)
 
 # 支持的环境变量
 
-从 Pegasus 2.6 开始，可通过 meta server 的 [HTTP 接口](/api/http) `/envs/list` 获取所有支持的 table 环境变量。
+从 Pegasus 2.6 开始，可通过 Meta Server 的 [HTTP 接口](/api/http) `/envs/list` 获取所有支持的 table 环境变量。
 例如：
 
 ```
