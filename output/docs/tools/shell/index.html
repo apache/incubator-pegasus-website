@@ -20,11 +20,11 @@
 <meta property="og:description" content="Pegasus offers a comprehensive Shell utility designed for perusing cluster-related data, crafting and eliminating tables, and orchestrating data operations, among other functions. This document base on version 2.5.0." />
 <meta property="og:site_name" content="Pegasus" />
 <meta property="og:type" content="article" />
-<meta property="article:published_time" content="2024-04-09T06:31:10+00:00" />
+<meta property="article:published_time" content="2024-04-22T06:39:52+00:00" />
 <meta name="twitter:card" content="summary" />
 <meta property="twitter:title" content="Shell" />
 <script type="application/ld+json">
-{"@context":"https://schema.org","@type":"BlogPosting","dateModified":"2024-04-09T06:31:10+00:00","datePublished":"2024-04-09T06:31:10+00:00","description":"Pegasus offers a comprehensive Shell utility designed for perusing cluster-related data, crafting and eliminating tables, and orchestrating data operations, among other functions. This document base on version 2.5.0.","headline":"Shell","mainEntityOfPage":{"@type":"WebPage","@id":"/docs/tools/shell/"},"url":"/docs/tools/shell/"}</script>
+{"@context":"https://schema.org","@type":"BlogPosting","dateModified":"2024-04-22T06:39:52+00:00","datePublished":"2024-04-22T06:39:52+00:00","description":"Pegasus offers a comprehensive Shell utility designed for perusing cluster-related data, crafting and eliminating tables, and orchestrating data operations, among other functions. This document base on version 2.5.0.","headline":"Shell","mainEntityOfPage":{"@type":"WebPage","@id":"/docs/tools/shell/"},"url":"/docs/tools/shell/"}</script>
 <!-- End Jekyll SEO tag -->
 </head>
 
@@ -1347,19 +1347,19 @@ total_replica_count_stddev    :
     </tr>
     <tr>
       <td>get_app_envs</td>
-      <td>Retrieve the environmental variables of a table, refer to <a href="/administration/table-env#get_app_envs">Table environment#get_app_envs</a>.</td>
+      <td>Retrieve the environmental variables of a table.</td>
     </tr>
     <tr>
       <td>set_app_envs</td>
-      <td>Set the environmental variables for a table, refer to <a href="/administration/table-env#set_app_envs">Table environment#set_app_envs</a>.</td>
+      <td>Set the environmental variables for a table.</td>
     </tr>
     <tr>
       <td>del_app_envs</td>
-      <td>Delete the environmental variables of a table, refer to <a href="/administration/table-env#del_app_envs">Table environment#del_app_envs</a>.</td>
+      <td>Delete the environmental variables of a table.</td>
     </tr>
     <tr>
       <td>clear_app_envs</td>
-      <td>Clean up the environmental variables of a table, refer to <a href="/administration/table-env#clear_app_envs">Table environment#clear_app_envs</a>.</td>
+      <td>Clean up the environmental variables of a table.</td>
     </tr>
     <tr>
       <td>add_dup</td>
@@ -1563,13 +1563,16 @@ total_replica_count_stddev    :
 <p>Explanation:</p>
 
 <ul>
-  <li>This command outputs the current environmental variables of the table. Please use <code class="language-plaintext highlighter-rouge">use [app_name]</code> to select a specific table before executing this command. For reference, see <a href="/administration/table-env#get_app_envs">get_app_envs</a>.</li>
+  <li>This command outputs the current environmental variables of the table. Please use <code class="language-plaintext highlighter-rouge">use [app_name]</code> to select a specific table before executing this command.</li>
 </ul>
 
 <p>Examples:</p>
 
 <div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>&gt;&gt;&gt; use temp
+OK
 &gt;&gt;&gt; get_app_envs
+[app_envs]
+rocksdb.usage_scenario  : normal
 </code></pre></div></div>
 
 <h3 id="set_app_envs">set_app_envs</h3>
@@ -1584,13 +1587,15 @@ total_replica_count_stddev    :
 <p>Explanation:</p>
 
 <ul>
-  <li>This command will set the current environmental variables of the table. Please use <code class="language-plaintext highlighter-rouge">use [app_name]</code> to select a specific table before executing this command. For reference, see <a href="/administration/table-env#get_app_envs">get_app_envs</a>.</li>
+  <li>This command will set the current environmental variables of the table. Please use <code class="language-plaintext highlighter-rouge">use [app_name]</code> to select a specific table before executing this command.</li>
 </ul>
 
 <p>Examples:</p>
 
 <div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>&gt;&gt;&gt; use temp
+OK
 &gt;&gt;&gt; set_app_envs rocksdb.usage_scenario bulk_load
+set app envs succeed
 </code></pre></div></div>
 
 <h3 id="del_app_envs">del_app_envs</h3>
@@ -1605,13 +1610,21 @@ total_replica_count_stddev    :
 <p>Explanation:</p>
 
 <ul>
-  <li>This command delete the environmental variables of the current table. Please use <code class="language-plaintext highlighter-rouge">use [app_name]</code> to select a specific table before executing this command. For reference, see <a href="/administration/table-env#get_app_envs">get_app_envs</a>.</li>
+  <li>This command deletes the environmental variables of the current table. Please use <code class="language-plaintext highlighter-rouge">use [app_name]</code> to select a specific table before executing this command.</li>
 </ul>
 
 <p>Examples:</p>
 
 <div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>&gt;&gt;&gt; use temp
+OK
+&gt;&gt;&gt; set_app_envs rocksdb.usage_scenario bulk_load
+set app envs succeed
 &gt;&gt;&gt; del_app_envs rocksdb.usage_scenario
+del app envs succeed
+=============================
+deleted keys:
+    rocksdb.usage_scenario
+=============================
 </code></pre></div></div>
 
 <h3 id="clear_app_envs">clear_app_envs</h3>
@@ -1626,7 +1639,7 @@ total_replica_count_stddev    :
 <p>Explanation:</p>
 
 <ul>
-  <li>This command eradicates the present table’s environmental variables. Prior to employment, please ensure to employ <code class="language-plaintext highlighter-rouge">use [app_name]</code> to designate a specific table, as referenced in <a href="/administration/table-env#clear_app_envs">clear_app_envs</a>.</li>
+  <li>This command eradicates the present table’s environmental variables. Prior to employment, please ensure to employ <code class="language-plaintext highlighter-rouge">use [app_name]</code> to designate a specific table.</li>
   <li>The <code class="language-plaintext highlighter-rouge">-a</code> option: When specified, it results in the purging of all environmental variables.</li>
   <li>The <code class="language-plaintext highlighter-rouge">-p</code> option: When specified, it allows for the elimination of environmental variables with a specific prefix string.</li>
 </ul>
@@ -1634,7 +1647,26 @@ total_replica_count_stddev    :
 <p>Examples:</p>
 
 <div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>&gt;&gt;&gt; use temp
-&gt;&gt;&gt; clear_app_envs -p rocksdb
+OK
+&gt;&gt;&gt; set_app_envs manual_compact.once.trigger_time 1713700000
+set app envs succeed
+&gt;&gt;&gt; set_app_envs manual_compact.once.target_level -1
+set app envs succeed
+&gt;&gt;&gt; set_app_envs manual_compact.once.bottommost_level_compaction force
+set app envs succeed
+&gt;&gt;&gt; set_app_envs rocksdb.usage_scenario bulk_load
+set app envs succeed
+&gt;&gt;&gt; clear_app_envs -p manual_compact
+clear app envs succeed
+=============================
+deleted keys:
+    manual_compact.once.bottommost_level_compaction
+    manual_compact.once.target_level
+    manual_compact.once.trigger_time
+=============================
+&gt;&gt;&gt; get_app_envs
+[app_envs]
+rocksdb.usage_scenario  : bulk_load
 </code></pre></div></div>
 
 <h3 id="add_dup">add_dup</h3>

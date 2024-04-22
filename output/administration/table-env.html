@@ -16,15 +16,15 @@
 <meta name="generator" content="Jekyll v4.3.3" />
 <meta property="og:title" content="Table Env" />
 <meta property="og:locale" content="en_US" />
-<meta name="description" content="TRANSLATING" />
-<meta property="og:description" content="TRANSLATING" />
+<meta name="description" content="Introduction" />
+<meta property="og:description" content="Introduction" />
 <meta property="og:site_name" content="Pegasus" />
 <meta property="og:type" content="article" />
-<meta property="article:published_time" content="2024-04-09T06:31:10+00:00" />
+<meta property="article:published_time" content="2024-04-22T06:39:52+00:00" />
 <meta name="twitter:card" content="summary" />
 <meta property="twitter:title" content="Table Env" />
 <script type="application/ld+json">
-{"@context":"https://schema.org","@type":"BlogPosting","dateModified":"2024-04-09T06:31:10+00:00","datePublished":"2024-04-09T06:31:10+00:00","description":"TRANSLATING","headline":"Table Env","mainEntityOfPage":{"@type":"WebPage","@id":"/administration/table-env"},"url":"/administration/table-env"}</script>
+{"@context":"https://schema.org","@type":"BlogPosting","dateModified":"2024-04-22T06:39:52+00:00","datePublished":"2024-04-22T06:39:52+00:00","description":"Introduction","headline":"Table Env","mainEntityOfPage":{"@type":"WebPage","@id":"/administration/table-env"},"url":"/administration/table-env"}</script>
 <!-- End Jekyll SEO tag -->
 </head>
 
@@ -733,7 +733,216 @@
             </section>
             <section class="section" style="padding-top: 2rem;">
                 <div class="content">
-                    <p>TRANSLATING</p>
+                    <h1 id="introduction">Introduction</h1>
+
+<p>In order to control some of the behaviors of the table, Pegasus provides the table environment variables, also known as <code class="language-plaintext highlighter-rouge">app envs</code>.</p>
+
+<p>The table environment variables are stored in the metadata of the table in the form of a map (in the Thrift structure <code class="language-plaintext highlighter-rouge">app_info</code>) and persisted to the Apache Zookeeper.</p>
+
+<p>View the table information through the shell tool’s <a href="/docs/tools/shell/#ls"><code class="language-plaintext highlighter-rouge">ls</code> command</a>, and the last column <code class="language-plaintext highlighter-rouge">envs_count</code> indicates the number of environment variables of the table. For example:</p>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>&gt;&gt;&gt; ls
+[general_info]
+app_id  status     app_name  app_type  partition_count  replica_count  is_stateful  create_time          drop_time  drop_expire  envs_count
+2       AVAILABLE  temp      pegasus   8                3              true         2024-04-15_06:58:38  -          -            1
+</code></pre></div></div>
+
+<p>If you want to view specific table environment variables, you need to use the <a href="#get_app_envs">get_app_envs</a> command.</p>
+
+<p>Table environment variables have the following characteristics:</p>
+<ul>
+  <li>Persist the metadata of the table onto Apache Zookeeper.</li>
+  <li>It can be dynamically modified through the command line, and once the modification is successful, it will be immediately updated to Zookeeper.</li>
+  <li>Synchronize the variables though the periodic synchronization message <code class="language-plaintext highlighter-rouge">config_sync</code> between the Meta Server and the Replica Server to take effect on each Replica Server.
+    <blockquote>
+      <p>Due to periodic synchronization, the updated environment variables may not take immediate effect on the Replica Server, but rather have a delay. This delay time depends on the value of the configuration ‘config_sync_interval_ms’, which defaults to 30 seconds.</p>
+    </blockquote>
+  </li>
+  <li>The key of environmental variables is usually separated by <code class="language-plaintext highlighter-rouge">.</code> for easy classification.</li>
+</ul>
+
+<p>The functions currently supported through table environment variables include:</p>
+<ul>
+  <li><a href="manual-compact">Manual-Compact</a></li>
+  <li><a href="usage-scenario">Usage-Scenario</a></li>
+</ul>
+
+<h1 id="control-commands">Control commands</h1>
+
+<p>Pegasus provides <a href="/docs/tools/shell/">Shell commands</a> for manipulating table environment variables.</p>
+<blockquote>
+  <p>Before executing these commands, <code class="language-plaintext highlighter-rouge">use &lt;table_name&gt;</code> needs to be executed to select the table that needs to be operated on.</p>
+</blockquote>
+
+<h2 id="get_app_envs">get_app_envs</h2>
+
+<p>Refer to: <a href="/docs/tools/shell/#get_app_envs"><code class="language-plaintext highlighter-rouge">get_app_envs</code> command</a></p>
+
+<h2 id="set_app_envs">set_app_envs</h2>
+
+<p>Refer to: <a href="/docs/tools/shell/#set_app_envs"><code class="language-plaintext highlighter-rouge">set_app_envs</code> command</a></p>
+
+<h2 id="del_app_envs">del_app_envs</h2>
+
+<p>Refer to: <a href="/docs/tools/shell/#del_app_envs"><code class="language-plaintext highlighter-rouge">del_app_envs</code> command</a></p>
+
+<h2 id="clear_app_envs">clear_app_envs</h2>
+
+<p>Refer to: <a href="/docs/tools/shell/#clear_app_envs"><code class="language-plaintext highlighter-rouge">clear_app_envs</code> command</a></p>
+
+<h1 id="supported-environment-variables">Supported environment variables</h1>
+
+<p>Starting from Pegasus 2.6, all supported table environment variables can be obtained through Meta Server <a href="/api/http">HTTP API</a> <code class="language-plaintext highlighter-rouge">/envs/list</code>.
+For example:</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>$ curl 127.0.0.1:34601/envs/list
+{
+  "business.info": {
+    "limitation": "",
+    "sample": "",
+    "type": "string"
+  },
+  "default_ttl": {
+    "limitation": "&gt;= 0",
+    "sample": "86400",
+    "type": "unsigned int32"
+  },
+  "manual_compact.disabled": {
+    "limitation": "true | false",
+    "sample": "true",
+    "type": "bool"
+  },
+  "manual_compact.max_concurrent_running_count": {
+    "limitation": "&gt;= 0",
+    "sample": "8",
+    "type": "unsigned int32"
+  },
+  "manual_compact.once.bottommost_level_compaction": {
+    "limitation": "force | skip",
+    "sample": "skip",
+    "type": "string"
+  },
+  "manual_compact.once.target_level": {
+    "limitation": "-1 or &gt;= 1",
+    "sample": "6",
+    "type": "unsigned int64"
+  },
+  "manual_compact.once.trigger_time": {
+    "limitation": "&gt; 0, timestamp (in seconds) to trigger the once manual compaction",
+    "sample": "1700000000",
+    "type": "unsigned int64"
+  },
+  "manual_compact.periodic.bottommost_level_compaction": {
+    "limitation": "force | skip",
+    "sample": "skip",
+    "type": "string"
+  },
+  "manual_compact.periodic.target_level": {
+    "limitation": "-1 or &gt;= 1",
+    "sample": "6",
+    "type": "unsigned int64"
+  },
+  "manual_compact.periodic.trigger_time": {
+    "limitation": "",
+    "sample": "",
+    "type": "string"
+  },
+  "replica.backup_request_throttling": {
+    "limitation": "&lt;size[K|M]&gt;*&lt;delay|reject&gt;*&lt;milliseconds&gt;",
+    "sample": "10000*delay*100,20000*reject*100",
+    "type": "string"
+  },
+  "replica.deny_client_request": {
+    "limitation": "timeout*all | timeout*write | timeout*read | reconfig*all | reconfig*write | reconfig*read",
+    "sample": "timeout*all",
+    "type": "string"
+  },
+  "replica.read_throttling": {
+    "limitation": "&lt;size[K|M]&gt;*&lt;delay|reject&gt;*&lt;milliseconds&gt;",
+    "sample": "10000*delay*100,20000*reject*100",
+    "type": "string"
+  },
+  "replica.read_throttling_by_size": {
+    "limitation": "",
+    "sample": "20000*delay*100,20000*reject*100",
+    "type": "string"
+  },
+  "replica.rocksdb_block_cache_enabled": {
+    "limitation": "true | false",
+    "sample": "true",
+    "type": "bool"
+  },
+  "replica.rocksdb_iteration_threshold_time_ms": {
+    "limitation": "&gt;= 0",
+    "sample": "1000",
+    "type": "unsigned int64"
+  },
+  "replica.slow_query_threshold": {
+    "limitation": "&gt;= 20",
+    "sample": "1000",
+    "type": "unsigned int64"
+  },
+  "replica.split.validate_partition_hash": {
+    "limitation": "true | false",
+    "sample": "true",
+    "type": "bool"
+  },
+  "replica.write_throttling": {
+    "limitation": "&lt;size[K|M]&gt;*&lt;delay|reject&gt;*&lt;milliseconds&gt;",
+    "sample": "10000*delay*100,20000*reject*100",
+    "type": "string"
+  },
+  "replica.write_throttling_by_size": {
+    "limitation": "&lt;size[K|M]&gt;*&lt;delay|reject&gt;*&lt;milliseconds&gt;",
+    "sample": "10000*delay*100,20000*reject*100",
+    "type": "string"
+  },
+  "replica_access_controller.allowed_users": {
+    "limitation": "",
+    "sample": "",
+    "type": "string"
+  },
+  "replica_access_controller.ranger_policies": {
+    "limitation": "",
+    "sample": "",
+    "type": "string"
+  },
+  "rocksdb.allow_ingest_behind": {
+    "limitation": "true | false",
+    "sample": "true",
+    "type": "bool"
+  },
+  "rocksdb.checkpoint.reserve_min_count": {
+    "limitation": "&gt; 0",
+    "sample": "2",
+    "type": "unsigned int32"
+  },
+  "rocksdb.checkpoint.reserve_time_seconds": {
+    "limitation": "&gt;= 0",
+    "sample": "3600",
+    "type": "unsigned int32"
+  },
+  "rocksdb.num_levels": {
+    "limitation": "In range [1, 10]",
+    "sample": "6",
+    "type": "unsigned int64"
+  },
+  "rocksdb.usage_scenario": {
+    "limitation": "bulk_load | normal | prefer_write",
+    "sample": "normal",
+    "type": "string"
+  },
+  "rocksdb.write_buffer_size": {
+    "limitation": "In range [16777216, 536870912]",
+    "sample": "16777216",
+    "type": "unsigned int64"
+  },
+  "user_specified_compaction": {
+    "limitation": "",
+    "sample": "",
+    "type": "string"
+  }
+}
+</code></pre></div></div>
 
                 </div>
             </section>
@@ -776,7 +985,18 @@
     </span>
     Table of contents
 </p>
-
+<ul class="menu-list">
+  <li><a href="#introduction">Introduction</a></li>
+  <li><a href="#control-commands">Control commands</a>
+    <ul>
+      <li><a href="#get_app_envs">get_app_envs</a></li>
+      <li><a href="#set_app_envs">set_app_envs</a></li>
+      <li><a href="#del_app_envs">del_app_envs</a></li>
+      <li><a href="#clear_app_envs">clear_app_envs</a></li>
+    </ul>
+  </li>
+  <li><a href="#supported-environment-variables">Supported environment variables</a></li>
+</ul>
 
         </div>
     </div>

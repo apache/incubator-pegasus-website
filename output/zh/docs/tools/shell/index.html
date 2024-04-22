@@ -20,11 +20,11 @@
 <meta property="og:description" content="Pegasus 提供了 Shell 工具，用于查看集群相关信息，创建/删除表，操作数据等。本文档基于 2.5.0 版本。" />
 <meta property="og:site_name" content="Pegasus" />
 <meta property="og:type" content="article" />
-<meta property="article:published_time" content="2024-04-09T06:31:10+00:00" />
+<meta property="article:published_time" content="2024-04-22T06:39:52+00:00" />
 <meta name="twitter:card" content="summary" />
 <meta property="twitter:title" content="Shell" />
 <script type="application/ld+json">
-{"@context":"https://schema.org","@type":"BlogPosting","dateModified":"2024-04-09T06:31:10+00:00","datePublished":"2024-04-09T06:31:10+00:00","description":"Pegasus 提供了 Shell 工具，用于查看集群相关信息，创建/删除表，操作数据等。本文档基于 2.5.0 版本。","headline":"Shell","mainEntityOfPage":{"@type":"WebPage","@id":"/docs/tools/shell/"},"url":"/docs/tools/shell/"}</script>
+{"@context":"https://schema.org","@type":"BlogPosting","dateModified":"2024-04-22T06:39:52+00:00","datePublished":"2024-04-22T06:39:52+00:00","description":"Pegasus 提供了 Shell 工具，用于查看集群相关信息，创建/删除表，操作数据等。本文档基于 2.5.0 版本。","headline":"Shell","mainEntityOfPage":{"@type":"WebPage","@id":"/docs/tools/shell/"},"url":"/docs/tools/shell/"}</script>
 <!-- End Jekyll SEO tag -->
 </head>
 
@@ -1337,19 +1337,19 @@ Options for subcommand 'shell':
     </tr>
     <tr>
       <td>get_app_envs</td>
-      <td>获取表的环境变量，参见 <a href="/zh/administration/table-env#get_app_envs">Table 环境变量#get_app_envs</a></td>
+      <td>获取表的环境变量</td>
     </tr>
     <tr>
       <td>set_app_envs</td>
-      <td>设置表的环境变量，参见 <a href="/zh/administration/table-env#set_app_envs">Table 环境变量#set_app_envs</a></td>
+      <td>设置表的环境变量</td>
     </tr>
     <tr>
       <td>del_app_envs</td>
-      <td>删除表的环境变量，参见 <a href="/zh/administration/table-env#del_app_envs">Table 环境变量#del_app_envs</a></td>
+      <td>删除表的环境变量</td>
     </tr>
     <tr>
       <td>clear_app_envs</td>
-      <td>清理表的环境变量，参见 <a href="/zh/administration/table-env#clear_app_envs">Table 环境变量#clear_app_envs</a></td>
+      <td>清理表的环境变量</td>
     </tr>
     <tr>
       <td>add_dup</td>
@@ -1553,13 +1553,16 @@ Options for subcommand 'shell':
 <p>说明：</p>
 
 <ul>
-  <li>该命令输出当前表的环境变量，使用前请首先使用<code class="language-plaintext highlighter-rouge">use [app_name]</code>选定特定表，参见 <a href="/zh/administration/table-env#get_app_envs">get_app_envs</a>。</li>
+  <li>该命令输出当前表的环境变量，使用前请首先使用<code class="language-plaintext highlighter-rouge">use [app_name]</code>选定特定表。</li>
 </ul>
 
 <p>示例：</p>
 
 <div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>&gt;&gt;&gt; use temp
+OK
 &gt;&gt;&gt; get_app_envs
+[app_envs]
+rocksdb.usage_scenario  : normal
 </code></pre></div></div>
 
 <h3 id="set_app_envs">set_app_envs</h3>
@@ -1574,13 +1577,15 @@ Options for subcommand 'shell':
 <p>说明：</p>
 
 <ul>
-  <li>该命令设置当前表的环境变量，使用前请首先使用<code class="language-plaintext highlighter-rouge">use [app_name]</code>选定特定表，参见 <a href="/zh/administration/table-env#set_app_envs">set_app_envs</a>。</li>
+  <li>该命令设置当前表的环境变量，使用前请首先使用<code class="language-plaintext highlighter-rouge">use [app_name]</code>选定特定表。</li>
 </ul>
 
 <p>示例：</p>
 
 <div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>&gt;&gt;&gt; use temp
+OK
 &gt;&gt;&gt; set_app_envs rocksdb.usage_scenario bulk_load
+set app envs succeed
 </code></pre></div></div>
 
 <h3 id="del_app_envs">del_app_envs</h3>
@@ -1595,13 +1600,21 @@ Options for subcommand 'shell':
 <p>说明：</p>
 
 <ul>
-  <li>该命令删除当前表的环境变量，使用前请首先使用<code class="language-plaintext highlighter-rouge">use [app_name]</code>选定特定表，参见 <a href="/zh/administration/table-env#del_app_envs">del_app_envs</a>。</li>
+  <li>该命令删除当前表的环境变量，使用前请首先使用<code class="language-plaintext highlighter-rouge">use [app_name]</code>选定特定表。</li>
 </ul>
 
 <p>示例：</p>
 
 <div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>&gt;&gt;&gt; use temp
+OK
+&gt;&gt;&gt; set_app_envs rocksdb.usage_scenario bulk_load
+set app envs succeed
 &gt;&gt;&gt; del_app_envs rocksdb.usage_scenario
+del app envs succeed
+=============================
+deleted keys:
+    rocksdb.usage_scenario
+=============================
 </code></pre></div></div>
 
 <h3 id="clear_app_envs">clear_app_envs</h3>
@@ -1616,7 +1629,7 @@ Options for subcommand 'shell':
 <p>说明：</p>
 
 <ul>
-  <li>该命令删除当前表的环境变量，使用前请首先使用<code class="language-plaintext highlighter-rouge">use [app_name]</code>选定特定表，参见 <a href="/zh/administration/table-env#clear_app_envs">clear_app_envs</a>。</li>
+  <li>该命令删除当前表的环境变量，使用前请首先使用<code class="language-plaintext highlighter-rouge">use [app_name]</code>选定特定表。</li>
   <li><code class="language-plaintext highlighter-rouge">-a</code>选项：如果指定，则清理所有的环境变量。</li>
   <li><code class="language-plaintext highlighter-rouge">-p</code>选项：如果指定，则可以清理以特定字符串为前缀的环境变量。</li>
 </ul>
@@ -1624,7 +1637,26 @@ Options for subcommand 'shell':
 <p>示例：</p>
 
 <div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>&gt;&gt;&gt; use temp
-&gt;&gt;&gt; clear_app_envs -p rocksdb
+OK
+&gt;&gt;&gt; set_app_envs manual_compact.once.trigger_time 1713700000
+set app envs succeed
+&gt;&gt;&gt; set_app_envs manual_compact.once.target_level -1
+set app envs succeed
+&gt;&gt;&gt; set_app_envs manual_compact.once.bottommost_level_compaction force
+set app envs succeed
+&gt;&gt;&gt; set_app_envs rocksdb.usage_scenario bulk_load
+set app envs succeed
+&gt;&gt;&gt; clear_app_envs -p manual_compact
+clear app envs succeed
+=============================
+deleted keys:
+    manual_compact.once.bottommost_level_compaction
+    manual_compact.once.target_level
+    manual_compact.once.trigger_time
+=============================
+&gt;&gt;&gt; get_app_envs
+[app_envs]
+rocksdb.usage_scenario  : bulk_load
 </code></pre></div></div>
 
 <h3 id="add_dup">add_dup</h3>
