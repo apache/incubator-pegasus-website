@@ -27,7 +27,7 @@ The following table shows the performance comparison of whether the backup reque
 
 In addition, since the delay time is set to p999 time, about 1 out of 1000 requests will send a backup request, so the proportion of additional request volume (i.e., the additional overhead of enabling the backup request) is about 0.1%. By analogy, if you want to reduce P999 latency, you can set `backupRequestDelayMs` to P99 latency, which will increase the additional read traffic by 1%.
 
-|  test case   | enable backup request  |  read p9999  |
-| ---- | ---- | ---- |
-| 3-clients 15-threads | no | 988671 |
-| 3-clients 15-threads | yes | 153599 |
+| test case            | enable backup request | read p9999 |
+|----------------------|-----------------------|------------|
+| 3-clients 15-threads | no                    | 988671     |
+| 3-clients 15-threads | yes                   | 153599     |
