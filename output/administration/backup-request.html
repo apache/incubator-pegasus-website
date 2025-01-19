@@ -13,18 +13,18 @@
     <script src="/assets/js/docsearch.v3.js"></script>
     <!-- Begin Jekyll SEO tag v2.8.0 -->
 <title>Backup Request | Pegasus</title>
-<meta name="generator" content="Jekyll v4.3.3" />
+<meta name="generator" content="Jekyll v4.3.4" />
 <meta property="og:title" content="Backup Request" />
 <meta property="og:locale" content="en_US" />
-<meta name="description" content="TRANSLATING" />
-<meta property="og:description" content="TRANSLATING" />
+<meta name="description" content="Background In the current implementation of Pegasus, reading from secondary replicas can lead to inconsistencies, so only primary replicas are used for reads. However, in certain scenarios, such as load balancing or hotspot writes can cause instability on the primary replica. To address this, we aim to enable reads from secondary replicas when the primary is unstable. While this approach sacrifices some strong consistency, it helps to alleviate long-tail latency in read requests and improves overall system availability. The backup request mechanism is designed to facilitate this functionality." />
+<meta property="og:description" content="Background In the current implementation of Pegasus, reading from secondary replicas can lead to inconsistencies, so only primary replicas are used for reads. However, in certain scenarios, such as load balancing or hotspot writes can cause instability on the primary replica. To address this, we aim to enable reads from secondary replicas when the primary is unstable. While this approach sacrifices some strong consistency, it helps to alleviate long-tail latency in read requests and improves overall system availability. The backup request mechanism is designed to facilitate this functionality." />
 <meta property="og:site_name" content="Pegasus" />
 <meta property="og:type" content="article" />
-<meta property="article:published_time" content="2024-04-22T13:02:52+00:00" />
+<meta property="article:published_time" content="2025-01-19T07:34:49+00:00" />
 <meta name="twitter:card" content="summary" />
 <meta property="twitter:title" content="Backup Request" />
 <script type="application/ld+json">
-{"@context":"https://schema.org","@type":"BlogPosting","dateModified":"2024-04-22T13:02:52+00:00","datePublished":"2024-04-22T13:02:52+00:00","description":"TRANSLATING","headline":"Backup Request","mainEntityOfPage":{"@type":"WebPage","@id":"/administration/backup-request"},"url":"/administration/backup-request"}</script>
+{"@context":"https://schema.org","@type":"BlogPosting","dateModified":"2025-01-19T07:34:49+00:00","datePublished":"2025-01-19T07:34:49+00:00","description":"Background In the current implementation of Pegasus, reading from secondary replicas can lead to inconsistencies, so only primary replicas are used for reads. However, in certain scenarios, such as load balancing or hotspot writes can cause instability on the primary replica. To address this, we aim to enable reads from secondary replicas when the primary is unstable. While this approach sacrifices some strong consistency, it helps to alleviate long-tail latency in read requests and improves overall system availability. The backup request mechanism is designed to facilitate this functionality.","headline":"Backup Request","mainEntityOfPage":{"@type":"WebPage","@id":"/administration/backup-request"},"url":"/administration/backup-request"}</script>
 <!-- End Jekyll SEO tag -->
 </head>
 
@@ -733,7 +733,50 @@
             </section>
             <section class="section" style="padding-top: 2rem;">
                 <div class="content">
-                    <p>TRANSLATING</p>
+                    <h1 id="background">Background</h1>
+<p>In the current implementation of Pegasus, reading from secondary replicas can lead to inconsistencies, so only primary replicas are used for reads. However, in certain scenarios, such as load balancing or hotspot writes can cause instability on the primary replica. To address this, we aim to enable reads from secondary replicas when the primary is unstable. While this approach sacrifices some strong consistency, it helps to alleviate long-tail latency in read requests and improves overall system availability. The <strong>backup request</strong> mechanism is designed to facilitate this functionality.</p>
+
+<h1 id="design-and-implementation">Design and Implementation</h1>
+<p>Implementing of backup requests is relatively straightforward. For read operations (write operations currently do not support backup requests), when a client sends a request to the primary, it will wait for a specified delay period (typically p999). If no response is received within this time, the client will randomly select a secondary replica and send a backup request. The first response received will be used.</p>
+
+<p>We recommend using p999 as the delay for sending secondary requests, as the purpose of the backup request operation is to eliminate long-tail latency rather than to improve cluster performance. Setting this value too low can result in an overwhelming number of backup requests, thereby significantly increasing the overall system load. For example, if the delay is set to p50, 50% of the requests would be sent to secondary replicas, causing a 50% increase in system load.</p>
+
+<h1 id="how-to-use">How to Use</h1>
+<p>In Pegasus Java Client v2.0.0, we introduced an interface that allows users to enable the backup request feature for a specific table. The method is defined as follows:</p>
+
+<div class="language-java highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kd">public</span> <span class="nc">PegasusTableInterface</span> <span class="nf">openTable</span><span class="o">(</span><span class="nc">String</span> <span class="n">tableName</span><span class="o">,</span> <span class="kt">int</span> <span class="n">backupRequestDelayMs</span><span class="o">)</span> <span class="kd">throws</span> <span class="nc">PException</span><span class="o">;</span>
+</code></pre></div></div>
+
+<p>Compared to the previous version of the <code class="language-plaintext highlighter-rouge">openTable</code> interface, we’ve added the <code class="language-plaintext highlighter-rouge">backupRequestDelayMs</code> parameter. This parameter defines the delay time in milliseconds: if a request sent to the primary replica does not receive a response within <code class="language-plaintext highlighter-rouge">backupRequestDelayMs</code>, a backup request will be sent to a secondary replica. Notice that setting <code class="language-plaintext highlighter-rouge">backupRequestDelayMs &lt;= 0</code> disables the backup request feature.</p>
+
+<p>In previous versions of the openTable interface, the backup request mechanism was disabled by default.</p>
+
+<h1 id="performance-testing">Performance Testing</h1>
+<p>The table below compares the performance between enabling and disabling backup requests. We used the p999 latency of read without backup requests (138 ms) as the delay for triggering backup requests. The data shows that enabling backup requests has <strong>no significant impact</strong> on the p999 latency for <code class="language-plaintext highlighter-rouge">get</code> requests, but the p9999 latency is <strong>reduced by several times</strong>.</p>
+
+<p>Additionally, since the delay is set to the p999 value, approximately one out of every thousand requests triggers a backup request. This results in an additional request load (i.e., the overhead of enabling backup requests) of approximately 0.1%. Similarly, setting the <code class="language-plaintext highlighter-rouge">backupRequestDelayMs</code> to p99 can further reduce the p999 latency, which may increase the additional read request load by around 1%.</p>
+
+<table>
+  <thead>
+    <tr>
+      <th>Test Case</th>
+      <th>Backup Request Enabled</th>
+      <th>Read p9999</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>3 Clients, 15 Threads</td>
+      <td>No</td>
+      <td>988,671</td>
+    </tr>
+    <tr>
+      <td>3 Clients, 15 Threads</td>
+      <td>Yes</td>
+      <td>153,599</td>
+    </tr>
+  </tbody>
+</table>
 
                 </div>
             </section>
@@ -776,7 +819,12 @@
     </span>
     Table of contents
 </p>
-
+<ul class="menu-list">
+  <li><a href="#background">Background</a></li>
+  <li><a href="#design-and-implementation">Design and Implementation</a></li>
+  <li><a href="#how-to-use">How to Use</a></li>
+  <li><a href="#performance-testing">Performance Testing</a></li>
+</ul>
 
         </div>
     </div>
