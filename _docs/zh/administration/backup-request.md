@@ -3,7 +3,7 @@ permalink: administration/backup-request
 ---
 
 # 背景
-在当前的 Pegasus 实现中，由于向 secondary 读取会导致不一致的情况发生，所以目前 Pegasus 仅支持对 primary 副本的读取。但是在某些情况下（例如：负载均衡、热点写入等）经常会导致 primary 不稳定。因此，我们希望在 primary 不稳定时能够读取 secondary，通过牺牲部分强一致性来降低读请求的长尾并提高系统的可用性。backup request 便是用来实现此功能的。
+在当前的 Pegasus 实现中，由于向 secondary 读取会导致不一致的情况发生，所以 Pegasus 默认只对 primary 副本的读取。但是在某些情况下（例如：负载均衡、热点写入等）经常会导致 primary 不稳定。因此，我们希望在 primary 不稳定时能够读取 secondary，通过牺牲部分强一致性来降低读请求的长尾并提高系统的可用性。backup request 便是用来实现此功能的。
 
 # 设计实现
 
@@ -21,13 +21,13 @@ public PegasusTableInterface openTable(String tableName, int backupRequestDelayM
 
 另外在老版本的 `openTable` 接口中，backup request 功能默认是关闭的。
 
-# 性能测试
+# Benchmark
 
 下面表格里展示了是否打开 backup request 的性能对比，这里我们选取了未打开 backup request 时读请求的 p999 时间作为 backup request 的 delay 时间（138ms）。数据显示，打开 backup request 之后 get 请求的 p999 时延**基本没有变化**，而 p9999 时延却有了**数倍的降低**。
 
 另外，由于 delay 时间设置的是 p999 时间，大约 1000 个请求里只有 1 个请求会发送 backup request，因此额外请求量（也就是开启 backup request 的额外开销）比例在 0.1% 左右。依此类推，若想要降低 P999 时延，则可以将 `backupRequestDelayMs` 设置为 P99 延迟，由此会增加 1% 的额外读流量。
 
-| test case            | enable backup request | read p9999 |
-|----------------------|-----------------------|------------|
-| 3-clients 15-threads | no                    | 988671     |
-| 3-clients 15-threads | yes                   | 153599     |
+| test case            | enable backup request | read p9999 latency in microsecond |
+|----------------------|-----------------------|-----------------------------------|
+| 3-clients 15-threads | no                    | 988,671                           |
+| 3-clients 15-threads | yes                   | 153,599                           |
