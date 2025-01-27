@@ -1,0 +1,26 @@
+name: Check Markdown format
+on:
+  pull_request:
+    types: [ synchronize, opened, reopened ]
+    branches:
+      - master
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+      - uses: dorny/paths-filter@v3
+        id: changes
+        with:
+          list-files: shell
+          filters: |
+            markdown:
+              - added|modified: '**/*.md'
+      - name: Install packages
+        if: ${{ steps.changes.outputs.markdown == 'true' }}
+        run: |
+          yarn global add pangu
+      - name: Check format
+        if: ${{ steps.changes.outputs.markdown == 'true' }}
+        run: for markdown_file in ${{ steps.changes.outputs.markdown_files }}; do diff -B <(pangu -f ${markdown_file}) <(cat ${markdown_file}); done
