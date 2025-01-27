@@ -17,16 +17,16 @@ backup request 的实现原理比较简单：对于读操作（目前写操作�
 在 Pegasus Java client v2.0.0 中，我们增加了一个接口，通过该接口可以打开某个表的 backup request 功能。其实现如下：
 
 ```java
-public PegasusTableInterface openTable (String tableName, int backupRequestDelayMs) throws PException;
+public PegasusTableInterface openTable(String tableName, int backupRequestDelayMs) throws PException;
 ```
 
-相比于老版本的 `openTable` 接口，我们增加了一个 `backupRequestDelayMs` 参数。这个参数便是上文所指的时延，即：向 primary 发送请求，如果过了 `backupRequestDelayMs` 毫秒 response 仍没有返回，则向 secondary 发送 backup request。需要注意的是，`backupRequestDelayMs <= 0` 代表禁用 backup reqeust 功能。
+相比于老版本的 `openTable` 接口，我们增加了一个 `backupRequestDelayMs` 参数。这个参数便是上文所指的时延，即：向 primary 发送请求，如果过了 `backupRequestDelayMs` 毫秒 response 仍没有返回，则向 secondary 发送 backup request。需要注意的是，`backupRequestDelayMs <= 0` 代表禁用 backup request 功能。
 
 另外在老版本的 `openTable` 接口中，backup request 功能默认是关闭的。
 
 # Benchmark
 
-下面表格里展示了是否打开 backup request 的性能对比，这里我们选取了未打开 backup request 时读请求的 p999 时间作为 backup request 的 delay 时间（138ms）。数据显示，打开 backup request 之后 get 请求的 p999 时延 ** 基本没有变化 **，而 p9999 时延却有了 ** 数倍的降低 **。
+下面表格里展示了是否打开 backup request 的性能对比，这里我们选取了未打开 backup request 时读请求的 p999 时间作为 backup request 的 delay 时间（138ms）。数据显示，打开 backup request 之后 get 请求的 p999 时延基本没有变化，而 p9999 时延却有了数倍的降低。
 
 另外，由于 delay 时间设置的是 p999 时间，大约 1000 个请求里只有 1 个请求会发送 backup request，因此额外请求量（也就是开启 backup request 的额外开销）比例在 0.1% 左右。依此类推，若想要降低 P999 时延，则可以将 `backupRequestDelayMs` 设置为 P99 延迟，由此会增加 1% 的额外读流量。
 
