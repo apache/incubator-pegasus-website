@@ -1,0 +1,975 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Pegasus | Deployment</title>
+    <link rel="stylesheet" href="/assets/css/app.css">
+    <link rel="shortcut icon" href="/assets/images/favicon.ico">
+    <link rel="stylesheet" href="/assets/css/utilities.min.css">
+    <link rel="stylesheet" href="/assets/css/docsearch.v3.css">
+    <script src="/assets/js/jquery.min.js"></script>
+    <script src="/assets/js/all.min.js"></script>
+    <script src="/assets/js/docsearch.v3.js"></script>
+    <!-- Begin Jekyll SEO tag v2.8.0 -->
+<title>Deployment | Pegasus</title>
+<meta name="generator" content="Jekyll v4.4.1" />
+<meta property="og:title" content="Deployment" />
+<meta property="og:locale" content="en_US" />
+<meta name="description" content="Prepare servers" />
+<meta property="og:description" content="Prepare servers" />
+<meta property="og:site_name" content="Pegasus" />
+<meta property="og:type" content="article" />
+<meta property="article:published_time" content="2025-02-12T14:49:16+00:00" />
+<meta name="twitter:card" content="summary" />
+<meta property="twitter:title" content="Deployment" />
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"BlogPosting","dateModified":"2025-02-12T14:49:16+00:00","datePublished":"2025-02-12T14:49:16+00:00","description":"Prepare servers","headline":"Deployment","mainEntityOfPage":{"@type":"WebPage","@id":"/administration/deployment"},"url":"/administration/deployment"}</script>
+<!-- End Jekyll SEO tag -->
+
+</head>
+
+
+<body>
+    <div class="dashboard is-full-height">
+        <!-- left panel -->
+        <div class="dashboard-panel is-medium is-hidden-mobile pl-0">
+            <div class="dashboard-panel-header has-text-centered">
+                <a href="/">
+                    <img src="/assets/images/pegasus-logo-inv.png" style="width: 80%;">
+                </a>
+                
+            </div>
+            <div class="dashboard-panel-main is-scrollable pl-6">
+                
+
+<aside class="menu">
+    
+    <p class="menu-label">The Pegasus documentation</p>
+    <ul class="menu-list">
+        
+        <li>
+            <a href="/docs/downloads"
+                class="">
+                Downloads
+            </a>
+        </li>
+        
+    </ul>
+    
+    <p class="menu-label">Building Pegasus</p>
+    <ul class="menu-list">
+        
+        <li>
+            <a href="/docs/build/compile-by-docker"
+                class="">
+                Compile by docker (recommended)
+            </a>
+        </li>
+        
+        <li>
+            <a href="/docs/build/compile-from-source"
+                class="">
+                Compile from source
+            </a>
+        </li>
+        
+    </ul>
+    
+    <p class="menu-label">Client Libs</p>
+    <ul class="menu-list">
+        
+        <li>
+            <a href="/clients/java-client"
+                class="">
+                Java Client
+            </a>
+        </li>
+        
+        <li>
+            <a href="/clients/cpp-client"
+                class="">
+                C++ Client
+            </a>
+        </li>
+        
+        <li>
+            <a href="https://github.com/apache/incubator-pegasus/tree/master/go-client"
+                class="">
+                Golang Client
+            </a>
+        </li>
+        
+        <li>
+            <a href="/clients/python-client"
+                class="">
+                Python Client
+            </a>
+        </li>
+        
+        <li>
+            <a href="/clients/node-client"
+                class="">
+                NodeJS Client
+            </a>
+        </li>
+        
+        <li>
+            <a href="/clients/scala-client"
+                class="">
+                Scala Client
+            </a>
+        </li>
+        
+    </ul>
+    
+    <p class="menu-label">Tools</p>
+    <ul class="menu-list">
+        
+        <li>
+            <a href="/docs/tools/shell"
+                class="">
+                Pegasus Shell
+            </a>
+        </li>
+        
+        <li>
+            <a href="https://github.com/pegasus-kv/admin-cli"
+                class="">
+                Admin CLI
+            </a>
+        </li>
+        
+        <li>
+            <a href="https://github.com/pegasus-kv/pegic"
+                class="">
+                Pegasus data access CLI
+            </a>
+        </li>
+        
+    </ul>
+    
+    <p class="menu-label">API</p>
+    <ul class="menu-list">
+        
+        <li>
+            <a href="/api/ttl"
+                class="">
+                TTL(Time To Live)
+            </a>
+        </li>
+        
+        <li>
+            <a href="/api/single-atomic"
+                class="">
+                Single-Atomic Operations
+            </a>
+        </li>
+        
+        <li>
+            <a href="/api/redis"
+                class="">
+                Redis Adaption
+            </a>
+        </li>
+        
+        <li>
+            <a href="/api/geo"
+                class="">
+                GEO Support
+            </a>
+        </li>
+        
+        <li>
+            <a href="/api/http"
+                class="">
+                HTTP API
+            </a>
+        </li>
+        
+    </ul>
+    
+    <p class="menu-label">Admin</p>
+    <ul class="menu-list">
+        
+        <li>
+            <a href="/administration/deployment"
+                class="is-active">
+                Deployment
+            </a>
+        </li>
+        
+        <li>
+            <a href="/administration/config"
+                class="">
+                Configurations
+            </a>
+        </li>
+        
+        <li>
+            <a href="/administration/rebalance"
+                class="">
+                Rebalance
+            </a>
+        </li>
+        
+        <li>
+            <a href="/administration/monitoring"
+                class="">
+                Monitoring
+            </a>
+        </li>
+        
+        <li>
+            <a href="/administration/rolling-update"
+                class="">
+                Rolling Restart and Upgrade
+            </a>
+        </li>
+        
+        <li>
+            <a href="/administration/scale-in-out"
+                class="">
+                Scale-in and Scale-out
+            </a>
+        </li>
+        
+        <li>
+            <a href="/administration/resource-management"
+                class="">
+                Resource Management
+            </a>
+        </li>
+        
+        <li>
+            <a href="/administration/cold-backup"
+                class="">
+                Cold Backup
+            </a>
+        </li>
+        
+        <li>
+            <a href="/administration/meta-recovery"
+                class="">
+                Metadata Recovery
+            </a>
+        </li>
+        
+        <li>
+            <a href="/administration/replica-recovery"
+                class="">
+                Replica Data Recovery
+            </a>
+        </li>
+        
+        <li>
+            <a href="/administration/zk-migration"
+                class="">
+                Zookeeper Migration
+            </a>
+        </li>
+        
+        <li>
+            <a href="/administration/table-migration"
+                class="">
+                Table Migration
+            </a>
+        </li>
+        
+        <li>
+            <a href="/administration/table-soft-delete"
+                class="">
+                Table Soft-Delete
+            </a>
+        </li>
+        
+        <li>
+            <a href="/administration/table-env"
+                class="">
+                Table Environment Variables
+            </a>
+        </li>
+        
+        <li>
+            <a href="/administration/remote-commands"
+                class="">
+                Remote Command
+            </a>
+        </li>
+        
+        <li>
+            <a href="/administration/partition-split"
+                class="">
+                Partition-Split
+            </a>
+        </li>
+        
+        <li>
+            <a href="/administration/duplication"
+                class="">
+                Duplication
+            </a>
+        </li>
+        
+        <li>
+            <a href="/administration/compression"
+                class="">
+                Data Compression
+            </a>
+        </li>
+        
+        <li>
+            <a href="/administration/throttling"
+                class="">
+                Throttling
+            </a>
+        </li>
+        
+        <li>
+            <a href="/administration/experiences"
+                class="">
+                Experiences
+            </a>
+        </li>
+        
+        <li>
+            <a href="/administration/manual-compact"
+                class="">
+                Manual Compact
+            </a>
+        </li>
+        
+        <li>
+            <a href="/administration/usage-scenario"
+                class="">
+                Usage Scenario
+            </a>
+        </li>
+        
+        <li>
+            <a href="/administration/bad-disk"
+                class="">
+                Bad Disk Repair
+            </a>
+        </li>
+        
+        <li>
+            <a href="/administration/whitelist"
+                class="">
+                Replica Server Whitelist
+            </a>
+        </li>
+        
+        <li>
+            <a href="/administration/backup-request"
+                class="">
+                Backup Request
+            </a>
+        </li>
+        
+        <li>
+            <a href="/administration/hotspot-detection"
+                class="">
+                Hotspot Detection
+            </a>
+        </li>
+        
+    </ul>
+    
+</aside>
+            </div>
+        </div>
+
+        <!-- main section -->
+        <div class="dashboard-main is-scrollable">
+            <nav class="navbar is-hidden-desktop">
+    <div class="navbar-brand">
+        <a href="/" class="navbar-item">
+            <!-- Pegasus Icon -->
+            <img src="/assets/images/pegasus-square.png">
+        </a>
+        <div class="navbar-item">
+            
+
+<!--A simple language switch button that only supports zh and en.-->
+<!--IF its language is zh, then switches to en.-->
+
+<a class="button is-light is-outlined is-inverted" href="/zh/administration/deployment"><strong>中</strong></a>
+
+        </div>
+        <a role="button" class="navbar-burger burger" aria-label="menu" aria-expanded="false" data-target="navMenu">
+            <!-- Appears in mobile mode only -->
+            <span aria-hidden="true"></span>
+            <span aria-hidden="true"></span>
+            <span aria-hidden="true"></span>
+        </a>
+    </div>
+    <div class="navbar-menu" id="navMenu">
+        <div class="navbar-end">
+            
+            <!--dropdown-->
+            <div class="navbar-item has-dropdown is-hoverable">
+                <a href=""
+                    class="navbar-link ">
+                    <span>
+                        The Pegasus documentation
+                    </span>
+                </a>
+                <div class="navbar-dropdown">
+                    
+                    <a href="/docs/downloads"
+                        class="navbar-item ">
+                        Downloads
+                    </a>
+                    
+                </div>
+            </div>
+            
+            <!--dropdown-->
+            <div class="navbar-item has-dropdown is-hoverable">
+                <a href=""
+                    class="navbar-link ">
+                    <span>
+                        Building Pegasus
+                    </span>
+                </a>
+                <div class="navbar-dropdown">
+                    
+                    <a href="/docs/build/compile-by-docker"
+                        class="navbar-item ">
+                        Compile by docker (recommended)
+                    </a>
+                    
+                    <a href="/docs/build/compile-from-source"
+                        class="navbar-item ">
+                        Compile from source
+                    </a>
+                    
+                </div>
+            </div>
+            
+            <!--dropdown-->
+            <div class="navbar-item has-dropdown is-hoverable">
+                <a href=""
+                    class="navbar-link ">
+                    <span>
+                        Client Libs
+                    </span>
+                </a>
+                <div class="navbar-dropdown">
+                    
+                    <a href="/clients/java-client"
+                        class="navbar-item ">
+                        Java Client
+                    </a>
+                    
+                    <a href="/clients/cpp-client"
+                        class="navbar-item ">
+                        C++ Client
+                    </a>
+                    
+                    <a href="https://github.com/apache/incubator-pegasus/tree/master/go-client"
+                        class="navbar-item ">
+                        Golang Client
+                    </a>
+                    
+                    <a href="/clients/python-client"
+                        class="navbar-item ">
+                        Python Client
+                    </a>
+                    
+                    <a href="/clients/node-client"
+                        class="navbar-item ">
+                        NodeJS Client
+                    </a>
+                    
+                    <a href="/clients/scala-client"
+                        class="navbar-item ">
+                        Scala Client
+                    </a>
+                    
+                </div>
+            </div>
+            
+            <!--dropdown-->
+            <div class="navbar-item has-dropdown is-hoverable">
+                <a href=""
+                    class="navbar-link ">
+                    <span>
+                        Tools
+                    </span>
+                </a>
+                <div class="navbar-dropdown">
+                    
+                    <a href="/docs/tools/shell"
+                        class="navbar-item ">
+                        Pegasus Shell
+                    </a>
+                    
+                    <a href="https://github.com/pegasus-kv/admin-cli"
+                        class="navbar-item ">
+                        Admin CLI
+                    </a>
+                    
+                    <a href="https://github.com/pegasus-kv/pegic"
+                        class="navbar-item ">
+                        Pegasus data access CLI
+                    </a>
+                    
+                </div>
+            </div>
+            
+            <!--dropdown-->
+            <div class="navbar-item has-dropdown is-hoverable">
+                <a href=""
+                    class="navbar-link ">
+                    <span>
+                        API
+                    </span>
+                </a>
+                <div class="navbar-dropdown">
+                    
+                    <a href="/api/ttl"
+                        class="navbar-item ">
+                        TTL(Time To Live)
+                    </a>
+                    
+                    <a href="/api/single-atomic"
+                        class="navbar-item ">
+                        Single-Atomic Operations
+                    </a>
+                    
+                    <a href="/api/redis"
+                        class="navbar-item ">
+                        Redis Adaption
+                    </a>
+                    
+                    <a href="/api/geo"
+                        class="navbar-item ">
+                        GEO Support
+                    </a>
+                    
+                    <a href="/api/http"
+                        class="navbar-item ">
+                        HTTP API
+                    </a>
+                    
+                </div>
+            </div>
+            
+            <!--dropdown-->
+            <div class="navbar-item has-dropdown is-hoverable">
+                <a href=""
+                    class="navbar-link ">
+                    <span>
+                        Admin
+                    </span>
+                </a>
+                <div class="navbar-dropdown">
+                    
+                    <a href="/administration/deployment"
+                        class="navbar-item is-active">
+                        Deployment
+                    </a>
+                    
+                    <a href="/administration/config"
+                        class="navbar-item ">
+                        Configurations
+                    </a>
+                    
+                    <a href="/administration/rebalance"
+                        class="navbar-item ">
+                        Rebalance
+                    </a>
+                    
+                    <a href="/administration/monitoring"
+                        class="navbar-item ">
+                        Monitoring
+                    </a>
+                    
+                    <a href="/administration/rolling-update"
+                        class="navbar-item ">
+                        Rolling Restart and Upgrade
+                    </a>
+                    
+                    <a href="/administration/scale-in-out"
+                        class="navbar-item ">
+                        Scale-in and Scale-out
+                    </a>
+                    
+                    <a href="/administration/resource-management"
+                        class="navbar-item ">
+                        Resource Management
+                    </a>
+                    
+                    <a href="/administration/cold-backup"
+                        class="navbar-item ">
+                        Cold Backup
+                    </a>
+                    
+                    <a href="/administration/meta-recovery"
+                        class="navbar-item ">
+                        Metadata Recovery
+                    </a>
+                    
+                    <a href="/administration/replica-recovery"
+                        class="navbar-item ">
+                        Replica Data Recovery
+                    </a>
+                    
+                    <a href="/administration/zk-migration"
+                        class="navbar-item ">
+                        Zookeeper Migration
+                    </a>
+                    
+                    <a href="/administration/table-migration"
+                        class="navbar-item ">
+                        Table Migration
+                    </a>
+                    
+                    <a href="/administration/table-soft-delete"
+                        class="navbar-item ">
+                        Table Soft-Delete
+                    </a>
+                    
+                    <a href="/administration/table-env"
+                        class="navbar-item ">
+                        Table Environment Variables
+                    </a>
+                    
+                    <a href="/administration/remote-commands"
+                        class="navbar-item ">
+                        Remote Command
+                    </a>
+                    
+                    <a href="/administration/partition-split"
+                        class="navbar-item ">
+                        Partition-Split
+                    </a>
+                    
+                    <a href="/administration/duplication"
+                        class="navbar-item ">
+                        Duplication
+                    </a>
+                    
+                    <a href="/administration/compression"
+                        class="navbar-item ">
+                        Data Compression
+                    </a>
+                    
+                    <a href="/administration/throttling"
+                        class="navbar-item ">
+                        Throttling
+                    </a>
+                    
+                    <a href="/administration/experiences"
+                        class="navbar-item ">
+                        Experiences
+                    </a>
+                    
+                    <a href="/administration/manual-compact"
+                        class="navbar-item ">
+                        Manual Compact
+                    </a>
+                    
+                    <a href="/administration/usage-scenario"
+                        class="navbar-item ">
+                        Usage Scenario
+                    </a>
+                    
+                    <a href="/administration/bad-disk"
+                        class="navbar-item ">
+                        Bad Disk Repair
+                    </a>
+                    
+                    <a href="/administration/whitelist"
+                        class="navbar-item ">
+                        Replica Server Whitelist
+                    </a>
+                    
+                    <a href="/administration/backup-request"
+                        class="navbar-item ">
+                        Backup Request
+                    </a>
+                    
+                    <a href="/administration/hotspot-detection"
+                        class="navbar-item ">
+                        Hotspot Detection
+                    </a>
+                    
+                </div>
+            </div>
+            
+        </div>
+    </div>
+</nav>
+
+<nav class="navbar is-hidden-mobile">
+    <div class="navbar-start w-full">
+        <div class="navbar-item pl-0 w-full">
+            <!--TODO(wutao): Given the limitation of docsearch that couldn't handle multiple input,
+                I make searchbox only shown in desktop. Fix this issue when docsearch.js v3 released.
+                Related issue: https://github.com/algolia/docsearch/issues/230-->
+            <div id="docsearch"></div>
+        </div>
+    </div>
+    <div class="navbar-end">
+        <div class="navbar-item">
+            
+
+<!--A simple language switch button that only supports zh and en.-->
+<!--IF its language is zh, then switches to en.-->
+
+<a class="button is-light is-outlined is-inverted" href="/zh/administration/deployment"><strong>中</strong></a>
+
+        </div>
+    </div>
+</nav>
+
+            <section class="hero is-info lg:mr-3">
+                <div class="hero-body">
+                    
+                    <p class="title is-size-2 is-centered">Deployment</p>
+                </div>
+            </section>
+            <section class="section" style="padding-top: 2rem;">
+                <div class="content">
+                    <h1 id="prepare-servers">Prepare servers</h1>
+
+<p>The Pegasus distributed cluster requires at least these servers to be prepared:</p>
+<ul>
+  <li>MetaServer: 2 or 3 servers, no SSD required.</li>
+  <li>ReplicaServer: At least 3 servers, it is recommended to mount SSD disks. Multiple disks can improve the throughput capacity of a single node, and each server should mount the same number and performance (e.g., IOPS, bandwidth and R/W latency) of disks to ensure load balancing.</li>
+  <li>Collector: Optional role, 1 server, no SSD required. This process is mainly used to collect and summarize cluster metrics, with a small load. It is recommended to deploy it on one of the MetaServer servers.</li>
+</ul>
+
+<h1 id="prepare-apache-zookeeper">Prepare Apache Zookeeper</h1>
+
+<p>The Pegasus cluster relies on Zookeeper for metadata storage and MetaServer leader election, therefore requiring a Zookeeper service.</p>
+<ul>
+  <li>It is recommended to deploy Zookeeper in the same server room as the Pegasus cluster server.</li>
+</ul>
+
+<h1 id="prepare-configuration-files">Prepare configuration files</h1>
+
+<p>Since 1.7.1, Pegasus has provided <a href="https://github.com/apache/incubator-pegasus/blob/master/src/server/config.ini">configuration file</a>, you need to modify the file to replace all variables in the form of <code class="language-plaintext highlighter-rouge">%{xxx}</code> with appropriate values. As follows:</p>
+
+<table>
+  <thead>
+    <tr>
+      <th>Variables</th>
+      <th>Description</th>
+      <th>Example</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>%{cluster.name}</td>
+      <td>Cluster name. Indicator reporting labels that will be used for collectors, etc</td>
+      <td>my_cluster</td>
+    </tr>
+    <tr>
+      <td>%{home.dir}</td>
+      <td>Pegasus home path. It will store global configuration files, such as disk blacklist configuration files</td>
+      <td>/home/work</td>
+    </tr>
+    <tr>
+      <td>%{app.dir}</td>
+      <td>Program working path. The data files and log files will be placed here by default</td>
+      <td>/home/work/app/pegasus</td>
+    </tr>
+    <tr>
+      <td>%{slog.dir}</td>
+      <td>The path to store the shared-log files. It is recommended to place it on an exclusive SSD drive. If there is no available SSD disk, it can be set as an empty string, indicating that <code class="language-plaintext highlighter-rouge">%{app.dir}</code> is used by default. Deprecate since version 2.6</td>
+      <td>/home/work/ssd1/pegasus</td>
+    </tr>
+    <tr>
+      <td>%{data.dirs}</td>
+      <td>A list of paths to store user data, separated by commas. Each path needs to be specified with a name in the format of <code class="language-plaintext highlighter-rouge">name1:path1,name2:path2</code>. If there is no available SSD disk, it can be set as an empty string, indicating that <code class="language-plaintext highlighter-rouge">%{app.dir}</code> is used by default</td>
+      <td>ssd2:/home/work/ssd2/pegasus,ssd3:/home/work/ssd3/pegasus</td>
+    </tr>
+    <tr>
+      <td>%{meta.server.list}</td>
+      <td>MetaServer address list, separated by commas. In the format of <code class="language-plaintext highlighter-rouge">ip1:port1,ip2:port2</code>. <strong>Note: Currently, only IP addresses are supported and hostnames are not supported</strong></td>
+      <td>1.2.3.4:34601,1.2.3.5:34601</td>
+    </tr>
+    <tr>
+      <td>%{zk.server.list}</td>
+      <td>Zookeeper address list, separated by commas. In the format of <code class="language-plaintext highlighter-rouge">ip1:port1,ip2:port2</code></td>
+      <td>1.2.3.4:2181,1.2.3.5:2181</td>
+    </tr>
+  </tbody>
+</table>
+
+<blockquote>
+  <p>Please refer to the meaning of <a href="/administration/config">configuration</a>。</p>
+</blockquote>
+
+<blockquote>
+  <p>Note: The same variable may appear in multiple places, so it is important to ensure that all <code class="language-plaintext highlighter-rouge">%{xxx}</code> variables are replaced.</p>
+</blockquote>
+
+<h2 id="how-to-configure-multiple-ssd-disks">How to configure multiple SSD disks</h2>
+
+<p>If there are multiple SSD disks, it is recommended to use one SSD disk specifically for slog (i.e., shared-log) and the other disks to store user data for each replicas.</p>
+
+<p>For example, suppose the server has 4 disks and the mounting path is <code class="language-plaintext highlighter-rouge">/home/work/ssd{id}</code>, where {id}=1,2,3,4. So you can use ssd1 for slog, which can be configured as follows:</p>
+<div class="language-ini highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nn">[replication]</span>
+  <span class="py">slog_dir</span> <span class="p">=</span> <span class="s">/home/work/ssd1/pegasus</span>
+  <span class="py">data_dirs</span> <span class="p">=</span> <span class="s">ssd2:/home/work/ssd2/pegasus,ssd3:/home/work/ssd3/pegasus,ssd4:/home/work/ssd4/pegasus</span>
+</code></pre></div></div>
+
+<p>If there is only one SSD drive, then both slog and each replicas data share this drive. Assuming the SSD disk mounting path is <code class="language-plaintext highlighter-rouge">/home/work/ssd</code>, it can be configured as follows:</p>
+<div class="language-ini highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nn">[replication]</span>
+  <span class="py">slog_dir</span> <span class="p">=</span> <span class="s">/home/work/ssd/pegasus/{cluster.name}</span>
+  <span class="py">data_dirs</span> <span class="p">=</span> <span class="s">ssd:/home/work/ssd/pegasus/{cluster.name}</span>
+</code></pre></div></div>
+
+<h2 id="how-to-configure-multiple-network-cards">How to configure multiple network cards</h2>
+
+<p>There is a section in the configuration file:</p>
+<div class="language-ini highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nn">[network]</span>
+  <span class="py">primary_interface</span> <span class="p">=</span>
+</code></pre></div></div>
+<p>Specify network card through <code class="language-plaintext highlighter-rouge">primary_interface</code>:</p>
+<ul>
+  <li>If there is only one network card, it can be set as an empty string to automatically obtain the appropriate network card address. The specific strategy is to search for the first address that complies with the <code class="language-plaintext highlighter-rouge">10.\*.\*.\*/172.16.\*.\*/192.168.\*.\*</code> rule (i.e., the intranet address) in the output list of the <code class="language-plaintext highlighter-rouge">ifconfig</code> command, which will ignore the loopback address and virtual address.</li>
+  <li>If there are multiple network cards, please specify the network card name. If not specified, the first address that complies with <code class="language-plaintext highlighter-rouge">10.\*.\*.\*/172.16.\*.\*/192.168.\*.\*</code> rules will be used.</li>
+</ul>
+
+<p>For example, if there are multiple network cards and you want to use the <code class="language-plaintext highlighter-rouge">eth2</code> network card, you can configure it as follows:</p>
+<div class="language-ini highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nn">[network]</span>
+  <span class="py">primary_interface</span> <span class="p">=</span> <span class="s">eth2</span>
+</code></pre></div></div>
+
+<h1 id="preparing-to-deploy-packages">Preparing to deploy packages</h1>
+
+<p>The three roles of ReplicaServer, MetaServer, and Collector share the same program binaries and configuration files.</p>
+
+<p>At first <a href="/overview/compilation">build Pegasus</a>. After building, run the following command to package and generate a server-side deployment package:</p>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>./run.sh pack_server
+</code></pre></div></div>
+<p>After successful packed, a directory and a tar.gz package named <code class="language-plaintext highlighter-rouge">pegasus-server-{version}-{gitSHA}-{platform}-{buildType}</code> will be generated in the local path.
+There is a <code class="language-plaintext highlighter-rouge">bin/</code> directory that contains pegasus_server program binary and dependency libraries, as well as the recently modified <code class="language-plaintext highlighter-rouge">config.ini</code> file.</p>
+
+<p>Copy the tar.gz package to the server that needs to be deployed and unzip it.</p>
+
+<h1 id="start-service">Start Service</h1>
+
+<p>Before starting the server, it is necessary to add the path of the dynamic link libraries that the program depends on to <code class="language-plaintext highlighter-rouge">LD_LIBRARY_PATH</code>:</p>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>export LD_LIBRARY_PATH=/path/to/your/pegasus/bin:$LD_LIBRARY_PATH
+</code></pre></div></div>
+
+<h2 id="start-metaserver">Start MetaServer：</h2>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>cd bin/
+./pegasus_server config.ini -app_list meta
+</code></pre></div></div>
+
+<h2 id="start-replicaserver">Start ReplicaServer：</h2>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>cd bin/
+./pegasus_server config.ini -app_list replica
+</code></pre></div></div>
+
+<h2 id="start-collector">Start Collector：</h2>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>cd bin/
+./pegasus_server config.ini -app_list collector
+</code></pre></div></div>
+
+<ul>
+  <li>After the cluster is successfully started, a <code class="language-plaintext highlighter-rouge">temp</code> table will be created by default, which is also used for the cluster availability detection by the Collector.</li>
+  <li>Use <a href="/overview/shell">Shell tools</a> to view various states of the cluster.</li>
+  <li>If the startup fails, you can check the logs in <code class="language-plaintext highlighter-rouge">%{app.dir}/log</code> to troubleshoot the issue.</li>
+</ul>
+
+<h1 id="faq">FAQ</h1>
+
+<h2 id="cluster-cleaning">Cluster cleaning</h2>
+
+<p>If you want to completely redeploy the cluster and <strong>clean up all data</strong>, you need to clean up the following environment, otherwise there may be issues when starting a new cluster:</p>
+<ul>
+  <li>Remove the <code class="language-plaintext highlighter-rouge">%{app.dir}</code>, <code class="language-plaintext highlighter-rouge">%{slog.dir}</code> and <code class="language-plaintext highlighter-rouge">%{data.dirs}</code> directories of MetaServer，ReplicaServer and Collector</li>
+  <li>Remove the <code class="language-plaintext highlighter-rouge">%{cluster_root}</code> path of Zookeeper</li>
+</ul>
+
+                </div>
+            </section>
+            <footer class="footer">
+    <div class="container">
+        <div class="content is-small has-text-centered">
+            <div style="margin-bottom: 20px;">
+                <a href="http://incubator.apache.org">
+                    <img src="/assets/images/egg-logo.png"
+                         width="15%"
+                         alt="Apache Incubator"/>
+                </a>
+            </div>
+            Copyright &copy; 2023 <a href="http://www.apache.org">The Apache Software Foundation</a>.
+            Licensed under the <a href="http://www.apache.org/licenses/LICENSE-2.0">Apache License, Version
+            2.0</a>.
+            <br><br>
+            
+            Apache Pegasus is an effort undergoing incubation at The Apache Software Foundation (ASF),
+            sponsored by the Apache Incubator. Incubation is required of all newly accepted projects
+            until a further review indicates that the infrastructure, communications, and decision making process
+            have stabilized in a manner consistent with other successful ASF projects. While incubation status is
+            not necessarily a reflection of the completeness or stability of the code, it does indicate that the
+            project has yet to be fully endorsed by the ASF.
+            
+            <br><br>
+            Apache Pegasus, Pegasus, Apache, the Apache feather logo, and the Apache Pegasus project logo are either
+            registered trademarks or trademarks of The Apache Software Foundation in the United States and other
+            countries.
+        </div>
+    </div>
+</footer>
+        </div>
+
+        <!-- right panel -->
+        <div class="dashboard-panel is-small is-scrollable is-hidden-mobile">
+            <p class="menu-label">
+    <span class="icon">
+        <i class="fa fa-bars" aria-hidden="true"></i>
+    </span>
+    Table of contents
+</p>
+<ul class="menu-list">
+  <li><a href="#prepare-servers">Prepare servers</a></li>
+  <li><a href="#prepare-apache-zookeeper">Prepare Apache Zookeeper</a></li>
+  <li><a href="#prepare-configuration-files">Prepare configuration files</a>
+    <ul>
+      <li><a href="#how-to-configure-multiple-ssd-disks">How to configure multiple SSD disks</a></li>
+      <li><a href="#how-to-configure-multiple-network-cards">How to configure multiple network cards</a></li>
+    </ul>
+  </li>
+  <li><a href="#preparing-to-deploy-packages">Preparing to deploy packages</a></li>
+  <li><a href="#start-service">Start Service</a>
+    <ul>
+      <li><a href="#start-metaserver">Start MetaServer：</a></li>
+      <li><a href="#start-replicaserver">Start ReplicaServer：</a></li>
+      <li><a href="#start-collector">Start Collector：</a></li>
+    </ul>
+  </li>
+  <li><a href="#faq">FAQ</a>
+    <ul>
+      <li><a href="#cluster-cleaning">Cluster cleaning</a></li>
+    </ul>
+  </li>
+</ul>
+
+        </div>
+    </div>
+
+    <script src="/assets/js/app.js" type="text/javascript"></script>
+     <script>
+     docsearch({
+         container: '#docsearch',
+         appId: 'QRN30RBW0S',
+         indexName: 'pegasus-apache',
+         apiKey: 'd3a3252fa344359766707a106c4ed88f',
+         debug: true
+     });
+ </script>
+
+</body>
+
+</html>

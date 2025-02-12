@@ -1,0 +1,979 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Pegasus | Deployment</title>
+    <link rel="stylesheet" href="/zh/assets/css/app.css">
+    <link rel="shortcut icon" href="/zh/assets/images/favicon.ico">
+    <link rel="stylesheet" href="/zh/assets/css/utilities.min.css">
+    <link rel="stylesheet" href="/zh/assets/css/docsearch.v3.css">
+    <script src="/assets/js/jquery.min.js"></script>
+    <script src="/assets/js/all.min.js"></script>
+    <script src="/assets/js/docsearch.v3.js"></script>
+    <!-- Begin Jekyll SEO tag v2.8.0 -->
+<title>Deployment | Pegasus</title>
+<meta name="generator" content="Jekyll v4.4.1" />
+<meta property="og:title" content="Deployment" />
+<meta property="og:locale" content="en_US" />
+<meta name="description" content="准备服务器" />
+<meta property="og:description" content="准备服务器" />
+<meta property="og:site_name" content="Pegasus" />
+<meta property="og:type" content="article" />
+<meta property="article:published_time" content="2025-02-12T14:49:16+00:00" />
+<meta name="twitter:card" content="summary" />
+<meta property="twitter:title" content="Deployment" />
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"BlogPosting","dateModified":"2025-02-12T14:49:16+00:00","datePublished":"2025-02-12T14:49:16+00:00","description":"准备服务器","headline":"Deployment","mainEntityOfPage":{"@type":"WebPage","@id":"/administration/deployment"},"url":"/administration/deployment"}</script>
+<!-- End Jekyll SEO tag -->
+
+</head>
+
+
+<body>
+    <div class="dashboard is-full-height">
+        <!-- left panel -->
+        <div class="dashboard-panel is-medium is-hidden-mobile pl-0">
+            <div class="dashboard-panel-header has-text-centered">
+                <a href="/zh/">
+                    <img src="/assets/images/pegasus-logo-inv.png" style="width: 80%;">
+                </a>
+                
+            </div>
+            <div class="dashboard-panel-main is-scrollable pl-6">
+                
+
+<aside class="menu">
+    
+    <p class="menu-label">Pegasus 产品文档</p>
+    <ul class="menu-list">
+        
+        <li>
+            <a href="/zh/docs/downloads"
+                class="">
+                下载
+            </a>
+        </li>
+        
+    </ul>
+    
+    <p class="menu-label">编译构建</p>
+    <ul class="menu-list">
+        
+        <li>
+            <a href="/zh/docs/build/compile-by-docker"
+                class="">
+                使用 Docker 完成编译（推荐）
+            </a>
+        </li>
+        
+        <li>
+            <a href="/zh/docs/build/compile-from-source"
+                class="">
+                从源码编译
+            </a>
+        </li>
+        
+    </ul>
+    
+    <p class="menu-label">客户端库</p>
+    <ul class="menu-list">
+        
+        <li>
+            <a href="/zh/clients/java-client"
+                class="">
+                Java 客户端
+            </a>
+        </li>
+        
+        <li>
+            <a href="/zh/clients/cpp-client"
+                class="">
+                C++ 客户端
+            </a>
+        </li>
+        
+        <li>
+            <a href="https://github.com/apache/incubator-pegasus/tree/master/go-client"
+                class="">
+                Golang 客户端
+            </a>
+        </li>
+        
+        <li>
+            <a href="/zh/clients/python-client"
+                class="">
+                Python 客户端
+            </a>
+        </li>
+        
+        <li>
+            <a href="/zh/clients/node-client"
+                class="">
+                NodeJS 客户端
+            </a>
+        </li>
+        
+        <li>
+            <a href="/zh/clients/scala-client"
+                class="">
+                Scala 客户端
+            </a>
+        </li>
+        
+    </ul>
+    
+    <p class="menu-label">生态工具</p>
+    <ul class="menu-list">
+        
+        <li>
+            <a href="/zh/docs/tools/shell"
+                class="">
+                Pegasus Shell 工具
+            </a>
+        </li>
+        
+        <li>
+            <a href="https://github.com/pegasus-kv/admin-cli"
+                class="">
+                集群管理命令行
+            </a>
+        </li>
+        
+        <li>
+            <a href="https://github.com/pegasus-kv/pegic"
+                class="">
+                数据访问命令行
+            </a>
+        </li>
+        
+    </ul>
+    
+    <p class="menu-label">用户接口</p>
+    <ul class="menu-list">
+        
+        <li>
+            <a href="/zh/api/ttl"
+                class="">
+                TTL
+            </a>
+        </li>
+        
+        <li>
+            <a href="/zh/api/single-atomic"
+                class="">
+                单行原子操作
+            </a>
+        </li>
+        
+        <li>
+            <a href="/zh/api/redis"
+                class="">
+                Redis 适配
+            </a>
+        </li>
+        
+        <li>
+            <a href="/zh/api/geo"
+                class="">
+                GEO 支持
+            </a>
+        </li>
+        
+        <li>
+            <a href="/zh/api/http"
+                class="">
+                HTTP 接口
+            </a>
+        </li>
+        
+    </ul>
+    
+    <p class="menu-label">高效运维</p>
+    <ul class="menu-list">
+        
+        <li>
+            <a href="/zh/administration/deployment"
+                class="is-active">
+                集群部署
+            </a>
+        </li>
+        
+        <li>
+            <a href="/zh/administration/config"
+                class="">
+                配置说明
+            </a>
+        </li>
+        
+        <li>
+            <a href="/zh/administration/rebalance"
+                class="">
+                负载均衡
+            </a>
+        </li>
+        
+        <li>
+            <a href="/zh/administration/monitoring"
+                class="">
+                可视化监控
+            </a>
+        </li>
+        
+        <li>
+            <a href="/zh/administration/rolling-update"
+                class="">
+                集群重启和升级
+            </a>
+        </li>
+        
+        <li>
+            <a href="/zh/administration/scale-in-out"
+                class="">
+                集群扩容缩容
+            </a>
+        </li>
+        
+        <li>
+            <a href="/zh/administration/resource-management"
+                class="">
+                资源管理
+            </a>
+        </li>
+        
+        <li>
+            <a href="/zh/administration/cold-backup"
+                class="">
+                冷备份
+            </a>
+        </li>
+        
+        <li>
+            <a href="/zh/administration/meta-recovery"
+                class="">
+                元数据恢复
+            </a>
+        </li>
+        
+        <li>
+            <a href="/zh/administration/replica-recovery"
+                class="">
+                Replica 数据恢复
+            </a>
+        </li>
+        
+        <li>
+            <a href="/zh/administration/zk-migration"
+                class="">
+                Zookeeper 迁移
+            </a>
+        </li>
+        
+        <li>
+            <a href="/zh/administration/table-migration"
+                class="">
+                Table 迁移
+            </a>
+        </li>
+        
+        <li>
+            <a href="/zh/administration/table-soft-delete"
+                class="">
+                Table 软删除
+            </a>
+        </li>
+        
+        <li>
+            <a href="/zh/administration/table-env"
+                class="">
+                Table 环境变量
+            </a>
+        </li>
+        
+        <li>
+            <a href="/zh/administration/remote-commands"
+                class="">
+                远程命令
+            </a>
+        </li>
+        
+        <li>
+            <a href="/zh/administration/partition-split"
+                class="">
+                Partition-Split
+            </a>
+        </li>
+        
+        <li>
+            <a href="/zh/administration/duplication"
+                class="">
+                跨机房同步
+            </a>
+        </li>
+        
+        <li>
+            <a href="/zh/administration/compression"
+                class="">
+                数据压缩
+            </a>
+        </li>
+        
+        <li>
+            <a href="/zh/administration/throttling"
+                class="">
+                流量控制
+            </a>
+        </li>
+        
+        <li>
+            <a href="/zh/administration/experiences"
+                class="">
+                运维经验
+            </a>
+        </li>
+        
+        <li>
+            <a href="/zh/administration/manual-compact"
+                class="">
+                Manual Compact 功能
+            </a>
+        </li>
+        
+        <li>
+            <a href="/zh/administration/usage-scenario"
+                class="">
+                Usage Scenario 功能
+            </a>
+        </li>
+        
+        <li>
+            <a href="/zh/administration/bad-disk"
+                class="">
+                坏盘检修
+            </a>
+        </li>
+        
+        <li>
+            <a href="/zh/administration/whitelist"
+                class="">
+                Replica Server 白名单
+            </a>
+        </li>
+        
+        <li>
+            <a href="/zh/administration/backup-request"
+                class="">
+                Backup Request
+            </a>
+        </li>
+        
+        <li>
+            <a href="/zh/administration/hotspot-detection"
+                class="">
+                热点检测
+            </a>
+        </li>
+        
+    </ul>
+    
+</aside>
+            </div>
+        </div>
+
+        <!-- main section -->
+        <div class="dashboard-main is-scrollable">
+            <nav class="navbar is-hidden-desktop">
+    <div class="navbar-brand">
+        <a href="/zh/" class="navbar-item">
+            <!-- Pegasus Icon -->
+            <img src="/assets/images/pegasus-square.png">
+        </a>
+        <div class="navbar-item">
+            
+
+<!--A simple language switch button that only supports zh and en.-->
+<!--IF its language is zh, then switches to en.-->
+
+<!--If you don't want a url to be relativized, you can add a space explicitly into the href to 
+    prevents a url from being relativized by polyglot.-->
+<a class="button is-light is-outlined is-inverted" href=" /administration/deployment"><strong>En</strong></a>
+
+        </div>
+        <a role="button" class="navbar-burger burger" aria-label="menu" aria-expanded="false" data-target="navMenu">
+            <!-- Appears in mobile mode only -->
+            <span aria-hidden="true"></span>
+            <span aria-hidden="true"></span>
+            <span aria-hidden="true"></span>
+        </a>
+    </div>
+    <div class="navbar-menu" id="navMenu">
+        <div class="navbar-end">
+            
+            <!--dropdown-->
+            <div class="navbar-item has-dropdown is-hoverable">
+                <a href=""
+                    class="navbar-link ">
+                    <span>
+                        Pegasus 产品文档
+                    </span>
+                </a>
+                <div class="navbar-dropdown">
+                    
+                    <a href="/zh/docs/downloads"
+                        class="navbar-item ">
+                        下载
+                    </a>
+                    
+                </div>
+            </div>
+            
+            <!--dropdown-->
+            <div class="navbar-item has-dropdown is-hoverable">
+                <a href=""
+                    class="navbar-link ">
+                    <span>
+                        编译构建
+                    </span>
+                </a>
+                <div class="navbar-dropdown">
+                    
+                    <a href="/zh/docs/build/compile-by-docker"
+                        class="navbar-item ">
+                        使用 Docker 完成编译（推荐）
+                    </a>
+                    
+                    <a href="/zh/docs/build/compile-from-source"
+                        class="navbar-item ">
+                        从源码编译
+                    </a>
+                    
+                </div>
+            </div>
+            
+            <!--dropdown-->
+            <div class="navbar-item has-dropdown is-hoverable">
+                <a href=""
+                    class="navbar-link ">
+                    <span>
+                        客户端库
+                    </span>
+                </a>
+                <div class="navbar-dropdown">
+                    
+                    <a href="/zh/clients/java-client"
+                        class="navbar-item ">
+                        Java 客户端
+                    </a>
+                    
+                    <a href="/zh/clients/cpp-client"
+                        class="navbar-item ">
+                        C++ 客户端
+                    </a>
+                    
+                    <a href="https://github.com/apache/incubator-pegasus/tree/master/go-client"
+                        class="navbar-item ">
+                        Golang 客户端
+                    </a>
+                    
+                    <a href="/zh/clients/python-client"
+                        class="navbar-item ">
+                        Python 客户端
+                    </a>
+                    
+                    <a href="/zh/clients/node-client"
+                        class="navbar-item ">
+                        NodeJS 客户端
+                    </a>
+                    
+                    <a href="/zh/clients/scala-client"
+                        class="navbar-item ">
+                        Scala 客户端
+                    </a>
+                    
+                </div>
+            </div>
+            
+            <!--dropdown-->
+            <div class="navbar-item has-dropdown is-hoverable">
+                <a href=""
+                    class="navbar-link ">
+                    <span>
+                        生态工具
+                    </span>
+                </a>
+                <div class="navbar-dropdown">
+                    
+                    <a href="/zh/docs/tools/shell"
+                        class="navbar-item ">
+                        Pegasus Shell 工具
+                    </a>
+                    
+                    <a href="https://github.com/pegasus-kv/admin-cli"
+                        class="navbar-item ">
+                        集群管理命令行
+                    </a>
+                    
+                    <a href="https://github.com/pegasus-kv/pegic"
+                        class="navbar-item ">
+                        数据访问命令行
+                    </a>
+                    
+                </div>
+            </div>
+            
+            <!--dropdown-->
+            <div class="navbar-item has-dropdown is-hoverable">
+                <a href=""
+                    class="navbar-link ">
+                    <span>
+                        用户接口
+                    </span>
+                </a>
+                <div class="navbar-dropdown">
+                    
+                    <a href="/zh/api/ttl"
+                        class="navbar-item ">
+                        TTL
+                    </a>
+                    
+                    <a href="/zh/api/single-atomic"
+                        class="navbar-item ">
+                        单行原子操作
+                    </a>
+                    
+                    <a href="/zh/api/redis"
+                        class="navbar-item ">
+                        Redis 适配
+                    </a>
+                    
+                    <a href="/zh/api/geo"
+                        class="navbar-item ">
+                        GEO 支持
+                    </a>
+                    
+                    <a href="/zh/api/http"
+                        class="navbar-item ">
+                        HTTP 接口
+                    </a>
+                    
+                </div>
+            </div>
+            
+            <!--dropdown-->
+            <div class="navbar-item has-dropdown is-hoverable">
+                <a href=""
+                    class="navbar-link ">
+                    <span>
+                        高效运维
+                    </span>
+                </a>
+                <div class="navbar-dropdown">
+                    
+                    <a href="/zh/administration/deployment"
+                        class="navbar-item is-active">
+                        集群部署
+                    </a>
+                    
+                    <a href="/zh/administration/config"
+                        class="navbar-item ">
+                        配置说明
+                    </a>
+                    
+                    <a href="/zh/administration/rebalance"
+                        class="navbar-item ">
+                        负载均衡
+                    </a>
+                    
+                    <a href="/zh/administration/monitoring"
+                        class="navbar-item ">
+                        可视化监控
+                    </a>
+                    
+                    <a href="/zh/administration/rolling-update"
+                        class="navbar-item ">
+                        集群重启和升级
+                    </a>
+                    
+                    <a href="/zh/administration/scale-in-out"
+                        class="navbar-item ">
+                        集群扩容缩容
+                    </a>
+                    
+                    <a href="/zh/administration/resource-management"
+                        class="navbar-item ">
+                        资源管理
+                    </a>
+                    
+                    <a href="/zh/administration/cold-backup"
+                        class="navbar-item ">
+                        冷备份
+                    </a>
+                    
+                    <a href="/zh/administration/meta-recovery"
+                        class="navbar-item ">
+                        元数据恢复
+                    </a>
+                    
+                    <a href="/zh/administration/replica-recovery"
+                        class="navbar-item ">
+                        Replica 数据恢复
+                    </a>
+                    
+                    <a href="/zh/administration/zk-migration"
+                        class="navbar-item ">
+                        Zookeeper 迁移
+                    </a>
+                    
+                    <a href="/zh/administration/table-migration"
+                        class="navbar-item ">
+                        Table 迁移
+                    </a>
+                    
+                    <a href="/zh/administration/table-soft-delete"
+                        class="navbar-item ">
+                        Table 软删除
+                    </a>
+                    
+                    <a href="/zh/administration/table-env"
+                        class="navbar-item ">
+                        Table 环境变量
+                    </a>
+                    
+                    <a href="/zh/administration/remote-commands"
+                        class="navbar-item ">
+                        远程命令
+                    </a>
+                    
+                    <a href="/zh/administration/partition-split"
+                        class="navbar-item ">
+                        Partition-Split
+                    </a>
+                    
+                    <a href="/zh/administration/duplication"
+                        class="navbar-item ">
+                        跨机房同步
+                    </a>
+                    
+                    <a href="/zh/administration/compression"
+                        class="navbar-item ">
+                        数据压缩
+                    </a>
+                    
+                    <a href="/zh/administration/throttling"
+                        class="navbar-item ">
+                        流量控制
+                    </a>
+                    
+                    <a href="/zh/administration/experiences"
+                        class="navbar-item ">
+                        运维经验
+                    </a>
+                    
+                    <a href="/zh/administration/manual-compact"
+                        class="navbar-item ">
+                        Manual Compact 功能
+                    </a>
+                    
+                    <a href="/zh/administration/usage-scenario"
+                        class="navbar-item ">
+                        Usage Scenario 功能
+                    </a>
+                    
+                    <a href="/zh/administration/bad-disk"
+                        class="navbar-item ">
+                        坏盘检修
+                    </a>
+                    
+                    <a href="/zh/administration/whitelist"
+                        class="navbar-item ">
+                        Replica Server 白名单
+                    </a>
+                    
+                    <a href="/zh/administration/backup-request"
+                        class="navbar-item ">
+                        Backup Request
+                    </a>
+                    
+                    <a href="/zh/administration/hotspot-detection"
+                        class="navbar-item ">
+                        热点检测
+                    </a>
+                    
+                </div>
+            </div>
+            
+        </div>
+    </div>
+</nav>
+
+<nav class="navbar is-hidden-mobile">
+    <div class="navbar-start w-full">
+        <div class="navbar-item pl-0 w-full">
+            <!--TODO(wutao): Given the limitation of docsearch that couldn't handle multiple input,
+                I make searchbox only shown in desktop. Fix this issue when docsearch.js v3 released.
+                Related issue: https://github.com/algolia/docsearch/issues/230-->
+            <div id="docsearch"></div>
+        </div>
+    </div>
+    <div class="navbar-end">
+        <div class="navbar-item">
+            
+
+<!--A simple language switch button that only supports zh and en.-->
+<!--IF its language is zh, then switches to en.-->
+
+<!--If you don't want a url to be relativized, you can add a space explicitly into the href to 
+    prevents a url from being relativized by polyglot.-->
+<a class="button is-light is-outlined is-inverted" href=" /administration/deployment"><strong>En</strong></a>
+
+        </div>
+    </div>
+</nav>
+
+            <section class="hero is-info lg:mr-3">
+                <div class="hero-body">
+                    
+                    <p class="title is-size-2 is-centered">集群部署</p>
+                </div>
+            </section>
+            <section class="section" style="padding-top: 2rem;">
+                <div class="content">
+                    <h1 id="准备服务器">准备服务器</h1>
+
+<p>Pegasus 分布式集群至少需要准备这些服务器：</p>
+<ul>
+  <li>MetaServer：2~3 台服务器，无需 SSD 盘。</li>
+  <li>ReplicaServer：至少 3 台服务器，建议挂载 SSD 盘。多块磁盘能够提升节点的吞吐能力，各台服务器挂载相同数量和性能（例如，IOPS，带宽和读写延迟等）的磁盘来保证负载均衡。</li>
+  <li>Collector：可选角色，1 台服务器，无需 SSD 盘。该进程主要用于收集和汇总集群的 metrics 信息，负载很小，建议部署在 MetaServer 的其中一台服务器上。</li>
+</ul>
+
+<h1 id="准备-apache-zookeeper">准备 Apache Zookeeper</h1>
+
+<p>Pegasus 集群依赖 Zookeeper 进行元数据存储和 MetaServer 选主，因此需要一个 Zookeeper 服务。</p>
+<ul>
+  <li>建议在 Pegasus 集群服务器所在的同机房搭建。</li>
+</ul>
+
+<h1 id="准备配置文件">准备配置文件</h1>
+
+<p>从 1.7.1 版本开始，Pegasus 提供了 <a href="https://github.com/apache/incubator-pegasus/blob/master/src/server/config.ini">配置文件</a>，你需要修改该文件，替换所有 <code class="language-plaintext highlighter-rouge">%{xxx}</code> 形式的变量为合适的值。如下：</p>
+
+<table>
+  <thead>
+    <tr>
+      <th>变量</th>
+      <th>说明</th>
+      <th>示例</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>%{cluster.name}</td>
+      <td>集群名称。会用于 collector 的指标上报标签等</td>
+      <td>my_cluster</td>
+    </tr>
+    <tr>
+      <td>%{home.dir}</td>
+      <td>Pegasus 主路径。会存放全局的配置文件，如磁盘黑名单配置文件</td>
+      <td>/home/work</td>
+    </tr>
+    <tr>
+      <td>%{app.dir}</td>
+      <td>程序工作路径。默认数据文件和日志文件都会放在这里</td>
+      <td>/home/work/app/pegasus</td>
+    </tr>
+    <tr>
+      <td>%{slog.dir}</td>
+      <td>存放 shared-log 文件的路径，建议放在一个独享的 SSD 盘上。如果没有可用的 SSD 盘，可以设置为空字符串，表示默认使用 <code class="language-plaintext highlighter-rouge">%{app.dir}</code>。2.6 版本之后已废弃</td>
+      <td>/home/work/ssd1/pegasus</td>
+    </tr>
+    <tr>
+      <td>%{data.dirs}</td>
+      <td>存放用户数据的路径列表，用逗号分隔。每个路径需要指定一个名称，格式为 <code class="language-plaintext highlighter-rouge">name1:path1,name2:path2</code>。如果没有可用的 SSD 盘，可以设置为空字符串，表示默认使用 <code class="language-plaintext highlighter-rouge">%{app.dir}</code></td>
+      <td>ssd2:/home/work/ssd2/pegasus,ssd3:/home/work/ssd3/pegasus</td>
+    </tr>
+    <tr>
+      <td>%{meta.server.list}</td>
+      <td>MetaServer 地址列表，用逗号分隔。格式为 <code class="language-plaintext highlighter-rouge">ip1:port1,ip2:port2</code>。<strong>注意：目前只支持 IP 地址，不支持 hostname</strong></td>
+      <td>1.2.3.4:34601,1.2.3.5:34601</td>
+    </tr>
+    <tr>
+      <td>%{zk.server.list}</td>
+      <td>Zookeeper 地址列表，用逗号分隔。格式为 <code class="language-plaintext highlighter-rouge">ip1:port1,ip2:port2</code></td>
+      <td>1.2.3.4:2181,1.2.3.5:2181</td>
+    </tr>
+  </tbody>
+</table>
+
+<blockquote>
+  <p>配置的含义请参考 <a href="/zh/administration/config">配置说明</a>。</p>
+</blockquote>
+
+<blockquote>
+  <p>注意：同一个变量可能出现在多个地方，要保证所有的 <code class="language-plaintext highlighter-rouge">%{xxx}</code> 变量都被替换掉。</p>
+</blockquote>
+
+<h2 id="多个-ssd-盘如何配置">多个 SSD 盘如何配置</h2>
+
+<p>如果有多个 SSD 盘，推荐使用一个 SSD 盘专门用于 slog（即 shared-log），其他盘用于存储各分片的用户数据。</p>
+
+<p>譬如，假设服务器有 4 个盘，挂载路径为 <code class="language-plaintext highlighter-rouge">/home/work/ssd{id}</code>，其中 {id}=1,2,3,4。那么可以将 ssd1 用于 slog，可配置如下：</p>
+<div class="language-ini highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nn">[replication]</span>
+  <span class="py">slog_dir</span> <span class="p">=</span> <span class="s">/home/work/ssd1/pegasus</span>
+  <span class="py">data_dirs</span> <span class="p">=</span> <span class="s">ssd2:/home/work/ssd2/pegasus,ssd3:/home/work/ssd3/pegasus,ssd4:/home/work/ssd4/pegasus</span>
+</code></pre></div></div>
+
+<p>如果只有一个 SSD 盘，那么就只能将 slog 和 data 共享这一块盘。假设 SSD 盘挂载路径为 <code class="language-plaintext highlighter-rouge">/home/work/ssd</code>，可配置如下：</p>
+<div class="language-ini highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nn">[replication]</span>
+  <span class="py">slog_dir</span> <span class="p">=</span> <span class="s">/home/work/ssd/pegasus/{cluster.name}</span>
+  <span class="py">data_dirs</span> <span class="p">=</span> <span class="s">ssd:/home/work/ssd/pegasus/{cluster.name}</span>
+</code></pre></div></div>
+
+<h2 id="多个网卡如何配置">多个网卡如何配置</h2>
+
+<p>在配置文件中有以下 section：</p>
+<div class="language-ini highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nn">[network]</span>
+  <span class="py">primary_interface</span> <span class="p">=</span>
+</code></pre></div></div>
+
+<p>通过 <code class="language-plaintext highlighter-rouge">primary_interface</code> 指定网卡：</p>
+<ul>
+  <li>如果只有一块网卡，可以设置为空字符串，表示自动获取合适的网卡地址。具体策略就是在 <code class="language-plaintext highlighter-rouge">ifconfig</code> 命令的输出列表中，查找第一个符合 <code class="language-plaintext highlighter-rouge">10.\*.\*.\*/172.16.\*.\*/192.168.\*.\*</code> 规则的地址（即内网地址），这样就会忽略回环地址和虚拟地址。</li>
+  <li>如果有多个网卡，请指定网卡名。如果不指定，则会获取第一个符合 <code class="language-plaintext highlighter-rouge">10.\*.\*.\*/172.16.\*.\*/192.168.\*.\*</code> 规则的地址。</li>
+</ul>
+
+<p>譬如，如果有多个网卡，想使用 eth2 所在网卡，可配置如下：</p>
+<div class="language-ini highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nn">[network]</span>
+  <span class="py">primary_interface</span> <span class="p">=</span> <span class="s">eth2</span>
+</code></pre></div></div>
+
+<h1 id="准备部署包">准备部署包</h1>
+
+<p>ReplicaServer，MetaServer，Collector 三种角色共用一套二进制程序和配置文件。</p>
+
+<p>首先 <a href="/zh/overview/compilation">编译 Pegasus</a>，编译完成后运行以下命令可以打包生成 server 端部署包：</p>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>./run.sh pack_server
+</code></pre></div></div>
+<p>运行成功后，会在本地文件夹下产生 <code class="language-plaintext highlighter-rouge">pegasus-server-{version}-{gitSHA}-{platform}-{buildType}</code> 的目录以及 tar.gz 包。其中有个 <code class="language-plaintext highlighter-rouge">bin/</code> 目录，里面包含 pegasus_server 程序及依赖库，还包括刚刚修改好的 config.ini 文件。</p>
+
+<p>将 tar.gz 包拷贝到需要部署的服务器上并解压。</p>
+
+<h1 id="启动服务">启动服务</h1>
+
+<p>在启动程序之前，需要先把程序所依赖的动态链接库的路径加入到 <code class="language-plaintext highlighter-rouge">LD_LIBRARY_PATH</code> 中：</p>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>export LD_LIBRARY_PATH=/path/to/your/pegasus/bin:$LD_LIBRARY_PATH
+</code></pre></div></div>
+
+<h2 id="启动-metaserver">启动 MetaServer：</h2>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>cd bin/
+./pegasus_server config.ini -app_list meta
+</code></pre></div></div>
+
+<h2 id="启动-replicaserver">启动 ReplicaServer：</h2>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>cd bin/
+./pegasus_server config.ini -app_list replica
+</code></pre></div></div>
+
+<h2 id="启动-collector">启动 Collector：</h2>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>cd bin/
+./pegasus_server config.ini -app_list collector
+</code></pre></div></div>
+
+<ul>
+  <li>集群启动成功后，会默认创建一个 <code class="language-plaintext highlighter-rouge">temp</code> 表，该表也用于 Collector 的集群可用度检查。</li>
+  <li>可以使用 <a href="/zh/overview/shell">Shell 工具</a> 查看集群的各种状态。</li>
+  <li>如果启动失败，可以到 <code class="language-plaintext highlighter-rouge">%{app.dir}/log</code> 内查看日志，排查问题。</li>
+</ul>
+
+<h1 id="常见问题">常见问题</h1>
+
+<h2 id="集群清理">集群清理</h2>
+
+<p>如果想完全重新部署集群，<strong>并清理所有数据</strong>，需要清理以下环境，否则可能会出现启动新集群失败的问题：</p>
+<ul>
+  <li>删除 MetaServer，ReplicaServer 和 Collector 的 <code class="language-plaintext highlighter-rouge">%{app.dir}</code>，<code class="language-plaintext highlighter-rouge">%{slog.dir}</code> 和 <code class="language-plaintext highlighter-rouge">%{data.dirs}</code> 目录</li>
+  <li>删除 Zookeeper 的 <code class="language-plaintext highlighter-rouge">%{cluster_root}</code> 路径</li>
+</ul>
+
+                </div>
+            </section>
+            <footer class="footer">
+    <div class="container">
+        <div class="content is-small has-text-centered">
+            <div style="margin-bottom: 20px;">
+                <a href="http://incubator.apache.org">
+                    <img src="/assets/images/egg-logo.png"
+                         width="15%"
+                         alt="Apache Incubator"/>
+                </a>
+            </div>
+            Copyright &copy; 2023 <a href="http://www.apache.org">The Apache Software Foundation</a>.
+            Licensed under the <a href="http://www.apache.org/licenses/LICENSE-2.0">Apache License, Version
+            2.0</a>.
+            <br><br>
+            
+            Apache Pegasus is an effort undergoing incubation at The Apache Software Foundation (ASF),
+            sponsored by the Apache Incubator. Incubation is required of all newly accepted projects
+            until a further review indicates that the infrastructure, communications, and decision making process
+            have stabilized in a manner consistent with other successful ASF projects. While incubation status is
+            not necessarily a reflection of the completeness or stability of the code, it does indicate that the
+            project has yet to be fully endorsed by the ASF.
+            
+            <br><br>
+            Apache Pegasus, Pegasus, Apache, the Apache feather logo, and the Apache Pegasus project logo are either
+            registered trademarks or trademarks of The Apache Software Foundation in the United States and other
+            countries.
+        </div>
+    </div>
+</footer>
+        </div>
+
+        <!-- right panel -->
+        <div class="dashboard-panel is-small is-scrollable is-hidden-mobile">
+            <p class="menu-label">
+    <span class="icon">
+        <i class="fa fa-bars" aria-hidden="true"></i>
+    </span>
+    本页导航
+</p>
+<ul class="menu-list">
+  <li><a href="#准备服务器">准备服务器</a></li>
+  <li><a href="#准备-apache-zookeeper">准备 Apache Zookeeper</a></li>
+  <li><a href="#准备配置文件">准备配置文件</a>
+    <ul>
+      <li><a href="#多个-ssd-盘如何配置">多个 SSD 盘如何配置</a></li>
+      <li><a href="#多个网卡如何配置">多个网卡如何配置</a></li>
+    </ul>
+  </li>
+  <li><a href="#准备部署包">准备部署包</a></li>
+  <li><a href="#启动服务">启动服务</a>
+    <ul>
+      <li><a href="#启动-metaserver">启动 MetaServer：</a></li>
+      <li><a href="#启动-replicaserver">启动 ReplicaServer：</a></li>
+      <li><a href="#启动-collector">启动 Collector：</a></li>
+    </ul>
+  </li>
+  <li><a href="#常见问题">常见问题</a>
+    <ul>
+      <li><a href="#集群清理">集群清理</a></li>
+    </ul>
+  </li>
+</ul>
+
+        </div>
+    </div>
+
+    <script src="/assets/js/app.js" type="text/javascript"></script>
+     <script>
+     docsearch({
+         container: '#docsearch',
+         appId: 'QRN30RBW0S',
+         indexName: 'pegasus-apache',
+         apiKey: 'd3a3252fa344359766707a106c4ed88f',
+         debug: true
+     });
+ </script>
+
+</body>
+
+</html>

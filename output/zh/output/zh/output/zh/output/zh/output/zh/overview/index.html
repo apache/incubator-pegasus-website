@@ -1,0 +1,399 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Pegasus | Overview</title>
+    <link rel="stylesheet" href="/zh/assets/css/app.css">
+    <link rel="shortcut icon" href="/zh/assets/images/favicon.ico">
+    <link rel="stylesheet" href="/zh/assets/css/utilities.min.css">
+    <link rel="stylesheet" href="/zh/assets/css/docsearch.v3.css">
+    <script src="/assets/js/jquery.min.js"></script>
+    <script src="/assets/js/all.min.js"></script>
+    <script src="/assets/js/docsearch.v3.js"></script>
+    <!-- Begin Jekyll SEO tag v2.8.0 -->
+<title>Overview | Pegasus</title>
+<meta name="generator" content="Jekyll v4.4.1" />
+<meta property="og:title" content="Overview" />
+<meta property="og:locale" content="en_US" />
+<meta name="description" content="Apache Pegasus是一个分布式Key-Value存储系统，它的设计目标是具备：" />
+<meta property="og:description" content="Apache Pegasus是一个分布式Key-Value存储系统，它的设计目标是具备：" />
+<meta property="og:site_name" content="Pegasus" />
+<meta property="og:type" content="article" />
+<meta property="article:published_time" content="2025-02-12T14:49:16+00:00" />
+<meta name="twitter:card" content="summary" />
+<meta property="twitter:title" content="Overview" />
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"BlogPosting","dateModified":"2025-02-12T14:49:16+00:00","datePublished":"2025-02-12T14:49:16+00:00","description":"Apache Pegasus是一个分布式Key-Value存储系统，它的设计目标是具备：","headline":"Overview","mainEntityOfPage":{"@type":"WebPage","@id":"/overview/"},"url":"/overview/"}</script>
+<!-- End Jekyll SEO tag -->
+
+</head>
+
+  <body>
+    
+
+
+
+<nav class="navbar is-primary">
+    <div class="container">
+        <!--container will be unwrapped when it's in docs-->
+        <div class="navbar-brand">
+            <a href="/zh/" class="navbar-item ">
+                <!-- Pegasus Icon -->
+                <img src="/assets/images/pegasus.svg">
+            </a>
+            <div class="navbar-item">
+                <a href="/zh/docs" class="button is-primary is-outlined is-inverted">
+                    <span class="icon"><i class="fas fa-book"></i></span>
+                    <span>Docs</span>
+                </a>
+            </div>
+            <div class="navbar-item is-hidden-desktop">
+                  
+
+<!--A simple language switch button that only supports zh and en.-->
+<!--IF its language is zh, then switches to en.-->
+
+<!--If you don't want a url to be relativized, you can add a space explicitly into the href to 
+    prevents a url from being relativized by polyglot.-->
+<a class="button is-primary is-outlined is-inverted" href=" /overview/index.html"><strong>En</strong></a>
+
+            </div>
+            <a role="button" class="navbar-burger burger" aria-label="menu" aria-expanded="false" data-target="navMenu">
+                <!-- Appears in mobile mode only -->
+                <span aria-hidden="true"></span>
+                <span aria-hidden="true"></span>
+                <span aria-hidden="true"></span>
+            </a>
+        </div>
+        <div class="navbar-menu" id="navMenu">
+            <div class="navbar-end">
+                
+                 <!--dropdown-->
+                <div class="navbar-item has-dropdown is-hoverable ">
+                    <a href=""
+                        class="navbar-link ">
+                        
+                        <span class="icon" style="margin-right: .25em">
+                            <i class="fas fa-users"></i>
+                        </span>
+                        
+                        <span>
+                            ASF
+                        </span>
+                    </a>
+                    <div class="navbar-dropdown">
+                        
+                        <a href="https://www.apache.org/"
+                            class="navbar-item ">
+                            Foundation
+                        </a>
+                        
+                        <a href="https://www.apache.org/licenses/"
+                            class="navbar-item ">
+                            License
+                        </a>
+                        
+                        <a href="https://www.apache.org/events/current-event.html"
+                            class="navbar-item ">
+                            Events
+                        </a>
+                        
+                        <a href="https://www.apache.org/foundation/sponsorship.html"
+                            class="navbar-item ">
+                            Sponsorship
+                        </a>
+                        
+                        <a href="https://www.apache.org/security/"
+                            class="navbar-item ">
+                            Security
+                        </a>
+                        
+                        <a href="https://privacy.apache.org/policies/privacy-policy-public.html"
+                            class="navbar-item ">
+                            Privacy
+                        </a>
+                        
+                        <a href="https://www.apache.org/foundation/thanks.html"
+                            class="navbar-item ">
+                            Thanks
+                        </a>
+                        
+                    </div>
+                </div>
+                
+                
+                 <!--dropdown-->
+                <div class="navbar-item has-dropdown is-hoverable ">
+                    <a href="/zh/community"
+                        class="navbar-link ">
+                        
+                        <span class="icon" style="margin-right: .25em">
+                            <i class="fas fa-user-plus"></i>
+                        </span>
+                        
+                        <span>
+                            开源社区
+                        </span>
+                    </a>
+                    <div class="navbar-dropdown">
+                        
+                        <a href="/zh/community/#contact-us"
+                            class="navbar-item ">
+                            联系我们
+                        </a>
+                        
+                        <a href="/zh/community/#contribution"
+                            class="navbar-item ">
+                            参与贡献
+                        </a>
+                        
+                        <a href="https://cwiki.apache.org/confluence/display/PEGASUS/Coding+guides"
+                            class="navbar-item ">
+                            编码指引
+                        </a>
+                        
+                        <a href="https://github.com/apache/incubator-pegasus/issues?q=is%3Aissue+is%3Aopen+label%3Atype%2Fbug"
+                            class="navbar-item ">
+                            Bug 追踪
+                        </a>
+                        
+                        <a href="https://cwiki.apache.org/confluence/display/INCUBATOR/PegasusProposal"
+                            class="navbar-item ">
+                            Apache 提案
+                        </a>
+                        
+                    </div>
+                </div>
+                
+                
+                
+                <a href="/zh/blogs"
+                    class="navbar-item ">
+                    
+                    <span class="icon" style="margin-right: .25em">
+                        <i class="fas fa-rss"></i>
+                    </span>
+                    
+                    <span>Blog</span>
+                </a>
+                
+                
+                
+                <a href="/zh/docs/downloads"
+                    class="navbar-item ">
+                    
+                    <span class="icon" style="margin-right: .25em">
+                        <i class="fas fa-fire"></i>
+                    </span>
+                    
+                    <span>版本发布</span>
+                </a>
+                
+                
+            </div>
+            <div class="navbar-item is-hidden-mobile">
+                
+
+<!--A simple language switch button that only supports zh and en.-->
+<!--IF its language is zh, then switches to en.-->
+
+<!--If you don't want a url to be relativized, you can add a space explicitly into the href to 
+    prevents a url from being relativized by polyglot.-->
+<a class="button is-primary is-outlined is-inverted" href=" /overview/index.html"><strong>En</strong></a>
+
+            </div>
+        </div>
+    </div>
+</nav>
+
+    <section class="section">
+        <div class="container">
+            <div class="columns is-multiline">
+                <div class="column is-one-fourth">
+                    
+                    
+
+<aside class="menu">
+    
+    <p class="menu-label"></p>
+    <ul class="menu-list">
+        
+        <li>
+            <a href="/zh/overview"
+                class="">
+                概览
+            </a>
+        </li>
+        
+        <li>
+            <a href="/zh/overview/background"
+                class="">
+                项目背景
+            </a>
+        </li>
+        
+        <li>
+            <a href="/zh/overview/architecture"
+                class="">
+                系统架构
+            </a>
+        </li>
+        
+        <li>
+            <a href="/zh/overview/data-model"
+                class="">
+                数据模型
+            </a>
+        </li>
+        
+        <li>
+            <a href="/zh/overview/benchmark"
+                class="">
+                性能测试
+            </a>
+        </li>
+        
+        <li>
+            <a href="/zh/docs/build/compile-by-docker"
+                class="">
+                安装构建
+            </a>
+        </li>
+        
+        <li>
+            <a href="/zh/overview/onebox"
+                class="">
+                体验 Onebox 集群
+            </a>
+        </li>
+        
+    </ul>
+    
+</aside>
+                    
+                </div>
+                <div class="column is-half">
+                    
+                    
+
+<div class="content">
+    <h1 id="概览">概览</h1>
+    <p>Apache Pegasus是一个分布式Key-Value存储系统，它的设计目标是具备：</p>
+
+<ul>
+  <li><strong>高扩展性</strong>：通过哈希分片实现分布式横向扩展。</li>
+  <li><strong>强一致性</strong>：通过<a href="https://www.microsoft.com/en-us/research/publication/pacifica-replication-in-log-based-distributed-storage-systems/">PacificA</a>一致性协议保证。</li>
+  <li><strong>高性能</strong>：底层使用<a href="https://rocksdb.org/">RocksDB</a>作为存储引擎。</li>
+  <li><strong>简单易用</strong>：基于Key-Value的良好接口。</li>
+</ul>
+
+<h2 id="背景">背景</h2>
+
+<p>Pegasus项目的目标是弥补Redis与<a href="https://hbase.apache.org/">HBase</a>之间的空白。Redis作为一个纯内存存储，它提供了低延迟读写能力，但它不具备强一致性。而与HBase不同，我们需要Pegasus以C++进行编写，同时其写路径应当只依赖于本地文件系统，不依赖于其他分布式文件系统（如HDFS），由此才能保证延迟稳定。</p>
+
+<p>除了性能需求外，我们还需要一个存储系统，它应能够支持多级别数据安全保障，快速跨数据中心迁移，自动负载均衡，以及快速分片分裂等功能。这就是我们发起Pegasus项目的原因。</p>
+
+<h2 id="特性">特性</h2>
+
+<ul>
+  <li>
+    <p><strong>数据的持久性</strong>：每一份数据写入都将分别复制到3个不同ReplicaServer上，待全部完成后才响应客户端。通过PacificA协议，Pegasus具备强一致数复制的能力，同时也能够实现强一致的成员变更。</p>
+  </li>
+  <li>
+    <p><strong>ReplicaServer之间的自动负载均衡</strong>：自动负载均衡是MetaServer的内置功能，它能够让Replica在节点之间均匀分布。当集群处于不均衡状态时，管理员可以通过简单的命令让Replica在节点之间自动迁移，从而实现负载均衡。</p>
+  </li>
+  <li>
+    <p><strong>冷备份</strong>：Pegasus支持可扩展的备份和恢复策略，由此可实现数据安全性。数据的存储位置可以是在HDFS或本地存储上。在文件系统上存储的快照数据可以通过<a href="https://github.com/pegasus-kv/pegasus-spark">pegasus-spark</a>实现离线数据分析。</p>
+  </li>
+  <li>
+    <p><strong>满足最终一致性的跨数据中心复制</strong>：这一功能我们又称之为<em>duplication</em>，它能够让本地集群的数据写在短时间内到达远端集群。它可以帮助你实现业务的更高的可用性，同时也可以让你避免跨机房访问，从而降低访问延迟。</p>
+  </li>
+</ul>
+
+<h2 id="社区分享">社区分享</h2>
+
+<p>（不完全统计，如果你有新的Pegasus相关分享，欢迎提交 <a href="https://github.com/apache/incubator-pegasus-website/pulls">PR</a>）</p>
+
+<ul>
+  <li>2023，成都，COSCon 2023，《Apache Pegasus在神策数据的应用》，李国豪（<a href="https://kaiyuanshe.cn/activity/recVnSz8ru/agenda/recAg8mw7f">介绍</a>，<a href="https://www.slideshare.net/acelyc1112009/how-does-apache-pegasusused-in-sensorsdata">Slides</a>）</li>
+  <li>2023，北京，DataFunSummit 2023，《Apache Pegasus的应用实现与未来规划》，何昱晨</li>
+  <li>2022，北京，DataFunSummit 2022，《Pegasus的设计实现和开源之路》，何昱晨（<a href="https://mp.weixin.qq.com/s/rLiwNdl2baCw6m1FoQT4jw">介绍</a>）</li>
+  <li>2022，北京，Pegasus meetup，《Apache Pegasus在神策广告数据流中的应用》，史佼明（<a href="https://www.slideshare.net/acelyc1112009/how-does-the-apache-pegasus-used-in-advertising-data-stream-in-sensorsdata">Slides</a>，<a href="https://www.bilibili.com/video/BV1q84y1h7xG/">video</a>）</li>
+  <li>2022，北京，Pegasus meetup，《如何在复杂 toB 场景下对Pegasus 进行持续改进》，王浩（<a href="https://www.slideshare.net/acelyc1112009/how-to-continuously-improve-apache-pegasus-in-complex-tob-scenarios">Slides</a>，<a href="https://www.bilibili.com/video/BV1M14y1g7yy/">video</a>）</li>
+  <li>2022，北京，Pegasus meetup，《Apache Pegasus离在线融合建设与实践》，王伟（<a href="https://www.slideshare.net/acelyc1112009/the-construction-and-practice-of-apache-pegasus-in-offline-and-online-scenarios-integration">Slides</a>，<a href="https://www.bilibili.com/video/BV1Ux4y137ib/">video</a>）</li>
+  <li>2022，北京，Pegasus meetup，《Pegasus在小米通用推荐算法框架中的应用》，梁伟（<a href="https://www.slideshare.net/acelyc1112009/how-does-apache-pegasus-used-in-xiaomis-universal-recommendation-algorithm-framework">Slides</a>，<a href="https://www.bilibili.com/video/BV16M411b7Pc/">video</a>）</li>
+  <li>2022，北京，Pegasus meetup，《Apache Pegasus 2.4.0 版本介绍》，贾硕（<a href="https://www.slideshare.net/acelyc1112009/the-introduction-of-apache-pegasus-240">Slides</a>，<a href="https://www.bilibili.com/video/BV1C8411N7hp/">video</a>）</li>
+  <li>2022，线上，ApacheCon Asia 2022，《How does Apache Pegasus (incubating) community develop at SensorsData》，王聃，赖迎春（<a href="https://www.slideshare.net/acelyc1112009/how-does-apache-pegasus-incubating-community-develop-at-sensorsdata">Slides</a>，<a href="https://www.bilibili.com/video/BV18v4y1U7RG/">video</a>）</li>
+  <li>2021，北京，系统软件Tech Day，《Apache Pegasus：高性能强一致分布式KV存储系统》，何昱晨（<a href="https://www.modb.pro/db/168862">介绍</a>，<a href="https://www.bilibili.com/video/BV1SP4y1p7cW/">video</a>）</li>
+  <li>2021，北京，Pegasus meetup，《Pegasus的设计实现和开源之路》，何昱晨（<a href="https://www.slideshare.net/acelyc1112009/the-design-implementation-and-open-source-way-of-apache-pegasus">Slides</a>，<a href="https://www.bilibili.com/video/BV1YL411s7dP/">video</a>）</li>
+  <li>2021，北京，Pegasus meetup，《Pegasus在小米数据接入上的实践》，肖发腾（<a href="https://www.slideshare.net/acelyc1112009/apache-pegasuss-practice-in-data-access-business-of-xiaomi">Slides</a>，<a href="https://www.bilibili.com/video/BV1K44y1t76C/">video</a>）</li>
+  <li>2021，北京，Pegasus meetup，《小米广告算法架构及Pegasus在特征缓存的实践》，郝刚（<a href="https://www.slideshare.net/acelyc1112009/the-advertising-algorithm-architecture-in-xiaomi-and-how-does-pegasus-practice-in-feature-caching">Slides</a>，<a href="https://www.bilibili.com/video/BV1JR4y1n77B/">video</a>）</li>
+  <li>2021，北京，Pegasus meetup，《我们是如何支撑起上千个Pegasus集群的-工程篇》，李国豪（<a href="https://www.slideshare.net/acelyc1112009/how-do-we-manage-more-than-one-thousand-of-pegasus-clusters-engine-part">Slides</a>，<a href="https://www.bilibili.com/video/BV1y44y147U6/">video</a>）</li>
+  <li>2021，北京，Pegasus meetup，《我们是如何支撑起上千个Pegasus集群的-后端篇》，王聃（<a href="https://www.slideshare.net/acelyc1112009/how-do-we-manage-more-than-one-thousand-of-pegasus-clusters-backend-part">Slides</a>，<a href="https://www.bilibili.com/video/BV1Lv411G7aW/">video</a>）</li>
+  <li>2021，线上，ApacheCon Asia 2021，《Apache Pegasus (incubating): A distributed key-value storage system》，何昱晨，贾硕（<a href="https://www.slideshare.net/acelyc1112009/apache-pegasus-incubating-a-distributed-keyvalue-storage-system">Slides</a>，<a href="https://www.bilibili.com/video/BV1b3411z7rR/">video</a>）</li>
+  <li>2020，北京，MIDC 2020，《Pegasus：打造小米开源KV存储》，吴涛（<a href="https://zhuanlan.zhihu.com/p/281519769">介绍</a>）</li>
+  <li>2018，北京，MIDC 2018，《Pegasus：分布式Key-Value存储系统》，覃左言</li>
+  <li>2018，北京，《深入了解Pegasus》，覃左言（<a href="https://www.slideshare.net/ssuser0a3cdd/pegasus-in-depth">Slides</a>）</li>
+  <li>2018，北京，《Pegasus分布式KV系统：让用户专注于业务逻辑》，覃左言 （<a href="https://www.slideshare.net/ssuser0a3cdd/pegasus-kv-storage-let-the-users-focus-on-their-work-201807">Slides</a>）</li>
+  <li>2017，深圳，ArchSummit，《分布式实现那些事儿：Pegasus背后的故事》，孙伟杰（<a href="https://sz2017.archsummit.com/presentation/969">介绍</a>，<a href="https://www.slideshare.net/ssuser0a3cdd/behind-pegasus-what-matters-in-a-distributed-system-arch-summit-shenzhen2017">Slides</a>）</li>
+  <li>2016，北京，ArchSummit，《从Pegasus看分布式系统的设计》，覃左言（<a href="http://bj2016.archsummit.com/presentation/3023">介绍</a>，<a href="https://www.slideshare.net/ssuser0a3cdd/pegasus-designing-a-distributed-key-value-system-arch-summit-beijing2016">Slides</a>）</li>
+</ul>
+
+</div>
+                </div>
+                <div class="column is-one-fourth is-hidden-mobile" style="padding-left: 3rem">
+                    
+                    <p class="menu-label">
+    <span class="icon">
+        <i class="fa fa-bars" aria-hidden="true"></i>
+    </span>
+    本页导航
+</p>
+<ul class="menu-list">
+  <li><a href="#概览">概览</a>
+    <ul>
+      <li><a href="#背景">背景</a></li>
+      <li><a href="#特性">特性</a></li>
+      <li><a href="#社区分享">社区分享</a></li>
+    </ul>
+  </li>
+</ul>
+
+                    
+                </div>
+            </div>
+        </div>
+    </section>
+    <footer class="footer">
+    <div class="container">
+        <div class="content is-small has-text-centered">
+            <div style="margin-bottom: 20px;">
+                <a href="http://incubator.apache.org">
+                    <img src="/assets/images/egg-logo.png"
+                         width="15%"
+                         alt="Apache Incubator"/>
+                </a>
+            </div>
+            Copyright &copy; 2023 <a href="http://www.apache.org">The Apache Software Foundation</a>.
+            Licensed under the <a href="http://www.apache.org/licenses/LICENSE-2.0">Apache License, Version
+            2.0</a>.
+            <br><br>
+            
+            Apache Pegasus is an effort undergoing incubation at The Apache Software Foundation (ASF),
+            sponsored by the Apache Incubator. Incubation is required of all newly accepted projects
+            until a further review indicates that the infrastructure, communications, and decision making process
+            have stabilized in a manner consistent with other successful ASF projects. While incubation status is
+            not necessarily a reflection of the completeness or stability of the code, it does indicate that the
+            project has yet to be fully endorsed by the ASF.
+            
+            <br><br>
+            Apache Pegasus, Pegasus, Apache, the Apache feather logo, and the Apache Pegasus project logo are either
+            registered trademarks or trademarks of The Apache Software Foundation in the United States and other
+            countries.
+        </div>
+    </div>
+</footer>
+    <script src="/assets/js/app.js" type="text/javascript"></script>
+  </body>
+</html>
