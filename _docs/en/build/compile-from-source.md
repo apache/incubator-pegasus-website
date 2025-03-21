@@ -10,7 +10,7 @@ Since 2.4.0, Pegasus supports to build both on Linux and macOS. Please don't hes
 ## Requirements
 
 - GCC 5.4.0+
-- CMake 3.11.0+
+- CMake 3.24.0+
 
 ## Linux environment
 
