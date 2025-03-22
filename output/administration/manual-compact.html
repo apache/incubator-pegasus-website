@@ -16,15 +16,15 @@
 <meta name="generator" content="Jekyll v4.4.1" />
 <meta property="og:title" content="Manual Compact" />
 <meta property="og:locale" content="en_US" />
-<meta name="description" content="TRANSLATING" />
-<meta property="og:description" content="TRANSLATING" />
+<meta name="description" content="Note: The manual compact feature has been supported since v1.8.1." />
+<meta property="og:description" content="Note: The manual compact feature has been supported since v1.8.1." />
 <meta property="og:site_name" content="Pegasus" />
 <meta property="og:type" content="article" />
-<meta property="article:published_time" content="2025-03-22T01:38:15+00:00" />
+<meta property="article:published_time" content="2025-03-22T01:39:36+00:00" />
 <meta name="twitter:card" content="summary" />
 <meta property="twitter:title" content="Manual Compact" />
 <script type="application/ld+json">
-{"@context":"https://schema.org","@type":"BlogPosting","dateModified":"2025-03-22T01:38:15+00:00","datePublished":"2025-03-22T01:38:15+00:00","description":"TRANSLATING","headline":"Manual Compact","mainEntityOfPage":{"@type":"WebPage","@id":"/administration/manual-compact"},"url":"/administration/manual-compact"}</script>
+{"@context":"https://schema.org","@type":"BlogPosting","dateModified":"2025-03-22T01:39:36+00:00","datePublished":"2025-03-22T01:39:36+00:00","description":"Note: The manual compact feature has been supported since v1.8.1.","headline":"Manual Compact","mainEntityOfPage":{"@type":"WebPage","@id":"/administration/manual-compact"},"url":"/administration/manual-compact"}</script>
 <!-- End Jekyll SEO tag -->
 
 </head>
@@ -734,7 +734,236 @@
             </section>
             <section class="section" style="padding-top: 2rem;">
                 <div class="content">
-                    <p>TRANSLATING</p>
+                    <blockquote>
+  <p><strong>Note</strong>: The manual compact feature has been supported since v1.8.1.</p>
+</blockquote>
+
+<h1 id="purpose">Purpose</h1>
+
+<p>Pegasus provides a table-level Manual Compaction feature built on top of RocksDB’s <a href="https://github.com/facebook/rocksdb/wiki/Manual-Compaction">Manual Compaction</a>. Its main purposes are:</p>
+
+<ol>
+  <li>Remove stale data via compaction, reduce data size, lower file levels, and improve read performance.</li>
+  <li>Perform compaction on bottommost levels to clean up data marked with <code class="language-plaintext highlighter-rouge">Delete</code>.</li>
+  <li>Combined with the <a href="https://pegasus.apache.org/administration/usage-scenario">Usage Scenario feature</a> in bulk_load mode, you can run Manual Compaction after a large data import to eliminate garbage data, tidy up data and file structures, and further boost read performance.</li>
+</ol>
+
+<hr />
+
+<div class="language-markdown highlighter-rouge"><div class="highlight"><pre class="highlight"><code>// CompactRangeOptions is used by CompactRange() call.
+struct CompactRangeOptions {
+  // If true, no other compaction will run at the same time as this
+  // manual compaction
+  bool exclusive_manual_compaction = true;
+  // If true, compacted files will be moved to the minimum level capable
+  // of holding the data or given level (specified non-negative target_level).
+  bool change_level = false;
+  // If change_level is true and target_level have non-negative value, compacted
+  // files will be moved to target_level.
+  int target_level = -1;
+  // Compaction outputs will be placed in options.db_paths[target_path_id].
+  // Behavior is undefined if target_path_id is out of range.
+  uint32_t target_path_id = 0;
+  // By default level-based compaction will only compact the bottommost level
+  // if there is a compaction filter
+  BottommostLevelCompaction bottommost_level_compaction =
+      BottommostLevelCompaction::kIfHaveCompactionFilter;
+};
+
+// Compact the underlying storage for the key range [<span class="ge">*begin,*</span>end].
+// The actual compaction interval might be a superset of [<span class="ge">*begin, *</span>end].
+// In particular, deleted and overwritten versions are discarded,
+// and the data is rearranged to reduce the cost of operations
+// needed to access the data. This operation should typically only
+// be invoked by users who understand the underlying implementation.
+//
+// begin==nullptr is treated as a key before all keys in the database.
+// end==nullptr is treated as a key after all keys in the database.
+// Therefore the following call will compact the entire database:
+//    db-&gt;CompactRange(options, nullptr, nullptr);
+// Note that after the entire database is compacted, all data are pushed
+// down to the last level containing any data. If the total data size after
+// compaction is reduced, that level might not be appropriate for hosting all
+// the files. In this case, client could set options.change_level to true, to
+// move the files back to the minimum level capable of holding the data set
+// or a given level (specified by non-negative options.target_level).
+virtual Status CompactRange(const CompactRangeOptions&amp; options,
+                            ColumnFamilyHandle<span class="err">*</span> column_family,
+                            const Slice<span class="ge">* begin, const Slice*</span> end) = 0;                                                   
+</code></pre></div></div>
+
+<p>##</p>
+
+<h2 id="implementation-details">Implementation Details</h2>
+
+<ul>
+  <li><strong>Prior to version 2.1</strong>, Pegasus extended RocksDB and recorded the time of the last Manual Compaction in the Manifest, providing the method <code class="language-plaintext highlighter-rouge">GetLastManualCompactFinishTime()</code> to retrieve it. <strong>Starting with version 2.1</strong>, Pegasus stores this timestamp in the meta column family and offers the method <code class="language-plaintext highlighter-rouge">get_last_manual_compact_finish_time()</code> to fetch it.</li>
+  <li>Table-level Manual Compaction in Pegasus is primarily controlled through <a href="https://pegasus.apache.org/administration/table-env">Table Environment Variables</a>. These environment variables define different strategies for Manual Compaction. The main related parameters can be categorized into three groups, as described below:
+    <ol>
+      <li><strong>Overall Manual Compact switch and concurrency control</strong>
+        <ul>
+          <li><code class="language-plaintext highlighter-rouge">manual_compact.disabled</code> (supported since v1.9.0): If set to <code class="language-plaintext highlighter-rouge">true</code>, the Manual Compaction feature is turned off and any ongoing Manual Compaction tasks will be canceled. By default (if unset), it is <code class="language-plaintext highlighter-rouge">false</code>.</li>
+          <li><code class="language-plaintext highlighter-rouge">manual_compact.max_concurrent_running_count</code> (supported since v1.11.3): Specifies the maximum concurrency. In practice, the actual maximum concurrency is the smaller value between this parameter and the number of threads in the server’s <code class="language-plaintext highlighter-rouge">MANUAL_COMPACT_THREAD_POOL</code>. This parameter is node-level. If multiple tables on the same node attempt to perform manual compaction simultaneously, it can reach this maximum concurrency. Subsequent requests on that node will be ignored (delayed until next time). In the logs, you may see a message like: <code class="language-plaintext highlighter-rouge">xxx ignored compact because exceed max_concurrent_running_count</code>.</li>
+        </ul>
+      </li>
+      <li><strong>Single-run Manual Compact strategy parameters</strong>
+        <ul>
+          <li><code class="language-plaintext highlighter-rouge">manual_compact.once.trigger_time</code>: Uses a Unix timestamp (in seconds). You can obtain the current timestamp via <code class="language-plaintext highlighter-rouge">date +%s</code>. If the <code class="language-plaintext highlighter-rouge">LastManualCompactFinishTime</code> is earlier than this <code class="language-plaintext highlighter-rouge">trigger_time</code>, Manual Compaction will be triggered.</li>
+          <li><code class="language-plaintext highlighter-rouge">manual_compact.once.target_level</code>: Sets <code class="language-plaintext highlighter-rouge">CompactRangeOptions::target_level</code>. If unset, it defaults to <code class="language-plaintext highlighter-rouge">-1</code>.</li>
+          <li><code class="language-plaintext highlighter-rouge">manual_compact.once.bottommost_level_compaction</code>: Can be set to <code class="language-plaintext highlighter-rouge">skip</code> or <code class="language-plaintext highlighter-rouge">force</code>. If set to <code class="language-plaintext highlighter-rouge">skip</code>, the bottommost level will not be compacted; if set to <code class="language-plaintext highlighter-rouge">force</code>, the bottommost level will definitely be compacted. Defaults to <code class="language-plaintext highlighter-rouge">skip</code> if not set.</li>
+        </ul>
+      </li>
+      <li><strong>Periodic Manual Compact strategy parameters</strong>
+        <ul>
+          <li><code class="language-plaintext highlighter-rouge">manual_compact.periodic.trigger_time</code>: A comma-separated list of clock times (e.g., <code class="language-plaintext highlighter-rouge">3:00,21:00</code>), meaning manual compaction is triggered each day at 3:00 and 21:00.</li>
+          <li><code class="language-plaintext highlighter-rouge">manual_compact.periodic.target_level</code>: Sets <code class="language-plaintext highlighter-rouge">CompactRangeOptions::target_level</code>. Defaults to <code class="language-plaintext highlighter-rouge">-1</code> if not set.</li>
+          <li><code class="language-plaintext highlighter-rouge">manual_compact.periodic.bottommost_level_compaction</code>: Can be <code class="language-plaintext highlighter-rouge">skip</code> or <code class="language-plaintext highlighter-rouge">force</code>. If <code class="language-plaintext highlighter-rouge">skip</code>, the bottommost level is not compacted; if <code class="language-plaintext highlighter-rouge">force</code>, the bottommost level is definitely compacted. Defaults to <code class="language-plaintext highlighter-rouge">skip</code> if not set.</li>
+        </ul>
+      </li>
+    </ol>
+  </li>
+</ul>
+
+<h3 id="important-notes">Important Notes</h3>
+
+<ul>
+  <li>
+    <p>Manual Compaction is dispatched to a dedicated compaction thread pool. Each thread can only handle one replica’s full compaction at a time. Because concurrent compaction capacity depends on the number of threads in this pool, you can configure the</p>
+
+    <div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>worker_count
+</code></pre></div>    </div>
+
+    <p>in the config file. If Manual Compaction is frequently used, consider increasing the thread count (e.g., to be close to the number of CPU cores):</p>
+
+    <div class="language-ini highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nn">[threadpool.THREAD_POOL_COMPACT]</span>
+<span class="py">name</span> <span class="p">=</span> <span class="s">compact</span>
+<span class="py">partitioned</span> <span class="p">=</span> <span class="s">false</span>
+<span class="py">max_input_queue_length</span> <span class="p">=</span> <span class="s">128</span>
+<span class="py">worker_priority</span> <span class="p">=</span> <span class="s">THREAD_xPRIORITY_NORMAL</span>
+<span class="py">worker_count</span> <span class="p">=</span> <span class="s">16</span>
+</code></pre></div>    </div>
+  </li>
+  <li>
+    <p>Manual Compaction is both CPU and I/O intensive. During the process, CPU usage can remain at a high level for a long time, potentially affecting read/write performance. <strong>We strongly recommend running compaction during off-peak traffic hours</strong>. If performance degradation is observed after starting compaction, you can immediately disable it by setting the environment variable <code class="language-plaintext highlighter-rouge">manual_compact.disabled=true</code> to terminate the ongoing compaction.</p>
+  </li>
+  <li>
+    <p>Manual Compaction may require a significant amount of extra disk space. Because compaction can drastically change the set of files before and after the process, and Pegasus retains multiple checkpoint versions, the extra disk space needed could roughly equal the total data size of the table being compacted. <strong>Ensure sufficient storage space</strong> before initiating Manual Compaction, and monitor disk usage throughout the process to avoid running out of space and causing node crashes, which would affect cluster availability.</p>
+  </li>
+</ul>
+
+<hr />
+
+<h1 id="how-to-configure">How to Configure</h1>
+
+<h2 id="configure-via-pegasus-shell">Configure via Pegasus Shell</h2>
+
+<p>Because Manual Compaction is triggered by <a href="https://pegasus.apache.org/administration/table-env">Table Environment Variables</a>, you can directly use the <a href="https://pegasus.apache.org/docs/tools/shell/#set_app_envs">set_app_envs command</a> in the shell to configure the relevant environment variables. Keep in mind it can take <strong>tens of seconds</strong> before the changes propagate to all replicas.</p>
+
+<p>However, due to the number of parameters and their specific formats, we <strong>strongly advise</strong> not to manually set them. Instead, use the script tool introduced below.</p>
+
+<h2 id="configure-via-script">Configure via Script</h2>
+
+<p>We provide a script tool <a href="https://github.com/apache/incubator-pegasus/blob/master/scripts/pegasus_manual_compact.sh">scripts/pegasus_manual_compact.sh</a> to manage these configurations conveniently. Usage is as follows:</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">$ </span>./scripts/pegasus_manual_compact.sh 
+This tool is <span class="k">for </span>manual compact specified table<span class="o">(</span>app<span class="o">)</span><span class="nb">.</span>
+USAGE: ./scripts/pegasus_manual_compact.sh <span class="nt">-c</span> cluster <span class="nt">-a</span> app-name <span class="o">[</span><span class="nt">-t</span> periodic|once] <span class="o">[</span><span class="nt">-w</span><span class="o">]</span> <span class="o">[</span><span class="nt">-g</span> trigger_time] <span class="o">[</span>...]
+Options:
+  <span class="nt">-h</span>|--help                   print <span class="nb">help </span>message
+
+  <span class="nt">-c</span>|--cluster &lt;str&gt;          cluster meta server list, default is <span class="s2">"127.0.0.1:34601,127.0.0.1:34602"</span>
+
+  <span class="nt">-a</span>|--app_name &lt;str&gt;         target table<span class="o">(</span>app<span class="o">)</span> name
+
+  <span class="nt">-t</span>|--type &lt;str&gt;             manual compact <span class="nb">type</span>, should be periodic or once, default is once
+
+  <span class="nt">-w</span>|--wait_only              this option is only used when the <span class="nb">type </span>is once!
+                              not trigger but only <span class="nb">wait </span>the last once compact to finish
+
+  <span class="nt">-g</span>|--trigger_time &lt;str&gt;     this option is only used when the <span class="nb">type </span>is periodic!
+                              specify trigger <span class="nb">time </span>of periodic compact <span class="k">in </span>24-hour format,
+                              e.g. <span class="s2">"3:00,21:00"</span> means 3:00 and 21:00 everyday
+
+  <span class="nt">--target_level</span> &lt;num&gt;        number <span class="k">in </span>range of <span class="o">[</span><span class="nt">-1</span>,num_levels], <span class="nt">-1</span> means automatically, default is <span class="nt">-1</span>
+
+  <span class="nt">--bottommost_level_compaction</span> &lt;skip|force&gt;
+                              skip or force, default is skip
+                              more details: https://github.com/facebook/rocksdb/wiki/Manual-Compaction
+
+  <span class="nt">--max_concurrent_running_count</span> &lt;num&gt;
+                              max concurrent running count limit, should be positive integer.
+                              <span class="k">if </span>not <span class="nb">set</span>, means no limit.
+
+<span class="k">for </span>example:
+
+  1<span class="o">)</span> Start once <span class="nb">type </span>manual compact with default options:
+      ./scripts/pegasus_manual_compact.sh <span class="nt">-c</span> 127.0.0.1:34601,127.0.0.1:34602 <span class="nt">-a</span> temp
+
+  2<span class="o">)</span> Only <span class="nb">wait </span>last once <span class="nb">type </span>manual compact to finish:
+      ./scripts/pegasus_manual_compact.sh <span class="nt">-c</span> 127.0.0.1:34601,127.0.0.1:34602 <span class="nt">-a</span> temp <span class="nt">-w</span>
+
+  3<span class="o">)</span> Config periodic <span class="nb">type </span>manual compact with specified options:
+      ./scripts/pegasus_manual_compact.sh <span class="nt">-c</span> 127.0.0.1:34601,127.0.0.1:34602 <span class="nt">-a</span> temp <span class="nt">-t</span> periodic <span class="nt">-g</span> 3:00,21:00 <span class="se">\</span>
+           <span class="nt">--target_level</span> 2 <span class="nt">--bottommost_level_compaction</span> force
+</code></pre></div></div>
+
+<p>This tool not only calls shell commands to set table environment variables but also waits until all replicas complete the compaction if you choose the once type. It’s quite convenient.</p>
+
+<p>For example, after a <a href="https://pegasus.apache.org/administration/usage-scenario">bulk load</a> is finished, run a one-time manual compaction like this:</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">$ </span>./scripts/pegasus_manual_compact.sh <span class="nt">-c</span> 127.0.0.1:34601,127.0.0.1:34602 <span class="nt">-a</span> temp
+</code></pre></div></div>
+
+<h2 id="configure-via-admin-cli-recommended">Configure via admin-cli (Recommended)</h2>
+
+<p>From <strong>Pegasus 2.4.0</strong> onwards, you can also use <strong>admin-cli</strong> to start manual compaction and easily monitor its progress.</p>
+
+<h3 id="example-commands">Example Commands</h3>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c"># Start a once-type manual compaction on a specific table</span>
+Pegasus-AdminCli-1.2.0 » manual-compaction start <span class="nt">-h</span>
+start manual compaction <span class="k">for </span>a specific table
+
+Usage:
+  start <span class="o">[</span>flags]
+
+Flags:
+  <span class="nt">-b</span>, <span class="nt">--bottommostLevelCompaction</span>           bottommost level files will be compacted or not, default value is <span class="nb">false</span>
+  <span class="nt">-h</span>, <span class="nt">--help</span>                                display <span class="nb">help</span>
+  <span class="nt">-c</span>, <span class="nt">--maxConcurrentRunningCount</span> int       max concurrent running count, default value is 0, no limited <span class="o">(</span>default: 0<span class="o">)</span>
+  <span class="nt">-a</span>, <span class="nt">--tableName</span>                 string    table name
+  <span class="nt">-l</span>, <span class="nt">--targetLevel</span>               int       compacted files move level, default value is <span class="nt">-1</span> <span class="o">(</span>default: <span class="nt">-1</span><span class="o">)</span>
+
+
+<span class="c"># Example of starting a one-time manual compaction with the simplest settings</span>
+Pegasus-AdminCli-1.2.0 » manual-compaction start <span class="nt">-a</span> <span class="nb">test 
+</span>Table <span class="nb">test </span>start manual compaction succeed
+
+
+<span class="c"># Query manual compaction progress</span>
+Pegasus-AdminCli-1.2.0 » manual-compaction query <span class="nt">-h</span>
+query manual compaction progress <span class="k">for </span>a specific table
+
+Usage:
+  query <span class="o">[</span>flags]
+
+Flags:
+  <span class="nt">-h</span>, <span class="nt">--help</span>                display <span class="nb">help</span>
+  <span class="nt">-a</span>, <span class="nt">--tableName</span> string    table name
+</code></pre></div></div>
+
+<hr />
+
+<h1 id="additional-notes">Additional Notes</h1>
+
+<p>Manual Compaction can work together with the bulk load feature to optimize read/write performance after massive data imports. When performing bulk load on a table, you can set <a href="https://pegasus.apache.org/administration/usage-scenario">Usage Scenario</a> to <code class="language-plaintext highlighter-rouge">bulk_load</code> mode to reduce performance impact caused by importing a large amount of data.</p>
+
+<ul>
+  <li>Under the bulk load scenario, manual compaction is generally more flexible than engine-level compaction. You can choose to run compaction in a low-traffic window and actively control concurrency.</li>
+  <li>When you enable <code class="language-plaintext highlighter-rouge">bulk_load</code>, engine-level compaction is disabled because large numbers of SST files can accumulate in level 0. If engine compaction is not disabled, it will consume massive I/O and negatively impact reads.</li>
+  <li>Write latency can be easily affected by disk I/O bottlenecks. Compaction is essentially a merge-sort on disk. Data is first read into memory to be sorted, then written back, thus performing two full I/O operations. This is very heavy on disk I/O and can increase write latency. However, you can manually configure the concurrency of manual compaction, e.g., compact one disk at a time, thus keeping the impact under control.</li>
+</ul>
+
 
                 </div>
             </section>
@@ -777,7 +1006,29 @@
     </span>
     Table of contents
 </p>
-
+<ul class="menu-list">
+  <li><a href="#purpose">Purpose</a>
+    <ul>
+      <li><a href="#implementation-details">Implementation Details</a>
+        <ul>
+          <li><a href="#important-notes">Important Notes</a></li>
+        </ul>
+      </li>
+    </ul>
+  </li>
+  <li><a href="#how-to-configure">How to Configure</a>
+    <ul>
+      <li><a href="#configure-via-pegasus-shell">Configure via Pegasus Shell</a></li>
+      <li><a href="#configure-via-script">Configure via Script</a></li>
+      <li><a href="#configure-via-admin-cli-recommended">Configure via admin-cli (Recommended)</a>
+        <ul>
+          <li><a href="#example-commands">Example Commands</a></li>
+        </ul>
+      </li>
+    </ul>
+  </li>
+  <li><a href="#additional-notes">Additional Notes</a></li>
+</ul>
 
         </div>
     </div>
