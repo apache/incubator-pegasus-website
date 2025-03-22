@@ -16,15 +16,15 @@
 <meta name="generator" content="Jekyll v4.4.1" />
 <meta property="og:title" content="Manual Compact" />
 <meta property="og:locale" content="en_US" />
-<meta name="description" content="注：manual compact 功能从 v1.8.1 版本开始支持。 原理" />
-<meta property="og:description" content="注：manual compact 功能从 v1.8.1 版本开始支持。 原理" />
+<meta name="description" content="注：manual compact 功能从 v1.8.1 版本开始支持。" />
+<meta property="og:description" content="注：manual compact 功能从 v1.8.1 版本开始支持。" />
 <meta property="og:site_name" content="Pegasus" />
 <meta property="og:type" content="article" />
-<meta property="article:published_time" content="2025-02-12T14:59:58+00:00" />
+<meta property="article:published_time" content="2025-03-22T01:38:15+00:00" />
 <meta name="twitter:card" content="summary" />
 <meta property="twitter:title" content="Manual Compact" />
 <script type="application/ld+json">
-{"@context":"https://schema.org","@type":"BlogPosting","dateModified":"2025-02-12T14:59:58+00:00","datePublished":"2025-02-12T14:59:58+00:00","description":"注：manual compact 功能从 v1.8.1 版本开始支持。 原理","headline":"Manual Compact","mainEntityOfPage":{"@type":"WebPage","@id":"/administration/manual-compact"},"url":"/administration/manual-compact"}</script>
+{"@context":"https://schema.org","@type":"BlogPosting","dateModified":"2025-03-22T01:38:15+00:00","datePublished":"2025-03-22T01:38:15+00:00","description":"注：manual compact 功能从 v1.8.1 版本开始支持。","headline":"Manual Compact","mainEntityOfPage":{"@type":"WebPage","@id":"/administration/manual-compact"},"url":"/administration/manual-compact"}</script>
 <!-- End Jekyll SEO tag -->
 
 </head>
@@ -739,9 +739,26 @@
             <section class="section" style="padding-top: 2rem;">
                 <div class="content">
                     <p>注：manual compact 功能从 v1.8.1 版本开始支持。</p>
+
+<h1 id="功能作用">功能作用</h1>
+
+<p>Pegasus 在RocksDB提供的 <a href="https://github.com/facebook/rocksdb/wiki/Manual-Compaction">Manual Compaction</a>功能上层进行了封装，提供了表级别的 Manual Compact 功能，其作用是：</p>
+
+<ol>
+  <li>
+    <p>通过 compaction 去掉垃圾数据，减少数据量，降低文件层数，提升读操作的性能。</p>
+  </li>
+  <li>
+    <p>对最高层做 compaction，可以清理掉 Delete 标记数据。</p>
+  </li>
+  <li>
+    <p>配合 <a href="usage-scenario">Usage Scenario 功能</a> 中表的 bulk_load 模式，可以在灌数据完成后执行一次 Manual Compact，去除垃圾数据，整理数据和文件夹结构，提升读性能。</p>
+  </li>
+</ol>
+
 <h1 id="原理">原理</h1>
 
-<p>RocksDB 除了根据需要自动触发 compaction 外，还能通过接口手动触发 compaction，这个功能称之为 <a href="https://github.com/facebook/rocksdb/wiki/Manual-Compaction">Manual Compaction</a>。其提供了 <code class="language-plaintext highlighter-rouge">CompactRange()</code> 接口，如下：</p>
+<p>RocksDB 除了根据需要自动触发 compaction 外，还能通过接口手动触发 compaction。RocksDB提供了 <code class="language-plaintext highlighter-rouge">CompactRange()</code> 接口，如下：</p>
 <pre><code class="language-C++">// CompactRangeOptions is used by CompactRange() call.
 struct CompactRangeOptions {
   // If true, no other compaction will run at the same time as this
@@ -784,37 +801,38 @@ virtual Status CompactRange(const CompactRangeOptions&amp; options,
                             const Slice* begin, const Slice* end) = 0;
 </code></pre>
 
-<p>对应地，Pegasus 对该功能在上层进行了封装，提供了表级别的 Manual Compact 功能，其作用是：</p>
-<ul>
-  <li>通过 compaction 去掉垃圾数据，减少数据量，降低文件层数，提升读操作的性能。</li>
-  <li>对最高层做 compaction，可以清理掉 Delete 标记数据。</li>
-  <li>配合 <a href="usage-scenario">Usage Scenario 功能</a> 中表的 bulk_load 模式，可以在灌数据完成后执行一次 Manual Compact，去除垃圾数据，整理数据和文件夹结构，提升读性能。</li>
-</ul>
+<h3 id="实现方式">实现方式</h3>
 
-<p>实现方式：</p>
 <ul>
-  <li>在 2.1 版本以前，Pegasus 扩展 RocksDB，并在 Manifest 中记录上一次执行 Manual Compact 的时间，并提供 <code class="language-plaintext highlighter-rouge">GetLastManualCompactFinishTime()</code> 方法来获取该时间。自 2.1 版本开始，Pegasus将该时间记录到了meta column family中，并提供了 <code class="language-plaintext highlighter-rouge">get_last_manual_compact_finish_time()</code>方法来获取。</li>
-  <li>利用 <a href="table-env">Table 环境变量</a>，来设置两类 Manual Compect 的环境变量：
+  <li>
+    <p>在 2.1 版本以前，Pegasus 扩展 RocksDB，并在 Manifest 中记录上一次执行 Manual Compact 的时间，并提供 <code class="language-plaintext highlighter-rouge">GetLastManualCompactFinishTime()</code> 方法来获取该时间。自 2.1 版本开始，Pegasus将该时间记录到了meta column family中，并提供了 <code class="language-plaintext highlighter-rouge">get_last_manual_compact_finish_time()</code>方法来获取。</p>
+  </li>
+  <li>
+    <p>Pegasus的表级Manual Compect主要利用 <a href="table-env">Table 环境变量</a>来配置具体的Manual Compect的策略，Table环境变量中主要有3种关于Manual Compaction的参数。下面将具体的介绍这些参数：</p>
+  </li>
+  <li>Manual Compact 总开关和并发控制参数：
     <ul>
-      <li>单次 Manual Compact：
-        <ul>
-          <li><code class="language-plaintext highlighter-rouge">manual_compact.once.trigger_time</code>：格式为 Unix 时间戳的秒数，可通过 shell 命令 <code class="language-plaintext highlighter-rouge">date +%s</code> 获取当前时间戳。如果 LastManualCompactFinishTime 旧于该 trigger_time，就触发 Manual Compaction 的执行。</li>
-          <li><code class="language-plaintext highlighter-rouge">manual_compact.once.target_level</code>：用于设置 <code class="language-plaintext highlighter-rouge">CompactRangeOptions::target_level</code>。如果不设置，则使用默认值 <code class="language-plaintext highlighter-rouge">-1</code>。</li>
-          <li><code class="language-plaintext highlighter-rouge">manual_compact.once.bottommost_level_compaction</code>：可设置为 <code class="language-plaintext highlighter-rouge">skip</code> 或者 <code class="language-plaintext highlighter-rouge">force</code>。如果是 <code class="language-plaintext highlighter-rouge">skip</code>，则不对最高层做 compaction；如果是 <code class="language-plaintext highlighter-rouge">force</code>，则强制对最高层做 compaction。如果不设置，则默认为 <code class="language-plaintext highlighter-rouge">skip</code>。</li>
-        </ul>
+      <li><code class="language-plaintext highlighter-rouge">manual_compact.disabled</code>(从 v1.9.0 版本开始支持)：如果为 true，则关闭 Manual Compact 功能，并且取消正在执行中的 Manual Compact 动作。如果不设置，默认为 false。</li>
+      <li><code class="language-plaintext highlighter-rouge">manual_compact.max_concurrent_running_count</code>(从 v1.11.3 版本开始支持)：指定最大并发数。实际上，可执行的最大并发数由该参数和服务端<code class="language-plaintext highlighter-rouge">MANUAL_COMPACT_THRAD_POOL</code>的线程数共同决定，取两者的较小值。该参数是节点级别的，如果同一时间进行 manual compaction 的表太多，则很有可能达到该最大并发数，后续该节点上的 replica 会忽略本轮 manual compaction 请求，延后执行。在日志中可以看到 <code class="language-plaintext highlighter-rouge">xxx ignored compact because exceed max_concurrent_running_count</code></li>
+    </ul>
+  </li>
+  <li>单次 Manual Compact策略参数：
+    <ul>
+      <li><code class="language-plaintext highlighter-rouge">manual_compact.once.trigger_time</code>：格式为 Unix 时间戳的秒数，可通过 shell 命令 <code class="language-plaintext highlighter-rouge">date +%s</code> 获取当前时间戳。如果 LastManualCompactFinishTime 旧于该 trigger_time，就触发 Manual Compaction 的执行。</li>
+      <li><code class="language-plaintext highlighter-rouge">manual_compact.once.target_level</code>：用于设置 <code class="language-plaintext highlighter-rouge">CompactRangeOptions::target_level</code>。如果不设置，则使用默认值 <code class="language-plaintext highlighter-rouge">-1</code>。</li>
+      <li><code class="language-plaintext highlighter-rouge">manual_compact.once.bottommost_level_compaction</code>：可设置为 <code class="language-plaintext highlighter-rouge">skip</code> 或者 <code class="language-plaintext highlighter-rouge">force</code>。如果是 <code class="language-plaintext highlighter-rouge">skip</code>，则不对最高层做 compaction；如果是 <code class="language-plaintext highlighter-rouge">force</code>，则强制对最高层做 compaction。如果不设置，则默认为 <code class="language-plaintext highlighter-rouge">skip</code>。</li>
+    </ul>
+  </li>
+  <li>周期 Manual Compact策略参数：
+    <ul>
+      <li>
+        <p><code class="language-plaintext highlighter-rouge">manual_compact.periodic.trigger_time</code>：格式为逗号分隔的时钟，譬如 <code class="language-plaintext highlighter-rouge">3:00,21:00</code>，表示每一天的 3:00 和 21:00 都触发一次 Manual Compaction 的执行。</p>
       </li>
-      <li>周期 Manual Compact：
-        <ul>
-          <li><code class="language-plaintext highlighter-rouge">manual_compact.periodic.trigger_time</code>：格式为逗号分隔的时钟，譬如 <code class="language-plaintext highlighter-rouge">3:00,21:00</code>，表示每一天的 3:00 和 21:00 都触发一次 Manual Compaction 的执行。</li>
-          <li><code class="language-plaintext highlighter-rouge">manual_compact.periodic.target_level</code>：用于设置 <code class="language-plaintext highlighter-rouge">CompactRangeOptions::target_level</code>。如果不设置，则使用默认值 <code class="language-plaintext highlighter-rouge">-1</code>。</li>
-          <li><code class="language-plaintext highlighter-rouge">manual_compact.periodic.bottommost_level_compaction</code>：可设置为 <code class="language-plaintext highlighter-rouge">skip</code> 或者 <code class="language-plaintext highlighter-rouge">force</code>。如果是 <code class="language-plaintext highlighter-rouge">skip</code>，则不对最高层做 compaction；如果是 <code class="language-plaintext highlighter-rouge">force</code>，则强制对最高层做 compaction。如果不设置，则默认为 <code class="language-plaintext highlighter-rouge">skip</code>。</li>
-        </ul>
+      <li>
+        <p><code class="language-plaintext highlighter-rouge">manual_compact.periodic.target_level</code>：用于设置 <code class="language-plaintext highlighter-rouge">CompactRangeOptions::target_level</code>。如果不设置，则使用默认值 <code class="language-plaintext highlighter-rouge">-1</code>。</p>
       </li>
-      <li>Manual Compact 总开关：
-        <ul>
-          <li><code class="language-plaintext highlighter-rouge">manual_compact.disabled</code>(从 v1.9.0 版本开始支持)：如果为 true，则关闭 Manual Compact 功能，并且取消正在执行中的 Manual Compact 动作。如果不设置，默认为 false。</li>
-          <li><code class="language-plaintext highlighter-rouge">manual_compact.max_concurrent_running_count</code>(从 v1.11.3 版本开始支持)：指定最大并发数。实际上，可执行的最大并发数由该参数和服务端<code class="language-plaintext highlighter-rouge">MANUAL_COMPACT_THRAD_POOL</code>的线程数共同决定，取两者的较小值。该参数是节点级别的，如果同一时间进行 manual compaction 的表太多，则很有可能达到该最大并发数，后续该节点上的 replica 会忽略本轮 manual compaction 请求，延后执行。在日志中可以看到 <code class="language-plaintext highlighter-rouge">xxx ignored compact because exceed max_concurrent_running_count</code></li>
-        </ul>
+      <li>
+        <p><code class="language-plaintext highlighter-rouge">manual_compact.periodic.bottommost_level_compaction</code>：可设置为 <code class="language-plaintext highlighter-rouge">skip</code> 或者 <code class="language-plaintext highlighter-rouge">force</code>。如果是 <code class="language-plaintext highlighter-rouge">skip</code>，则不对最高层做 compaction；如果是 <code class="language-plaintext highlighter-rouge">force</code>，则强制对最高层做 compaction。如果不设置，则默认为 <code class="language-plaintext highlighter-rouge">skip</code>。</p>
       </li>
     </ul>
   </li>
@@ -831,8 +849,8 @@ worker_priority = THREAD_xPRIORITY_NORMAL
 worker_count = 16
 </code></pre></div>    </div>
   </li>
-  <li>Manual Compact 属于 CPU 和 IO 密集型操作，处理过程中会使 CPU 使用率长期处于高位，容易对集群的读写性能造成影响，所以 ** 建议在流量低峰时段进行操作 **。如果启动后发现读写性能下降影响了业务，可以立即通过设置该表的环境变量 <code class="language-plaintext highlighter-rouge">manual_compact.disabled=true</code> 来中止。</li>
-  <li>Manual Compact 过程中可能需要较多的额外磁盘空间。因为 compaction 前后文件变化较大，而 Pegasus 又会保留最近多个版本的 checkpoint，所以需要的额外磁盘空间量大约等于执行 Manual Compact 的表的数据存储量。所以，在执行 Manual Compact 前需 ** 确认集群有足够的存储空间 **，同时在执行过程中 ** 关注磁盘空间使用情况 **，避免因为磁盘空间耗尽导致集群节点宕机，影响集群可用度。</li>
+  <li>Manual Compact 属于 CPU 和 IO 密集型操作，处理过程中会使 CPU 使用率长期处于高位，容易对集群的读写性能造成影响，所以 <strong>建议在流量低峰时段进行操作</strong>。如果启动后发现读写性能下降影响了业务，可以立即通过设置该表的环境变量 <code class="language-plaintext highlighter-rouge">manual_compact.disabled=true</code> 来中止。</li>
+  <li>Manual Compact 过程中可能需要较多的额外磁盘空间。因为 compaction 前后文件变化较大，而 Pegasus 又会保留最近多个版本的 checkpoint，所以需要的额外磁盘空间量大约等于执行 Manual Compact 的表的数据存储量。所以，在执行 Manual Compact 前需 <strong>确认集群有足够的存储空间</strong>，同时在执行过程中 <strong>关注磁盘空间使用情况</strong>，避免因为磁盘空间耗尽导致集群节点宕机，影响集群可用度。</li>
 </ul>
 
 <h1 id="如何设置">如何设置</h1>
@@ -898,13 +916,14 @@ for example:
 <p>譬如，在 <a href="usage-scenario#支持场景">bulk load</a> 完成后执行 once manual compact 如下：</p>
 <div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>$ ./scripts/pegasus_manual_compact.sh -c 127.0.0.1:34601,127.0.0.1:34602 -a temp
 </code></pre></div></div>
-<h2 id="通过-admin-cli-设置">通过 admin-cli 设置</h2>
+
+<h2 id="通过-admin-cli-设置推荐">通过 admin-cli 设置（推荐）</h2>
 
 <p>在 <strong>2.4.0</strong> 之后的 Pegasus 版本还支持用 admin-cli 来设置 manual compaction 的开始并且可以方便的查看进行的进度。</p>
 
 <h3 id="使用命令">使用命令</h3>
 
-<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c"># 开始单次 manual compaction</span>
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c"># 开始单次 某张表manual compaction的使用案例</span>
 Pegasus-AdminCli-1.2.0 » manual-compaction start <span class="nt">-h</span>
 start manual compaction <span class="k">for </span>a specific table
 
@@ -917,7 +936,12 @@ Flags:
   <span class="nt">-c</span>, <span class="nt">--maxConcurrentRunningCount</span> int       max concurrent running count, default value is 0, no limited <span class="o">(</span>default: 0<span class="o">)</span>
   <span class="nt">-a</span>, <span class="nt">--tableName</span>                 string    table name
   <span class="nt">-l</span>, <span class="nt">--targetLevel</span>               int       compacted files move level, default value is <span class="nt">-1</span> <span class="o">(</span>default: <span class="nt">-1</span><span class="o">)</span>
-  
+
+
+<span class="c"># 一次最简单的开启某张表manual compaction的使用案例</span>
+Pegasus-AdminCli-1.2.0 » manual-compaction start <span class="nt">-a</span> <span class="nb">test 
+</span>Table <span class="nb">test </span>start manual compaction succeed
+
   
 <span class="c"># 查看 manual compaction 进度</span>
 Pegasus-AdminCli-1.2.0 » manual-compaction query <span class="nt">-h</span>
@@ -931,6 +955,7 @@ Flags:
   <span class="nt">-a</span>, <span class="nt">--tableName</span> string    table name
 
 </code></pre></div></div>
+
 <h2 id="补充说明">补充说明</h2>
 
 <p>Manual compaction 可与 bulk load 功能配合使用，作为批量导入大量数据后的一种优化读写性能的方式。在需要进行 bulk load 操作的表中，可将 <a href="/zh/administration/usage-scenario">Usage Scenario</a> 参数设置为 <code class="language-plaintext highlighter-rouge">bulk_load</code> 模式，以便减小导入大量数据带来的性能损耗。</p>
@@ -984,12 +1009,14 @@ Flags:
     本页导航
 </p>
 <ul class="menu-list">
-  <li><a href="#原理">原理</a></li>
+  <li><a href="#功能作用">功能作用</a></li>
+  <li><a href="#原理">原理</a>
+      - {:.} <a href="#实现方式">实现方式</a></li>
   <li><a href="#如何设置">如何设置</a>
     <ul>
       <li><a href="#通过-pegasus-shell-工具设置">通过 Pegasus shell 工具设置</a></li>
       <li><a href="#通过脚本设置">通过脚本设置</a></li>
-      <li><a href="#通过-admin-cli-设置">通过 admin-cli 设置</a>
+      <li><a href="#通过-admin-cli-设置推荐">通过 admin-cli 设置（推荐）</a>
         <ul>
           <li><a href="#使用命令">使用命令</a></li>
         </ul>
