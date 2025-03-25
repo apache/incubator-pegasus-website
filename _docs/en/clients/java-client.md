@@ -13,7 +13,7 @@ git clone https://github.com/apache/incubator-pegasus.git
 cd pegasus-java-client
 ```
 
-Choose the version you want and build it; it is advisable to use the [latest release version](https://github.com/xiaomi/pegasus-java-client/releases):
+Choose the version you to use and build the client. It is recommended to use the [latest release version](https://github.com/xiaomi/pegasus-java-client/releases):
 
 ```bash
 git checkout v2.0.0
