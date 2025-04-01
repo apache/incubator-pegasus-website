@@ -92,7 +92,7 @@ another_cluster = @SOME_IP@:34601,@SOME_IP@:34601,@SOME_IP@:34601
 # 接口定义
 ## 创建Client实例
 客户端工厂类
-```
+```c++
 namespace pegasus {
 class pegasus_client_factory
 {
@@ -123,7 +123,7 @@ public:
 } //end namespace
 ```
 客户端的初始化，实际上是对rdsn框架初始化
-```
+```c++
 if (!pegasus::pegasus_client_factory::initialize("config.ini")) {
     fprintf(stderr, "ERROR: init pegasus failed\n");
     return -1;
@@ -136,7 +136,7 @@ if (!pegasus::pegasus_client_factory::initialize("config.ini")) {
  * 该函数只需在一个进程生命周期内调用一次即可，并且非线程安全的
 
 获取客户端
-```
+```c++
 pegasus::pegasus_client* pg_client = pegasus::pegasus_client_factory::get_client("cluster_name", "table_name");
 if (pg_client == nullptr) {
     fprintf(stderr, "ERROR: get pegasus client failed\n");
@@ -151,7 +151,7 @@ Cpp客户端提供两种接口，异步API 和 同步API，同步API是基于异
 
 ### set
 写单行数据
-```
+```c++
     ///
     /// \brief set
     ///     store the k-v to the cluster.
@@ -179,7 +179,7 @@ Cpp客户端提供两种接口，异步API 和 同步API，同步API是基于异
 ```
 注：
  * internal_info 结构如下，主要是记录在写入成功之后，该条数据的一些信息，在使用之前需要判断info是否为空
-```
+```c++
     struct internal_info
     {
         int32_t app_id;
@@ -190,7 +190,7 @@ Cpp客户端提供两种接口，异步API 和 同步API，同步API是基于异
      }
 ```
  * 返回值：int值来表示是否成功，通过get_error_string() 函数来判断返回值的意义（下面的所有同步接口的返回值，都可以通过该函数判断返回值意义）
-```
+```c++
     ///
     /// \brief get_error_string
     /// get error string
@@ -204,7 +204,7 @@ Cpp客户端提供两种接口，异步API 和 同步API，同步API是基于异
 ```
 ### async_set
 异步写单行数据
-```
+```c++
     ///
     /// \brief asynchronous set
     ///     store the k-v to the cluster.
@@ -235,7 +235,7 @@ Cpp客户端提供两种接口，异步API 和 同步API，同步API是基于异
 
 ### multi_set
 写多条数据（同一hashkey下面）
-```
+```c++
     ///
     /// \brief multi_set (guarantee atomicity)
     ///     store multiple k-v of the same hashkey to the cluster.
@@ -261,7 +261,7 @@ Cpp客户端提供两种接口，异步API 和 同步API，同步API是基于异
 
 ### async_multi_set
 异步写多条数据
-```
+```c++
     ///
     /// \brief asynchronous multi_set (guarantee atomicity)
     ///     store multiple k-v of the same hashkey to the cluster.
@@ -288,7 +288,7 @@ Cpp客户端提供两种接口，异步API 和 同步API，同步API是基于异
 
 ### get
 读取一条数据
-```
+```c++
     ///
     /// \brief get
     ///     get value by key from the cluster.
@@ -314,7 +314,7 @@ Cpp客户端提供两种接口，异步API 和 同步API，同步API是基于异
 
 ### async_get
 异步读取一条数据
-```
+```c++
     ///
     /// \brief asynchronous get
     ///     get value by key from the cluster.
@@ -338,7 +338,7 @@ Cpp客户端提供两种接口，异步API 和 同步API，同步API是基于异
 
 ### multi_get
 读取多条数据
-```
+```c++
     ///
     /// \brief multi_get
     ///     get multiple value by key from the cluster.
@@ -374,7 +374,7 @@ Cpp客户端提供两种接口，异步API 和 同步API，同步API是基于异
 
 ### async_multi_get
 异步读取多条数据
-```
+```c++
     ///
     /// \brief asynchronous multi_get
     ///     get multiple value by key from the cluster.
@@ -405,7 +405,7 @@ Cpp客户端提供两种接口，异步API 和 同步API，同步API是基于异
 
 ### multi_get_sortkeys
 获取hashkey下面的多个sortkey，不返回value
-```
+```c++
     ///
     /// \brief multi_get_sortkeys
     ///     get multiple sort keys by hash key from the cluster.
@@ -437,7 +437,7 @@ Cpp客户端提供两种接口，异步API 和 同步API，同步API是基于异
 
 ### async_multi_get_sortkeys
 异步获取hashkey下面的多个sortkey（不包含value）
-```
+```c++
     ///
     /// \brief asynchronous multi_get_sortkeys
     ///     get multiple sort keys by hash key from the cluster.
@@ -465,7 +465,7 @@ Cpp客户端提供两种接口，异步API 和 同步API，同步API是基于异
 
 ### exist
 判断单条数据是否存在
-```
+```c++
     ///
     /// \brief exist
     ///     check value exist by key from the cluster.
@@ -489,7 +489,7 @@ Cpp客户端提供两种接口，异步API 和 同步API，同步API是基于异
 
 ### sortkey_count
 统计hashkey下面的sortkey个数
-```
+```c++
     ///
     /// \brief sortkey_count
     ///     get sortkey count by hashkey from the cluster.
@@ -511,7 +511,7 @@ Cpp客户端提供两种接口，异步API 和 同步API，同步API是基于异
 
 ### del
 删除单条数据
-```
+```c++
     ///
     /// \brief del
     ///     del stored k-v by key from cluster
@@ -534,7 +534,7 @@ Cpp客户端提供两种接口，异步API 和 同步API，同步API是基于异
 
 ### async_del
 异步删除单条数据
-```
+```c++
     ///
     /// \brief asynchronous del
     ///     del stored k-v by key from cluster
@@ -559,7 +559,7 @@ Cpp客户端提供两种接口，异步API 和 同步API，同步API是基于异
 
 ### multi_del
 删除多条数据
-```
+```c++
     ///
     /// \brief multi_del
     ///     delete multiple value by key from the cluster.
@@ -583,8 +583,9 @@ Cpp客户端提供两种接口，异步API 和 同步API，同步API是基于异
 ```
 
 ### async_multi_del
+
 异步的删除多条数据
-```
+```c++
     ///
     /// \brief asynchronous multi_del
     ///     delete multiple value by key from the cluster.
@@ -606,7 +607,270 @@ Cpp客户端提供两种接口，异步API 和 同步API，同步API是基于异
                                  int timeout_milliseconds = 5000) = 0;
 ```
 
+### incr
+
+自增
+
+```c++
+    ///
+    /// \brief incr
+    ///     atomically increment value by key from the cluster.
+    ///     key is composed of hashkey and sortkey. must provide both to get the value.
+    ///
+    ///     the increment semantic is the same as redis:
+    ///       - if old data is not found or empty, then set initial value to 0.
+    ///       - if old data is not an integer or out of range, then return PERR_INVALID_ARGUMENT,
+    ///         and return `new_value' as 0.
+    ///       - if new value is out of range, then return PERR_INVALID_ARGUMENT, and return old
+    ///         value in `new_value'.
+    ///
+    ///     if ttl_seconds == 0, the semantic is also the same as redis:
+    ///       - normally, increment will preserve the original ttl.
+    ///       - if old data is expired by ttl, then set initial value to 0 and set no ttl.
+    ///     if ttl_seconds > 0, then update with the new ttl if incr succeed.
+    ///     if ttl_seconds == -1, then update to no ttl if incr succeed.
+    ///
+    /// \param hashkey
+    /// used to decide which partition to get this k-v
+    /// \param sortkey
+    /// all the k-v under hashkey will be sorted by sortkey.
+    /// \param increment
+    /// the value we want to increment.
+    /// \param new_value
+    /// out param to return the new value if increment succeed.
+    /// \param timeout_milliseconds
+    /// if wait longer than this value, will return time out error
+    /// \param ttl_seconds
+    /// time to live of this value.
+    /// \return
+    /// int, the error indicates whether or not the operation is succeeded.
+    /// this error can be converted to a string using get_error_string().
+    ///
+    virtual int incr(const std::string &hashkey,
+                     const std::string &sortkey,
+                     int64_t increment,
+                     int64_t &new_value,
+                     int timeout_milliseconds = 5000,
+                     int ttl_seconds = 0,
+                     internal_info *info = nullptr) = 0;
+```
+
+### async_incr
+
+异步自增
+
+```c++
+    ///
+    /// \brief asynchronous incr
+    ///     atomically increment value by key from the cluster.
+    ///     will not be blocked, return immediately.
+    ///
+    ///     the increment semantic is the same as redis:
+    ///       - if old data is not found or empty, then set initial value to 0.
+    ///       - if old data is not an integer or out of range, then return PERR_INVALID_ARGUMENT,
+    ///         and return `new_value' as 0.
+    ///       - if new value is out of range, then return PERR_INVALID_ARGUMENT, and return old
+    ///         value in `new_value'.
+    ///
+    ///     if ttl_seconds == 0, the semantic is also the same as redis:
+    ///       - normally, increment will preserve the original ttl.
+    ///       - if old data is expired by ttl, then set initial value to 0 and set no ttl.
+    ///     if ttl_seconds > 0, then update with the new ttl if incr succeed.
+    ///     if ttl_seconds == -1, then update to no ttl if incr succeed.
+    ///
+    /// \param hashkey
+    /// used to decide which partition to get this k-v
+    /// \param sortkey
+    /// all the k-v under hashkey will be sorted by sortkey.
+    /// \param increment
+    /// the value we want to increment.
+    /// \param callback
+    /// the callback function will be invoked after operation finished or error occurred.
+    /// \param timeout_milliseconds
+    /// if wait longer than this value, will return time out error
+    /// \param ttl_seconds
+    /// time to live of this value.
+    /// \return
+    /// void.
+    ///
+    virtual void async_incr(const std::string &hashkey,
+                            const std::string &sortkey,
+                            int64_t increment,
+                            async_incr_callback_t &&callback = nullptr,
+                            int timeout_milliseconds = 5000,
+                            int ttl_seconds = 0) = 0;
+```
+
+### check_and_set
+
+检查并设置
+
+```c++
+    ///
+    /// \brief check_and_set
+    ///     atomically check and set value by key from the cluster.
+    ///     the value will be set if and only if check passed.
+    ///     the sort key for checking and setting can be the same or different.
+    /// \param hash_key
+    /// used to decide which partition to get this k-v
+    /// \param check_sort_key
+    /// the sort key to check.
+    /// \param check_type
+    /// the check type.
+    /// \param check_operand
+    /// the check operand.
+    /// \param set_sort_key
+    /// the sort key to set value if check passed.
+    /// \param set_value
+    /// the value to set if check passed.
+    /// \param options
+    /// the check-and-set options.
+    /// \param results
+    /// the check-and-set results.
+    /// \param timeout_milliseconds
+    /// if wait longer than this value, will return time out error
+    /// \return
+    /// int, the error indicates whether or not the operation is succeeded.
+    /// this error can be converted to a string using get_error_string().
+    /// if check type is int compare, and check_operand/check_value is not integer
+    /// or out of range, then return PERR_INVALID_ARGUMENT.
+    ///
+    virtual int check_and_set(const std::string &hash_key,
+                              const std::string &check_sort_key,
+                              cas_check_type check_type,
+                              const std::string &check_operand,
+                              const std::string &set_sort_key,
+                              const std::string &set_value,
+                              const check_and_set_options &options,
+                              check_and_set_results &results,
+                              int timeout_milliseconds = 5000,
+                              internal_info *info = nullptr) = 0;
+```
+
+### async_check_and_set
+
+异步检查并设置
+
+```c++
+    ///
+    /// \brief asynchronous check_and_set
+    ///     atomically check and set value by key from the cluster.
+    ///     will not be blocked, return immediately.
+    /// \param hash_key
+    /// used to decide which partition to get this k-v
+    /// \param check_sort_key
+    /// the sort key to check.
+    /// \param check_type
+    /// the check type.
+    /// \param check_operand
+    /// the check operand.
+    /// \param set_sort_key
+    /// the sort key to set value if check passed.
+    /// \param set_value
+    /// the value to set if check passed.
+    /// \param options
+    /// the check-and-set options.
+    /// \param callback
+    /// the callback function will be invoked after operation finished or error occurred.
+    /// \param timeout_milliseconds
+    /// if wait longer than this value, will return time out error
+    /// \return
+    /// void.
+    ///
+    virtual void async_check_and_set(const std::string &hash_key,
+                                     const std::string &check_sort_key,
+                                     cas_check_type check_type,
+                                     const std::string &check_operand,
+                                     const std::string &set_sort_key,
+                                     const std::string &set_value,
+                                     const check_and_set_options &options,
+                                     async_check_and_set_callback_t &&callback = nullptr,
+                                     int timeout_milliseconds = 5000) = 0;
+```
+
+### check_and_mutate
+
+检查并修改
+
+```c++
+    ///
+    /// \brief check_and_mutate
+    ///     atomically check and mutate from the cluster.
+    ///     the mutations will be applied if and only if check passed.
+    /// \param hash_key
+    /// used to decide which partition to get this k-v
+    /// \param check_sort_key
+    /// the sort key to check.
+    /// \param check_type
+    /// the check type.
+    /// \param check_operand
+    /// the check operand.
+    /// \param mutations
+    /// the list of mutations to perform if check condition is satisfied.
+    /// \param options
+    /// the check-and-mutate options.
+    /// \param results
+    /// the check-and-mutate results.
+    /// \param timeout_milliseconds
+    /// if wait longer than this value, will return time out error
+    /// \return
+    /// int, the error indicates whether or not the operation is succeeded.
+    /// this error can be converted to a string using get_error_string().
+    /// if check type is int compare, and check_operand/check_value is not integer
+    /// or out of range, then return PERR_INVALID_ARGUMENT.
+    ///
+    virtual int check_and_mutate(const std::string &hash_key,
+                                 const std::string &check_sort_key,
+                                 cas_check_type check_type,
+                                 const std::string &check_operand,
+                                 const mutations &mutations,
+                                 const check_and_mutate_options &options,
+                                 check_and_mutate_results &results,
+                                 int timeout_milliseconds = 5000,
+                                 internal_info *info = nullptr) = 0;
+
+```
+
+### async_check_and_mutate
+
+异步检查并修改
+
+```c++
+    ///
+    /// \brief asynchronous check_and_mutate
+    ///     atomically check and mutate from the cluster.
+    ///     will not be blocked, return immediately.
+    /// \param hash_key
+    /// used to decide which partition to get this k-v
+    /// \param check_sort_key
+    /// the sort key to check.
+    /// \param check_type
+    /// the check type.
+    /// \param check_operand
+    /// the check operand.
+    /// \param mutations
+    /// the list of mutations to perform if check condition is satisfied.
+    /// \param options
+    /// the check-and-mutate options.
+    /// \param callback
+    /// the callback function will be invoked after operation finished or error occurred.
+    /// \param timeout_milliseconds
+    /// if wait longer than this value, will return time out error
+    /// \return
+    /// void.
+    ///
+    virtual void async_check_and_mutate(const std::string &hash_key,
+                                        const std::string &check_sort_key,
+                                        cas_check_type check_type,
+                                        const std::string &check_operand,
+                                        const mutations &mutations,
+                                        const check_and_mutate_options &options,
+                                        async_check_and_mutate_callback_t &&callback = nullptr,
+                                        int timeout_milliseconds = 5000) = 0;
+```
+
 ### ttl
+
 获取单行数据的TTL时间。TTL表示Time To Live，表示该数据还能存活多久。如果超过存活时间，数据就读不到了
 ```
     ///
@@ -634,7 +898,7 @@ Cpp客户端提供两种接口，异步API 和 同步API，同步API是基于异
 
 ### get_scanner
 获取针对某个hashkey下的sortkey区间 [sortkeyA ~ sortkeyB)的一个scanner
-```
+```c++
     ///
     /// \brief get hash scanner
     ///     get scanner for [start_sortkey, stop_sortkey) of hashkey
@@ -662,7 +926,7 @@ Cpp客户端提供两种接口，异步API 和 同步API，同步API是基于异
 
 ### async_get_scanner
 异步获取针对某个hashkey下的sortkey区间 [sortkeyA ~ sortkeyB)的一个scanner
-```
+```c++
     ///
     /// \brief async get hash scanner
     ///     get scanner for [start_sortkey, stop_sortkey) of hashkey
@@ -688,7 +952,7 @@ Cpp客户端提供两种接口，异步API 和 同步API，同步API是基于异
 
 ### get_unordered_scanners
 获取一个遍历所有数据的scanner
-```
+```c++
     ///
     /// \brief get a bundle of scanners to iterate all k-v in table
     ///        scanners should be deleted when scan complete
@@ -710,7 +974,7 @@ Cpp客户端提供两种接口，异步API 和 同步API，同步API是基于异
 
 ### async_get_unordered_scanners
 异步获取一个遍历所有数据的scanner
-```
+```c++
     ///
     /// \brief async get a bundle of scanners to iterate all k-v in table
     ///        scannners return by callback should be deleted when all scan complete
