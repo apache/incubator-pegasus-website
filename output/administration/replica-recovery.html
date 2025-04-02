@@ -16,15 +16,15 @@
 <meta name="generator" content="Jekyll v4.4.1" />
 <meta property="og:title" content="Replica Recovery" />
 <meta property="og:locale" content="en_US" />
-<meta name="description" content="TRANSLATING" />
-<meta property="og:description" content="TRANSLATING" />
+<meta name="description" content="Principle" />
+<meta property="og:description" content="Principle" />
 <meta property="og:site_name" content="Pegasus" />
 <meta property="og:type" content="article" />
-<meta property="article:published_time" content="2025-03-27T13:37:11+00:00" />
+<meta property="article:published_time" content="2025-04-02T09:26:03+00:00" />
 <meta name="twitter:card" content="summary" />
 <meta property="twitter:title" content="Replica Recovery" />
 <script type="application/ld+json">
-{"@context":"https://schema.org","@type":"BlogPosting","dateModified":"2025-03-27T13:37:11+00:00","datePublished":"2025-03-27T13:37:11+00:00","description":"TRANSLATING","headline":"Replica Recovery","mainEntityOfPage":{"@type":"WebPage","@id":"/administration/replica-recovery"},"url":"/administration/replica-recovery"}</script>
+{"@context":"https://schema.org","@type":"BlogPosting","dateModified":"2025-04-02T09:26:03+00:00","datePublished":"2025-04-02T09:26:03+00:00","description":"Principle","headline":"Replica Recovery","mainEntityOfPage":{"@type":"WebPage","@id":"/administration/replica-recovery"},"url":"/administration/replica-recovery"}</script>
 <!-- End Jekyll SEO tag -->
 
 </head>
@@ -734,7 +734,138 @@
             </section>
             <section class="section" style="padding-top: 2rem;">
                 <div class="content">
-                    <p>TRANSLATING</p>
+                    <h1 id="principle">Principle</h1>
+
+<p>Generally speaking, data in Pegasus is stored with 3 replicas. For each partition, under normal situation, there should be one primary replica and two secondary replicas, totaling three replicas providing service.</p>
+
+<p>However, it is inevitable that the cluster will experience node crashes, network anomalies, heartbeat disconnections, and other situations that can cause replica loss, affecting the availability of services. The degree of replica loss affects the ability to read and write (introduced in <a href="rebalance#conceptual">Load Balancing</a> as well):</p>
+
+<ul>
+  <li>One primary and two replicas are available: The partition is completely healthy and can <strong>read and write normally</strong>.</li>
+  <li>One primary and one replica are available: According to the PacificA consistency protocol, it can still <strong>read and write safely</strong>.</li>
+  <li>Only one primary is available: At this point, it is <strong>not writable</strong>, but <strong>readable</strong>.</li>
+  <li>All are unavailable: At this point, it is <strong>neither readable nor writable</strong>. This situation is referred to as <strong>DDD</strong>, which stands for Dead-Dead-Dead, indicating that all three replicas are unavailable.</li>
+</ul>
+
+<p>In the above situations, except for the <strong>completely unavailable DDD state</strong>, MetaServer can automatically replenish replicas and eventually restore to a completely healthy state. However, if a partition enters the DDD state, MetaServer cannot automatically recover it and manual intervention is required.</p>
+
+<p><a href="https://github.com/XiaoMi/rdsn/issues/80">This discussion</a> provides examples of entering the DDD state. In fact, <strong>as long as a partition enters the DDD state and one of the last two nodes in LastDrop cannot start normally, it will enter the DDD state requiring manual intervention</strong>. During the process of multiple nodes starting and stopping in an online cluster, this situation is quite common.</p>
+
+<p>The health status can be viewed using the <code class="language-plaintext highlighter-rouge">ls -d</code> command in the Shell tool. If the number of <code class="language-plaintext highlighter-rouge">read_unhealthy</code> is greater than 0, it indicates that a partition has entered the DDD state.</p>
+
+<h1 id="ddd-diagnostic-tool">DDD Diagnostic Tool</h1>
+
+<p>Starting from version v1.11.0, Pegasus has provided the <code class="language-plaintext highlighter-rouge">ddd_diagnose</code> command in the Shell tool to support automatic DDD diagnostics.</p>
+
+<p>Command usage:</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>ddd_diagnose [-g|--gpid appid|appid.pidx] [-d|--diagnose] [-a|--auto_diagnose]
+             [-s|--skip_prompt] [-o|--output file_name]
+</code></pre></div></div>
+
+<p>Parameter explanation:</p>
+
+<ul>
+  <li>
+    <p><code class="language-plaintext highlighter-rouge">-g</code>: Specify the app_id or partition_id, for example, <code class="language-plaintext highlighter-rouge">-g 1</code> or <code class="language-plaintext highlighter-rouge">-g 1.3</code>; if not specified, the operation is performed on all tables.</p>
+  </li>
+  <li>
+    <p><code class="language-plaintext highlighter-rouge">-d</code>: Enter diagnostic mode; if not specified, only the DDD situation is displayed without diagnosis.</p>
+  </li>
+  <li>
+    <p><code class="language-plaintext highlighter-rouge">-a</code>: Enable automatic diagnosis, that is, if the diagnostic tool can find a suitable backup as the primary backup for this partition while ensuring data consistency, it automatically sets it as primary to complete data recovery without manual intervention.</p>
+  </li>
+  <li>
+    <p><code class="language-plaintext highlighter-rouge">-s</code>: Avoid interactive mode; if not specified, the diagnostic process may require user input to complete selections, confirmations, or information supplementation.</p>
+  </li>
+  <li>
+    <p><code class="language-plaintext highlighter-rouge">-o</code>: Output the results to a specified file.</p>
+  </li>
+</ul>
+
+<p>Usage example (if not clear, please open the image in a separate page):</p>
+
+<p><img src="/assets/images/ddd-diagnose.png" alt="ddd-diagnose.png" class="img-responsive" /></p>
+
+<p>The above image is the output when using the <code class="language-plaintext highlighter-rouge">ddd_diagnose</code> command, and we explain it in sequence with red arrows:</p>
+
+<ol>
+  <li>
+    <p>The current partition id being diagnosed.</p>
+  </li>
+  <li>
+    <p>The <code class="language-plaintext highlighter-rouge">ballot</code> and <code class="language-plaintext highlighter-rouge">last_committed_decree</code> information of this partition persisted in zookeeper, but since persistence is not real-time, this value may be less than the actual value.</p>
+  </li>
+  <li>
+    <p>The dropped list, listing the status information of nodes that have served this partition, focusing on:</p>
+
+    <ul>
+      <li>
+        <p>alive: Whether the node is available.</p>
+      </li>
+      <li>
+        <p>ballot: The actual <code class="language-plaintext highlighter-rouge">ballot</code> of the replica on this partition on that node; if it is -1, it means that there is no data for this partition on that node.</p>
+      </li>
+      <li>
+        <p>last_committed: The actual <code class="language-plaintext highlighter-rouge">last_committed_decree</code> of the replica on this partition on that node.</p>
+      </li>
+      <li>
+        <p>last_prepared: The actual <code class="language-plaintext highlighter-rouge">last_prepared_decree</code> of the replica on this partition on that node.</p>
+      </li>
+      <li>
+        <p>If there is a <code class="language-plaintext highlighter-rouge">&lt;==</code> at the end, it indicates whether the node is the <strong>latest to become unavailable</strong> or the <strong>second to last to become unavailable</strong>.</p>
+      </li>
+    </ul>
+  </li>
+  <li>
+    <p>The last_drops list, recording the chronological order in which nodes become unavailable.</p>
+  </li>
+  <li>
+    <p>ddd_reason, indicating the reason why this partition has become a DDD state.</p>
+  </li>
+  <li>
+    <p>recommanded_primary, the new primary recommended by the diagnostic tool under the premise of ensuring data consistency; if it cannot be given, it is <code class="language-plaintext highlighter-rouge">none</code>.</p>
+  </li>
+  <li>
+    <p>If step 6 provides a recommended node, then prompt the user for the next step (if the <code class="language-plaintext highlighter-rouge">-a</code> or <code class="language-plaintext highlighter-rouge">-s</code> option is specified, this step will not be entered, equivalent to always automatically selecting y):</p>
+
+    <ul>
+      <li>
+        <p>y: Use the recommended node as the new primary.</p>
+      </li>
+      <li>
+        <p>n: Do not use the recommended node and let the user choose another node.</p>
+      </li>
+      <li>
+        <p>s: Ignore the diagnosis of this partition.</p>
+      </li>
+    </ul>
+  </li>
+  <li>
+    <p>If step 6 does not provide a recommended node or step 7 chooses n, then prompt the user to enter a new node as the primary.</p>
+  </li>
+  <li>
+    <p>Generate a propose command, send it to MetaServer, and designate the node as the new primary to recover this partition.</p>
+  </li>
+  <li>
+    <p>Receive the reply to the propose command, <code class="language-plaintext highlighter-rouge">ERR_OK</code> indicates successful execution.</p>
+  </li>
+  <li>
+    <p>Display the current progress, with the numerator being the number of diagnoses completed and the denominator being the total number of diagnoses needed.</p>
+  </li>
+</ol>
+
+<p><strong>Recommended usage</strong>:</p>
+
+<ul>
+  <li><code class="language-plaintext highlighter-rouge">ddd_diagnose -d -a</code>, that is, enable automatic diagnosis, for partitions that cannot be diagnosed automatically, obtain manual intervention through interaction with the user. This is the simplest and most worry-free method, and in most cases, the recovery process can be completed automatically without manual intervention.</li>
+</ul>
+
+<p>In cases where automatic diagnosis cannot be completed, step 8 in the above figure will be entered, requiring the user to input a new node as the primary. So, among the many nodes in the dropped list, how to choose the most suitable node as the primary? Our suggestion is:</p>
+
+<ul>
+  <li><strong>Among all nodes where alive is true, choose the node with the largest <code class="language-plaintext highlighter-rouge">last_prepared</code> value</strong>, because this can recover as much data as possible and reduce the possibility of data loss.</li>
+</ul>
 
                 </div>
             </section>
@@ -777,7 +908,10 @@
     </span>
     Table of contents
 </p>
-
+<ul class="menu-list">
+  <li><a href="#principle">Principle</a></li>
+  <li><a href="#ddd-diagnostic-tool">DDD Diagnostic Tool</a></li>
+</ul>
 
         </div>
     </div>
