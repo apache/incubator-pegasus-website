@@ -13,7 +13,7 @@ permalink: administration/throttling
 
 从流控的粒度来看，可分为：
 * 表级流控：只控制单个表的流控，粒度较细。
-* 节点级流控：针对ReplicaServer节点进行的流控，不区分具体的表。
+* 节点级流控：针对ReplicaServer节点进行的流控，不区分具体的表（节点级流控暂未支持）。
 
 # 客户端流控
 
@@ -21,9 +21,9 @@ permalink: administration/throttling
 
 # 服务端流控
 
-# 表级流控
+## 表写级流控
 
-从v1.11.2版本开始，Pegasus支持Server端表级流控，目前只针对写操作。另外，从v1.12.0版本开始增加了基于吞吐量的限流。
+从`v1.11.2`版本开始，Pegasus增加了Server端基于写QPS的表级流控。从`v1.12.0`版本开始，Pegasus增加了基于吞吐量的表级流控。
 
 实现原理：
 * 用户可以在[Table环境变量](table-env)中设置`replica.write_throttling`和`replica.write_throttling_by_size`环境变量。其中`replica.write_throttling`是基于qps的限流，`replica.write_throttling_by_size`是基于吞吐量的限流。
@@ -45,24 +45,40 @@ write_throttling流控目前支持两种操作类型：
 * delay_ms_before_reject：reject操作返回错误码之前的推迟时间，单位毫秒，需满足>=0。
 * delay和reject配置可以同时提供两个，也可以只提供其中一个。
 * 如果delay和reject配置同时提供，且QPS同时达到了delay和reject的阈值，那么会执行reject操作。
+* 表级流控会均摊到每个分片上，因此不宜设置太小。假设`temp`表具有256个分片，并设置下方示例中的流控参数，具体流控判定时，若某分片QPS超过（1000/256）则将采取delay操作，某分片QPS超过（2000/256）将采取reject操作。若某分片流量超过（10^9/256）`字节/秒`则将采取delay操作，若某分片流量超过（20^9/256）`字节/秒`则将采取reject操作。
 
-示例：
+**写流控设置示例：**
+
 ```bash
-$ ./run.sh shell
+$ ./run.sh shell -n {clusterName}
 >>> use temp
 OK
 >>> set_app_envs replica.write_throttling 1000*delay*100,2000*reject*200
 set app envs succeed
+>>> set_app_envs replica.write_throttling_by_size 1000K*delay*100,2000K*reject*200
+set app envs succeed
+>>> set_app_envs replica.write_throttling_by_size 1000M*delay*100,2000M*reject*200
+set app envs succeed
 >>> get_app_envs
-get app envs succeed, count = 1
-=================================
-replica.write_throttling = 1000*delay*100,2000*reject*200
-=================================
->>> 
+[app_envs]
+replica.write_throttling          : 1000*delay*100,2000*reject*200
+replica.write_throttling_by_size  : 1000M*delay*100,2000M*reject*200
 ```
 
-上面我们设置了`temp`表的write_throttling配置为`1000*delay*100,2000*reject*200`，这个配置的意思是：当QPS超过1000时，就开始执行delay操作；当QPS超过2000时，就开始执行reject操作。
+## 表级读流控
 
-## 节点级流控
+从`v2.4.x`版本开始，Server端增加了基于读QPS的限流。读限流和写限流实现原理一样，使用方式类似。
 
-待补充。
+**写流控设置示例：**
+
+```shell
+$ ./run.sh shell
+>>> use temp
+OK
+>>> set_app_envs replica.read_throttling 1000*delay*100,2000*reject*200
+set app envs succeed
+>>> get_app_envs
+[app_envs]
+replica.read_throttling           : 1000*delay*100,2000*reject*200
+```
+
