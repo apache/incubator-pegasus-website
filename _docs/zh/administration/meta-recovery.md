@@ -127,16 +127,16 @@ permalink: administration/meta-recovery
 
   此时 MetaServer 应当启动失败并 coredump：
   ```
-  F12:16:26.793 (1488341786793734532 26cc)   meta.default0.0000269c00010001: /home/mi/git.xiaomi/Pegasus/pegasus/rdsn/src/dist/replication/meta_server/server_state.cpp:698:initialize_data_structure(): assertion expression: false
-  F12:16:26.793 (1488341786793754317 26cc)   meta.default0.0000269c00010001: /home/mi/git.xiaomi/Pegasus/pegasus/rdsn/src/dist/replication/meta_server/server_state.cpp:698:initialize_data_structure(): find apps from remote storage, but [meta_server].recover_from_replica_server = true
+  F12:16:26.793 (1488341786793734532 26cc)   meta.default0.0000269c00010001: /home/Pegasus/pegasus/rdsn/src/dist/replication/meta_server/server_state.cpp:698:initialize_data_structure(): assertion expression: false
+  F12:16:26.793 (1488341786793754317 26cc)   meta.default0.0000269c00010001: /home/Pegasus/pegasus/rdsn/src/dist/replication/meta_server/server_state.cpp:698:initialize_data_structure(): find apps from remote storage, but [meta_server].recover_from_replica_server = true
   ```
 
 * 忘记设置 recover_from_replica_server 为 true
 
   meta server 会进入正常启动逻辑，从 zookeeper 上获取的 apps 为空，但是在 config sync 过程中发现 replica server 上有无法识别的 replica，出现元数据不一致的情况，会 coredump：
   ```
-  F12:22:21.228 (1488342141228270056 2764)   meta.meta_state0.0102000000000001: /home/mi/git.xiaomi/Pegasus/pegasus/rdsn/src/dist/replication/meta_server/server_state.cpp:823:on_config_sync(): assertion expression: false
-  F12:22:21.228 (1488342141228314857 2764)   meta.meta_state0.0102000000000001: /home/mi/git.xiaomi/Pegasus/pegasus/rdsn/src/dist/replication/meta_server/server_state.cpp:823:on_config_sync(): gpid(2.7) on node(10.235.114.240:34801) is not exist on meta server, administrator should check consistency of meta data
+  F12:22:21.228 (1488342141228270056 2764)   meta.meta_state0.0102000000000001: /home/Pegasus/pegasus/rdsn/src/dist/replication/meta_server/server_state.cpp:823:on_config_sync(): assertion expression: false
+  F12:22:21.228 (1488342141228314857 2764)   meta.meta_state0.0102000000000001: /home/Pegasus/pegasus/rdsn/src/dist/replication/meta_server/server_state.cpp:823:on_config_sync(): gpid(2.7) on node(10.235.114.240:34801) is not exist on meta server, administrator should check consistency of meta data
   ```
 
 * 恢复时连不上 replica server
