@@ -3,11 +3,11 @@ permalink: administration/meta-recovery
 ---
 
 # 功能目标
-在 Pegasus bootstrap 的过程中， meta server 需要先从 zookeeper 上拉取 table 的元信息以及所有 replica 的拓扑结构，再开始服务。
+在 Pegasus bootstrap 的过程中，meta server 需要先从 zookeeper 上拉取 table 的元信息以及所有 replica 的拓扑结构，再开始服务。
 
 元数据恢复的目标就是：**让 Pegasus 可以不依赖 zookeeper 的任何信息，完成系统的 bootstrap**。
 
-具体流程就是：用户只需提供集群有效的 replica server 的集合； meta server 通过和这些 replica server 交互，尝试重建出 table 元信息和 replica 拓扑结构，并写入到新的 zookeeper 节点，完成 bootstrap。
+具体流程就是：用户只需提供集群有效的 replica server 的集合；meta server 通过和这些 replica server 交互，尝试重建出 table 元信息和 replica 拓扑结构，并写入到新的 zookeeper 节点，完成 bootstrap。
 
 **注意：元数据恢复功能只是 zookeeper 数据损坏或者丢失之后的补救措施，运维人员要尽力避免这种情况的发生。**
 
@@ -141,7 +141,7 @@ permalink: administration/meta-recovery
 
 * 恢复时连不上 replica server
 
-  如果恢复时连不上 replica server， recover 命令就会执行失败：
+  如果恢复时连不上 replica server，recover 命令就会执行失败：
   ```
   >>> recover -f recover_node_list
   Wait seconds: 100
@@ -243,13 +243,13 @@ permalink: administration/meta-recovery
 
 * 恢复软删除的表
 
-  对于已经删除的表，由于有 [Table 软删除 ](table-soft-delete) 功能，只要没有超过保留时间， replica server 上的 replica 数据就不会被清理，所以该表能被恢复，且被认为是一个正常的未删除的表，也就是说丢掉了删除信息，但是不会丢数据。
+  对于已经删除的表，由于有 [Table 软删除 ](table-soft-delete) 功能，只要没有超过保留时间，replica server 上的 replica 数据就不会被清理，所以该表能被恢复，且被认为是一个正常的未删除的表，也就是说丢掉了删除信息，但是不会丢数据。
 
-  由于表删除后可以创建新的同名表，所以在恢复过程中可能会发现多个表都使用相同表名，出现表名冲突。此时， id 最大的那个表会使用原始表名，其他表的表名都改为 `{name}-{id}` 的形式。
+  由于表删除后可以创建新的同名表，所以在恢复过程中可能会发现多个表都使用相同表名，出现表名冲突。此时，id 最大的那个表会使用原始表名，其他表的表名都改为 `{name}-{id}` 的形式。
 
 # 设计与实现
 元数据恢复功能的设计与实现：
 * meta server 提供一个配置项，用来标识“当从 zookeeper 上获取不到任何元数据信息时，是否进入元数据恢复的模式”。
 * shell 端提供一个 recovery 的命令，来触发 meta 启动元数据恢复流程。
-* 如果进入了元数据恢复流程， meta server 会接收 replica server 的探活心跳，并只响应一个特殊的 `start_recovery`RPC，而不响应任何其他类型的 RPC。
-* 用户需要指定一个 replica server 的集合； meta server 只和该集合中节点进行通信，响应其 `start_recovery`RPC，以进行信息收集，用于 bootstrap； meta server 和任何节点的交互失败都会导致恢复流程的失败。
+* 如果进入了元数据恢复流程，meta server 会接收 replica server 的探活心跳，并只响应一个特殊的 `start_recovery`RPC，而不响应任何其他类型的 RPC。
+* 用户需要指定一个 replica server 的集合；meta server 只和该集合中节点进行通信，响应其 `start_recovery`RPC，以进行信息收集，用于 bootstrap；meta server 和任何节点的交互失败都会导致恢复流程的失败。
