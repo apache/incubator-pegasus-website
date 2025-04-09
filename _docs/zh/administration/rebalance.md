@@ -29,7 +29,6 @@ permalink: administration/rebalance
    * unhealthy：不完全健康。
    * write_unhealthy：不可写，包括上面的readable but unwritable和dead。
    * read_unhealthy：不可读，包括上面的unreadable和dead。
-  
 2. Meta server的运行level
 
    meta server的运行level决定了meta server会对整个分布式系统做到何种程度的管理。最常用的运行level包括：
@@ -366,7 +365,7 @@ Pegasus提供了一些控制参数给些过程可以提供更精细的控制：
 
 从上面可以看出，该算法主要是对第2步进行了修改，并非像Ford-Fulkerson算法那样简单的进行边权重修改。
 
-NOTE：我们在执行Ford-Fulkerson进行primary迁移的时候，是针对单个表的，也就是说构造网络、执行角色切换都是针对单个表的，当要对多个表进行迁移，则只要循环对所有表各执行上述流程就可以了
+NOTE：我们在执行Ford-Fulkerson进行primary迁移的时候，是针对单个表的，也就是说构造网络、执行角色切换都是针对单个表的，当要对多个表进行迁移，则只要循环对所有表各执行上述流程就可以了。
 
 ### Copy_Primary
 当没有成功获取增广路径时，则说明简单通过角色切换的方式已经无法达到负载均衡了，必须通过迁移Primary来实现了。 迁移Primary算法的实现相对简单，其具体执行步骤如下：

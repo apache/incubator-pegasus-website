@@ -6,9 +6,9 @@ This document mainly introduces the concepts, usage, and design of rebalance in 
 
 ## Concept Section
 In Pegasus, rebalance mainly includes the following aspects:
-1. If a certain partition replica does not meet the requirement of one primary and two secondaries, a node needs to be selected to complete the missing replica. This process in Pegasus is called `cure`.
-2. After all partitions meet the requirement of one primary and two secondaries, the number of replicas on each replica server in the cluster is adjusted to try to keep the number of replicas served by each machine at a similar level. This process in Pegasus is called `balance`.
-3. If a replica server has multiple disks mounted and provided to Pegasus for use through the configuration file `data_dirs`, the replica server should try to keep the number of replicas on each disk at a similar level.
+1. If a partition has less than 3 replicas (1 primary and 2 secondaries), a node needs to be selected to complete the missing replicas. This process in Pegasus is called `cure`.
+2. After all partitions have 3 replicas each, all replicas need to be distributed evenly across the replica servers. This process in Pegasus is called `balance`.
+3. If a replica server has multiple disks mounted and provided to Pegasus through the configuration file `data_dirs`, the replica server should try to keep the number of replicas on each disk at a similar level.
    
 Based on these points, Pegasus has introduced some concepts to conveniently describe these situations:
 1. The Health Status of Partition
@@ -20,7 +20,7 @@ Based on these points, Pegasus has introduced some concepts to conveniently desc
    * 【dead】: All replicas of the partition are unavailable, also known as the DDD state.
 ![pegasus-healthy-status](/assets/images/pegasus-healthy-status.png){:class="img-responsive"}
 
-   When checking the status of the cluster, tables, and partitions through the Pegasus shell, you will often see the overall statistics or individual descriptions of the health conditions of the partitions. For example, by using the ls -d command, you can see the number of partitions in different health conditions for each table, including the following:
+   When checking the status of the cluster, tables, and partitions through the Pegasus shell, you will often see the overall statistics or individual descriptions of the health conditions of the partitions. For example, by using the `ls -d` command, you can see the number of partitions in different health conditions for each table, including the following:
    * fully_healthy: Completely healthy.
    * unhealthy: Not completely healthy.
    * write_unhealthy: Unwritable, including the above-mentioned readable but unwritable and dead states.
@@ -332,7 +332,7 @@ If you need to use cluster-level load balancing, you need to modify the followin
 ```
 
 ## Design Section
-n the current implementation of the Pegasus balancer, the meta server will regularly evaluate the replica situation of all replica server nodes. When it deems that the replicas are unevenly distributed across nodes, it will migrate the corresponding replicas.
+In the current implementation of the Pegasus balancer, the meta server will regularly evaluate the replica  distribution across of all replica servers. When it deems that the replicas are unevenly distributed across nodes, it will migrate the corresponding replicas.
 The factors that need to be considered during the decision-making process of the balancer are as follows:
 - For any table, the partitions should be evenly distributed across nodes, which includes the following aspects:
   - The three replicas of a certain partition cannot all be located on one node.
