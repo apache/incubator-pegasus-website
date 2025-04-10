@@ -16,15 +16,15 @@
 <meta name="generator" content="Jekyll v4.4.1" />
 <meta property="og:title" content="Meta Recovery" />
 <meta property="og:locale" content="en_US" />
-<meta name="description" content="TRANSLATING" />
-<meta property="og:description" content="TRANSLATING" />
+<meta name="description" content="Functional Objectives During the Pegasus bootstrap process, the meta server must first pull the table metadata and the topology of all replicas from zookeeper before starting service." />
+<meta property="og:description" content="Functional Objectives During the Pegasus bootstrap process, the meta server must first pull the table metadata and the topology of all replicas from zookeeper before starting service." />
 <meta property="og:site_name" content="Pegasus" />
 <meta property="og:type" content="article" />
-<meta property="article:published_time" content="2025-04-10T04:36:03+00:00" />
+<meta property="article:published_time" content="2025-04-10T10:43:45+00:00" />
 <meta name="twitter:card" content="summary" />
 <meta property="twitter:title" content="Meta Recovery" />
 <script type="application/ld+json">
-{"@context":"https://schema.org","@type":"BlogPosting","dateModified":"2025-04-10T04:36:03+00:00","datePublished":"2025-04-10T04:36:03+00:00","description":"TRANSLATING","headline":"Meta Recovery","mainEntityOfPage":{"@type":"WebPage","@id":"/administration/meta-recovery"},"url":"/administration/meta-recovery"}</script>
+{"@context":"https://schema.org","@type":"BlogPosting","dateModified":"2025-04-10T10:43:45+00:00","datePublished":"2025-04-10T10:43:45+00:00","description":"Functional Objectives During the Pegasus bootstrap process, the meta server must first pull the table metadata and the topology of all replicas from zookeeper before starting service.","headline":"Meta Recovery","mainEntityOfPage":{"@type":"WebPage","@id":"/administration/meta-recovery"},"url":"/administration/meta-recovery"}</script>
 <!-- End Jekyll SEO tag -->
 
 </head>
@@ -734,7 +734,266 @@
             </section>
             <section class="section" style="padding-top: 2rem;">
                 <div class="content">
-                    <p>TRANSLATING</p>
+                    <h1 id="functional-objectives">Functional Objectives</h1>
+<p>During the Pegasus bootstrap process, the meta server must first pull the table metadata and the topology of all replicas from zookeeper before starting service.</p>
+
+<p>The goal of metadata recovery is to <strong>allow Pegasus to complete system bootstrap without relying on any information from zookeeper</strong>.</p>
+
+<p>The specific process is as follows: the user only needs to provide a set of valid replica servers of the cluster; the meta server interacts with these replica servers to attempt to rebuild the table metadata and replica topology, then writes them to new zookeeper nodes to complete bootstrap.</p>
+
+<p><strong>Note: The metadata recovery function is only a remedial measure after zookeeper data is corrupted or lost. Operators should strive to avoid such situations.</strong></p>
+
+<h1 id="operational-process">Operational Process</h1>
+<h2 id="demonstration-using-a-onebox-cluster">Demonstration Using a Onebox Cluster</h2>
+<ol>
+  <li>
+    <p>Initialize the onebox cluster</p>
+
+    <p>Start only one meta server:</p>
+    <div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>./run.sh clear_onebox
+./run.sh start_onebox <span class="nt">-m</span> 1 <span class="nt">-w</span>
+</code></pre></div>    </div>
+
+    <p>At this point, using the shell command <code class="language-plaintext highlighter-rouge">cluster_info</code>, you can see the zookeeper node path:</p>
+    <div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>zookeeper_root      : /pegasus/onebox/x.x.x.x
+</code></pre></div>    </div>
+  </li>
+  <li>
+    <p>Use the bench tool to load data</p>
+
+    <p>Data loading is performed to test the integrity of data before and after metadata recovery:</p>
+    <div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>./run.sh bench <span class="nt">--app_name</span> temp <span class="nt">-t</span> fillseq_pegasus <span class="nt">-n</span> 10000
+</code></pre></div>    </div>
+  </li>
+  <li>
+    <p>Modify the configuration file</p>
+
+    <p>Use the following commands to modify the meta server configuration file:</p>
+    <div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nb">sed</span> <span class="nt">-i</span> <span class="s1">'s@/pegasus/onebox@/pegasus/onebox_recovery@'</span> onebox/meta1/config.ini
+<span class="nb">sed</span> <span class="nt">-i</span> <span class="s1">'s@recover_from_replica_server = false@recover_from_replica_server = true@'</span> onebox/meta1/config.ini
+</code></pre></div>    </div>
+
+    <p>These commands modify the zookeeper path in the configuration file <code class="language-plaintext highlighter-rouge">onebox/meta1/config.ini</code> and set it to recovery mode:</p>
+    <ul>
+      <li>Change <code class="language-plaintext highlighter-rouge">cluster_root = /pegasus/onebox/x.x.x.x</code> to <code class="language-plaintext highlighter-rouge">cluster_root = /pegasus/onebox_recovery/x.x.x.x</code></li>
+      <li>Change <code class="language-plaintext highlighter-rouge">distributed_lock_service_parameters = /pegasus/onebox/x.x.x.x</code> to <code class="language-plaintext highlighter-rouge">distributed_lock_service_parameters = /pegasus/onebox_recovery/x.x.x.x</code></li>
+      <li>Change <code class="language-plaintext highlighter-rouge">recover_from_replica_server = false</code> to <code class="language-plaintext highlighter-rouge">recover_from_replica_server = true</code></li>
+    </ul>
+  </li>
+  <li>
+    <p>Restart meta</p>
+
+    <div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>./run.sh stop_onebox_instance <span class="nt">-m</span> 1
+./run.sh start_onebox_instance <span class="nt">-m</span> 1
+</code></pre></div>    </div>
+
+    <p>After a successful restart, the meta server enters recovery mode. At this point, aside from the start_recovery request, all other RPC requests will return ERR_UNDER_RECOVERY. For example, using the shell command <code class="language-plaintext highlighter-rouge">ls</code> yields:</p>
+    <div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>&gt;&gt;&gt; ls
+list apps failed, error=ERR_UNDER_RECOVERY
+</code></pre></div>    </div>
+  </li>
+  <li>
+    <p>Send the recover command through the shell</p>
+
+    <p>First, prepare a file named <code class="language-plaintext highlighter-rouge">recover_node_list</code> to specify the valid replica server nodes, with one node per line, for example:</p>
+    <div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code># comment line
+x.x.x.x:34801
+x.x.x.x:34802
+x.x.x.x:34803
+</code></pre></div>    </div>
+
+    <p>Then, use the shell command <code class="language-plaintext highlighter-rouge">recover</code> to send the start_recovery request to the meta server:</p>
+    <div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>&gt;&gt;&gt; recover -f recover_node_list
+Wait seconds: 100
+Skip bad nodes: false
+Skip lost partitions: false
+Node list:
+=============================
+x.x.x.x:34801
+x.x.x.x:34802
+x.x.x.x:34803
+=============================
+Recover result: ERR_OK
+</code></pre></div>    </div>
+
+    <p>When the result is ERR_OK, recovery is successful, and you can see the normal table information via the shell command <code class="language-plaintext highlighter-rouge">ls</code>.</p>
+
+    <p>Also, using the shell command <code class="language-plaintext highlighter-rouge">cluster_info</code>, you can see that the zookeeper node path has changed:</p>
+    <div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>zookeeper_root      : /pegasus/onebox_recovery/x.x.x.x
+</code></pre></div>    </div>
+  </li>
+  <li>
+    <p>Check data integrity</p>
+
+    <p>Use the bench tool to query whether the previously written data exists completely:</p>
+    <div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>./run.sh bench <span class="nt">--app_name</span> temp <span class="nt">-t</span> readrandom_pegasus <span class="nt">-n</span> 10000
+</code></pre></div>    </div>
+
+    <p>The final statistics should show <code class="language-plaintext highlighter-rouge">(10000 of 10000 found)</code>, indicating that the data is completely intact after recovery.</p>
+  </li>
+  <li>
+    <p>Modify the configuration file and restart meta</p>
+
+    <p>After recovery succeeds, modify the configuration file to revert back to non-recovery mode:</p>
+    <ul>
+      <li>Change <code class="language-plaintext highlighter-rouge">recover_from_replica_server = true</code> back to <code class="language-plaintext highlighter-rouge">recover_from_replica_server = false</code></li>
+    </ul>
+
+    <p>Restart the meta server:</p>
+    <div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>./run.sh stop_onebox_instance <span class="nt">-m</span> 1
+./run.sh start_onebox_instance <span class="nt">-m</span> 1
+</code></pre></div>    </div>
+
+    <p>This step prevents the meta server from entering recovery mode again upon restart, which would make the cluster unavailable.</p>
+  </li>
+</ol>
+
+<h2 id="online-cluster-recovery">Online Cluster Recovery</h2>
+
+<p>When performing metadata recovery on an online cluster, please follow steps <code class="language-plaintext highlighter-rouge">3~7</code> above and note the following:</p>
+<ul>
+  <li>When specifying valid replica server nodes in <code class="language-plaintext highlighter-rouge">recover_node_list</code>, ensure that all nodes are functioning properly.</li>
+  <li>Do not forget to set <code class="language-plaintext highlighter-rouge">recover_from_replica_server</code> to true in the configuration file before recovery.</li>
+  <li>Recovery can only be performed on new or empty zookeeper nodes.</li>
+  <li>After recovery, reset <code class="language-plaintext highlighter-rouge">recover_from_replica_server</code> to false in the configuration file.</li>
+</ul>
+
+<h2 id="common-issues-and-solutions">Common Issues and Solutions</h2>
+
+<ul>
+  <li>
+    <p><strong>Recovery to a non-empty zookeeper node</strong></p>
+
+    <p>In this case, the MetaServer should fail to start and coredump:</p>
+    <div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>F12:16:26.793 (1488341786793734532 26cc)   meta.default0.0000269c00010001: /home/Pegasus/pegasus/rdsn/src/dist/replication/meta_server/server_state.cpp:698:initialize_data_structure(): assertion expression: false
+F12:16:26.793 (1488341786793754317 26cc)   meta.default0.0000269c00010001: /home/Pegasus/pegasus/rdsn/src/dist/replication/meta_server/server_state.cpp:698:initialize_data_structure(): find apps from remote storage, but [meta_server].recover_from_replica_server = true
+</code></pre></div>    </div>
+  </li>
+  <li>
+    <p><strong>Forgetting to set recover_from_replica_server to true</strong></p>
+
+    <p>The meta server will start normally, but since the apps fetched from zookeeper are empty, during config sync it finds unrecognized replicas on the replica server, leading to metadata inconsistency and a coredump:</p>
+    <div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>F12:22:21.228 (1488342141228270056 2764)   meta.meta_state0.0102000000000001: /home/Pegasus/pegasus/rdsn/src/dist/replication/meta_server/server_state.cpp:823:on_config_sync(): assertion expression: false
+F12:22:21.228 (1488342141228314857 2764)   meta.meta_state0.0102000000000001: /home/Pegasus/pegasus/rdsn/src/dist/replication/meta_server/server_state.cpp:823:on_config_sync(): gpid(2.7) on node(10.235.114.240:34801) is not exist on meta server, administrator should check consistency of meta data
+</code></pre></div>    </div>
+  </li>
+  <li>
+    <p><strong>Cannot connect to a replica server during recovery</strong></p>
+
+    <p>If the meta server fails to connect to a replica server during recovery, the recover command will fail:</p>
+    <div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>&gt;&gt;&gt; recover -f recover_node_list
+Wait seconds: 100
+Skip bad nodes: false
+Skip lost partitions: false
+Node list:
+=============================
+x.x.x.x:34801
+x.x.x.x:34802
+x.x.x.x:34803
+x.x.x.x:34804
+=============================
+Recover result: ERR_TRY_AGAIN
+=============================
+ERROR: collect app and replica info from node(x.x.x.x:34804) failed with err(ERR_NETWORK_FAILURE), you can skip it by set skip_bad_nodes option
+=============================
+</code></pre></div>    </div>
+
+    <p>You can force skipping problematic nodes by specifying the <code class="language-plaintext highlighter-rouge">--skip_bad_nodes</code> parameter. Note that skipping bad nodes may result in some partitions having an incomplete number of replicas, risking data loss.</p>
+    <div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>&gt;&gt;&gt; recover -f recover_node_list --skip_bad_nodes
+Wait seconds: 100
+Skip bad nodes: true
+Skip lost partitions: false
+Node list:
+=============================
+x.x.x.x:34801
+x.x.x.x:34802
+x.x.x.x:34803
+=============================
+Recover result: ERR_OK
+=============================
+WARNING: collect app and replica info from node(x.x.x.x:34804) failed with err(ERR_NETWORK_FAILURE), skip the bad node
+WARNING: partition(1.0) only collects 2/3 of replicas, may lost data
+WARNING: partition(1.1) only collects 2/3 of replicas, may lost data
+WARNING: partition(1.3) only collects 2/3 of replicas, may lost data
+WARNING: partition(1.5) only collects 2/3 of replicas, may lost data
+WARNING: partition(1.7) only collects 2/3 of replicas, may lost data
+=============================
+</code></pre></div>    </div>
+  </li>
+  <li>
+    <p><strong>Recovery finds a partition with an incomplete replica count</strong></p>
+
+    <p>When a partition collects an incomplete set of replicas, recovery will still succeed but with warning messages:</p>
+    <div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>&gt;&gt;&gt; recover -f recover_node_list
+Wait seconds: 100
+Skip bad nodes: false
+Skip lost partitions: false
+Node list:
+=============================
+x.x.x.x:34801
+x.x.x.x:34802
+x.x.x.x:34803
+=============================
+Recover result: ERR_OK
+=============================
+WARNING: partition(1.0) only collects 1/3 of replicas, may lost data
+=============================
+</code></pre></div>    </div>
+  </li>
+  <li>
+    <p><strong>Recovery finds a partition with no available replica</strong></p>
+
+    <p>If a partition fails to collect any available replica, recovery will fail:</p>
+    <div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>&gt;&gt;&gt; recover -f recover_node_list
+Wait seconds: 100
+Skip bad nodes: false
+Skip lost partitions: false
+Node list:
+=============================
+x.x.x.x:34801
+x.x.x.x:34802
+x.x.x.x:34803
+=============================
+Recover result: ERR_TRY_AGAIN
+=============================
+ERROR: partition(1.0) has no replica collected, you can force recover it by set skip_lost_partitions option
+=============================
+</code></pre></div>    </div>
+
+    <p>You can force recovery by specifying the <code class="language-plaintext highlighter-rouge">--skip_lost_partitions</code> parameter, which will initialize partition(1.0) as an empty replica. <strong>Use with caution, as data loss may occur.</strong></p>
+    <div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>&gt;&gt;&gt; recover -f recover_node_list --skip_lost_partitions
+Wait seconds: 100
+Skip bad nodes: false
+Skip lost partitions: true
+Node list:
+=============================
+x.x.x.x:34801
+x.x.x.x:34802
+x.x.x.x:34803
+=============================
+Recover result: ERR_OK
+=============================
+WARNING: partition(1.0) has no replica collected, force recover the lost partition to empty
+=============================
+</code></pre></div>    </div>
+  </li>
+  <li>
+    <p><strong>Recovery of soft-deleted tables</strong></p>
+
+    <p>For tables that have been deleted, due to the <a href="table-soft-delete">Table Soft-Delete</a> feature, as long as the retention period has not expired, the replica data on the replica servers will not be cleaned up. Therefore, such tables can be recovered and treated as normal, non-deleted tables— that is, the deletion information is lost, but the data is intact.</p>
+
+    <p>Since a new table with the same name can be created after deletion, the recovery process may find multiple tables using the same name, causing a conflict. In such cases, the table with the highest id retains its original name, while the others are renamed to <code class="language-plaintext highlighter-rouge">{name}-{id}</code>.</p>
+  </li>
+</ul>
+
+<h1 id="design-and-implementation">Design and Implementation</h1>
+<p>The design and implementation of the metadata recovery function are as follows:</p>
+<ul>
+  <li>The meta server provides a configuration option to indicate whether to enter metadata recovery mode when no metadata is obtained from zookeeper.</li>
+  <li>The shell provides a recovery command to trigger the meta server to start the metadata recovery process.</li>
+  <li>If the metadata recovery process is initiated, the meta server will receive heartbeat messages from replica servers and will only respond to a special <code class="language-plaintext highlighter-rouge">start_recovery</code> RPC, ignoring all other types of RPC.</li>
+  <li>The user must specify a set of replica servers; the meta server communicates only with the nodes in this set and responds to their <code class="language-plaintext highlighter-rouge">start_recovery</code> RPC to collect information for bootstrap. Any communication failure between the meta server and any node will cause the recovery process to fail.</li>
+</ul>
 
                 </div>
             </section>
@@ -777,7 +1036,17 @@
     </span>
     Table of contents
 </p>
-
+<ul class="menu-list">
+  <li><a href="#functional-objectives">Functional Objectives</a></li>
+  <li><a href="#operational-process">Operational Process</a>
+    <ul>
+      <li><a href="#demonstration-using-a-onebox-cluster">Demonstration Using a Onebox Cluster</a></li>
+      <li><a href="#online-cluster-recovery">Online Cluster Recovery</a></li>
+      <li><a href="#common-issues-and-solutions">Common Issues and Solutions</a></li>
+    </ul>
+  </li>
+  <li><a href="#design-and-implementation">Design and Implementation</a></li>
+</ul>
 
         </div>
     </div>
