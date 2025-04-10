@@ -22,7 +22,6 @@ permalink: administration/rebalance
    * 【readable but unwritable】: 分片可读但是不可写。指的是只剩下了一个primary，两个secondary副本全部丢失
    * 【readable and writable but unhealthy】: 分片可读可写，但仍旧不健康。指的是三副本里面少了一个secondary
    * 【dead】: partition的所有副本全不可用了，又称之为DDD状态。
-
 ![pegasus-healthy-status](/assets/images/pegasus-healthy-status.png){:class="img-responsive"}
 
    当通过pegasus shell来查看集群、表以及分片的状态时，会经常看到对分片健康情况的整体统计或单个描述。譬如通过`ls -d`命令，可以看到各个表处于不同健康状况的partition的个数，包括这些：
@@ -30,7 +29,6 @@ permalink: administration/rebalance
    * unhealthy：不完全健康。
    * write_unhealthy：不可写，包括上面的readable but unwritable和dead。
    * read_unhealthy：不可读，包括上面的unreadable和dead。
-
 2. Meta server的运行level
 
    meta server的运行level决定了meta server会对整个分布式系统做到何种程度的管理。最常用的运行level包括：
@@ -278,7 +276,7 @@ Failed count: 0
 
 #### assign_secondary_black_list
 
-该命令用来设定**添加secondary的黑名单**。这个命令在批量下线集群节点的时候非常有用, 例如: 
+该命令用来设定**添加secondary的黑名单**。这个命令在批量下线集群节点的时候非常有用. 
 
 #### add secondary时候的流控
 
@@ -296,7 +294,7 @@ Failed count: 0
 
 #### 精细控制balancer
 
-balancer表示把各节点个数调匀的过程。在目前的pegasus实现中，balancer过程大概可以用四点来概括：
+在目前的pegasus实现中，balancer过程大概可以用四点来概括：
 1. 尽量通过角色互换来做到primary均衡
 2. 如果1做不到让primary变均匀，通过拷数据来做到primary均衡
 3. 在2做完后，通过拷数据做到secondary的均衡
@@ -325,6 +323,64 @@ Pegasus提供了一些控制参数给些过程可以提供更精细的控制：
 
 不过有部分脚本的逻辑依赖小米的[minos部署系统](https://github.com/XiaoMi/minos)。这里希望大家可以帮助pegasus, 可以支持更多的部署系统。
 
-## 设计篇
+## 集群级别负载均衡
+1. 上面的描述都是以表为单位进行负载均衡的，即当一个集群中每张表在replica server上是均衡的，meta server就认为整个集群是均衡的。
+2. 然而，在部分场景下，特别是集群replica server节点数较多，集群中存在大量**小分片**表时，即使每张表是均衡的，整个集群也不是均衡的。
+3. 从2.3.0版本开始，Pegasus支持集群级别的负载均衡,在保障不改变表均衡的情况下让整个集群的replica个数均衡。
 
-待补充。
+其使用方式和上面描述方法相同，并且支持上述所有的命令。  
+如果需要使用集群级别负载均衡，需要修改以下配置：
+```
+[[meta_server]]
+   balance_cluster = ture  // 默认为false
+```
+
+
+## 设计篇
+在当前Pegasus balancer的实现中，meta server会定期对所有replica server节点的replica情况做评估，当其认为replica在节点分布不均衡时，会将相应replica进行迁移。
+在balancer生成决策过程中需要考虑的因素有：
+- 对于任意表，其partition在节点上的分布要均衡，这其中包括如下几个方面：
+  - 某个partition的三个副本不能全部落在一个节点上
+  - Primary的数量要均摊
+  - Secondary的数量也要均摊
+- 如果发现Primary分配不均衡时，首先考虑的策略应该是对Primary进行角色切换，而不是直接就进行数据拷贝
+- 不仅要考虑节点间的负载均衡，也要尽量保证节点内各个磁盘的replica个数是均衡的
+  
+### Move_Primary
+当primary分布不均衡时，首先考虑的策略是对进行角色切换，也就是说，需要寻找到一条从路径，将primary从“多方”迁移到“少方”。将迁移的primary数量作为流量，很自然的我们就想到了Ford-Fulkerson，即：  
+1. 寻找一条从source到sink的增广路径
+2. 按照增广路径修改各边权重，形成残差网络
+3. 在残差网络中继续步骤1，直到找不到增广路径为止。  
+
+但是我们又不能直接套用Ford-Fulkerson。原因在于第2步中，按照Ford-Fulkerson，增广路上的一条权重为x的边意味着从A流向B的primary的个数为x，此时形成残差网络中，该边的权重需要减去x，然而其反向边也同时增加x（反向边的作用用于提供一个调整的机会，因为之前形成的增广路径很有可能不是最大流，该反向边用于调整此前形成的增广路径，具体参考Ford-Fulkerson算法）。但是在我们的模型中，反向边增加x是不合理的，例如，对于Partition[Primary: A, Secondary: (B, C)]，Primary从A向B流动，最终使得Partition成为[Primary: B, Secondary: (A, C)]，这时意味着： 
+1. A到B的流量减少
+2. A到C的流量减少
+3. B到A的流量增加
+4. B到C的流量增加  
+   
+这显然与Ford-Fulkerson的残差网络的反向边的权重变化是不同的。 所以我们将算法修改如下：
+1. 按照当前的partition分布生成图结构，并根据Ford-Fulkerson算法，找到一条增广路径
+2. 根据找到的增广路径，构造primary角色切换的决策动作。并在集群中执行该动作，生成新的partition分布
+3. 根据新的partition分布，迭代步骤1，一直到不能找到增广路径  
+
+从上面可以看出，该算法主要是对第2步进行了修改，并非像Ford-Fulkerson算法那样简单的进行边权重修改。
+
+NOTE：我们在执行Ford-Fulkerson进行primary迁移的时候，是针对单个表的，也就是说构造网络、执行角色切换都是针对单个表的，当要对多个表进行迁移，则只要循环对所有表各执行上述流程就可以了。
+
+### Copy_Primary
+当没有成功获取增广路径时，则说明简单通过角色切换的方式已经无法达到负载均衡了，必须通过迁移Primary来实现了。 迁移Primary算法的实现相对简单，其具体执行步骤如下：
+1. 将节点按照Primary数量按从小到大排序，得到pri_queue
+2. 对pri_queue上，id_min始终指向pri_queue的头结点，id_max始终指向pri_queue的尾节点，如下图所示:
+```
+ +------+------+------+------+------+------+------+------+
+ |                                                       |
+ V                                                       V
+id_min                                                  id_max
+```
+3. 对当前id_max上的所有Primary，分别找到其对应的磁盘并获取其磁盘负载，选择负载最大的磁盘及其对应的Primary，进行迁移
+4. 对当前id_min/id_max指向的Primary数量分别+1/-1。重新排序，并循环执行上述步骤，直到id_min节点上的Primary数量 >= N/M，此时说明达到了平衡
+   
+### Copy_Secondary
+上述讲解了Primary负载均衡，当然Secondary也同样需要负载均衡，否则的话可能会出现不同节点上Primary均衡，但是partition总数不均衡的情况。 因为在做Primary迁移时已经做过角色切换了，Secondary迁移就不用像Primary这么复杂，不用考虑角色切换的问题了。此时直接进行copy就可以。因此Secondary的负载均衡，直接采用copy Primary一样的算法实现，这里不再赘述。 同理，Secondary也要对所有表分别进行负载均衡。
+
+NOTE： 上述构建图、查找增广路径、Move_Primary、Copy_Primary、Copy_Secondary都是针对一个表进行的操作，对于集群上的多个表，都要执行一次上述步骤。
