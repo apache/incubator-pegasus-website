@@ -13,6 +13,10 @@ permalink: administration/partition-split
 * 若new_partition_count != old_partition_count*2，返回 ERR_INVALID_PARAMETERS
 * 若表正在进行split，返回 ERR_BUSY
 * 若split成功返回 ERR_OK
+  
+## 注意
+* 2.4/2.5版本中，split过程中可能会hang住，如果需要执行split最好升级到最新版本
+
 
 # 设计与实现
 
@@ -35,8 +39,7 @@ partition split过程可分为以下几个步骤：
 由于partition split功能不能取消，且没有减小partition的功能，因此执行partition split需谨慎，虽然目前单次split只能使partition个数翻倍，但仍需指定partition count，这是为了防止client多次重试这个非幂等操作导致partition个数非预期增大。
 
 ## 如何删除无效数据
-执行partition
-split前需要保证磁盘空间可用超过50%，内存可用充足，因为split操作首先需要对每个partition进行复制，在split完成后，pegasus会通过rocksdb提供的filter功能在后台删除split造成的无效数据。若磁盘资源紧张或者希望尽快删除无效数据，可在集群CPU空闲期间执行manual_compact功能，手动触发filter，命令详情参见[操作示例](#操作示例)。
+执行partition split前需要保证磁盘空间可用超过50%，内存可用充足，因为split操作首先需要对每个partition进行复制，在split完成后，pegasus会通过rocksdb提供的filter功能在后台删除split造成的无效数据。若磁盘资源紧张或者希望尽快删除无效数据，可在集群CPU空闲期间执行manual_compact功能，手动触发filter，命令详情参见[操作示例](#操作示例)。
 
 ## Partition-Split与热点问题
 split功能主要是为了保障在数据量非预期增长情况下的服务质量，并不能完全解决单个partition过热的问题，pegasus的数据模式是hash分片，在split完成后流量并不能保障是被平分在两个partition上，这个是依赖于用户的hashkey决定的，只能说可以缓解热点问题，并且partition split是表级命令，暂时不支持针对单个partition的partition split。
@@ -93,4 +96,5 @@ list app split_table succeed
 
 ## 手动触发Manual-Compact
 关于Manual compact详情可参见[Manual compact功能](manual-compact)，在集群CPU空闲时进行操作，建议命令示例如下：
-`./scripts/pegasus_manual_compact.sh -c <meta_list> -a <table_name>` 
+`./scripts/pegasus_manual_compact.sh -c <meta_list> -a <table_name> --bottommost_level_compaction force`
+注意需要加上`--bottommost_level_compaction`, 这样所有冗余的数据都会被清理。
