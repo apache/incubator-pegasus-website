@@ -20,11 +20,11 @@
 <meta property="og:description" content="原理" />
 <meta property="og:site_name" content="Pegasus" />
 <meta property="og:type" content="article" />
-<meta property="article:published_time" content="2025-04-11T10:16:04+00:00" />
+<meta property="article:published_time" content="2025-04-15T10:31:50+00:00" />
 <meta name="twitter:card" content="summary" />
 <meta property="twitter:title" content="Replica Recovery" />
 <script type="application/ld+json">
-{"@context":"https://schema.org","@type":"BlogPosting","dateModified":"2025-04-11T10:16:04+00:00","datePublished":"2025-04-11T10:16:04+00:00","description":"原理","headline":"Replica Recovery","mainEntityOfPage":{"@type":"WebPage","@id":"/administration/replica-recovery"},"url":"/administration/replica-recovery"}</script>
+{"@context":"https://schema.org","@type":"BlogPosting","dateModified":"2025-04-15T10:31:50+00:00","datePublished":"2025-04-15T10:31:50+00:00","description":"原理","headline":"Replica Recovery","mainEntityOfPage":{"@type":"WebPage","@id":"/administration/replica-recovery"},"url":"/administration/replica-recovery"}</script>
 <!-- End Jekyll SEO tag -->
 
 </head>
@@ -742,7 +742,26 @@
 
 <p>通常来说，Pegasus的数据会存储3个副本。对于每个partition，正常情况下应当都有一主两备3个replica提供服务。</p>
 
-<p>但是，集群不可避免会发生节点宕机、网络异常、心跳失联等情况，造成副本丢失，对服务可用性产生影响。副本丢失的程度会影响读写的能力（在<a href="rebalance#概念篇">负载均衡</a>里也有介绍）：</p>
+<p>但是，集群不可避免会发生节点宕机、网络异常、心跳失联等情况，造成副本丢失，对服务可用性产生影响。Pegasus共有3种探测机制可以发现副本的丢失情况：</p>
+
+<ul>
+  <li>
+    <p>2pc超时：主要是保证主副本和从副本之间的健康。这是一个以副本为粒度的故障探测。每次写⼊进⼊2pc流程都会进⾏。</p>
+  </li>
+  <li>
+    <p>failure_detect：主要通过租约机制保证meta server和replica server之间的连接正常。服务器节点级别的故障探测，可以及时发现某台节点产生了可用性问题。线上默认配置3秒⼀次。</p>
+  </li>
+  <li>
+    <p>group_check：主副本成为primary的时候发起的任务。定期向secondary发送rpc进⾏探活。线上默认配置100秒⼀次。</p>
+  </li>
+</ul>
+
+<p>其中，2pc超时与group_check可以让主副本及时发现从副本的连接异常（无论是什么原因），从而将有问题的从副本在拓扑结构中踢出并上报meta。failure_detect可以让meta server发现某个数据节点异常连接，从而将该节点的全部副本从拓扑结构中踢出。</p>
+
+<p>通过这3种探测机制，meta就会进入一个副本丢失的状态，从而触发后续的分片补全（cure）流程来使所有的副本恢复健康。</p>
+
+<p>副本丢失的程度会影响读写的能力说明如下（在<a href="rebalance#概念篇">负载均衡</a>里也有介绍）：</p>
+
 <ul>
   <li>一主两备都可用：partition完全健康，可以<strong>正常读和写</strong>。</li>
   <li>一主一备可用：根据PacificA一致性协议，同样可以<strong>安全地读和写</strong>。</li>
