@@ -12,7 +12,7 @@ permalink: administration/replica-recovery
 
 * failure_detect：主要通过租约机制保证meta server和replica server之间的连接正常。服务器节点级别的故障探测，可以及时发现某台节点产生了可用性问题。线上默认配置3秒⼀次。 
 
-* group_check：主副本成为primary的时候发起的任务。定期向secondary发送rpc进 ⾏探活。线上默认配置100秒⼀次。
+* group_check：主副本成为primary的时候发起的任务。定期向secondary发送rpc进⾏探活。线上默认配置100秒⼀次。
 
 其中，2pc超时与group_check可以让主副本及时发现从副本的连接异常（无论是什么原因），从而将有问题的从副本在拓扑结构中踢出并上报meta。failure_detect可以让meta server发现某个数据节点异常连接，从而将该节点的全部副本从拓扑结构中踢出。
 
