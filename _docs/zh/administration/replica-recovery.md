@@ -20,7 +20,7 @@ permalink: administration/replica-recovery
 
 
 
-具体的，副本丢失的程度会影响读写的能力（在[负载均衡](rebalance#概念篇)里也有介绍）：
+副本丢失的程度会影响读写的能力说明如下（在[负载均衡](rebalance#概念篇)里也有介绍）：
 
 * 一主两备都可用：partition完全健康，可以**正常读和写**。
 * 一主一备可用：根据PacificA一致性协议，同样可以**安全地读和写**。
