@@ -6,7 +6,17 @@ permalink: administration/replica-recovery
 
 Generally speaking, data in Pegasus is stored with 3 replicas. For each partition, under normal situation, there should be one primary replica and two secondary replicas, totaling three replicas providing service.
 
-However, it is inevitable that the cluster will experience node crashes, network anomalies, heartbeat disconnections, and other situations that can cause replica loss, affecting the availability of services. The degree of replica loss affects the ability to read and write (introduced in [Load Balancing](rebalance#conceptual) as well):
+However, node failures,network issues, and heartbeat loss are inevitable in a cluster, leading to replica loss and affecting service availability. Pegasus has three detection mechanisms to identify replica loss:
+
+* 2PC timeout: Mainly ensures the health of the primary-secondary replica relationship. This is a replica-level failure detection, triggered each time a write enters the 2PC process.
+
+* failure_detect: Uses a lease mechanism to ensure the connectivity between the meta server and replica server. This is a server-level failure detection mechanism that can quickly identify a node's availability issue. The default interval in production is 3 seconds.
+
+* group_check: A task initiated when a replica becomes the primary. It periodically sends RPCs to secondaries to check their liveness. The default interval in production is 100 seconds.
+
+Among them, 2PC timeout and group_check help the primary detect connection issues with its secondaries and remove faulty replicas from the topology, reporting them to meta. failure_detect helps the meta server identify faulty replica nodes and remove all their replicas from the topology.
+
+Through these three detection mechanisms, the meta server detects lost replicas and triggers the subsequent cure process to restore all replicas to a healthy state. The degree of replica loss affects the ability to read and write (introduced in [Load Balancing](rebalance#conceptual) as well):
 
 * One primary and two replicas are available: The partition is completely healthy and can **read and write normally**.
 * One primary and one replica are available: According to the PacificA consistency protocol, it can still **read and write safely**.
