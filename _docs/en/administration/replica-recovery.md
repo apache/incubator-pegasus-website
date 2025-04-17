@@ -14,7 +14,7 @@ However, node failures, network issues, and heartbeat loss are inevitable in a c
 
 * group_check: A task initiated when a replica becomes the primary. It periodically sends RPCs to secondaries to check their liveness. The default interval in production is 100 seconds.
 
-Among them, 2PC timeout and group_check help the primary detect connection issues with its secondaries and remove faulty replicas from the topology, reporting them to meta. failure_detect helps the meta server identify faulty replica nodes and remove all their replicas from the topology.
+Among them, 2PC timeout and group_check help the primary detect connection issues with its secondaries and remove faulty replicas from the topology, reporting them to meta server. failure_detect helps the meta server identify faulty replica nodes and remove all their replicas from the topology.
 
 Through these three detection mechanisms, the meta server detects lost replicas and triggers the subsequent cure process to restore all replicas to a healthy state. The degree of replica loss affects the ability to read and write (introduced in [Load Balancing](rebalance#conceptual) as well):
 
