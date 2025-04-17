@@ -80,3 +80,4 @@ set app envs succeed
 >>> get_app_envs
 [app_envs]
 replica.read_throttling           : 1000*delay*100,2000*reject*200
+```
