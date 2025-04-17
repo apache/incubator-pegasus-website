@@ -20,11 +20,11 @@
 <meta property="og:description" content="This document mainly introduces the concepts, usage, and design of rebalance in Pegasus." />
 <meta property="og:site_name" content="Pegasus" />
 <meta property="og:type" content="article" />
-<meta property="article:published_time" content="2025-04-17T04:06:09+00:00" />
+<meta property="article:published_time" content="2025-04-17T04:25:03+00:00" />
 <meta name="twitter:card" content="summary" />
 <meta property="twitter:title" content="Rebalance" />
 <script type="application/ld+json">
-{"@context":"https://schema.org","@type":"BlogPosting","dateModified":"2025-04-17T04:06:09+00:00","datePublished":"2025-04-17T04:06:09+00:00","description":"This document mainly introduces the concepts, usage, and design of rebalance in Pegasus.","headline":"Rebalance","mainEntityOfPage":{"@type":"WebPage","@id":"/administration/rebalance"},"url":"/administration/rebalance"}</script>
+{"@context":"https://schema.org","@type":"BlogPosting","dateModified":"2025-04-17T04:25:03+00:00","datePublished":"2025-04-17T04:25:03+00:00","description":"This document mainly introduces the concepts, usage, and design of rebalance in Pegasus.","headline":"Rebalance","mainEntityOfPage":{"@type":"WebPage","@id":"/administration/rebalance"},"url":"/administration/rebalance"}</script>
 <!-- End Jekyll SEO tag -->
 
 </head>
@@ -1109,7 +1109,7 @@ If you need to use cluster-level load balancing, you need to modify the followin
 </code></pre></div></div>
 
 <h2 id="design-section">Design Section</h2>
-<p>In the current implementation of the Pegasus balancer, the meta server will regularly evaluate the replica  distribution across of all replica servers. When it deems that the replicas are unevenly distributed across nodes, it will migrate the corresponding replicas.
+<p>In the current implementation of the Pegasus balancer, the meta server will regularly evaluate the replica distribution across of all replica servers. When it deems that the replicas are unevenly distributed across nodes, it will migrate the corresponding replicas.
 The factors that need to be considered during the decision-making process of the balancer are as follows:</p>
 <ul>
   <li>For any table, the partitions should be evenly distributed across nodes, which includes the following aspects:
