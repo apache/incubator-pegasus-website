@@ -16,15 +16,15 @@
 <meta name="generator" content="Jekyll v4.4.1" />
 <meta property="og:title" content="Throttling" />
 <meta property="og:locale" content="en_US" />
-<meta name="description" content="TRANSLATING" />
-<meta property="og:description" content="TRANSLATING" />
+<meta name="description" content="Background Throttling refers to controlling the speed of read/write requests through certain mechanisms." />
+<meta property="og:description" content="Background Throttling refers to controlling the speed of read/write requests through certain mechanisms." />
 <meta property="og:site_name" content="Pegasus" />
 <meta property="og:type" content="article" />
-<meta property="article:published_time" content="2025-04-17T03:48:47+00:00" />
+<meta property="article:published_time" content="2025-04-17T03:53:40+00:00" />
 <meta name="twitter:card" content="summary" />
 <meta property="twitter:title" content="Throttling" />
 <script type="application/ld+json">
-{"@context":"https://schema.org","@type":"BlogPosting","dateModified":"2025-04-17T03:48:47+00:00","datePublished":"2025-04-17T03:48:47+00:00","description":"TRANSLATING","headline":"Throttling","mainEntityOfPage":{"@type":"WebPage","@id":"/administration/throttling"},"url":"/administration/throttling"}</script>
+{"@context":"https://schema.org","@type":"BlogPosting","dateModified":"2025-04-17T03:53:40+00:00","datePublished":"2025-04-17T03:53:40+00:00","description":"Background Throttling refers to controlling the speed of read/write requests through certain mechanisms.","headline":"Throttling","mainEntityOfPage":{"@type":"WebPage","@id":"/administration/throttling"},"url":"/administration/throttling"}</script>
 <!-- End Jekyll SEO tag -->
 
 </head>
@@ -734,7 +734,92 @@
             </section>
             <section class="section" style="padding-top: 2rem;">
                 <div class="content">
-                    <p>TRANSLATING</p>
+                    <h1 id="background">Background</h1>
+<p>Throttling refers to controlling the speed of read/write requests through certain mechanisms.</p>
+
+<p>Why implement throttling? Mainly to reduce cluster pressure and improve stability. If write traffic to the cluster is too high, it will consume significant system resources (CPU, IO, etc.), affecting read request latency. Some services have high requirements for read performance, and without write throttling, quality of service cannot be guaranteed.</p>
+
+<p>From the perspective of throttling location, it can be divided into:</p>
+<ul>
+  <li>Client-side throttling: Controls traffic at the source. Advantage is avoiding unnecessary network transmission; disadvantage is requiring additional client logic and difficulty in precise control due to unpredictable user behavior.</li>
+  <li>Server-side throttling: Implements throttling on ReplicaServer nodes. Advantage is being transparent to clients with centralized control; disadvantage is only being able to throttle by increasing latency or rejecting requests, which is less direct and may not avoid unnecessary network transmission.</li>
+</ul>
+
+<p>From the granularity perspective, it can be divided into:</p>
+<ul>
+  <li>Table-level throttling: Controls throttling for individual tables with finer granularity.</li>
+  <li>Node-level throttling: Implements throttling at the ReplicaServer node level without distinguishing specific tables (node-level throttling is not yet supported).</li>
+</ul>
+
+<h1 id="client-side-throttling">Client-side Throttling</h1>
+
+<p>The Java client currently provides throttling tools. See <a href="/clients/java-client#throttling">Java Client Documentation#Throttling</a>.</p>
+
+<h1 id="server-side-throttling">Server-side Throttling</h1>
+
+<h2 id="table-write-throttling">Table Write Throttling</h2>
+
+<p>Starting from version <code class="language-plaintext highlighter-rouge">v1.11.2</code>, Pegasus added server-side table-level write throttling based on QPS. From version <code class="language-plaintext highlighter-rouge">v1.12.0</code>, Pegasus added table-level throttling based on throughput.</p>
+
+<p>Implementation principle:</p>
+<ul>
+  <li>Users can set <code class="language-plaintext highlighter-rouge">replica.write_throttling</code> and <code class="language-plaintext highlighter-rouge">replica.write_throttling_by_size</code> environment variables in <a href="table-env">Table Environment Variables</a>. <code class="language-plaintext highlighter-rouge">replica.write_throttling</code> is QPS-based throttling, while <code class="language-plaintext highlighter-rouge">replica.write_throttling_by_size</code> is throughput-based throttling.</li>
+  <li>MetaServer asynchronously notifies all ReplicaServers of the environment variables, allowing each replica of the table to obtain them. This process typically takes several seconds to tens of seconds, but no more than one minute.</li>
+  <li>After obtaining the environment variables, replicas parse the write_throttling configuration and immediately put it into effect.</li>
+</ul>
+
+<p>write_throttling currently supports two operation types:</p>
+<ul>
+  <li>delay: The server does not process requests immediately upon receipt but delays them for a period, increasing client-side write latency to indirectly achieve throttling.</li>
+  <li>reject: The server does not process requests upon receipt but returns an ERR_BUSY error code. The error code can be delayed to increase client-side error latency, preventing immediate retries and frequent unnecessary retries.</li>
+</ul>
+
+<p>Environment variable <code class="language-plaintext highlighter-rouge">replica.write_throttling</code>/<code class="language-plaintext highlighter-rouge">replica.write_throttling_by_size</code> value format:</p>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>{delay_qps_threshold}*delay*{delay_ms},{reject_qps_threshold}*reject*{delay_ms_before_reject}
+</code></pre></div></div>
+<p>Notes:</p>
+<ul>
+  <li>delay_qps_threshold: QPS threshold triggering delay operation. If write requests processed within 1 second exceed this value, subsequent requests within that second will be delayed.</li>
+  <li>delay_ms: Delay time in milliseconds, must be &gt;=0.</li>
+  <li>reject_qps_threshold: QPS threshold triggering reject operation. If write requests processed within 1 second exceed this value, subsequent requests within that second will be rejected.</li>
+  <li>delay_ms_before_reject: Delay time before returning error code in milliseconds, must be &gt;=0.</li>
+  <li>Both delay and reject configurations can be provided together or separately.</li>
+  <li>If both delay and reject configurations are provided and QPS reaches both thresholds, the reject operation will be executed.</li>
+  <li>Table-level throttling is distributed across each partition, so thresholds shouldn’t be set too small. For example, if table <code class="language-plaintext highlighter-rouge">temp</code> has 256 partitions with the sample throttling parameters below, throttling will trigger when a partition’s QPS exceeds (1000/256) for delay or (2000/256) for reject. For size-based throttling, delay triggers at (10^9/256) bytes/sec and reject at (20^9/256) bytes/sec.</li>
+</ul>
+
+<p><strong>Write throttling configuration example:</strong></p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">$ </span>./run.sh shell <span class="nt">-n</span> <span class="o">{</span>clusterName<span class="o">}</span>
+<span class="o">&gt;&gt;&gt;</span> use temp
+OK
+<span class="o">&gt;&gt;&gt;</span> set_app_envs replica.write_throttling 1000<span class="k">*</span>delay<span class="k">*</span>100,2000<span class="k">*</span>reject<span class="k">*</span>200
+<span class="nb">set </span>app envs succeed
+<span class="o">&gt;&gt;&gt;</span> set_app_envs replica.write_throttling_by_size 1000K<span class="k">*</span>delay<span class="k">*</span>100,2000K<span class="k">*</span>reject<span class="k">*</span>200
+<span class="nb">set </span>app envs succeed
+<span class="o">&gt;&gt;&gt;</span> set_app_envs replica.write_throttling_by_size 1000M<span class="k">*</span>delay<span class="k">*</span>100,2000M<span class="k">*</span>reject<span class="k">*</span>200
+<span class="nb">set </span>app envs succeed
+<span class="o">&gt;&gt;&gt;</span> get_app_envs
+<span class="o">[</span>app_envs]
+replica.write_throttling          : 1000<span class="k">*</span>delay<span class="k">*</span>100,2000<span class="k">*</span>reject<span class="k">*</span>200
+replica.write_throttling_by_size  : 1000M<span class="k">*</span>delay<span class="k">*</span>100,2000M<span class="k">*</span>reject<span class="k">*</span>200
+</code></pre></div></div>
+
+<h2 id="table-read-throttling">Table Read Throttling</h2>
+
+<p>Starting from version <code class="language-plaintext highlighter-rouge">v2.4.x</code>, server-side read throttling based on QPS was added. Read throttling follows the same implementation principle as write throttling.</p>
+
+<p><strong>Read throttling configuration example:</strong></p>
+
+<div class="language-shell highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">$ </span>./run.sh shell
+<span class="o">&gt;&gt;&gt;</span> use temp
+OK
+<span class="o">&gt;&gt;&gt;</span> set_app_envs replica.read_throttling 1000<span class="k">*</span>delay<span class="k">*</span>100,2000<span class="k">*</span>reject<span class="k">*</span>200
+<span class="nb">set </span>app envs succeed
+<span class="o">&gt;&gt;&gt;</span> get_app_envs
+<span class="o">[</span>app_envs]
+replica.read_throttling           : 1000<span class="k">*</span>delay<span class="k">*</span>100,2000<span class="k">*</span>reject<span class="k">*</span>200
+</code></pre></div></div>
 
                 </div>
             </section>
@@ -777,7 +862,16 @@
     </span>
     Table of contents
 </p>
-
+<ul class="menu-list">
+  <li><a href="#background">Background</a></li>
+  <li><a href="#client-side-throttling">Client-side Throttling</a></li>
+  <li><a href="#server-side-throttling">Server-side Throttling</a>
+    <ul>
+      <li><a href="#table-write-throttling">Table Write Throttling</a></li>
+      <li><a href="#table-read-throttling">Table Read Throttling</a></li>
+    </ul>
+  </li>
+</ul>
 
         </div>
     </div>
