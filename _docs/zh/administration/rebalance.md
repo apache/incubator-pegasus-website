@@ -8,7 +8,7 @@ permalink: administration/rebalance
 
 在Pegasus中，负载均衡主要包括以下几个方面的内容：
 
-1. 如果某个partition分片不满足一主两备，要选择一个机器将缺失的分片补全。这个过程在Pegasus中叫做`cure`。
+1. 如果某个partition不满足一主两备，要选择一个机器将缺失的分片补全。这个过程在Pegasus中叫做`cure`。
 2. 当所有的分片都满足一主两备份后，对集群各个replica server上分片的个数做调整，尽量让每个机器上服务的分片数都维持在一个相近的水平上。这个过程在Pegasus中叫做`balance`。
 3. 如果一个replica server上挂载了多个磁盘，并且通过配置文件`data_dirs`提供给Pegasus使用。replica server要尽量让每个磁盘上分片的数量都维持在一个相近的水平上。
 
