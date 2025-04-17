@@ -332,7 +332,7 @@ If you need to use cluster-level load balancing, you need to modify the followin
 ```
 
 ## Design Section
-In the current implementation of the Pegasus balancer, the meta server will regularly evaluate the replica  distribution across of all replica servers. When it deems that the replicas are unevenly distributed across nodes, it will migrate the corresponding replicas.
+In the current implementation of the Pegasus balancer, the meta server will regularly evaluate the replica distribution across of all replica servers. When it deems that the replicas are unevenly distributed across nodes, it will migrate the corresponding replicas.
 The factors that need to be considered during the decision-making process of the balancer are as follows:
 - For any table, the partitions should be evenly distributed across nodes, which includes the following aspects:
   - The three replicas of a certain partition cannot all be located on one node.
