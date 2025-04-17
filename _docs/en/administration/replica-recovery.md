@@ -8,7 +8,7 @@ Generally speaking, data in Pegasus is stored with 3 replicas. For each partitio
 
 However, node failures, network issues, and heartbeat loss are inevitable in a cluster, leading to replica loss and affecting service availability. Pegasus has three detection mechanisms to identify replica loss:
 
-* 2PC timeout: Mainly ensures the health of the primary-secondary replica relationship. This is a replica-level failure detection, triggered each time a write enters the 2PC process.
+* 2PC timeout: Mainly ensures the health of the primary-secondary replica relationship. This is a replica-level failure detection, triggered each time a write enters the 2PC phase.
 
 * failure_detect: Uses a lease mechanism to ensure the connectivity between the meta server and replica server. This is a server-level failure detection mechanism that can quickly identify a node's availability issue. The default interval in production is 3 seconds.
 
