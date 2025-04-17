@@ -6,7 +6,7 @@ permalink: administration/replica-recovery
 
 Generally speaking, data in Pegasus is stored with 3 replicas. For each partition, under normal situation, there should be one primary replica and two secondary replicas, totaling three replicas providing service.
 
-However, node failures,network issues, and heartbeat loss are inevitable in a cluster, leading to replica loss and affecting service availability. Pegasus has three detection mechanisms to identify replica loss:
+However, node failures, network issues, and heartbeat loss are inevitable in a cluster, leading to replica loss and affecting service availability. Pegasus has three detection mechanisms to identify replica loss:
 
 * 2PC timeout: Mainly ensures the health of the primary-secondary replica relationship. This is a replica-level failure detection, triggered each time a write enters the 2PC process.
 
