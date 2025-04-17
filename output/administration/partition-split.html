@@ -3,7 +3,7 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Pegasus | Hotspot Detection</title>
+    <title>Pegasus | Partition Split</title>
     <link rel="stylesheet" href="/assets/css/app.css">
     <link rel="shortcut icon" href="/assets/images/favicon.ico">
     <link rel="stylesheet" href="/assets/css/utilities.min.css">
@@ -12,19 +12,19 @@
     <script src="/assets/js/all.min.js"></script>
     <script src="/assets/js/docsearch.v3.js"></script>
     <!-- Begin Jekyll SEO tag v2.8.0 -->
-<title>Hotspot Detection | Pegasus</title>
+<title>Partition Split | Pegasus</title>
 <meta name="generator" content="Jekyll v4.4.1" />
-<meta property="og:title" content="Hotspot Detection" />
+<meta property="og:title" content="Partition Split" />
 <meta property="og:locale" content="en_US" />
-<meta name="description" content="TRANSLATING" />
-<meta property="og:description" content="TRANSLATING" />
+<meta name="description" content="Feature Overview In Pegasus, the number of partitions in a table is specified at creation time and does not change dynamically. However, as the amount of data grows, some partitions may become too large, which can lead to degraded read and write performance. Therefore, it is necessary to manually increase the number of partitions to ensure service quality." />
+<meta property="og:description" content="Feature Overview In Pegasus, the number of partitions in a table is specified at creation time and does not change dynamically. However, as the amount of data grows, some partitions may become too large, which can lead to degraded read and write performance. Therefore, it is necessary to manually increase the number of partitions to ensure service quality." />
 <meta property="og:site_name" content="Pegasus" />
 <meta property="og:type" content="article" />
-<meta property="article:published_time" content="2025-04-15T10:31:50+00:00" />
+<meta property="article:published_time" content="2025-04-17T03:48:47+00:00" />
 <meta name="twitter:card" content="summary" />
-<meta property="twitter:title" content="Hotspot Detection" />
+<meta property="twitter:title" content="Partition Split" />
 <script type="application/ld+json">
-{"@context":"https://schema.org","@type":"BlogPosting","dateModified":"2025-04-15T10:31:50+00:00","datePublished":"2025-04-15T10:31:50+00:00","description":"TRANSLATING","headline":"Hotspot Detection","mainEntityOfPage":{"@type":"WebPage","@id":"/administration/partition-split"},"url":"/administration/partition-split"}</script>
+{"@context":"https://schema.org","@type":"BlogPosting","dateModified":"2025-04-17T03:48:47+00:00","datePublished":"2025-04-17T03:48:47+00:00","description":"Feature Overview In Pegasus, the number of partitions in a table is specified at creation time and does not change dynamically. However, as the amount of data grows, some partitions may become too large, which can lead to degraded read and write performance. Therefore, it is necessary to manually increase the number of partitions to ensure service quality.","headline":"Partition Split","mainEntityOfPage":{"@type":"WebPage","@id":"/administration/partition-split"},"url":"/administration/partition-split"}</script>
 <!-- End Jekyll SEO tag -->
 
 </head>
@@ -729,12 +729,121 @@
             <section class="hero is-info lg:mr-3">
                 <div class="hero-body">
                     
-                    <p class="title is-size-2 is-centered">Hotspot Detection</p>
+                    <p class="title is-size-2 is-centered">Partition-Split</p>
                 </div>
             </section>
             <section class="section" style="padding-top: 2rem;">
                 <div class="content">
-                    <p>TRANSLATING</p>
+                    <h1 id="feature-overview">Feature Overview</h1>
+<p>In Pegasus, the number of partitions in a table is specified at creation time and does not change dynamically. However, as the amount of data grows, some partitions may become too large, which can lead to degraded read and write performance. Therefore, it is necessary to manually increase the number of partitions to ensure service quality.</p>
+
+<p>In Pegasus’s design, the number of partitions is always a power of two. Currently, the split functionality doubles the number of partitions. Each partition(i) is split into partition(i) and partition(i + original_count).
+For example, if the original table has 4 partitions, after the split it will have 8 partitions:</p>
+<ul>
+  <li>partition(0) will be split into partition(0) and partition(4)</li>
+  <li>partition(1) into partition(1) and partition(5)</li>
+  <li>and so on.</li>
+</ul>
+
+<p>We refer to partition(i) as the parent partition, and partition(i + original_count) as the child partition.</p>
+
+<h1 id="command-description">Command Description</h1>
+<p><code class="language-plaintext highlighter-rouge">partition_split &lt;app_name&gt; &lt;new_partition_count&gt;</code></p>
+<ul>
+  <li>If the table is unavailable, return ERR_APP_NOT_EXIST</li>
+  <li>If new_partition_count != old_partition_count * 2, return ERR_INVALID_PARAMETERS</li>
+  <li>If the table is currently undergoing a split, return ERR_BUSY</li>
+  <li>If the split is successful, return ERR_OK</li>
+</ul>
+
+<h2 id="note">Note</h2>
+<ul>
+  <li>In versions 2.4 and 2.5, the split process may hang. It is recommended to upgrade to the latest version before performing a split.</li>
+</ul>
+
+<h1 id="design-and-implementation">Design and Implementation</h1>
+
+<h2 id="overall-process">Overall Process</h2>
+<p>The partition split process can be divided into the following steps:</p>
+<ol>
+  <li>The client sends a partition split request to the meta server.</li>
+  <li>The replica server detects the change in the number of table partitions through <code class="language-plaintext highlighter-rouge">config_sync</code> with the meta server.</li>
+  <li>Each parent partition asynchronously replicates all its data to create a corresponding child partition</li>
+  <li>Once all child partitions in a group are ready, the primary sends a request to the meta server to register the child partitions.</li>
+  <li>The meta server registers the child partitions.</li>
+  <li>After all child partitions have been registered, the split process is complete.</li>
+  <li>Invalid data is cleaned up. See <a href="#how-to-delete-invalid-data">How to Delete Invalid Data</a> for details.</li>
+</ol>
+
+<h2 id="reads-and-writes-during-the-partition-split-process">Reads and Writes During the Partition Split Process</h2>
+<p>During the partition split process, read and write operations can generally proceed as normal. But there is a brief period of service unavailability during the registration of child partitions.</p>
+
+<p>To illustrate, suppose the app initially has 4 partitions, which will be split into 8. Assume the data a client wants to access is originally served by partition(1), and after the split, it will be served by partition(5). From the beginning of the split process until the asynchronous learn phase is completed, partition(1) continues to serve the client. However, once the primary sends a request to the meta server to register the child partitions, partition(1) will reject client read/write requests until the registration is complete. After registration, the client is still unaware that the serving partition has changed to partition(5) and will continue to send requests to partition(1). At this point, partition(1) will notify the client to update its routing table. This update is transparent to the user. Overall, the period of unavailability is very short.</p>
+
+<h2 id="why-it-is-necessary-to-specify-the-number-of-partitions">Why It Is Necessary to Specify the Number of Partitions</h2>
+<p>Since the partition split operation cannot be canceled and there is no functionality to decrease the number of partitions, performing a split must be done with caution. Although each split operation currently only doubles the number of partitions, it is still necessary to explicitly specify the target partition count. This is to prevent the client from unintentionally retrying this non-idempotent operation multiple times, which could lead to the partition count increasing beyond what was intended.</p>
+
+<h2 id="how-to-delete-invalid-data">How to Delete Invalid Data</h2>
+<p>Before performing a partition split, ensure that more than 50% of disk space is available and that there is sufficient free memory. This is because the split operation involves copying data for each partition.
+After the split is completed, Pegasus will use RocksDB’s background filter mechanism to delete the invalid data generated during the split process.If disk resources are tight, or if you want to remove invalid data more quickly, you can use the manual_compact feature to manually trigger the filter when the cluster’s CPU is idle. For command details, refer to <a href="#usage-example">Usage Example</a>.</p>
+
+<h2 id="partition-split-and-hotspot-issues">Partition Split and Hotspot Issues</h2>
+
+<p>The partition split feature is primarily designed to ensure service quality in cases of unexpected data growth. However, it cannot fully resolve the issue of a single partition becoming a hotspot. Pegasus uses a hash-based sharding model. After a split, traffic is not guaranteed to be evenly distributed between the parent and child partitions — the distribution depends on the user’s hashkey. Therefore, while partition split can help alleviate hotspot issues, it is not a complete solution. Additionally, partition split is currently a table-level operation. Splitting individual partitions is not supported at this time.</p>
+
+<h1 id="usage-example">Usage Example</h1>
+<h2 id="executing-a-partition-split">Executing a Partition Split</h2>
+<p>Before performing a split, it is recommended to use the <code class="language-plaintext highlighter-rouge">app_stat</code> command to check the size of the table to be split. Then, execute the following command:</p>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>&gt;&gt;&gt; partition_split split_table 8
+split app split_table succeed
+</code></pre></div></div>
+<p>Use the shell tool to perform a partition split, changing the split_table partition count from 4 to 8</p>
+
+<h2 id="during-the-partition-split-process">During the Partition Split Process</h2>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>&gt;&gt;&gt; app split_table -d
+[Parameters]
+app_name: split_table
+detailed: true
+
+[Result]
+app_name          : split_table
+app_id            : 2
+partition_count   : 8
+max_replica_count : 3
+details           :
+pidx      ballot    replica_count       primary                                 secondaries                             
+0         3         3/3                 10.239.35.234:34802                     [10.239.35.234:34803,10.239.35.234:34801]
+1         3         3/3                 10.239.35.234:34803                     [10.239.35.234:34801,10.239.35.234:34802]
+2         3         3/3                 10.239.35.234:34801                     [10.239.35.234:34803,10.239.35.234:34802]
+3         3         3/3                 10.239.35.234:34802                     [10.239.35.234:34801,10.239.35.234:34803]
+4         -1        0/0                 -                                       []
+5         -1        0/0                 -                                       []
+6         -1        0/0                 -                                       []
+7         -1        0/0                 -                                       []
+
+node                                    primary   secondary total     
+10.239.35.234:34801                     1         3         4         
+10.239.35.234:34802                     2         2         4         
+10.239.35.234:34803                     1         3         4         
+                                        4         8         12        
+
+fully_healthy_partition_count   : 4
+unhealthy_partition_count       : 4
+write_unhealthy_partition_count : 4
+read_unhealthy_partition_count  : 4
+
+list app split_table succeed
+</code></pre></div></div>
+<p>Use the command <code class="language-plaintext highlighter-rouge">app &lt;table_name&gt; -d</code> to view detailed information about the current table. If a partition shows ballot = -1, it indicates that the partition has not yet been registered by the meta server.</p>
+
+<h2 id="partition-split-completed">Partition Split Completed</h2>
+<p>You can again use the command <code class="language-plaintext highlighter-rouge">app &lt;table_name&gt; -d</code> to check the table details. When you see that all ballot values are greater than 0, it means that all partitions have been successfully registered. If the current traffic is low, you may set the meta server to lively mode to enable load balancing.Also, use the <code class="language-plaintext highlighter-rouge">app_stat</code> command to check the size of the table — it should now be approximately twice the size compared to before the split.</p>
+
+<h2 id="manually-triggering-manual-compact">Manually Triggering Manual Compact</h2>
+<p>For more details on manual compaction, refer to <a href="manual-compact">Manual Compact</a>. It’s recommended to perform this operation when the cluster’s CPU is idle. Suggested command example:<br />
+<code class="language-plaintext highlighter-rouge">./scripts/pegasus_manual_compact.sh -c &lt;meta_list&gt; -a &lt;table_name&gt; --bottommost_level_compaction force</code><br />
+ Note: Be sure to include the –bottommost_level_compaction option. This ensures that all redundant data will be thoroughly cleaned up.</p>
+
 
                 </div>
             </section>
@@ -777,7 +886,31 @@
     </span>
     Table of contents
 </p>
-
+<ul class="menu-list">
+  <li><a href="#feature-overview">Feature Overview</a></li>
+  <li><a href="#command-description">Command Description</a>
+    <ul>
+      <li><a href="#note">Note</a></li>
+    </ul>
+  </li>
+  <li><a href="#design-and-implementation">Design and Implementation</a>
+    <ul>
+      <li><a href="#overall-process">Overall Process</a></li>
+      <li><a href="#reads-and-writes-during-the-partition-split-process">Reads and Writes During the Partition Split Process</a></li>
+      <li><a href="#why-it-is-necessary-to-specify-the-number-of-partitions">Why It Is Necessary to Specify the Number of Partitions</a></li>
+      <li><a href="#how-to-delete-invalid-data">How to Delete Invalid Data</a></li>
+      <li><a href="#partition-split-and-hotspot-issues">Partition Split and Hotspot Issues</a></li>
+    </ul>
+  </li>
+  <li><a href="#usage-example">Usage Example</a>
+    <ul>
+      <li><a href="#executing-a-partition-split">Executing a Partition Split</a></li>
+      <li><a href="#during-the-partition-split-process">During the Partition Split Process</a></li>
+      <li><a href="#partition-split-completed">Partition Split Completed</a></li>
+      <li><a href="#manually-triggering-manual-compact">Manually Triggering Manual Compact</a></li>
+    </ul>
+  </li>
+</ul>
 
         </div>
     </div>

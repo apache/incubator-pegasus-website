@@ -16,15 +16,15 @@
 <meta name="generator" content="Jekyll v4.4.1" />
 <meta property="og:title" content="Hotspot Detection" />
 <meta property="og:locale" content="en_US" />
-<meta name="description" content="功能简介 Pegasus 是一个以 Hash 分片打散数据的分布式存储系统。通常情况下，流量会均匀地打在集群中的所有节点上。但是在极端情况下，比如 Hashkey 设计不合理、出现了热点事件/热点用户、业务代码逻辑错误等场景下，Pegasus 单机节点往往会负载过高从而影响服务整体的可用性。于是我们设计了一套热点检测方案帮助运维人员能及时发现热点问题并找出热点流量。" />
-<meta property="og:description" content="功能简介 Pegasus 是一个以 Hash 分片打散数据的分布式存储系统。通常情况下，流量会均匀地打在集群中的所有节点上。但是在极端情况下，比如 Hashkey 设计不合理、出现了热点事件/热点用户、业务代码逻辑错误等场景下，Pegasus 单机节点往往会负载过高从而影响服务整体的可用性。于是我们设计了一套热点检测方案帮助运维人员能及时发现热点问题并找出热点流量。" />
+<meta name="description" content="Background Pegasus is a distributed storage system that shards data using Hash partitioning. Normally, traffic is evenly distributed across all nodes in the cluster. However, in extreme cases such as improper Hashkey design, hotspot events/users, or business logic errors, individual Pegasus nodes may experience excessive load, affecting overall service availability. Therefore, we designed a hotspot detection solution to help operators promptly identify hotspot issues and locate hotspot traffic." />
+<meta property="og:description" content="Background Pegasus is a distributed storage system that shards data using Hash partitioning. Normally, traffic is evenly distributed across all nodes in the cluster. However, in extreme cases such as improper Hashkey design, hotspot events/users, or business logic errors, individual Pegasus nodes may experience excessive load, affecting overall service availability. Therefore, we designed a hotspot detection solution to help operators promptly identify hotspot issues and locate hotspot traffic." />
 <meta property="og:site_name" content="Pegasus" />
 <meta property="og:type" content="article" />
-<meta property="article:published_time" content="2025-04-15T10:31:50+00:00" />
+<meta property="article:published_time" content="2025-04-17T03:48:47+00:00" />
 <meta name="twitter:card" content="summary" />
 <meta property="twitter:title" content="Hotspot Detection" />
 <script type="application/ld+json">
-{"@context":"https://schema.org","@type":"BlogPosting","dateModified":"2025-04-15T10:31:50+00:00","datePublished":"2025-04-15T10:31:50+00:00","description":"功能简介 Pegasus 是一个以 Hash 分片打散数据的分布式存储系统。通常情况下，流量会均匀地打在集群中的所有节点上。但是在极端情况下，比如 Hashkey 设计不合理、出现了热点事件/热点用户、业务代码逻辑错误等场景下，Pegasus 单机节点往往会负载过高从而影响服务整体的可用性。于是我们设计了一套热点检测方案帮助运维人员能及时发现热点问题并找出热点流量。","headline":"Hotspot Detection","mainEntityOfPage":{"@type":"WebPage","@id":"/administration/hotspot-detection"},"url":"/administration/hotspot-detection"}</script>
+{"@context":"https://schema.org","@type":"BlogPosting","dateModified":"2025-04-17T03:48:47+00:00","datePublished":"2025-04-17T03:48:47+00:00","description":"Background Pegasus is a distributed storage system that shards data using Hash partitioning. Normally, traffic is evenly distributed across all nodes in the cluster. However, in extreme cases such as improper Hashkey design, hotspot events/users, or business logic errors, individual Pegasus nodes may experience excessive load, affecting overall service availability. Therefore, we designed a hotspot detection solution to help operators promptly identify hotspot issues and locate hotspot traffic.","headline":"Hotspot Detection","mainEntityOfPage":{"@type":"WebPage","@id":"/administration/hotspot-detection"},"url":"/administration/hotspot-detection"}</script>
 <!-- End Jekyll SEO tag -->
 
 </head>
@@ -734,85 +734,87 @@
             </section>
             <section class="section" style="padding-top: 2rem;">
                 <div class="content">
-                    <h1 id="功能简介">功能简介</h1>
-<p>Pegasus 是一个以 <code class="language-plaintext highlighter-rouge">Hash</code> 分片打散数据的分布式存储系统。通常情况下，流量会均匀地打在集群中的所有节点上。但是在极端情况下，比如 <code class="language-plaintext highlighter-rouge">Hashkey</code> 设计不合理、出现了热点事件/热点用户、业务代码逻辑错误等场景下，Pegasus 单机节点往往会负载过高从而影响服务整体的可用性。于是我们设计了一套热点检测方案帮助运维人员能及时发现热点问题并找出热点流量。</p>
+                    <h1 id="background">Background</h1>
+<p>Pegasus is a distributed storage system that shards data using <code class="language-plaintext highlighter-rouge">Hash</code> partitioning. Normally, traffic is evenly distributed across all nodes in the cluster. However, in extreme cases such as improper <code class="language-plaintext highlighter-rouge">Hashkey</code> design, hotspot events/users, or business logic errors, individual Pegasus nodes may experience excessive load, affecting overall service availability. Therefore, we designed a hotspot detection solution to help operators promptly identify hotspot issues and locate hotspot traffic.</p>
 
-<h1 id="热点分片查询">热点分片查询</h1>
+<h1 id="hot-partition-detection">Hot Partition Detection</h1>
 
-<h2 id="设计原理">设计原理</h2>
-<p>Pegasus服务端主要有三个组件：Meta，Replica和Collector。其中Collector负责从Replica中获取Metric信息并上报给监控平台、集群可用性探测等功能。</p>
+<h2 id="design-and-implementation">Design and Implementation</h2>
+<p>Pegasus server consists of three main components: Meta, Replica, and Collector. The Collector is responsible for fetching metrics from Replica and reporting them to the monitoring platform, as well as cluster availability detection.</p>
 
-<p>此功能中，Collector 周期性从集群拿到的各个分片的读写流量进行数据分析，对每个分片通过纵向的历史数据和横向同期数据对比，计算 <a href="https://en.wikipedia.org/wiki/Standard_score">Z-score</a> 用来描述分片的热点情况。在开启 <code class="language-plaintext highlighter-rouge">enable_hotkey_auto_detect</code> 选项后，Collector 会自动向热点分片发送 <a href="#热点流量查询">热点流量查询</a> 请求，统计当前异常的热点流量，并将结果上报到监控平台（Falcon）。</p>
+<p>In this feature, the Collector periodically collects read/write traffic metrics from each partition in the cluster for analysis. It calculates the <a href="https://en.wikipedia.org/wiki/Standard_score">Z-score</a> for each partition by comparing historical data vertically and concurrent data horizontally to describe the hotspot status. When <code class="language-plaintext highlighter-rouge">enable_hotkey_auto_detect</code> is enabled, the Collector will automatically send <a href="#hotkey-detection">Hotkey Detection</a> requests to hot partitions to identify abnormal hotspot traffic and report results to the monitoring platform (Falcon).</p>
 
-<h2 id="操作示例">操作示例</h2>
-<p>在配置文件中添加以下几个配置项，然后重启 Collector：</p>
+<h2 id="usage-example">Usage Example</h2>
+<p>Add the following configurations to the config file and restart the Collector:</p>
 <div class="language-shell highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="o">[</span>pegasus.collector]
-<span class="c"># 开启热点流量自动检测功能，当热点分片被确认之后,</span>
-<span class="c"># Collector 会向对应的分片发送热点流量查询请求</span>
+<span class="c"># Enable automatic hotkey detection. When a hot partition is confirmed,</span>
+<span class="c"># the Collector will send hotkey detection requests to the corresponding partition</span>
 enable_hotkey_auto_detect <span class="o">=</span> <span class="nb">true</span>
 
-<span class="c"># 热点分片阈值(Z-score)为 3。在这里可以理解为算法的灵敏度，</span>
-<span class="c"># 超过阈值的会被判定成热点分片。</span>
-<span class="c"># 在测试中，我们认为阈值设为 3 为比较合理的选项。</span>
+<span class="c"># Hot partition threshold (Z-score) is 3. This can be understood as the algorithm's sensitivity.</span>
+<span class="c"># Partitions exceeding this threshold will be identified as hot partitions.</span>
+<span class="c"># In testing, we found a threshold of 3 to be reasonable.</span>
 hot_partition_threshold <span class="o">=</span> 3
 
-<span class="c"># 单个分片被判定为热点的累积次数超过这个值就会触发热点流量自动检测。</span>
+<span class="c"># When a partition is identified as hot for more than this count, automatic hotkey detection will be triggered.</span>
 occurrence_threshold <span class="o">=</span> 100
 </code></pre></div></div>
 
-<h2 id="相关监控">相关监控</h2>
+<h2 id="related-metrics">Related Metrics</h2>
 
-<p>在Falcon中依据此Metric即可查到是否目标机器存在热点，<code class="language-plaintext highlighter-rouge">hotkey_type</code> 分为 <code class="language-plaintext highlighter-rouge">read</code> 和 <code class="language-plaintext highlighter-rouge">write</code> 分别代表读/写热点。</p>
+<p>In Falcon, you can check if target machines have hotspots using this metric. <code class="language-plaintext highlighter-rouge">hotkey_type</code> can be <code class="language-plaintext highlighter-rouge">read</code> or <code class="language-plaintext highlighter-rouge">write</code>, representing read/write hotspots respectively.</p>
 
 <div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>app.stat.hotspots@{app_name}.{hotkey_type}.{partition_count}
 </code></pre></div></div>
-<h1 id="热点流量查询">热点流量查询</h1>
-<h2 id="设计原理-1">设计原理</h2>
-<p>此功能可确认某一个分片热点的具体<code class="language-plaintext highlighter-rouge">Hashkey</code>。 Replica 收到对应分片的热点流量查询请求后，会记录统计一段时间的流量，从而分析出具体的热点流量。如果周期时间内找不到热点流量，收集会自动停止。</p>
 
-<h2 id="操作示例-1">操作示例</h2>
-<p><strong>开启热点流量检测</strong></p>
+<h1 id="hotkey-detection">Hotkey Detection</h1>
+<h2 id="design-principle">Design Principle</h2>
+<p>This feature identifies specific <code class="language-plaintext highlighter-rouge">Hashkey</code>s causing partition hotspots. When receiving a hotkey detection request, the Replica will record and analyze traffic for a period to identify hotspot traffic. If no hotspot is found within the cycle, collection will automatically stop.</p>
 
-<p>你需要在命令行中添加探测表的 <code class="language-plaintext highlighter-rouge">app_id</code>、分片号、热点数据类型、需要探测的节点地址</p>
+<h2 id="usage-example-1">Usage Example</h2>
+<p><strong>Start hotkey detection</strong></p>
+
+<p>You need to specify the <code class="language-plaintext highlighter-rouge">app_id</code>, partition number, hotspot type, and target node address:</p>
 <div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>&gt;&gt;&gt; detect_hotkey -a 3 -p 1 -t write -c start -d 10.231.57.104:34802
 Detect hotkey rpc is starting, use 'detect_hotkey -a 3 -p 1 -t write -c query -d 10.231.57.104:34802' to get the result later
 </code></pre></div></div>
-<p><strong>查询热点流量结果</strong></p>
 
-<p>当热点流量检测未结束时，会受到如下提示：</p>
+<p><strong>Query hotkey detection result</strong></p>
+
+<p>When detection is still in progress:</p>
 <div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>&gt;&gt;&gt; detect_hotkey -a 3 -p 2 -t write -c query -d 10.231.57.104:34802
 Hotkey detection performed failed, in 584.78, error_hint:ERR_BUSY Can't get hotkey now, now state: hotkey_collector_state::COARSE_DETECTING
 &gt;&gt;&gt; detect_hotkey -a 3 -p 2 -t write -c query -d 10.231.57.104:34802
 Hotkey detection performed failed, in 584.78, error_hint:ERR_BUSY Can't get hotkey now, now state: hotkey_collector_state::FINE_DETECTING
 </code></pre></div></div>
 
-<p>成功获取到热点流量 <code class="language-plaintext highlighter-rouge">hashkey = Thisishotkey1</code>，后的结果：</p>
+<p>When successfully detecting hotkey <code class="language-plaintext highlighter-rouge">hashkey = Thisishotkey1</code>:</p>
 <div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>&gt;&gt;&gt; detect_hotkey -a 3 -p 2 -t write -c query -d 10.231.57.104:34802
 Find write hotkey in 3.2 result:\"Thisishotkey1\"
 </code></pre></div></div>
 
-<p>周期内无法检测到热点流量的结果：</p>
+<p>When no hotspot is detected within the cycle:</p>
 <div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>&gt;&gt;&gt; detect_hotkey -a 3 -p 2 -t write -c query -d 10.231.57.104:34803
 Hotkey detect rpc performed failed, in 3.2, error_hint:ERR_BUSY Can't get hotkey now, now state: hotkey_collector_state::STOPPED
 </code></pre></div></div>
 
-<p><strong>结束热点流量检测</strong></p>
+<p><strong>Stop hotkey detection</strong></p>
 <div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>&gt;&gt;&gt; detect_hotkey -a 3 -p 2 -t write -c stop -d 10.231.57.104:34803
 Detect hotkey rpc is stopped now
 </code></pre></div></div>
-<p>注意：无论是检测成功还是检测失败都要先 <code class="language-plaintext highlighter-rouge">stop</code> 这次探测才能开始下一次探测。</p>
+<p>Note: Whether detection succeeds or fails, you must <code class="language-plaintext highlighter-rouge">stop</code> the current detection before starting a new one.</p>
 
-<h2 id="相关配置">相关配置</h2>
+<h2 id="related-configurations">Related Configurations</h2>
 <div class="language-shell highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="o">[</span>pegasus.server]
-<span class="c"># 粗粒度筛查热点流量的阈值，灵敏度负相关</span>
+<span class="c"># Threshold for coarse-grained hotkey detection (inversely proportional to sensitivity)</span>
 hot_key_variance_threshold <span class="o">=</span> 5
-<span class="c"># 细粒度筛查热点流量的阈值，灵敏度负相关</span>
+<span class="c"># Threshold for fine-grained hotkey detection (inversely proportional to sensitivity)</span>
 hot_bucket_variance_threshold <span class="o">=</span> 7
-<span class="c"># 设置为负数，一般不推荐改动</span>
+<span class="c"># Set to negative value, generally not recommended to modify</span>
 hotkey_buckets_num <span class="o">=</span> 37
-<span class="c"># 一次探测最长时间</span>
+<span class="c"># Maximum duration for a single detection</span>
 max_seconds_to_detect_hotkey <span class="o">=</span> 150
-<span class="c"># 单次探测收集时间周期</span>
+<span class="c"># Collection time interval for each detection cycle</span>
 hotkey_analyse_time_interval_s <span class="o">=</span> 10
 </code></pre></div></div>
 
@@ -858,19 +860,19 @@ hotkey_analyse_time_interval_s <span class="o">=</span> 10
     Table of contents
 </p>
 <ul class="menu-list">
-  <li><a href="#功能简介">功能简介</a></li>
-  <li><a href="#热点分片查询">热点分片查询</a>
+  <li><a href="#background">Background</a></li>
+  <li><a href="#hot-partition-detection">Hot Partition Detection</a>
     <ul>
-      <li><a href="#设计原理">设计原理</a></li>
-      <li><a href="#操作示例">操作示例</a></li>
-      <li><a href="#相关监控">相关监控</a></li>
+      <li><a href="#design-and-implementation">Design and Implementation</a></li>
+      <li><a href="#usage-example">Usage Example</a></li>
+      <li><a href="#related-metrics">Related Metrics</a></li>
     </ul>
   </li>
-  <li><a href="#热点流量查询">热点流量查询</a>
+  <li><a href="#hotkey-detection">Hotkey Detection</a>
     <ul>
-      <li><a href="#设计原理-1">设计原理</a></li>
-      <li><a href="#操作示例-1">操作示例</a></li>
-      <li><a href="#相关配置">相关配置</a></li>
+      <li><a href="#design-principle">Design Principle</a></li>
+      <li><a href="#usage-example-1">Usage Example</a></li>
+      <li><a href="#related-configurations">Related Configurations</a></li>
     </ul>
   </li>
 </ul>
