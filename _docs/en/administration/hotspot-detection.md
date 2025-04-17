@@ -92,3 +92,4 @@ hotkey_buckets_num = 37
 max_seconds_to_detect_hotkey = 150
 # Collection time interval for each detection cycle
 hotkey_analyse_time_interval_s = 10
+```
