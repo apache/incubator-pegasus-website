@@ -16,15 +16,15 @@
 <meta name="generator" content="Jekyll v4.4.1" />
 <meta property="og:title" content="Table Soft Delete" />
 <meta property="og:locale" content="en_US" />
-<meta name="description" content="TRANSLATING" />
-<meta property="og:description" content="TRANSLATING" />
+<meta name="description" content="Background Soft delete is primarily used to prevent accidental permanent data deletion. Specifically, soft delete should provide the following functionality: When a user deletes a specified table, the table becomes inaccessible. Deleted tables are not immediately physically removed but retained for a period of time. After the deleted table expires (exceeds retention time), data is physically deleted, though the actual deletion time depends on other factors (see Garbage Folder Management). Unexpired tables can be recovered and then accessed normally for read/write operations." />
+<meta property="og:description" content="Background Soft delete is primarily used to prevent accidental permanent data deletion. Specifically, soft delete should provide the following functionality: When a user deletes a specified table, the table becomes inaccessible. Deleted tables are not immediately physically removed but retained for a period of time. After the deleted table expires (exceeds retention time), data is physically deleted, though the actual deletion time depends on other factors (see Garbage Folder Management). Unexpired tables can be recovered and then accessed normally for read/write operations." />
 <meta property="og:site_name" content="Pegasus" />
 <meta property="og:type" content="article" />
-<meta property="article:published_time" content="2025-04-17T04:25:03+00:00" />
+<meta property="article:published_time" content="2025-04-18T04:14:19+00:00" />
 <meta name="twitter:card" content="summary" />
 <meta property="twitter:title" content="Table Soft Delete" />
 <script type="application/ld+json">
-{"@context":"https://schema.org","@type":"BlogPosting","dateModified":"2025-04-17T04:25:03+00:00","datePublished":"2025-04-17T04:25:03+00:00","description":"TRANSLATING","headline":"Table Soft Delete","mainEntityOfPage":{"@type":"WebPage","@id":"/administration/table-soft-delete"},"url":"/administration/table-soft-delete"}</script>
+{"@context":"https://schema.org","@type":"BlogPosting","dateModified":"2025-04-18T04:14:19+00:00","datePublished":"2025-04-18T04:14:19+00:00","description":"Background Soft delete is primarily used to prevent accidental permanent data deletion. Specifically, soft delete should provide the following functionality: When a user deletes a specified table, the table becomes inaccessible. Deleted tables are not immediately physically removed but retained for a period of time. After the deleted table expires (exceeds retention time), data is physically deleted, though the actual deletion time depends on other factors (see Garbage Folder Management). Unexpired tables can be recovered and then accessed normally for read/write operations.","headline":"Table Soft Delete","mainEntityOfPage":{"@type":"WebPage","@id":"/administration/table-soft-delete"},"url":"/administration/table-soft-delete"}</script>
 <!-- End Jekyll SEO tag -->
 
 </head>
@@ -734,7 +734,130 @@
             </section>
             <section class="section" style="padding-top: 2rem;">
                 <div class="content">
-                    <p>TRANSLATING</p>
+                    <h1 id="background">Background</h1>
+<p>Soft delete is primarily used to prevent accidental permanent data deletion. Specifically, soft delete should provide the following functionality:</p>
+<ul>
+  <li>When a user deletes a specified table, the table becomes inaccessible.</li>
+  <li>Deleted tables are not immediately physically removed but retained for a period of time.</li>
+  <li>After the deleted table expires (exceeds retention time), data is physically deleted, though the actual deletion time depends on other factors (see <a href="resource-management#garbage-folder-management">Garbage Folder Management</a>).</li>
+  <li>Unexpired tables can be recovered and then accessed normally for read/write operations.</li>
+</ul>
+
+<h1 id="commands">Commands</h1>
+<p>The shell provides <code class="language-plaintext highlighter-rouge">drop</code> and <code class="language-plaintext highlighter-rouge">recall</code> commands to support soft delete.</p>
+
+<h2 id="using-drop-command-to-delete-table">Using drop Command to Delete Table</h2>
+<p>Usage:</p>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>drop                   &lt;app_name&gt; [-r|--reserve_seconds num]
+</code></pre></div></div>
+
+<p>The drop command deletes a table, with the <code class="language-plaintext highlighter-rouge">-r</code> option specifying data retention time in seconds from deletion time. If unspecified, uses the <code class="language-plaintext highlighter-rouge">hold_seconds_for_dropped_app</code> config value (default: 7 days).</p>
+
+<p>After successful deletion:</p>
+<ul>
+  <li>Accessing the table returns <code class="language-plaintext highlighter-rouge">ERR_OBJECT_NOT_FOUND</code>.</li>
+  <li>The deleted table won’t appear in shell <code class="language-plaintext highlighter-rouge">ls</code> output.</li>
+  <li>Deleted tables are visible with <code class="language-plaintext highlighter-rouge">ls -a</code>.</li>
+  <li>Deleted table IDs aren’t reused to prevent conflicts during recovery.</li>
+  <li>New tables can be created with the same name, which clients will access.</li>
+</ul>
+
+<h2 id="physical-deletion-of-expired-tables">Physical Deletion of Expired Tables</h2>
+<p>Expired table data may not be immediately physically deleted because:</p>
+<ul>
+  <li>After retention expires, meta server must be in <a href="rebalance#cluster-load-balancing-control">load balancing mode</a> (<code class="language-plaintext highlighter-rouge">set_meta_level lively</code>) to notify replica servers via <code class="language-plaintext highlighter-rouge">config_sync</code> RPC. Replica servers then rename replica folders with <code class="language-plaintext highlighter-rouge">.gar</code> suffix to mark them as deletable, though data remains.</li>
+  <li>Replica servers periodically scan data folders (config <code class="language-plaintext highlighter-rouge">disk_stat_interval_seconds</code>) and compare <code class="language-plaintext highlighter-rouge">.gar</code> folder modification times against current time. Only when the difference exceeds threshold (config <code class="language-plaintext highlighter-rouge">gc_disk_garbage_replica_interval_seconds</code>) are folders deleted.</li>
+</ul>
+
+<p>Key configurations affecting physical deletion timing:</p>
+<ul>
+  <li><code class="language-plaintext highlighter-rouge">[meta_server] hold_seconds_for_dropped_app</code>: Retention time when <code class="language-plaintext highlighter-rouge">-r</code> isn’t specified.</li>
+  <li><code class="language-plaintext highlighter-rouge">[replication] disk_stat_interval_seconds</code>: Interval for scanning data folders.</li>
+  <li><code class="language-plaintext highlighter-rouge">[replication] gc_disk_garbage_replica_interval_seconds</code>: Threshold for deleting garbage folders.</li>
+</ul>
+
+<p>Warning for manual deletion:</p>
+<ul>
+  <li>Only delete expired tables when absolutely necessary.</li>
+  <li>Never delete non-expired tables.</li>
+  <li>Avoid accidental deletion of other tables.</li>
+</ul>
+
+<h2 id="using-recall-command-to-recover-table">Using recall Command to Recover Table</h2>
+<p>Usage:</p>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>recall                 &lt;app_id&gt; [new_app_name]
+</code></pre></div></div>
+
+<p>Recovery is possible before retention expires:</p>
+<ul>
+  <li>Requires table ID.</li>
+  <li>Optional new table name (uses original name if unspecified).</li>
+  <li>Must specify different name if original exists.</li>
+  <li>Recovery may take time.</li>
+</ul>
+
+<h2 id="example">Example</h2>
+<p>Example workflow deleting mytable and recovering as mytable2:</p>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>&gt;&gt;&gt; ls
+app_id    status              app_name            app_type            partition_count     replica_count       is_stateful         drop_expire_time    envs_count          
+1         AVAILABLE           temp                pegasus             8                   3                   true                -                   0                   
+2         AVAILABLE           mytable             pegasus             8                   3                   true                -                   0                   
+
+list apps succeed
+
+&gt;&gt;&gt; drop mytable
+reserve_seconds = 0
+drop app mytable succeed
+
+&gt;&gt;&gt; ls
+app_id    status              app_name            app_type            partition_count     replica_count       is_stateful         drop_expire_time    envs_count          
+1         AVAILABLE           temp                pegasus             8                   3                   true                -                   0                   
+
+list apps succeed
+
+&gt;&gt;&gt; ls -a
+app_id    status              app_name            app_type            partition_count     replica_count       is_stateful         drop_expire_time    envs_count          
+1         AVAILABLE           temp                pegasus             8                   3                   true                -                   0                   
+2         DROPPED             mytable             pegasus             8                   3                   true                2018-07-28 19:07:21 0                   
+
+list apps succeed
+
+&gt;&gt;&gt; recall 2 mytable2
+recall app ok, id(2), name(mytable2), partition_count(8), wait it ready
+mytable2 not ready yet, still waiting... (0/8)
+mytable2 not ready yet, still waiting... (0/8)
+mytable2 not ready yet, still waiting... (0/8)
+mytable2 not ready yet, still waiting... (0/8)
+mytable2 not ready yet, still waiting... (0/8)
+mytable2 not ready yet, still waiting... (0/8)
+mytable2 not ready yet, still waiting... (0/8)
+mytable2 not ready yet, still waiting... (0/8)
+mytable2 not ready yet, still waiting... (7/8)
+mytable2 is ready now: (8/8)
+recall app 2 succeed
+
+&gt;&gt;&gt; ls
+app_id    status              app_name            app_type            partition_count     replica_count       is_stateful         drop_expire_time    envs_count          
+1         AVAILABLE           temp                pegasus             8                   3                   true                -                   0                   
+2         AVAILABLE           mytable2            pegasus             8                   3                   true                -                   0                   
+
+list apps succeed
+</code></pre></div></div>
+
+<h1 id="design-and-implementation">Design and Implementation</h1>
+<p>Key points:</p>
+<ul>
+  <li>Clear table lifecycle definition: Block create/recall/drop operations during deletion/recovery.</li>
+  <li>Synchronize expiration times across meta servers (requires clock synchronization).</li>
+  <li>Handle out-of-order drop/recall operations at replica servers by mapping drops to replica configuration metadata changes.</li>
+</ul>
+
+<p>Implementation highlights:</p>
+<ul>
+  <li>Meta server response to deletion: Update ZooKeeper with (1) app status-&gt;dropped + expiration (2) configuration state.</li>
+  <li>Replica lifecycle changes: Replica servers periodically sync with meta server to remove local replicas no longer existing remotely.</li>
+  <li>Expired data deletion: Meta server commands replica servers to delete invalid replicas reported during heartbeat.</li>
+</ul>
 
                 </div>
             </section>
@@ -777,7 +900,18 @@
     </span>
     Table of contents
 </p>
-
+<ul class="menu-list">
+  <li><a href="#background">Background</a></li>
+  <li><a href="#commands">Commands</a>
+    <ul>
+      <li><a href="#using-drop-command-to-delete-table">Using drop Command to Delete Table</a></li>
+      <li><a href="#physical-deletion-of-expired-tables">Physical Deletion of Expired Tables</a></li>
+      <li><a href="#using-recall-command-to-recover-table">Using recall Command to Recover Table</a></li>
+      <li><a href="#example">Example</a></li>
+    </ul>
+  </li>
+  <li><a href="#design-and-implementation">Design and Implementation</a></li>
+</ul>
 
         </div>
     </div>
