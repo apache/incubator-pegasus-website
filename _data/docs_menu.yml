@@ -15,7 +15,7 @@
     - name: title_cpp-client
       link: /clients/cpp-client
     - name: title_go-client
-      link: https://github.com/apache/incubator-pegasus/tree/master/go-client
+      link: /clients/go-client
     - name: title_python-client
       link: /clients/python-client
     - name: title_node-client
