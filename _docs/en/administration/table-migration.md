@@ -17,7 +17,7 @@ Below, we explain the principles and step-by-step operations of each migration m
 
 ## Principle
 
-The Shell tool’s [copy_data command](/overview/shell#copy_data) works by reading each record from the source table via the client and writing it one by one into the target table. Specifically, it uses the `scan` interface to fetch entries from the table in the source cluster, then uses the `set` interface to insert or overwrite entries in the target cluster’s table.
+The Shell tool’ s [copy_data command](/overview/shell#copy_data) works by reading each record from the source table via the client and writing it one by one into the target table. Specifically, it uses the `scan` interface to fetch entries from the table in the source cluster, then uses the `set` interface to insert or overwrite entries in the target cluster’ s table.
 
 ## Step‑by‑Step Operation
 
@@ -39,10 +39,10 @@ copy_data              <-c|--target_cluster_name str> <-a|--target_app_name str>
 Assume the source cluster is `ClusterA`, the target cluster is `ClusterB`, and the table to migrate is `TableA`. The migration steps are:
 
 1. **Create the table on the target cluster.**  
-   The `copy_data` command does not auto-create tables on the target cluster. You must manually create a table (for example, named `TableB`). The new table’s name and partition count may differ from the original.
+   The `copy_data` command does not auto-create tables on the target cluster. You must manually create a table (for example, named `TableB`). The new table’ s name and partition count may differ from the original.
 
 2. **Add the target cluster’s configuration to the Shell config file.**  
-   Since you specify the target cluster with `-c`, you need to list `ClusterB`’s MetaServer addresses in `src/shell/config.ini`. In the Shell working directory, append:
+   Since you specify the target cluster with `-c`, you need to list `ClusterB`’ s MetaServer addresses in `src/shell/config.ini`. In the Shell working directory, append:
 
    ```ini
    [pegasus.clusters]
@@ -63,7 +63,7 @@ Assume the source cluster is `ClusterA`, the target cluster is `ClusterB`, and t
 
 ## Principle
 
-Cold backup migration uses Pegasus’s [cold backup feature](/administration/cold-backup) to back up data to HDFS (or other storage) and then restore or bulkload it into the new table.
+Cold backup migration uses Pegasus’ s [cold backup feature](/administration/cold-backup) to back up data to HDFS (or other storage) and then restore or bulkload it into the new table.
 
 **Advantages of cold backup migration:**
 
@@ -95,13 +95,13 @@ Cold backup migration uses Pegasus’s [cold backup feature](/administration/col
 - **Initiate the backup via `admin-cli`, specifying table ID, HDFS region, and path:**
 
   ```shell
-  backup 3 hdfs_xxx /user/pegasus/backup
+  backup 3 hdfs_xyz /user/pegasus/backup
   ```
 
-  The `hdfs_xxx` region is defined in `config.ini`:
+  The `hdfs_xyz` region is defined in `config.ini`:
 
   ```ini
-  [block_service.hdfs_xxx]
+  [block_service.hdfs_xyz]
   type = hdfs_service
   args = hdfs://xxxprc-hadoop/
   ```
@@ -132,13 +132,13 @@ Cold backup migration uses Pegasus’s [cold backup feature](/administration/col
 
 2. **Using Bulkload:**  
 
-   - Convert cold backup files to Bulkload format via Pegasus-spark’s offline split.  
+   - Convert cold backup files to Bulkload format via Pegasus-spark’ s offline split.  
    - In Shell, run:
 
      ```shell
      >>> use TableB
      >>> set_app_envs rocksdb.usage_scenario bulk_load
-     >>> start_bulk_load -a TableB -c ClusterB -p hdfs_xxx -r /user/pegasus/split
+     >>> start_bulk_load -a TableB -c ClusterB -p hdfs_xyz -r /user/pegasus/split
      ```
 
 # Dual‑Write with Bulkload
@@ -150,7 +150,7 @@ Both `copy_data` and cold backup migrate only existing data; incremental writes 
 - **Dual‑write:** from the application to both the source and target tables, ensuring real‑time sync of new writes.  
 - **Bulkload:** existing data via cold backup, offline split, and `IngestBehind`, ensuring correct ordering between old and new data.
 
-RocksDB’s `IngestBehind` assigns a global sequence number of 0 to ingested SST files, placing them below existing data so that incremental writes (with higher sequence numbers) remain in order.
+RocksDB’ s `IngestBehind` assigns a global sequence number of 0 to ingested SST files, placing them below existing data so that incremental writes (with higher sequence numbers) remain in order.
 
 ## Step‑by‑Step Operation
 
@@ -167,7 +167,7 @@ RocksDB’s `IngestBehind` assigns a global sequence number of 0 to ingested SST
    ```shell
    >>> use TableB
    >>> set_app_envs rocksdb.usage_scenario bulk_load
-   >>> start_bulk_load -a TableB -c ClusterB -p hdfs_xxx -r /user/pegasus/split --ingest_behind
+   >>> start_bulk_load -a TableB -c ClusterB -p hdfs_xyz -r /user/pegasus/split --ingest_behind
    ```
 
 - **Rate‑limit Bulkload network I/O as needed.** 
@@ -180,11 +180,11 @@ From version `v2.4.x`, Pegasus supports hot backup. See [Cross‑datacenter Repl
 ## Step‑by‑Step Operation
 
 - **Replace ip straigt**  
-   Route all clients through `MetaProxy`—no direct MetaServer IPs allowed.  
+   Route all clients through `MetaProxy`— no direct MetaServer IPs allowed.  
 - **Start backup**  
    Establish hot backup from source to target cluster (setup omitted).  
 - **Switch ZooKeeper**  
-   Switch `MetaProxy` in ZooKeeper to point to the target cluster’s MetaServer addresses.  
+   Switch `MetaProxy` in ZooKeeper to point to the target cluster’ s MetaServer addresses.  
 - **Refresh topology**  
    Block reads/writes on the source table to force clients to refresh topology.
 
