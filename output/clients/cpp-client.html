@@ -16,15 +16,15 @@
 <meta name="generator" content="Jekyll v4.4.1" />
 <meta property="og:title" content="Cpp Client" />
 <meta property="og:locale" content="en_US" />
-<meta name="description" content="TRANSLATING" />
-<meta property="og:description" content="TRANSLATING" />
+<meta name="description" content="Obtain Pegasus C++ client" />
+<meta property="og:description" content="Obtain Pegasus C++ client" />
 <meta property="og:site_name" content="Pegasus" />
 <meta property="og:type" content="article" />
-<meta property="article:published_time" content="2025-05-26T07:37:35+00:00" />
+<meta property="article:published_time" content="2025-05-26T08:17:06+00:00" />
 <meta name="twitter:card" content="summary" />
 <meta property="twitter:title" content="Cpp Client" />
 <script type="application/ld+json">
-{"@context":"https://schema.org","@type":"BlogPosting","dateModified":"2025-05-26T07:37:35+00:00","datePublished":"2025-05-26T07:37:35+00:00","description":"TRANSLATING","headline":"Cpp Client","mainEntityOfPage":{"@type":"WebPage","@id":"/clients/cpp-client"},"url":"/clients/cpp-client"}</script>
+{"@context":"https://schema.org","@type":"BlogPosting","dateModified":"2025-05-26T08:17:06+00:00","datePublished":"2025-05-26T08:17:06+00:00","description":"Obtain Pegasus C++ client","headline":"Cpp Client","mainEntityOfPage":{"@type":"WebPage","@id":"/clients/cpp-client"},"url":"/clients/cpp-client"}</script>
 <!-- End Jekyll SEO tag -->
 
 </head>
@@ -734,7 +734,986 @@
             </section>
             <section class="section" style="padding-top: 2rem;">
                 <div class="content">
-                    <p>TRANSLATING</p>
+                    <h1 id="obtain-pegasus-c-client">Obtain Pegasus C++ client</h1>
+
+<p>First, you need to compile <a href="/overview/compilation">Pegasus</a>. After compilation is complete, run the following command to package the production C++ client library:</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>./run.sh pack_client
+</code></pre></div></div>
+<p>After successful execution, a folder named <code class="language-plaintext highlighter-rouge">pegasus-client-{version}-{platform}-{buildType}</code> and a corresponding <code class="language-plaintext highlighter-rouge">.tar.gz</code> file will be generated in the local directory. Inside this folder, there is a <code class="language-plaintext highlighter-rouge">sample/</code> subdirectory. Navigate into it and run <code class="language-plaintext highlighter-rouge">make</code> to compile the example programs.</p>
+
+<h1 id="configuration-file">Configuration File</h1>
+
+<p>The C++ client uses the RDSN framework, so its configuration file is relatively complex, as shown below:</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>[apps..default]
+run = true
+count = 1
+;network.client.RPC_CHANNEL_TCP = dsn::tools::sim_network_provider, 65536
+;network.client.RPC_CHANNEL_UDP = dsn::tools::sim_network_provider, 65536
+;network.server.0.RPC_CHANNEL_TCP = dsn::tools::sim_network_provider, 65536
+
+[apps.mimic]
+type = dsn.app.mimic
+arguments =
+pools = THREAD_POOL_DEFAULT
+run = true
+count = 1
+
+[core]
+;tool = simulator
+;tool = fastrun
+tool = nativerun
+;toollets = tracer
+;toollets = tracer, profiler, fault_injector
+pause_on_start = false
+cli_local = false
+cli_remote = false
+
+start_nfs = false
+
+logging_start_level = LOG_LEVEL_DEBUG
+logging_factory_name = dsn::tools::simple_logger
+logging_flush_on_exit = true
+
+enable_default_app_mimic = true
+
+data_dir = ./data
+
+[tools.simple_logger]
+short_header = true
+fast_flush = true
+max_number_of_log_files_on_disk = 10
+stderr_start_level = LOG_LEVEL_ERROR
+
+[tools.hpc_logger]
+per_thread_buffer_bytes = 8192
+max_number_of_log_files_on_disk = 10
+
+[tools.simulator]
+random_seed = 0
+
+[network]
+; how many network threads for network library(used by asio)
+io_service_worker_count = 4
+
+; specification for each thread pool
+[threadpool..default]
+worker_count = 4
+
+[threadpool.THREAD_POOL_DEFAULT]
+name = default
+partitioned = false
+max_input_queue_length = 1024
+worker_priority = THREAD_xPRIORITY_NORMAL
+worker_count = 4
+
+[task..default]
+is_trace = false
+is_profile = false
+allow_inline = false
+fast_execution_in_network_thread = false
+rpc_call_header_format = NET_HDR_DSN
+rpc_call_channel = RPC_CHANNEL_TCP
+rpc_timeout_milliseconds = 5000
+
+[pegasus.clusters]
+onebox = @LOCAL_IP@:34601,@LOCAL_IP@:34602,@LOCAL_IP@:34603
+another_cluster = @SOME_IP@:34601,@SOME_IP@:34601,@SOME_IP@:34601
+</code></pre></div></div>
+<p>For detailed explanations of the configuration file, please refer to <a href="/administration/config">Configuration Guide</a>.</p>
+
+<h1 id="interface-definition">Interface Definition</h1>
+
+<h2 id="creating-a-client-instance">Creating a Client Instance</h2>
+
+<p>Client Factory Class</p>
+<div class="language-c++ highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">namespace</span> <span class="n">pegasus</span> <span class="p">{</span>
+<span class="k">class</span> <span class="nc">pegasus_client_factory</span>
+<span class="p">{</span>
+<span class="nl">public:</span>
+    <span class="c1">///</span>
+    <span class="c1">/// \brief initialize</span>
+    <span class="c1">/// initialize pegasus client lib. must call this function before anything else.</span>
+    <span class="c1">/// \param config_file</span>
+    <span class="c1">/// the configuration file of client lib</span>
+    <span class="c1">/// \return</span>
+    <span class="c1">/// true indicate the initailize is success.</span>
+    <span class="c1">///</span>
+    <span class="k">static</span> <span class="kt">bool</span> <span class="n">initialize</span><span class="p">(</span><span class="k">const</span> <span class="kt">char</span> <span class="o">*</span><span class="n">config_file</span><span class="p">);</span>
+
+    <span class="c1">///</span>
+    <span class="c1">/// \brief get_client</span>
+    <span class="c1">/// get an instance for a given cluster and a given app name.</span>
+    <span class="c1">/// \param cluster_name</span>
+    <span class="c1">/// the pegasus cluster name.</span>
+    <span class="c1">/// a cluster can have multiple apps.</span>
+    <span class="c1">/// \param app_name</span>
+    <span class="c1">/// an app is a logical isolated k-v store.</span>
+    <span class="c1">/// a cluster can have multiple apps.</span>
+    <span class="c1">/// \return</span>
+    <span class="c1">/// the client instance. DO NOT delete this client even after usage.</span>
+    <span class="k">static</span> <span class="n">pegasus_client</span> <span class="o">*</span><span class="n">get_client</span><span class="p">(</span><span class="k">const</span> <span class="kt">char</span> <span class="o">*</span><span class="n">cluster_name</span><span class="p">,</span> <span class="k">const</span> <span class="kt">char</span> <span class="o">*</span><span class="n">app_name</span><span class="p">);</span>
+<span class="p">};</span>
+<span class="p">}</span> <span class="c1">//end namespace</span>
+</code></pre></div></div>
+<p>Client initialization essentially initializes the underlying RDSN framework.</p>
+
+<div class="language-c++ highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="n">pegasus</span><span class="o">::</span><span class="n">pegasus_client_factory</span><span class="o">::</span><span class="n">initialize</span><span class="p">(</span><span class="s">"config.ini"</span><span class="p">))</span> <span class="p">{</span>
+    <span class="n">fprintf</span><span class="p">(</span><span class="n">stderr</span><span class="p">,</span> <span class="s">"ERROR: init pegasus failed</span><span class="se">\n</span><span class="s">"</span><span class="p">);</span>
+    <span class="k">return</span> <span class="o">-</span><span class="mi">1</span><span class="p">;</span>
+<span class="p">}</span>
+<span class="cm">/**succeed, continue**/</span>
+</code></pre></div></div>
+<p><strong>Note：</strong></p>
+
+<ul>
+  <li><strong>Parameter (<code class="language-plaintext highlighter-rouge">config_file</code>):</strong> Refer to the Configuration File section for details.</li>
+  <li><strong>Return Value (<code class="language-plaintext highlighter-rouge">bool</code>):</strong>
+    <ul>
+      <li><code class="language-plaintext highlighter-rouge">true</code>: Initialization succeeded.</li>
+      <li><code class="language-plaintext highlighter-rouge">false</code>: Initialization failed.</li>
+    </ul>
+  </li>
+  <li><strong>Usage Guidelines:</strong>
+    <ul>
+      <li>This function only needs to be called <strong>once</strong> during a process’s lifecycle.</li>
+      <li><strong>Not thread-safe</strong> – ensure proper synchronization if called in a multi-threaded environment.</li>
+    </ul>
+  </li>
+</ul>
+
+<div class="language-c++ highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">pegasus</span><span class="o">::</span><span class="n">pegasus_client</span><span class="o">*</span> <span class="n">pg_client</span> <span class="o">=</span> <span class="n">pegasus</span><span class="o">::</span><span class="n">pegasus_client_factory</span><span class="o">::</span><span class="n">get_client</span><span class="p">(</span><span class="s">"cluster_name"</span><span class="p">,</span> <span class="s">"table_name"</span><span class="p">);</span>
+<span class="k">if</span> <span class="p">(</span><span class="n">pg_client</span> <span class="o">==</span> <span class="nb">nullptr</span><span class="p">)</span> <span class="p">{</span>
+    <span class="n">fprintf</span><span class="p">(</span><span class="n">stderr</span><span class="p">,</span> <span class="s">"ERROR: get pegasus client failed</span><span class="se">\n</span><span class="s">"</span><span class="p">);</span>
+    <span class="k">return</span> <span class="o">-</span><span class="mi">1</span><span class="p">;</span>
+<span class="p">}</span>
+<span class="cm">/***  do what you want with pg_client ****/</span>
+</code></pre></div></div>
+<ul>
+  <li>Do NOT explicitly call <code class="language-plaintext highlighter-rouge">delete</code>on the <code class="language-plaintext highlighter-rouge">get_client()</code> return value. Do NOT wrap the pointer in smart pointers (e.g., <code class="language-plaintext highlighter-rouge">std::shared_ptr</code>). The framework <strong>automatically releases</strong> the client during shutdown (managed internally via singleton).</li>
+</ul>
+
+<h2 id="pegasus_client-interface">pegasus_client Interface</h2>
+<p>The C++ client provides two types of interfaces: asynchronous APIs and synchronous APIs. The synchronous APIs are implemented based on the asynchronous APIs, as detailed below:</p>
+
+<h3 id="set">set</h3>
+<p>Write single-row data</p>
+<div class="language-c++ highlighter-rouge"><div class="highlight"><pre class="highlight"><code>    <span class="c1">///</span>
+    <span class="c1">/// \brief set</span>
+    <span class="c1">///     store the k-v to the cluster.</span>
+    <span class="c1">///     key is composed of hashkey and sortkey.</span>
+    <span class="c1">/// \param hashkey</span>
+    <span class="c1">/// used to decide which partition to put this k-v</span>
+    <span class="c1">/// \param sortkey</span>
+    <span class="c1">/// all the k-v under hashkey will be sorted by sortkey.</span>
+    <span class="c1">/// \param value</span>
+    <span class="c1">/// the value we want to store.</span>
+    <span class="c1">/// \param timeout_milliseconds</span>
+    <span class="c1">/// if wait longer than this value, will return time out error</span>
+    <span class="c1">/// \param ttl_seconds</span>
+    <span class="c1">/// time to live of this value, if expired, will return not found; 0 means no ttl</span>
+    <span class="c1">/// \return</span>
+    <span class="c1">/// int, the error indicates whether or not the operation is succeeded.</span>
+    <span class="c1">/// this error can be converted to a string using get_error_string()</span>
+    <span class="c1">///</span>
+    <span class="k">virtual</span> <span class="kt">int</span> <span class="n">set</span><span class="p">(</span><span class="k">const</span> <span class="n">std</span><span class="o">::</span><span class="n">string</span> <span class="o">&amp;</span><span class="n">hashkey</span><span class="p">,</span>
+                    <span class="k">const</span> <span class="n">std</span><span class="o">::</span><span class="n">string</span> <span class="o">&amp;</span><span class="n">sortkey</span><span class="p">,</span>
+                    <span class="k">const</span> <span class="n">std</span><span class="o">::</span><span class="n">string</span> <span class="o">&amp;</span><span class="n">value</span><span class="p">,</span>
+                    <span class="kt">int</span> <span class="n">timeout_milliseconds</span> <span class="o">=</span> <span class="mi">5000</span><span class="p">,</span>
+                    <span class="kt">int</span> <span class="n">ttl_seconds</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span>
+                    <span class="n">internal_info</span> <span class="o">*</span><span class="n">info</span> <span class="o">=</span> <span class="nb">NULL</span><span class="p">)</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+</code></pre></div></div>
+<p><strong>Note:</strong></p>
+
+<p>The <code class="language-plaintext highlighter-rouge">internal_info</code> structure records metadata about successfully written data. Before using it, check if <code class="language-plaintext highlighter-rouge">internal_info</code> is non-null.</p>
+
+<div class="language-c++ highlighter-rouge"><div class="highlight"><pre class="highlight"><code>    <span class="k">struct</span> <span class="nc">internal_info</span>
+    <span class="p">{</span>
+        <span class="kt">int32_t</span> <span class="n">app_id</span><span class="p">;</span>
+        <span class="kt">int32_t</span> <span class="n">partition_index</span><span class="p">;</span>
+        <span class="kt">int64_t</span> <span class="n">decree</span><span class="p">;</span>
+        <span class="n">std</span><span class="o">::</span><span class="n">string</span> <span class="n">server</span><span class="p">;</span>
+        <span class="n">internal_info</span><span class="p">()</span> <span class="o">:</span> <span class="n">app_id</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">),</span> <span class="n">partition_index</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">),</span> <span class="n">decree</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">)</span> <span class="p">{}</span>
+     <span class="p">}</span>
+</code></pre></div></div>
+<ul>
+  <li>Return value: An int value indicating success/failure. Use <code class="language-plaintext highlighter-rouge">get_error_string()</code> to interpret the return value’s meaning. (All synchronous interfaces below can use this function to interpret their return values.)
+    <div class="language-c++ highlighter-rouge"><div class="highlight"><pre class="highlight"><code> <span class="c1">///</span>
+ <span class="c1">/// \brief get_error_string</span>
+ <span class="c1">/// get error string</span>
+ <span class="c1">/// all the function above return an int value that indicates an error can be converted into a</span>
+ <span class="c1">/// string for human reading.</span>
+ <span class="c1">/// \param error_code</span>
+ <span class="c1">/// all the error code are defined in "error_def.h"</span>
+ <span class="c1">/// \return</span>
+ <span class="c1">///</span>
+ <span class="k">virtual</span> <span class="k">const</span> <span class="kt">char</span> <span class="o">*</span><span class="n">get_error_string</span><span class="p">(</span><span class="kt">int</span> <span class="n">error_code</span><span class="p">)</span> <span class="k">const</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+</code></pre></div>    </div>
+    <h3 id="async_set">async_set</h3>
+    <p>Asynchronous write single row data</p>
+    <div class="language-c++ highlighter-rouge"><div class="highlight"><pre class="highlight"><code> <span class="c1">///</span>
+ <span class="c1">/// \brief asynchronous set</span>
+ <span class="c1">///     store the k-v to the cluster.</span>
+ <span class="c1">///     will not be blocked, return immediately.</span>
+ <span class="c1">///     key is composed of hashkey and sortkey.</span>
+ <span class="c1">/// \param hashkey</span>
+ <span class="c1">/// used to decide which partition to put this k-v</span>
+ <span class="c1">/// \param sortkey</span>
+ <span class="c1">/// all the k-v under hashkey will be stored by sortkey.</span>
+ <span class="c1">/// \param value</span>
+ <span class="c1">/// the value we want to store.</span>
+ <span class="c1">/// \param callback</span>
+ <span class="c1">/// the callback function will be invoked after operation finished or error occurred.</span>
+ <span class="c1">/// \param timeout_milliseconds</span>
+ <span class="c1">/// if wait longer than this value, will return time out error.</span>
+ <span class="c1">/// \param ttl_seconds</span>
+ <span class="c1">/// time to live of this value, if expired, will return not found; 0 means no ttl.</span>
+ <span class="c1">/// \return</span>
+ <span class="c1">/// void.</span>
+ <span class="c1">///</span>
+ <span class="k">virtual</span> <span class="kt">void</span> <span class="n">async_set</span><span class="p">(</span><span class="k">const</span> <span class="n">std</span><span class="o">::</span><span class="n">string</span> <span class="o">&amp;</span><span class="n">hashkey</span><span class="p">,</span>
+                        <span class="k">const</span> <span class="n">std</span><span class="o">::</span><span class="n">string</span> <span class="o">&amp;</span><span class="n">sortkey</span><span class="p">,</span>
+                        <span class="k">const</span> <span class="n">std</span><span class="o">::</span><span class="n">string</span> <span class="o">&amp;</span><span class="n">value</span><span class="p">,</span>
+                        <span class="n">async_set_callback_t</span> <span class="o">&amp;&amp;</span><span class="n">callback</span> <span class="o">=</span> <span class="nb">nullptr</span><span class="p">,</span>
+                        <span class="kt">int</span> <span class="n">timeout_milliseconds</span> <span class="o">=</span> <span class="mi">5000</span><span class="p">,</span>
+                        <span class="kt">int</span> <span class="n">ttl_seconds</span> <span class="o">=</span> <span class="mi">0</span><span class="p">)</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+</code></pre></div>    </div>
+  </li>
+</ul>
+
+<h3 id="multi_set">multi_set</h3>
+
+<p>Write multiple data rows (under the same hashkey)</p>
+
+<div class="language-c++ highlighter-rouge"><div class="highlight"><pre class="highlight"><code>    <span class="c1">///</span>
+    <span class="c1">/// \brief multi_set (guarantee atomicity)</span>
+    <span class="c1">///     store multiple k-v of the same hashkey to the cluster.</span>
+    <span class="c1">/// \param hashkey</span>
+    <span class="c1">/// used to decide which partition to put this k-v</span>
+    <span class="c1">/// \param kvs</span>
+    <span class="c1">/// all &lt;sortkey,value&gt; pairs to be set. should not be empty</span>
+    <span class="c1">/// \param timeout_milliseconds</span>
+    <span class="c1">/// if wait longer than this value, will return time out error</span>
+    <span class="c1">/// \param ttl_seconds</span>
+    <span class="c1">/// time to live of this value, if expired, will return not found; 0 means no ttl</span>
+    <span class="c1">/// \return</span>
+    <span class="c1">/// int, the error indicates whether or not the operation is succeeded.</span>
+    <span class="c1">/// this error can be converted to a string using get_error_string().</span>
+    <span class="c1">/// return PERR_INVALID_ARGUMENT if param kvs is empty.</span>
+    <span class="c1">///</span>
+    <span class="k">virtual</span> <span class="kt">int</span> <span class="n">multi_set</span><span class="p">(</span><span class="k">const</span> <span class="n">std</span><span class="o">::</span><span class="n">string</span> <span class="o">&amp;</span><span class="n">hashkey</span><span class="p">,</span>
+                          <span class="k">const</span> <span class="n">std</span><span class="o">::</span><span class="n">map</span><span class="o">&lt;</span><span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="p">,</span> <span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="o">&gt;</span> <span class="o">&amp;</span><span class="n">kvs</span><span class="p">,</span>
+                          <span class="kt">int</span> <span class="n">timeout_milliseconds</span> <span class="o">=</span> <span class="mi">5000</span><span class="p">,</span>
+                          <span class="kt">int</span> <span class="n">ttl_seconds</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span>
+                          <span class="n">internal_info</span> <span class="o">*</span><span class="n">info</span> <span class="o">=</span> <span class="nb">NULL</span><span class="p">)</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+</code></pre></div></div>
+
+<h3 id="async_multi_set">async_multi_set</h3>
+
+<p>Asynchronous write multiple data rows</p>
+
+<div class="language-c++ highlighter-rouge"><div class="highlight"><pre class="highlight"><code>    <span class="c1">///</span>
+    <span class="c1">/// \brief asynchronous multi_set (guarantee atomicity)</span>
+    <span class="c1">///     store multiple k-v of the same hashkey to the cluster.</span>
+    <span class="c1">///     will not be blocked, return immediately.</span>
+    <span class="c1">/// \param hashkey</span>
+    <span class="c1">/// used to decide which partition to put this k-v</span>
+    <span class="c1">/// \param kvs</span>
+    <span class="c1">/// all &lt;sortkey,value&gt; pairs to be set. should not be empty</span>
+    <span class="c1">/// \param callback</span>
+    <span class="c1">/// the callback function will be invoked after operation finished or error occurred.</span>
+    <span class="c1">/// \param timeout_milliseconds</span>
+    <span class="c1">/// if wait longer than this value, will return time out error</span>
+    <span class="c1">/// \param ttl_seconds</span>
+    <span class="c1">/// time to live of this value, if expired, will return not found; 0 means no ttl</span>
+    <span class="c1">/// \return</span>
+    <span class="c1">/// void.</span>
+    <span class="c1">///</span>
+    <span class="k">virtual</span> <span class="kt">void</span> <span class="n">async_multi_set</span><span class="p">(</span><span class="k">const</span> <span class="n">std</span><span class="o">::</span><span class="n">string</span> <span class="o">&amp;</span><span class="n">hashkey</span><span class="p">,</span>
+                                 <span class="k">const</span> <span class="n">std</span><span class="o">::</span><span class="n">map</span><span class="o">&lt;</span><span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="p">,</span> <span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="o">&gt;</span> <span class="o">&amp;</span><span class="n">kvs</span><span class="p">,</span>
+                                 <span class="n">async_multi_set_callback_t</span> <span class="o">&amp;&amp;</span><span class="n">callback</span> <span class="o">=</span> <span class="nb">nullptr</span><span class="p">,</span>
+                                 <span class="kt">int</span> <span class="n">timeout_milliseconds</span> <span class="o">=</span> <span class="mi">5000</span><span class="p">,</span>
+                                 <span class="kt">int</span> <span class="n">ttl_seconds</span> <span class="o">=</span> <span class="mi">0</span><span class="p">)</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+</code></pre></div></div>
+
+<h3 id="get">get</h3>
+<p>Read a single data row</p>
+<div class="language-c++ highlighter-rouge"><div class="highlight"><pre class="highlight"><code>    <span class="c1">///</span>
+    <span class="c1">/// \brief get</span>
+    <span class="c1">///     get value by key from the cluster.</span>
+    <span class="c1">/// \param hashkey</span>
+    <span class="c1">/// used to decide which partition to get this k-v</span>
+    <span class="c1">/// \param sortkey</span>
+    <span class="c1">/// all the k-v under hashkey will be sorted by sortkey.</span>
+    <span class="c1">/// \param value</span>
+    <span class="c1">/// the returned value will be put into it.</span>
+    <span class="c1">/// \param timeout_milliseconds</span>
+    <span class="c1">/// if wait longer than this value, will return time out error</span>
+    <span class="c1">/// \return</span>
+    <span class="c1">/// int, the error indicates whether or not the operation is succeeded.</span>
+    <span class="c1">/// this error can be converted to a string using get_error_string().</span>
+    <span class="c1">/// returns PERR_NOT_FOUND if no value is found under the &lt;hashkey,sortkey&gt;.</span>
+    <span class="c1">///</span>
+    <span class="k">virtual</span> <span class="kt">int</span> <span class="n">get</span><span class="p">(</span><span class="k">const</span> <span class="n">std</span><span class="o">::</span><span class="n">string</span> <span class="o">&amp;</span><span class="n">hashkey</span><span class="p">,</span>
+                    <span class="k">const</span> <span class="n">std</span><span class="o">::</span><span class="n">string</span> <span class="o">&amp;</span><span class="n">sortkey</span><span class="p">,</span>
+                    <span class="n">std</span><span class="o">::</span><span class="n">string</span> <span class="o">&amp;</span><span class="n">value</span><span class="p">,</span>
+                    <span class="kt">int</span> <span class="n">timeout_milliseconds</span> <span class="o">=</span> <span class="mi">5000</span><span class="p">,</span>
+                    <span class="n">internal_info</span> <span class="o">*</span><span class="n">info</span> <span class="o">=</span> <span class="nb">NULL</span><span class="p">)</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+</code></pre></div></div>
+
+<h3 id="async_get">async_get</h3>
+<p>Asynchronous read single data row</p>
+<div class="language-c++ highlighter-rouge"><div class="highlight"><pre class="highlight"><code>    <span class="c1">///</span>
+    <span class="c1">/// \brief asynchronous get</span>
+    <span class="c1">///     get value by key from the cluster.</span>
+    <span class="c1">///     will not be blocked, return immediately.</span>
+    <span class="c1">/// \param hashkey</span>
+    <span class="c1">/// used to decide which partition to get this k-v</span>
+    <span class="c1">/// \param sortkey</span>
+    <span class="c1">/// all the k-v under hashkey will be sorted by sortkey.</span>
+    <span class="c1">/// \param callback</span>
+    <span class="c1">/// the callback function will be invoked after operation finished or error occurred.</span>
+    <span class="c1">/// \param timeout_milliseconds</span>
+    <span class="c1">/// if wait longer than this value, will return time out error</span>
+    <span class="c1">/// \return</span>
+    <span class="c1">/// void.</span>
+    <span class="c1">///</span>
+    <span class="k">virtual</span> <span class="kt">void</span> <span class="n">async_get</span><span class="p">(</span><span class="k">const</span> <span class="n">std</span><span class="o">::</span><span class="n">string</span> <span class="o">&amp;</span><span class="n">hashkey</span><span class="p">,</span>
+                           <span class="k">const</span> <span class="n">std</span><span class="o">::</span><span class="n">string</span> <span class="o">&amp;</span><span class="n">sortkey</span><span class="p">,</span>
+                           <span class="n">async_get_callback_t</span> <span class="o">&amp;&amp;</span><span class="n">callback</span> <span class="o">=</span> <span class="nb">nullptr</span><span class="p">,</span>
+                           <span class="kt">int</span> <span class="n">timeout_milliseconds</span> <span class="o">=</span> <span class="mi">5000</span><span class="p">)</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+</code></pre></div></div>
+
+<h3 id="multi_get">multi_get</h3>
+<p>Read multiple data rows</p>
+<div class="language-c++ highlighter-rouge"><div class="highlight"><pre class="highlight"><code>    <span class="c1">///</span>
+    <span class="c1">/// \brief multi_get</span>
+    <span class="c1">///     get multiple value by key from the cluster.</span>
+    <span class="c1">/// \param hashkey</span>
+    <span class="c1">/// used to decide which partition to get this k-v</span>
+    <span class="c1">/// \param sortkeys</span>
+    <span class="c1">/// all the k-v under hashkey will be sorted by sortkey.</span>
+    <span class="c1">/// if empty, means fetch all sortkeys under the hashkey.</span>
+    <span class="c1">/// \param values</span>
+    <span class="c1">/// the returned &lt;sortkey,value&gt; pairs will be put into it.</span>
+    <span class="c1">/// if data is not found for some &lt;hashkey,sortkey&gt;, then it will not appear in the map.</span>
+    <span class="c1">/// \param max_fetch_count</span>
+    <span class="c1">/// max count of k-v pairs to be fetched. max_fetch_count &lt;= 0 means no limit.</span>
+    <span class="c1">/// \param max_fetch_size</span>
+    <span class="c1">/// max size of k-v pairs to be fetched. max_fetch_size &lt;= 0 means no limit.</span>
+    <span class="c1">/// \param timeout_milliseconds</span>
+    <span class="c1">/// if wait longer than this value, will return time out error</span>
+    <span class="c1">/// \return</span>
+    <span class="c1">/// int, the error indicates whether or not the operation is succeeded.</span>
+    <span class="c1">/// this error can be converted to a string using get_error_string().</span>
+    <span class="c1">/// returns PERR_OK if fetch done, even no data is returned.</span>
+    <span class="c1">/// returns PERR_INCOMPLETE is only partial data is fetched.</span>
+    <span class="c1">///</span>
+    <span class="k">virtual</span> <span class="kt">int</span> <span class="n">multi_get</span><span class="p">(</span><span class="k">const</span> <span class="n">std</span><span class="o">::</span><span class="n">string</span> <span class="o">&amp;</span><span class="n">hashkey</span><span class="p">,</span>
+                          <span class="k">const</span> <span class="n">std</span><span class="o">::</span><span class="n">set</span><span class="o">&lt;</span><span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="o">&gt;</span> <span class="o">&amp;</span><span class="n">sortkeys</span><span class="p">,</span>
+                          <span class="n">std</span><span class="o">::</span><span class="n">map</span><span class="o">&lt;</span><span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="p">,</span> <span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="o">&gt;</span> <span class="o">&amp;</span><span class="n">values</span><span class="p">,</span>
+                          <span class="kt">int</span> <span class="n">max_fetch_count</span> <span class="o">=</span> <span class="mi">100</span><span class="p">,</span>
+                          <span class="kt">int</span> <span class="n">max_fetch_size</span> <span class="o">=</span> <span class="mi">1000000</span><span class="p">,</span>
+                          <span class="kt">int</span> <span class="n">timeout_milliseconds</span> <span class="o">=</span> <span class="mi">5000</span><span class="p">,</span>
+                          <span class="n">internal_info</span> <span class="o">*</span><span class="n">info</span> <span class="o">=</span> <span class="nb">NULL</span><span class="p">)</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+</code></pre></div></div>
+<p>Note: <code class="language-plaintext highlighter-rouge">max_fetch_count</code> and <code class="language-plaintext highlighter-rouge">max_fetch_size</code> limit the <code class="language-plaintext highlighter-rouge">multi_get</code> return values by the number of kv-pairs and total size respectively.</p>
+
+<h3 id="async_multi_get">async_multi_get</h3>
+<p>Asynchronous read multiple data rows.</p>
+<div class="language-c++ highlighter-rouge"><div class="highlight"><pre class="highlight"><code>    <span class="c1">///</span>
+    <span class="c1">/// \brief asynchronous multi_get</span>
+    <span class="c1">///     get multiple value by key from the cluster.</span>
+    <span class="c1">///     will not be blocked, return immediately.</span>
+    <span class="c1">/// \param hashkey</span>
+    <span class="c1">/// used to decide which partition to get this k-v</span>
+    <span class="c1">/// \param sortkeys</span>
+    <span class="c1">/// all the k-v under hashkey will be sorted by sortkey.</span>
+    <span class="c1">/// if empty, means fetch all sortkeys under the hashkey.</span>
+    <span class="c1">/// \param callback</span>
+    <span class="c1">/// the callback function will be invoked after operation finished or error occurred.</span>
+    <span class="c1">/// \param max_fetch_count</span>
+    <span class="c1">/// max count of k-v pairs to be fetched. max_fetch_count &lt;= 0 means no limit.</span>
+    <span class="c1">/// \param max_fetch_size</span>
+    <span class="c1">/// max size of k-v pairs to be fetched. max_fetch_size &lt;= 0 means no limit.</span>
+    <span class="c1">/// \param timeout_milliseconds</span>
+    <span class="c1">/// if wait longer than this value, will return time out error</span>
+    <span class="c1">/// \return</span>
+    <span class="c1">/// void.</span>
+    <span class="c1">///</span>
+    <span class="k">virtual</span> <span class="kt">void</span> <span class="n">async_multi_get</span><span class="p">(</span><span class="k">const</span> <span class="n">std</span><span class="o">::</span><span class="n">string</span> <span class="o">&amp;</span><span class="n">hashkey</span><span class="p">,</span>
+                                 <span class="k">const</span> <span class="n">std</span><span class="o">::</span><span class="n">set</span><span class="o">&lt;</span><span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="o">&gt;</span> <span class="o">&amp;</span><span class="n">sortkeys</span><span class="p">,</span>
+                                 <span class="n">async_multi_get_callback_t</span> <span class="o">&amp;&amp;</span><span class="n">callback</span> <span class="o">=</span> <span class="nb">nullptr</span><span class="p">,</span>
+                                 <span class="kt">int</span> <span class="n">max_fetch_count</span> <span class="o">=</span> <span class="mi">100</span><span class="p">,</span>
+                                 <span class="kt">int</span> <span class="n">max_fetch_size</span> <span class="o">=</span> <span class="mi">1000000</span><span class="p">,</span>
+                                 <span class="kt">int</span> <span class="n">timeout_milliseconds</span> <span class="o">=</span> <span class="mi">5000</span><span class="p">)</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+</code></pre></div></div>
+
+<h3 id="multi_get_sortkeys">multi_get_sortkeys</h3>
+<p>Get multiple sortkeys under a hashkey (values not returned)</p>
+
+<div class="language-c++ highlighter-rouge"><div class="highlight"><pre class="highlight"><code>    <span class="c1">///</span>
+    <span class="c1">/// \brief multi_get_sortkeys</span>
+    <span class="c1">///     get multiple sort keys by hash key from the cluster.</span>
+    <span class="c1">///     only fetch sort keys, but not fetch values.</span>
+    <span class="c1">/// \param hashkey</span>
+    <span class="c1">/// used to decide which partition to get this k-v</span>
+    <span class="c1">/// \param sortkeys</span>
+    <span class="c1">/// the returned sort keys will be put into it.</span>
+    <span class="c1">/// \param max_fetch_count</span>
+    <span class="c1">/// max count of sort keys to be fetched. max_fetch_count &lt;= 0 means no limit.</span>
+    <span class="c1">/// \param max_fetch_size</span>
+    <span class="c1">/// max size of sort keys to be fetched. max_fetch_size &lt;= 0 means no limit.</span>
+    <span class="c1">/// \param timeout_milliseconds</span>
+    <span class="c1">/// if wait longer than this value, will return time out error</span>
+    <span class="c1">/// \return</span>
+    <span class="c1">/// int, the error indicates whether or not the operation is succeeded.</span>
+    <span class="c1">/// this error can be converted to a string using get_error_string().</span>
+    <span class="c1">/// returns PERR_OK if fetch done, even no data is returned.</span>
+    <span class="c1">/// returns PERR_INCOMPLETE is only partial data is fetched.</span>
+    <span class="c1">///</span>
+    <span class="k">virtual</span> <span class="kt">int</span> <span class="n">multi_get_sortkeys</span><span class="p">(</span><span class="k">const</span> <span class="n">std</span><span class="o">::</span><span class="n">string</span> <span class="o">&amp;</span><span class="n">hashkey</span><span class="p">,</span>
+                                   <span class="n">std</span><span class="o">::</span><span class="n">set</span><span class="o">&lt;</span><span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="o">&gt;</span> <span class="o">&amp;</span><span class="n">sortkeys</span><span class="p">,</span>
+                                   <span class="kt">int</span> <span class="n">max_fetch_count</span> <span class="o">=</span> <span class="mi">100</span><span class="p">,</span>
+                                   <span class="kt">int</span> <span class="n">max_fetch_size</span> <span class="o">=</span> <span class="mi">1000000</span><span class="p">,</span>
+                                   <span class="kt">int</span> <span class="n">timeout_milliseconds</span> <span class="o">=</span> <span class="mi">5000</span><span class="p">,</span>
+                                   <span class="n">internal_info</span> <span class="o">*</span><span class="n">info</span> <span class="o">=</span> <span class="nb">NULL</span><span class="p">)</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+</code></pre></div></div>
+<p>Note: <code class="language-plaintext highlighter-rouge">max_fetch_count</code> and <code class="language-plaintext highlighter-rouge">max_fetch_size</code> limit the number of returned sortkeys and total size respectively (when calculating size, the hashkey size is counted for each sortkey).</p>
+
+<h3 id="async_multi_get_sortkeys">async_multi_get_sortkeys</h3>
+<p>Asynchronously fetch multiple sortkeys under a hashkey (values not returned)</p>
+
+<div class="language-c++ highlighter-rouge"><div class="highlight"><pre class="highlight"><code>    <span class="c1">///</span>
+    <span class="c1">/// \brief asynchronous multi_get_sortkeys</span>
+    <span class="c1">///     get multiple sort keys by hash key from the cluster.</span>
+    <span class="c1">///     only fetch sort keys, but not fetch values.</span>
+    <span class="c1">///     will not be blocked, return immediately.</span>
+    <span class="c1">/// \param hashkey</span>
+    <span class="c1">/// used to decide which partition to get this k-v</span>
+    <span class="c1">/// \param callback</span>
+    <span class="c1">/// the callback function will be invoked after operation finished or error occurred.</span>
+    <span class="c1">/// \param max_fetch_count</span>
+    <span class="c1">/// max count of sort keys to be fetched. max_fetch_count &lt;= 0 means no limit.</span>
+    <span class="c1">/// \param max_fetch_size</span>
+    <span class="c1">/// max size of sort keys to be fetched. max_fetch_size &lt;= 0 means no limit.</span>
+    <span class="c1">/// \param timeout_milliseconds</span>
+    <span class="c1">/// if wait longer than this value, will return time out error</span>
+    <span class="c1">/// \return</span>
+    <span class="c1">/// void.</span>
+    <span class="c1">///</span>
+    <span class="k">virtual</span> <span class="kt">void</span> <span class="n">async_multi_get_sortkeys</span><span class="p">(</span><span class="k">const</span> <span class="n">std</span><span class="o">::</span><span class="n">string</span> <span class="o">&amp;</span><span class="n">hashkey</span><span class="p">,</span>
+                                          <span class="n">async_multi_get_sortkeys_callback_t</span> <span class="o">&amp;&amp;</span><span class="n">callback</span> <span class="o">=</span> <span class="nb">nullptr</span><span class="p">,</span>
+                                          <span class="kt">int</span> <span class="n">max_fetch_count</span> <span class="o">=</span> <span class="mi">100</span><span class="p">,</span>
+                                          <span class="kt">int</span> <span class="n">max_fetch_size</span> <span class="o">=</span> <span class="mi">1000000</span><span class="p">,</span>
+                                          <span class="kt">int</span> <span class="n">timeout_milliseconds</span> <span class="o">=</span> <span class="mi">5000</span><span class="p">)</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+</code></pre></div></div>
+
+<h3 id="exist">exist</h3>
+<p>Check if a single data row exists.</p>
+<div class="language-c++ highlighter-rouge"><div class="highlight"><pre class="highlight"><code>    <span class="c1">///</span>
+    <span class="c1">/// \brief exist</span>
+    <span class="c1">///     check value exist by key from the cluster.</span>
+    <span class="c1">/// \param hashkey</span>
+    <span class="c1">/// used to decide which partition to get this k-v</span>
+    <span class="c1">/// \param sortkey</span>
+    <span class="c1">/// all the k-v under hashkey will be sorted by sortkey.</span>
+    <span class="c1">/// \param timeout_milliseconds</span>
+    <span class="c1">/// if wait longer than this value, will return time out error</span>
+    <span class="c1">/// \return</span>
+    <span class="c1">/// int, the error indicates whether or not the operation is succeeded.</span>
+    <span class="c1">/// this error can be converted to a string using get_error_string().</span>
+    <span class="c1">/// returns PERR_OK if exist.</span>
+    <span class="c1">/// returns PERR_NOT_FOUND if not exist.</span>
+    <span class="c1">///</span>
+    <span class="k">virtual</span> <span class="kt">int</span> <span class="n">exist</span><span class="p">(</span><span class="k">const</span> <span class="n">std</span><span class="o">::</span><span class="n">string</span> <span class="o">&amp;</span><span class="n">hashkey</span><span class="p">,</span>
+                      <span class="k">const</span> <span class="n">std</span><span class="o">::</span><span class="n">string</span> <span class="o">&amp;</span><span class="n">sortkey</span><span class="p">,</span>
+                      <span class="kt">int</span> <span class="n">timeout_milliseconds</span> <span class="o">=</span> <span class="mi">5000</span><span class="p">,</span>
+                      <span class="n">internal_info</span> <span class="o">*</span><span class="n">info</span> <span class="o">=</span> <span class="nb">NULL</span><span class="p">)</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+</code></pre></div></div>
+
+<h3 id="sortkey_count">sortkey_count</h3>
+<p>Count the number of sortkeys under a hashkey.</p>
+<div class="language-c++ highlighter-rouge"><div class="highlight"><pre class="highlight"><code>    <span class="c1">///</span>
+    <span class="c1">/// \brief sortkey_count</span>
+    <span class="c1">///     get sortkey count by hashkey from the cluster.</span>
+    <span class="c1">/// \param hashkey</span>
+    <span class="c1">/// used to decide which partition to get this k-v</span>
+    <span class="c1">/// \param count</span>
+    <span class="c1">/// the returned sortkey count</span>
+    <span class="c1">/// \param timeout_milliseconds</span>
+    <span class="c1">/// if wait longer than this value, will return time out error</span>
+    <span class="c1">/// \return</span>
+    <span class="c1">/// int, the error indicates whether or not the operation is succeeded.</span>
+    <span class="c1">/// this error can be converted to a string using get_error_string().</span>
+    <span class="c1">///</span>
+    <span class="k">virtual</span> <span class="kt">int</span> <span class="n">sortkey_count</span><span class="p">(</span><span class="k">const</span> <span class="n">std</span><span class="o">::</span><span class="n">string</span> <span class="o">&amp;</span><span class="n">hashkey</span><span class="p">,</span>
+                              <span class="kt">int64_t</span> <span class="o">&amp;</span><span class="n">count</span><span class="p">,</span>
+                              <span class="kt">int</span> <span class="n">timeout_milliseconds</span> <span class="o">=</span> <span class="mi">5000</span><span class="p">,</span>
+                              <span class="n">internal_info</span> <span class="o">*</span><span class="n">info</span> <span class="o">=</span> <span class="nb">NULL</span><span class="p">)</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+</code></pre></div></div>
+
+<h3 id="del">del</h3>
+<p>Delete a single data row.</p>
+<div class="language-c++ highlighter-rouge"><div class="highlight"><pre class="highlight"><code>    <span class="c1">///</span>
+    <span class="c1">/// \brief del</span>
+    <span class="c1">///     del stored k-v by key from cluster</span>
+    <span class="c1">///     key is composed of hashkey and sortkey. must provide both to get the value.</span>
+    <span class="c1">/// \param hashkey</span>
+    <span class="c1">/// used to decide from which partition to del this k-v</span>
+    <span class="c1">/// \param sortkey</span>
+    <span class="c1">/// all the k-v under hashkey will be sorted by sortkey.</span>
+    <span class="c1">/// \param timeout_milliseconds</span>
+    <span class="c1">/// if wait longer than this value, will return time out error</span>
+    <span class="c1">/// \return</span>
+    <span class="c1">/// int, the error indicates whether or not the operation is succeeded.</span>
+    <span class="c1">/// this error can be converted to a string using get_error_string()</span>
+    <span class="c1">///</span>
+    <span class="k">virtual</span> <span class="kt">int</span> <span class="n">del</span><span class="p">(</span><span class="k">const</span> <span class="n">std</span><span class="o">::</span><span class="n">string</span> <span class="o">&amp;</span><span class="n">hashkey</span><span class="p">,</span>
+                    <span class="k">const</span> <span class="n">std</span><span class="o">::</span><span class="n">string</span> <span class="o">&amp;</span><span class="n">sortkey</span><span class="p">,</span>
+                    <span class="kt">int</span> <span class="n">timeout_milliseconds</span> <span class="o">=</span> <span class="mi">5000</span><span class="p">,</span>
+                    <span class="n">internal_info</span> <span class="o">*</span><span class="n">info</span> <span class="o">=</span> <span class="nb">NULL</span><span class="p">)</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+</code></pre></div></div>
+
+<h3 id="async_del">async_del</h3>
+<p>Asynchronous delete single data row.</p>
+<div class="language-c++ highlighter-rouge"><div class="highlight"><pre class="highlight"><code>    <span class="c1">///</span>
+    <span class="c1">/// \brief asynchronous del</span>
+    <span class="c1">///     del stored k-v by key from cluster</span>
+    <span class="c1">///     key is composed of hashkey and sortkey. must provide both to get the value.</span>
+    <span class="c1">///     will not be blocked, return immediately.</span>
+    <span class="c1">/// \param hashkey</span>
+    <span class="c1">/// used to decide from which partition to del this k-v</span>
+    <span class="c1">/// \param sortkey</span>
+    <span class="c1">/// all the k-v under hashkey will be sorted by sortkey.</span>
+    <span class="c1">/// \param callback</span>
+    <span class="c1">/// the callback function will be invoked after operation finished or error occurred.</span>
+    <span class="c1">/// \param timeout_milliseconds</span>
+    <span class="c1">/// if wait longer than this value, will return time out error</span>
+    <span class="c1">/// \return</span>
+    <span class="c1">/// void.</span>
+    <span class="c1">///</span>
+    <span class="k">virtual</span> <span class="kt">void</span> <span class="n">async_del</span><span class="p">(</span><span class="k">const</span> <span class="n">std</span><span class="o">::</span><span class="n">string</span> <span class="o">&amp;</span><span class="n">hashkey</span><span class="p">,</span>
+                           <span class="k">const</span> <span class="n">std</span><span class="o">::</span><span class="n">string</span> <span class="o">&amp;</span><span class="n">sortkey</span><span class="p">,</span>
+                           <span class="n">async_del_callback_t</span> <span class="o">&amp;&amp;</span><span class="n">callback</span> <span class="o">=</span> <span class="nb">nullptr</span><span class="p">,</span>
+                           <span class="kt">int</span> <span class="n">timeout_milliseconds</span> <span class="o">=</span> <span class="mi">5000</span><span class="p">)</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+</code></pre></div></div>
+
+<h3 id="multi_del">multi_del</h3>
+<p>Delete multiple data rows.</p>
+<div class="language-c++ highlighter-rouge"><div class="highlight"><pre class="highlight"><code>    <span class="c1">///</span>
+    <span class="c1">/// \brief multi_del</span>
+    <span class="c1">///     delete multiple value by key from the cluster.</span>
+    <span class="c1">/// \param hashkey</span>
+    <span class="c1">/// used to decide which partition to get this k-v</span>
+    <span class="c1">/// \param sortkeys</span>
+    <span class="c1">/// all the k-v under hashkey will be sorted by sortkey. should not be empty.</span>
+    <span class="c1">/// \param deleted_count</span>
+    <span class="c1">/// return count of deleted k-v pairs.</span>
+    <span class="c1">/// \param timeout_milliseconds</span>
+    <span class="c1">/// if wait longer than this value, will return time out error</span>
+    <span class="c1">/// \return</span>
+    <span class="c1">/// int, the error indicates whether or not the operation is succeeded.</span>
+    <span class="c1">/// this error can be converted to a string using get_error_string().</span>
+    <span class="c1">///</span>
+    <span class="k">virtual</span> <span class="kt">int</span> <span class="n">multi_del</span><span class="p">(</span><span class="k">const</span> <span class="n">std</span><span class="o">::</span><span class="n">string</span> <span class="o">&amp;</span><span class="n">hashkey</span><span class="p">,</span>
+                          <span class="k">const</span> <span class="n">std</span><span class="o">::</span><span class="n">set</span><span class="o">&lt;</span><span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="o">&gt;</span> <span class="o">&amp;</span><span class="n">sortkeys</span><span class="p">,</span>
+                          <span class="kt">int64_t</span> <span class="o">&amp;</span><span class="n">deleted_count</span><span class="p">,</span>
+                          <span class="kt">int</span> <span class="n">timeout_milliseconds</span> <span class="o">=</span> <span class="mi">5000</span><span class="p">,</span>
+                          <span class="n">internal_info</span> <span class="o">*</span><span class="n">info</span> <span class="o">=</span> <span class="nb">NULL</span><span class="p">)</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+</code></pre></div></div>
+
+<h3 id="async_multi_del">async_multi_del</h3>
+
+<p>Asynchronously delete multiple data rows.</p>
+<div class="language-c++ highlighter-rouge"><div class="highlight"><pre class="highlight"><code>    <span class="c1">///</span>
+    <span class="c1">/// \brief asynchronous multi_del</span>
+    <span class="c1">///     delete multiple value by key from the cluster.</span>
+    <span class="c1">///     will not be blocked, return immediately.</span>
+    <span class="c1">/// \param hashkey</span>
+    <span class="c1">/// used to decide which partition to get this k-v</span>
+    <span class="c1">/// \param sortkeys</span>
+    <span class="c1">/// all the k-v under hashkey will be sorted by sortkey. should not be empty.</span>
+    <span class="c1">/// \param callback</span>
+    <span class="c1">/// the callback function will be invoked after operation finished or error occurred.</span>
+    <span class="c1">/// \param timeout_milliseconds</span>
+    <span class="c1">/// if wait longer than this value, will return time out error</span>
+    <span class="c1">/// \return</span>
+    <span class="c1">/// void.</span>
+    <span class="c1">///</span>
+    <span class="k">virtual</span> <span class="kt">void</span> <span class="n">async_multi_del</span><span class="p">(</span><span class="k">const</span> <span class="n">std</span><span class="o">::</span><span class="n">string</span> <span class="o">&amp;</span><span class="n">hashkey</span><span class="p">,</span>
+                                 <span class="k">const</span> <span class="n">std</span><span class="o">::</span><span class="n">set</span><span class="o">&lt;</span><span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="o">&gt;</span> <span class="o">&amp;</span><span class="n">sortkeys</span><span class="p">,</span>
+                                 <span class="n">async_multi_del_callback_t</span> <span class="o">&amp;&amp;</span><span class="n">callback</span> <span class="o">=</span> <span class="nb">nullptr</span><span class="p">,</span>
+                                 <span class="kt">int</span> <span class="n">timeout_milliseconds</span> <span class="o">=</span> <span class="mi">5000</span><span class="p">)</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+</code></pre></div></div>
+
+<h3 id="incr">incr</h3>
+
+<p>Increment</p>
+
+<div class="language-c++ highlighter-rouge"><div class="highlight"><pre class="highlight"><code>    <span class="c1">///</span>
+    <span class="c1">/// \brief incr</span>
+    <span class="c1">///     atomically increment value by key from the cluster.</span>
+    <span class="c1">///     key is composed of hashkey and sortkey. must provide both to get the value.</span>
+    <span class="c1">///</span>
+    <span class="c1">///     the increment semantic is the same as redis:</span>
+    <span class="c1">///       - if old data is not found or empty, then set initial value to 0.</span>
+    <span class="c1">///       - if old data is not an integer or out of range, then return PERR_INVALID_ARGUMENT,</span>
+    <span class="c1">///         and return `new_value' as 0.</span>
+    <span class="c1">///       - if new value is out of range, then return PERR_INVALID_ARGUMENT, and return old</span>
+    <span class="c1">///         value in `new_value'.</span>
+    <span class="c1">///</span>
+    <span class="c1">///     if ttl_seconds == 0, the semantic is also the same as redis:</span>
+    <span class="c1">///       - normally, increment will preserve the original ttl.</span>
+    <span class="c1">///       - if old data is expired by ttl, then set initial value to 0 and set no ttl.</span>
+    <span class="c1">///     if ttl_seconds &gt; 0, then update with the new ttl if incr succeed.</span>
+    <span class="c1">///     if ttl_seconds == -1, then update to no ttl if incr succeed.</span>
+    <span class="c1">///</span>
+    <span class="c1">/// \param hashkey</span>
+    <span class="c1">/// used to decide which partition to get this k-v</span>
+    <span class="c1">/// \param sortkey</span>
+    <span class="c1">/// all the k-v under hashkey will be sorted by sortkey.</span>
+    <span class="c1">/// \param increment</span>
+    <span class="c1">/// the value we want to increment.</span>
+    <span class="c1">/// \param new_value</span>
+    <span class="c1">/// out param to return the new value if increment succeed.</span>
+    <span class="c1">/// \param timeout_milliseconds</span>
+    <span class="c1">/// if wait longer than this value, will return time out error</span>
+    <span class="c1">/// \param ttl_seconds</span>
+    <span class="c1">/// time to live of this value.</span>
+    <span class="c1">/// \return</span>
+    <span class="c1">/// int, the error indicates whether or not the operation is succeeded.</span>
+    <span class="c1">/// this error can be converted to a string using get_error_string().</span>
+    <span class="c1">///</span>
+    <span class="k">virtual</span> <span class="kt">int</span> <span class="n">incr</span><span class="p">(</span><span class="k">const</span> <span class="n">std</span><span class="o">::</span><span class="n">string</span> <span class="o">&amp;</span><span class="n">hashkey</span><span class="p">,</span>
+                     <span class="k">const</span> <span class="n">std</span><span class="o">::</span><span class="n">string</span> <span class="o">&amp;</span><span class="n">sortkey</span><span class="p">,</span>
+                     <span class="kt">int64_t</span> <span class="n">increment</span><span class="p">,</span>
+                     <span class="kt">int64_t</span> <span class="o">&amp;</span><span class="n">new_value</span><span class="p">,</span>
+                     <span class="kt">int</span> <span class="n">timeout_milliseconds</span> <span class="o">=</span> <span class="mi">5000</span><span class="p">,</span>
+                     <span class="kt">int</span> <span class="n">ttl_seconds</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span>
+                     <span class="n">internal_info</span> <span class="o">*</span><span class="n">info</span> <span class="o">=</span> <span class="nb">nullptr</span><span class="p">)</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+</code></pre></div></div>
+
+<h3 id="async_incr">async_incr</h3>
+
+<p>Asynchronous increment</p>
+
+<div class="language-c++ highlighter-rouge"><div class="highlight"><pre class="highlight"><code>    <span class="c1">///</span>
+    <span class="c1">/// \brief asynchronous incr</span>
+    <span class="c1">///     atomically increment value by key from the cluster.</span>
+    <span class="c1">///     will not be blocked, return immediately.</span>
+    <span class="c1">///</span>
+    <span class="c1">///     the increment semantic is the same as redis:</span>
+    <span class="c1">///       - if old data is not found or empty, then set initial value to 0.</span>
+    <span class="c1">///       - if old data is not an integer or out of range, then return PERR_INVALID_ARGUMENT,</span>
+    <span class="c1">///         and return `new_value' as 0.</span>
+    <span class="c1">///       - if new value is out of range, then return PERR_INVALID_ARGUMENT, and return old</span>
+    <span class="c1">///         value in `new_value'.</span>
+    <span class="c1">///</span>
+    <span class="c1">///     if ttl_seconds == 0, the semantic is also the same as redis:</span>
+    <span class="c1">///       - normally, increment will preserve the original ttl.</span>
+    <span class="c1">///       - if old data is expired by ttl, then set initial value to 0 and set no ttl.</span>
+    <span class="c1">///     if ttl_seconds &gt; 0, then update with the new ttl if incr succeed.</span>
+    <span class="c1">///     if ttl_seconds == -1, then update to no ttl if incr succeed.</span>
+    <span class="c1">///</span>
+    <span class="c1">/// \param hashkey</span>
+    <span class="c1">/// used to decide which partition to get this k-v</span>
+    <span class="c1">/// \param sortkey</span>
+    <span class="c1">/// all the k-v under hashkey will be sorted by sortkey.</span>
+    <span class="c1">/// \param increment</span>
+    <span class="c1">/// the value we want to increment.</span>
+    <span class="c1">/// \param callback</span>
+    <span class="c1">/// the callback function will be invoked after operation finished or error occurred.</span>
+    <span class="c1">/// \param timeout_milliseconds</span>
+    <span class="c1">/// if wait longer than this value, will return time out error</span>
+    <span class="c1">/// \param ttl_seconds</span>
+    <span class="c1">/// time to live of this value.</span>
+    <span class="c1">/// \return</span>
+    <span class="c1">/// void.</span>
+    <span class="c1">///</span>
+    <span class="k">virtual</span> <span class="kt">void</span> <span class="n">async_incr</span><span class="p">(</span><span class="k">const</span> <span class="n">std</span><span class="o">::</span><span class="n">string</span> <span class="o">&amp;</span><span class="n">hashkey</span><span class="p">,</span>
+                            <span class="k">const</span> <span class="n">std</span><span class="o">::</span><span class="n">string</span> <span class="o">&amp;</span><span class="n">sortkey</span><span class="p">,</span>
+                            <span class="kt">int64_t</span> <span class="n">increment</span><span class="p">,</span>
+                            <span class="n">async_incr_callback_t</span> <span class="o">&amp;&amp;</span><span class="n">callback</span> <span class="o">=</span> <span class="nb">nullptr</span><span class="p">,</span>
+                            <span class="kt">int</span> <span class="n">timeout_milliseconds</span> <span class="o">=</span> <span class="mi">5000</span><span class="p">,</span>
+                            <span class="kt">int</span> <span class="n">ttl_seconds</span> <span class="o">=</span> <span class="mi">0</span><span class="p">)</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+</code></pre></div></div>
+
+<h3 id="check_and_set">check_and_set</h3>
+
+<div class="language-c++ highlighter-rouge"><div class="highlight"><pre class="highlight"><code>    <span class="c1">///</span>
+    <span class="c1">/// \brief check_and_set</span>
+    <span class="c1">///     atomically check and set value by key from the cluster.</span>
+    <span class="c1">///     the value will be set if and only if check passed.</span>
+    <span class="c1">///     the sort key for checking and setting can be the same or different.</span>
+    <span class="c1">/// \param hash_key</span>
+    <span class="c1">/// used to decide which partition to get this k-v</span>
+    <span class="c1">/// \param check_sort_key</span>
+    <span class="c1">/// the sort key to check.</span>
+    <span class="c1">/// \param check_type</span>
+    <span class="c1">/// the check type.</span>
+    <span class="c1">/// \param check_operand</span>
+    <span class="c1">/// the check operand.</span>
+    <span class="c1">/// \param set_sort_key</span>
+    <span class="c1">/// the sort key to set value if check passed.</span>
+    <span class="c1">/// \param set_value</span>
+    <span class="c1">/// the value to set if check passed.</span>
+    <span class="c1">/// \param options</span>
+    <span class="c1">/// the check-and-set options.</span>
+    <span class="c1">/// \param results</span>
+    <span class="c1">/// the check-and-set results.</span>
+    <span class="c1">/// \param timeout_milliseconds</span>
+    <span class="c1">/// if wait longer than this value, will return time out error</span>
+    <span class="c1">/// \return</span>
+    <span class="c1">/// int, the error indicates whether or not the operation is succeeded.</span>
+    <span class="c1">/// this error can be converted to a string using get_error_string().</span>
+    <span class="c1">/// if check type is int compare, and check_operand/check_value is not integer</span>
+    <span class="c1">/// or out of range, then return PERR_INVALID_ARGUMENT.</span>
+    <span class="c1">///</span>
+    <span class="k">virtual</span> <span class="kt">int</span> <span class="n">check_and_set</span><span class="p">(</span><span class="k">const</span> <span class="n">std</span><span class="o">::</span><span class="n">string</span> <span class="o">&amp;</span><span class="n">hash_key</span><span class="p">,</span>
+                              <span class="k">const</span> <span class="n">std</span><span class="o">::</span><span class="n">string</span> <span class="o">&amp;</span><span class="n">check_sort_key</span><span class="p">,</span>
+                              <span class="n">cas_check_type</span> <span class="n">check_type</span><span class="p">,</span>
+                              <span class="k">const</span> <span class="n">std</span><span class="o">::</span><span class="n">string</span> <span class="o">&amp;</span><span class="n">check_operand</span><span class="p">,</span>
+                              <span class="k">const</span> <span class="n">std</span><span class="o">::</span><span class="n">string</span> <span class="o">&amp;</span><span class="n">set_sort_key</span><span class="p">,</span>
+                              <span class="k">const</span> <span class="n">std</span><span class="o">::</span><span class="n">string</span> <span class="o">&amp;</span><span class="n">set_value</span><span class="p">,</span>
+                              <span class="k">const</span> <span class="n">check_and_set_options</span> <span class="o">&amp;</span><span class="n">options</span><span class="p">,</span>
+                              <span class="n">check_and_set_results</span> <span class="o">&amp;</span><span class="n">results</span><span class="p">,</span>
+                              <span class="kt">int</span> <span class="n">timeout_milliseconds</span> <span class="o">=</span> <span class="mi">5000</span><span class="p">,</span>
+                              <span class="n">internal_info</span> <span class="o">*</span><span class="n">info</span> <span class="o">=</span> <span class="nb">nullptr</span><span class="p">)</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+</code></pre></div></div>
+
+<h3 id="async_check_and_set">async_check_and_set</h3>
+
+<div class="language-c++ highlighter-rouge"><div class="highlight"><pre class="highlight"><code>    <span class="c1">///</span>
+    <span class="c1">/// \brief asynchronous check_and_set</span>
+    <span class="c1">///     atomically check and set value by key from the cluster.</span>
+    <span class="c1">///     will not be blocked, return immediately.</span>
+    <span class="c1">/// \param hash_key</span>
+    <span class="c1">/// used to decide which partition to get this k-v</span>
+    <span class="c1">/// \param check_sort_key</span>
+    <span class="c1">/// the sort key to check.</span>
+    <span class="c1">/// \param check_type</span>
+    <span class="c1">/// the check type.</span>
+    <span class="c1">/// \param check_operand</span>
+    <span class="c1">/// the check operand.</span>
+    <span class="c1">/// \param set_sort_key</span>
+    <span class="c1">/// the sort key to set value if check passed.</span>
+    <span class="c1">/// \param set_value</span>
+    <span class="c1">/// the value to set if check passed.</span>
+    <span class="c1">/// \param options</span>
+    <span class="c1">/// the check-and-set options.</span>
+    <span class="c1">/// \param callback</span>
+    <span class="c1">/// the callback function will be invoked after operation finished or error occurred.</span>
+    <span class="c1">/// \param timeout_milliseconds</span>
+    <span class="c1">/// if wait longer than this value, will return time out error</span>
+    <span class="c1">/// \return</span>
+    <span class="c1">/// void.</span>
+    <span class="c1">///</span>
+    <span class="k">virtual</span> <span class="kt">void</span> <span class="n">async_check_and_set</span><span class="p">(</span><span class="k">const</span> <span class="n">std</span><span class="o">::</span><span class="n">string</span> <span class="o">&amp;</span><span class="n">hash_key</span><span class="p">,</span>
+                                     <span class="k">const</span> <span class="n">std</span><span class="o">::</span><span class="n">string</span> <span class="o">&amp;</span><span class="n">check_sort_key</span><span class="p">,</span>
+                                     <span class="n">cas_check_type</span> <span class="n">check_type</span><span class="p">,</span>
+                                     <span class="k">const</span> <span class="n">std</span><span class="o">::</span><span class="n">string</span> <span class="o">&amp;</span><span class="n">check_operand</span><span class="p">,</span>
+                                     <span class="k">const</span> <span class="n">std</span><span class="o">::</span><span class="n">string</span> <span class="o">&amp;</span><span class="n">set_sort_key</span><span class="p">,</span>
+                                     <span class="k">const</span> <span class="n">std</span><span class="o">::</span><span class="n">string</span> <span class="o">&amp;</span><span class="n">set_value</span><span class="p">,</span>
+                                     <span class="k">const</span> <span class="n">check_and_set_options</span> <span class="o">&amp;</span><span class="n">options</span><span class="p">,</span>
+                                     <span class="n">async_check_and_set_callback_t</span> <span class="o">&amp;&amp;</span><span class="n">callback</span> <span class="o">=</span> <span class="nb">nullptr</span><span class="p">,</span>
+                                     <span class="kt">int</span> <span class="n">timeout_milliseconds</span> <span class="o">=</span> <span class="mi">5000</span><span class="p">)</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+</code></pre></div></div>
+
+<h3 id="check_and_mutate">check_and_mutate</h3>
+
+<div class="language-c++ highlighter-rouge"><div class="highlight"><pre class="highlight"><code>    <span class="c1">///</span>
+    <span class="c1">/// \brief check_and_mutate</span>
+    <span class="c1">///     atomically check and mutate from the cluster.</span>
+    <span class="c1">///     the mutations will be applied if and only if check passed.</span>
+    <span class="c1">/// \param hash_key</span>
+    <span class="c1">/// used to decide which partition to get this k-v</span>
+    <span class="c1">/// \param check_sort_key</span>
+    <span class="c1">/// the sort key to check.</span>
+    <span class="c1">/// \param check_type</span>
+    <span class="c1">/// the check type.</span>
+    <span class="c1">/// \param check_operand</span>
+    <span class="c1">/// the check operand.</span>
+    <span class="c1">/// \param mutations</span>
+    <span class="c1">/// the list of mutations to perform if check condition is satisfied.</span>
+    <span class="c1">/// \param options</span>
+    <span class="c1">/// the check-and-mutate options.</span>
+    <span class="c1">/// \param results</span>
+    <span class="c1">/// the check-and-mutate results.</span>
+    <span class="c1">/// \param timeout_milliseconds</span>
+    <span class="c1">/// if wait longer than this value, will return time out error</span>
+    <span class="c1">/// \return</span>
+    <span class="c1">/// int, the error indicates whether or not the operation is succeeded.</span>
+    <span class="c1">/// this error can be converted to a string using get_error_string().</span>
+    <span class="c1">/// if check type is int compare, and check_operand/check_value is not integer</span>
+    <span class="c1">/// or out of range, then return PERR_INVALID_ARGUMENT.</span>
+    <span class="c1">///</span>
+    <span class="k">virtual</span> <span class="kt">int</span> <span class="n">check_and_mutate</span><span class="p">(</span><span class="k">const</span> <span class="n">std</span><span class="o">::</span><span class="n">string</span> <span class="o">&amp;</span><span class="n">hash_key</span><span class="p">,</span>
+                                 <span class="k">const</span> <span class="n">std</span><span class="o">::</span><span class="n">string</span> <span class="o">&amp;</span><span class="n">check_sort_key</span><span class="p">,</span>
+                                 <span class="n">cas_check_type</span> <span class="n">check_type</span><span class="p">,</span>
+                                 <span class="k">const</span> <span class="n">std</span><span class="o">::</span><span class="n">string</span> <span class="o">&amp;</span><span class="n">check_operand</span><span class="p">,</span>
+                                 <span class="k">const</span> <span class="n">mutations</span> <span class="o">&amp;</span><span class="n">mutations</span><span class="p">,</span>
+                                 <span class="k">const</span> <span class="n">check_and_mutate_options</span> <span class="o">&amp;</span><span class="n">options</span><span class="p">,</span>
+                                 <span class="n">check_and_mutate_results</span> <span class="o">&amp;</span><span class="n">results</span><span class="p">,</span>
+                                 <span class="kt">int</span> <span class="n">timeout_milliseconds</span> <span class="o">=</span> <span class="mi">5000</span><span class="p">,</span>
+                                 <span class="n">internal_info</span> <span class="o">*</span><span class="n">info</span> <span class="o">=</span> <span class="nb">nullptr</span><span class="p">)</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+
+</code></pre></div></div>
+
+<h3 id="async_check_and_mutate">async_check_and_mutate</h3>
+
+<div class="language-c++ highlighter-rouge"><div class="highlight"><pre class="highlight"><code>    <span class="c1">///</span>
+    <span class="c1">/// \brief asynchronous check_and_mutate</span>
+    <span class="c1">///     atomically check and mutate from the cluster.</span>
+    <span class="c1">///     will not be blocked, return immediately.</span>
+    <span class="c1">/// \param hash_key</span>
+    <span class="c1">/// used to decide which partition to get this k-v</span>
+    <span class="c1">/// \param check_sort_key</span>
+    <span class="c1">/// the sort key to check.</span>
+    <span class="c1">/// \param check_type</span>
+    <span class="c1">/// the check type.</span>
+    <span class="c1">/// \param check_operand</span>
+    <span class="c1">/// the check operand.</span>
+    <span class="c1">/// \param mutations</span>
+    <span class="c1">/// the list of mutations to perform if check condition is satisfied.</span>
+    <span class="c1">/// \param options</span>
+    <span class="c1">/// the check-and-mutate options.</span>
+    <span class="c1">/// \param callback</span>
+    <span class="c1">/// the callback function will be invoked after operation finished or error occurred.</span>
+    <span class="c1">/// \param timeout_milliseconds</span>
+    <span class="c1">/// if wait longer than this value, will return time out error</span>
+    <span class="c1">/// \return</span>
+    <span class="c1">/// void.</span>
+    <span class="c1">///</span>
+    <span class="k">virtual</span> <span class="kt">void</span> <span class="n">async_check_and_mutate</span><span class="p">(</span><span class="k">const</span> <span class="n">std</span><span class="o">::</span><span class="n">string</span> <span class="o">&amp;</span><span class="n">hash_key</span><span class="p">,</span>
+                                        <span class="k">const</span> <span class="n">std</span><span class="o">::</span><span class="n">string</span> <span class="o">&amp;</span><span class="n">check_sort_key</span><span class="p">,</span>
+                                        <span class="n">cas_check_type</span> <span class="n">check_type</span><span class="p">,</span>
+                                        <span class="k">const</span> <span class="n">std</span><span class="o">::</span><span class="n">string</span> <span class="o">&amp;</span><span class="n">check_operand</span><span class="p">,</span>
+                                        <span class="k">const</span> <span class="n">mutations</span> <span class="o">&amp;</span><span class="n">mutations</span><span class="p">,</span>
+                                        <span class="k">const</span> <span class="n">check_and_mutate_options</span> <span class="o">&amp;</span><span class="n">options</span><span class="p">,</span>
+                                        <span class="n">async_check_and_mutate_callback_t</span> <span class="o">&amp;&amp;</span><span class="n">callback</span> <span class="o">=</span> <span class="nb">nullptr</span><span class="p">,</span>
+                                        <span class="kt">int</span> <span class="n">timeout_milliseconds</span> <span class="o">=</span> <span class="mi">5000</span><span class="p">)</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+</code></pre></div></div>
+
+<h3 id="ttl">ttl</h3>
+
+<p>Get the TTL (Time To Live) of a single data row. TTL indicates how long the data remains valid. Data becomes unreadable after the TTL expires.</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>    ///
+    /// \brief ttl (time to live)
+    ///     get ttl in seconds of this k-v.
+    ///     key is composed of hashkey and sortkey. must provide both to get the value.
+    /// \param hashkey
+    /// used to decide which partition to get this k-v
+    /// \param sortkey
+    /// all the k-v under hashkey will be sorted by sortkey.
+    /// \param ttl_seconds
+    /// the returned ttl value in seconds.
+    /// \param timeout_milliseconds
+    /// if wait longer than this value, will return time out error
+    /// \return
+    /// int, the error indicates whether or not the operation is succeeded.
+    /// this error can be converted to a string using get_error_string()
+    ///
+    virtual int ttl(const std::string &amp;hashkey,
+                    const std::string &amp;sortkey,
+                    int &amp;ttl_seconds,
+                    int timeout_milliseconds = 5000,
+                    internal_info *info = NULL) = 0;
+</code></pre></div></div>
+
+<h3 id="get_scanner">get_scanner</h3>
+<p>Get a scanner for the sortkey range [sortkeyA ~ sortkeyB) under a specific hashkey.</p>
+
+<div class="language-c++ highlighter-rouge"><div class="highlight"><pre class="highlight"><code>    <span class="c1">///</span>
+    <span class="c1">/// \brief get hash scanner</span>
+    <span class="c1">///     get scanner for [start_sortkey, stop_sortkey) of hashkey</span>
+    <span class="c1">/// \param hashkey</span>
+    <span class="c1">/// cannot be empty</span>
+    <span class="c1">/// \param start_sortkey</span>
+    <span class="c1">/// sortkey to start with</span>
+    <span class="c1">/// \param stop_sortkey</span>
+    <span class="c1">/// sortkey to stop. ""(empty string) represents the max key</span>
+    <span class="c1">/// \param options</span>
+    <span class="c1">/// which used to indicate scan options, like which bound is inclusive</span>
+    <span class="c1">/// \param scanner</span>
+    <span class="c1">/// out param, used to get k-v</span>
+    <span class="c1">/// this pointer should be deleted when scan complete</span>
+    <span class="c1">/// \return</span>
+    <span class="c1">/// int, the error indicates whether or not the operation is succeeded.</span>
+    <span class="c1">/// this error can be converted to a string using get_error_string()</span>
+    <span class="c1">///</span>
+    <span class="k">virtual</span> <span class="kt">int</span> <span class="n">get_scanner</span><span class="p">(</span><span class="k">const</span> <span class="n">std</span><span class="o">::</span><span class="n">string</span> <span class="o">&amp;</span><span class="n">hashkey</span><span class="p">,</span>
+                            <span class="k">const</span> <span class="n">std</span><span class="o">::</span><span class="n">string</span> <span class="o">&amp;</span><span class="n">start_sortkey</span><span class="p">,</span> <span class="c1">// start from beginning if this set ""</span>
+                            <span class="k">const</span> <span class="n">std</span><span class="o">::</span><span class="n">string</span> <span class="o">&amp;</span><span class="n">stop_sortkey</span><span class="p">,</span>  <span class="c1">// to the last item if this set ""</span>
+                            <span class="k">const</span> <span class="n">scan_options</span> <span class="o">&amp;</span><span class="n">options</span><span class="p">,</span>
+                            <span class="n">pegasus_scanner</span> <span class="o">*&amp;</span><span class="n">scanner</span><span class="p">)</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+</code></pre></div></div>
+
+<h3 id="async_get_scanner">async_get_scanner</h3>
+<p>Asynchronously get a scanner for the sortkey range [sortkeyA ~ sortkeyB) under a specific hashkey.</p>
+
+<div class="language-c++ highlighter-rouge"><div class="highlight"><pre class="highlight"><code>    <span class="c1">///</span>
+    <span class="c1">/// \brief async get hash scanner</span>
+    <span class="c1">///     get scanner for [start_sortkey, stop_sortkey) of hashkey</span>
+    <span class="c1">///     will not be blocked, return immediately.</span>
+    <span class="c1">/// \param hashkey</span>
+    <span class="c1">/// cannot be empty</span>
+    <span class="c1">/// \param start_sortkey</span>
+    <span class="c1">/// sortkey to start with</span>
+    <span class="c1">/// \param stop_sortkey</span>
+    <span class="c1">/// sortkey to stop. ""(empty string) represents the max key</span>
+    <span class="c1">/// \param options</span>
+    <span class="c1">/// which used to indicate scan options, like which bound is inclusive</span>
+    <span class="c1">/// \param callback</span>
+    <span class="c1">/// return status and scanner in callback, and the latter should be deleted when scan complete</span>
+    <span class="c1">///</span>
+    <span class="k">virtual</span> <span class="kt">void</span>
+    <span class="n">async_get_scanner</span><span class="p">(</span><span class="k">const</span> <span class="n">std</span><span class="o">::</span><span class="n">string</span> <span class="o">&amp;</span><span class="n">hashkey</span><span class="p">,</span>
+                      <span class="k">const</span> <span class="n">std</span><span class="o">::</span><span class="n">string</span> <span class="o">&amp;</span><span class="n">start_sortkey</span><span class="p">,</span> <span class="c1">// start from beginning if this set ""</span>
+                      <span class="k">const</span> <span class="n">std</span><span class="o">::</span><span class="n">string</span> <span class="o">&amp;</span><span class="n">stop_sortkey</span><span class="p">,</span>  <span class="c1">// to the last item if this set ""</span>
+                      <span class="k">const</span> <span class="n">scan_options</span> <span class="o">&amp;</span><span class="n">options</span><span class="p">,</span>
+                      <span class="n">async_get_scanner_callback_t</span> <span class="o">&amp;&amp;</span><span class="n">callback</span><span class="p">)</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+</code></pre></div></div>
+
+<h3 id="get_unordered_scanners">get_unordered_scanners</h3>
+<p>Get a scanner to iterate through all data.</p>
+<div class="language-c++ highlighter-rouge"><div class="highlight"><pre class="highlight"><code>    <span class="c1">///</span>
+    <span class="c1">/// \brief get a bundle of scanners to iterate all k-v in table</span>
+    <span class="c1">///        scanners should be deleted when scan complete</span>
+    <span class="c1">/// \param max_split_count</span>
+    <span class="c1">/// the number of scanners returned will always &lt;= max_split_count</span>
+    <span class="c1">/// \param options</span>
+    <span class="c1">/// which used to indicate scan options, like timeout_milliseconds</span>
+    <span class="c1">/// \param scanners</span>
+    <span class="c1">/// out param, used to get k-v</span>
+    <span class="c1">/// these pointers should be deleted</span>
+    <span class="c1">/// \return</span>
+    <span class="c1">/// int, the error indicates whether or not the operation is succeeded.</span>
+    <span class="c1">/// this error can be converted to a string using get_error_string()</span>
+    <span class="c1">///</span>
+    <span class="k">virtual</span> <span class="kt">int</span> <span class="n">get_unordered_scanners</span><span class="p">(</span><span class="kt">int</span> <span class="n">max_split_count</span><span class="p">,</span>
+                                       <span class="k">const</span> <span class="n">scan_options</span> <span class="o">&amp;</span><span class="n">options</span><span class="p">,</span>
+                                       <span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="n">pegasus_scanner</span> <span class="o">*&gt;</span> <span class="o">&amp;</span><span class="n">scanners</span><span class="p">)</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+</code></pre></div></div>
+
+<h3 id="async_get_unordered_scanners">async_get_unordered_scanners</h3>
+<p>Asynchronously get a scanner to iterate through all data.</p>
+<div class="language-c++ highlighter-rouge"><div class="highlight"><pre class="highlight"><code>    <span class="c1">///</span>
+    <span class="c1">/// \brief async get a bundle of scanners to iterate all k-v in table</span>
+    <span class="c1">///        scannners return by callback should be deleted when all scan complete</span>
+    <span class="c1">/// \param max_split_count</span>
+    <span class="c1">/// the number of scanners returned will always &lt;= max_split_count</span>
+    <span class="c1">/// \param options</span>
+    <span class="c1">/// which used to indicate scan options, like timeout_milliseconds</span>
+    <span class="c1">/// \param callback; return status and scanner in this callback</span>
+    <span class="c1">///</span>
+    <span class="k">virtual</span> <span class="kt">void</span>
+    <span class="n">async_get_unordered_scanners</span><span class="p">(</span><span class="kt">int</span> <span class="n">max_split_count</span><span class="p">,</span>
+                                 <span class="k">const</span> <span class="n">scan_options</span> <span class="o">&amp;</span><span class="n">options</span><span class="p">,</span>
+                                 <span class="n">async_get_unordered_scanners_callback_t</span> <span class="o">&amp;&amp;</span><span class="n">callback</span><span class="p">)</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+</code></pre></div></div>
 
                 </div>
             </section>
@@ -777,7 +1756,46 @@
     </span>
     Table of contents
 </p>
-
+<ul class="menu-list">
+  <li><a href="#obtain-pegasus-c-client">Obtain Pegasus C++ client</a></li>
+  <li><a href="#configuration-file">Configuration File</a></li>
+  <li><a href="#interface-definition">Interface Definition</a>
+    <ul>
+      <li><a href="#creating-a-client-instance">Creating a Client Instance</a></li>
+      <li><a href="#pegasus_client-interface">pegasus_client Interface</a>
+        <ul>
+          <li><a href="#set">set</a></li>
+          <li><a href="#async_set">async_set</a></li>
+          <li><a href="#multi_set">multi_set</a></li>
+          <li><a href="#async_multi_set">async_multi_set</a></li>
+          <li><a href="#get">get</a></li>
+          <li><a href="#async_get">async_get</a></li>
+          <li><a href="#multi_get">multi_get</a></li>
+          <li><a href="#async_multi_get">async_multi_get</a></li>
+          <li><a href="#multi_get_sortkeys">multi_get_sortkeys</a></li>
+          <li><a href="#async_multi_get_sortkeys">async_multi_get_sortkeys</a></li>
+          <li><a href="#exist">exist</a></li>
+          <li><a href="#sortkey_count">sortkey_count</a></li>
+          <li><a href="#del">del</a></li>
+          <li><a href="#async_del">async_del</a></li>
+          <li><a href="#multi_del">multi_del</a></li>
+          <li><a href="#async_multi_del">async_multi_del</a></li>
+          <li><a href="#incr">incr</a></li>
+          <li><a href="#async_incr">async_incr</a></li>
+          <li><a href="#check_and_set">check_and_set</a></li>
+          <li><a href="#async_check_and_set">async_check_and_set</a></li>
+          <li><a href="#check_and_mutate">check_and_mutate</a></li>
+          <li><a href="#async_check_and_mutate">async_check_and_mutate</a></li>
+          <li><a href="#ttl">ttl</a></li>
+          <li><a href="#get_scanner">get_scanner</a></li>
+          <li><a href="#async_get_scanner">async_get_scanner</a></li>
+          <li><a href="#get_unordered_scanners">get_unordered_scanners</a></li>
+          <li><a href="#async_get_unordered_scanners">async_get_unordered_scanners</a></li>
+        </ul>
+      </li>
+    </ul>
+  </li>
+</ul>
 
         </div>
     </div>
