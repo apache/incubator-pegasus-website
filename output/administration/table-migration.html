@@ -16,15 +16,15 @@
 <meta name="generator" content="Jekyll v4.4.1" />
 <meta property="og:title" content="Table Migration" />
 <meta property="og:locale" content="en_US" />
-<meta name="description" content="TRANSLATING" />
-<meta property="og:description" content="TRANSLATING" />
+<meta name="description" content="Table migration refers to moving all data of a table from one Pegasus cluster to another Pegasus cluster." />
+<meta property="og:description" content="Table migration refers to moving all data of a table from one Pegasus cluster to another Pegasus cluster." />
 <meta property="og:site_name" content="Pegasus" />
 <meta property="og:type" content="article" />
-<meta property="article:published_time" content="2025-04-18T04:14:19+00:00" />
+<meta property="article:published_time" content="2025-05-26T07:37:35+00:00" />
 <meta name="twitter:card" content="summary" />
 <meta property="twitter:title" content="Table Migration" />
 <script type="application/ld+json">
-{"@context":"https://schema.org","@type":"BlogPosting","dateModified":"2025-04-18T04:14:19+00:00","datePublished":"2025-04-18T04:14:19+00:00","description":"TRANSLATING","headline":"Table Migration","mainEntityOfPage":{"@type":"WebPage","@id":"/administration/table-migration"},"url":"/administration/table-migration"}</script>
+{"@context":"https://schema.org","@type":"BlogPosting","dateModified":"2025-05-26T07:37:35+00:00","datePublished":"2025-05-26T07:37:35+00:00","description":"Table migration refers to moving all data of a table from one Pegasus cluster to another Pegasus cluster.","headline":"Table Migration","mainEntityOfPage":{"@type":"WebPage","@id":"/administration/table-migration"},"url":"/administration/table-migration"}</script>
 <!-- End Jekyll SEO tag -->
 
 </head>
@@ -734,7 +734,239 @@
             </section>
             <section class="section" style="padding-top: 2rem;">
                 <div class="content">
-                    <p>TRANSLATING</p>
+                    <p>Table migration refers to moving all data of a table from one Pegasus cluster to another Pegasus cluster.</p>
+
+<p>Currently, four table migration methods are provided:</p>
+
+<ol>
+  <li>The Shell tool command migration;</li>
+  <li>Cold backup and restore;</li>
+  <li>Dual-write with bulkload;</li>
+  <li>Online (hot) migration;</li>
+</ol>
+
+<p>Below, we explain the principles and step-by-step operations of each migration method:</p>
+
+<h1 id="shell-tool-command-migration">Shell Tool Command Migration</h1>
+
+<h2 id="principle">Principle</h2>
+
+<p>The Shell tool’ s <a href="/overview/shell#copy_data">copy_data command</a> works by reading each record from the source table via the client and writing it one by one into the target table. Specifically, it uses the <code class="language-plaintext highlighter-rouge">scan</code> interface to fetch entries from the table in the source cluster, then uses the <code class="language-plaintext highlighter-rouge">set</code> interface to insert or overwrite entries in the target cluster’ s table.</p>
+
+<h2 id="stepbystep-operation">Step‑by‑Step Operation</h2>
+
+<p>The <code class="language-plaintext highlighter-rouge">copy_data</code> command syntax is:</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>copy_data              &lt;-c|--target_cluster_name str&gt; &lt;-a|--target_app_name str&gt;
+                       [-p|--partition num] [-b|--max_batch_count num] [-t|--timeout_ms num]
+                       [-h|--hash_key_filter_type anywhere|prefix|postfix]
+                       [-x|--hash_key_filter_pattern str]
+                       [-s|--sort_key_filter_type anywhere|prefix|postfix|exact]
+                       [-y|--sort_key_filter_pattern str]
+                       [-v|--value_filter_type anywhere|prefix|postfix|exact]
+                       [-z|--value_filter_pattern str] [-m|--max_multi_set_concurrency]
+                       [-o|--scan_option_batch_size] [-e|--no_ttl] [-n|--no_overwrite]
+                       [-i|--no_value] [-g|--geo_data] [-u|--use_multi_set]
+</code></pre></div></div>
+
+<p>Assume the source cluster is <code class="language-plaintext highlighter-rouge">ClusterA</code>, the target cluster is <code class="language-plaintext highlighter-rouge">ClusterB</code>, and the table to migrate is <code class="language-plaintext highlighter-rouge">TableA</code>. The migration steps are:</p>
+
+<ol>
+  <li>
+    <p><strong>Create the table on the target cluster.</strong><br />
+The <code class="language-plaintext highlighter-rouge">copy_data</code> command does not auto-create tables on the target cluster. You must manually create a table (for example, named <code class="language-plaintext highlighter-rouge">TableB</code>). The new table’ s name and partition count may differ from the original.</p>
+  </li>
+  <li>
+    <p><strong>Add the target cluster’s configuration to the Shell config file.</strong><br />
+Since you specify the target cluster with <code class="language-plaintext highlighter-rouge">-c</code>, you need to list <code class="language-plaintext highlighter-rouge">ClusterB</code>’ s MetaServer addresses in <code class="language-plaintext highlighter-rouge">src/shell/config.ini</code>. In the Shell working directory, append:</p>
+
+    <div class="language-ini highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nn">[pegasus.clusters]</span>
+ <span class="py">ClusterB</span> <span class="p">=</span> <span class="s">{MetaServer addresses of ClusterB}</span>
+</code></pre></div>    </div>
+  </li>
+  <li>
+    <p><strong>Run the <code class="language-plaintext highlighter-rouge">copy_data</code> command in the Shell:</strong></p>
+
+    <div class="language-shell highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="o">&gt;&gt;&gt;</span> use TableA
+<span class="o">&gt;&gt;&gt;</span> copy_data <span class="nt">-c</span> ClusterB <span class="nt">-a</span> TableB <span class="nt">-t</span> 10000
+</code></pre></div>    </div>
+  </li>
+  <li>
+    <p><strong>Monitor the copy process.</strong><br />
+If everything is set up correctly, copying will begin and progress will print every second. Typical throughput exceeds 100,000 records per second. If the process fails (e.g., due to write throttling or write stalls), shuold resolve the issue and retry.</p>
+  </li>
+</ol>
+
+<h1 id="cold-backup-migration">Cold Backup Migration</h1>
+
+<h2 id="principle-1">Principle</h2>
+
+<p>Cold backup migration uses Pegasus’ s <a href="/administration/cold-backup">cold backup feature</a> to back up data to HDFS (or other storage) and then restore or bulkload it into the new table.</p>
+
+<p><strong>Advantages of cold backup migration:</strong></p>
+
+<ul>
+  <li><strong>Higher speed:</strong> Cold backup copies files directly, which is much faster than row-by-row copying.</li>
+  <li><strong>Greater fault tolerance:</strong> The cold backup process includes retry logic to handle network instability, whereas <code class="language-plaintext highlighter-rouge">copy_data</code> must restart on failure.</li>
+  <li><strong>Multiple targets friendly:</strong> You can back up once and restore multiple times to different clusters.</li>
+</ul>
+
+<h2 id="stepbystep-operation-1">Step‑by‑Step Operation</h2>
+
+<p><strong>Cold backup consists of two main phases:</strong></p>
+
+<ol>
+  <li>
+    <p><strong>Create checkpoints</strong><br />
+Checkpoint creation on all primaries and replicas, preparing data for upload. Larger partitions incur higher disk I/O and may cause brief read/write spikes.</p>
+  </li>
+  <li>
+    <p><strong>Upload checkpoints</strong><br />
+Uploading checkpoints to HDFS, consuming network bandwidth. Without rate limiting,this may saturate the network.</p>
+  </li>
+</ol>
+
+<p><strong>Recommended practices:</strong></p>
+
+<ul>
+  <li>
+    <p><strong>Rate‑limit network I/O before backup via Shell:</strong></p>
+
+    <div class="language-shell highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c"># For versions ≤ 2.3.x</span>
+remote_command <span class="nt">-t</span> replica-server nfs.max_send_rate_megabytes 50
+<span class="c"># For versions ≥ 2.4.x</span>
+remote_command <span class="nt">-t</span> replica-server nfs.max_send_rate_megabytes_per_disk 50
+</code></pre></div>    </div>
+  </li>
+  <li>
+    <p><strong>Initiate the backup via <code class="language-plaintext highlighter-rouge">admin-cli</code>, specifying table ID, HDFS region, and path:</strong></p>
+
+    <div class="language-shell highlighter-rouge"><div class="highlight"><pre class="highlight"><code>backup 3 hdfs_xyz /user/pegasus/backup
+</code></pre></div>    </div>
+
+    <p>The <code class="language-plaintext highlighter-rouge">hdfs_xyz</code> region is defined in <code class="language-plaintext highlighter-rouge">config.ini</code>:</p>
+
+    <div class="language-ini highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nn">[block_service.hdfs_xyz]</span>
+<span class="py">type</span> <span class="p">=</span> <span class="s">hdfs_service</span>
+<span class="py">args</span> <span class="p">=</span> <span class="s">hdfs://xxxprc-hadoop/</span>
+</code></pre></div>    </div>
+  </li>
+  <li>
+    <p><strong>Monitor progress.</strong><br />
+ Once disk I/O drops, the upload phase has begun. You may incrementally increase the rate limit (e.g., to 100 MB/s) to speed up:</p>
+
+    <div class="language-shell highlighter-rouge"><div class="highlight"><pre class="highlight"><code> <span class="c"># version ≤ 2.3.x</span>
+ remote_command <span class="nt">-t</span> replica-server nfs.max_send_rate_megabytes 100
+ <span class="c"># version ≥ 2.4.x</span>
+ remote_command <span class="nt">-t</span> replica-server nfs.max_send_rate_megabytes_per_disk 100
+</code></pre></div>    </div>
+  </li>
+  <li>
+    <p><strong>Handle failures.</strong><br />
+ If a ReplicaServer restarts, the backup fails and must restart. Watch the <code class="language-plaintext highlighter-rouge">cold.backup.max.upload.file.size</code> metric; when it resets to zero, the failed backup has ended. Delete the HDFS backup directory and retry.</p>
+  </li>
+</ul>
+
+<p><strong>Data restoration methods:</strong></p>
+
+<ol>
+  <li>
+    <p><strong>Using <code class="language-plaintext highlighter-rouge">restore</code>:</strong></p>
+
+    <div class="language-shell highlighter-rouge"><div class="highlight"><pre class="highlight"><code>restore <span class="nt">-c</span> ClusterA <span class="nt">-a</span> single <span class="nt">-i</span> 4 <span class="nt">-t</span> 1742888751127 <span class="nt">-b</span> hdfs_x <span class="nt">-r</span> /user/pegasus/backup
+</code></pre></div>    </div>
+
+    <ul>
+      <li><code class="language-plaintext highlighter-rouge">restore</code> auto‑creates the table and does not support changing partition count.</li>
+      <li>The source table (<code class="language-plaintext highlighter-rouge">TableA</code>) must exist; otherwise, use Bulkload.</li>
+    </ul>
+  </li>
+  <li>
+    <p><strong>Using Bulkload:</strong></p>
+
+    <ul>
+      <li>Convert cold backup files to Bulkload format via Pegasus-spark’ s offline split.</li>
+      <li>
+        <p>In Shell, run:</p>
+
+        <div class="language-shell highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="o">&gt;&gt;&gt;</span> use TableB
+<span class="o">&gt;&gt;&gt;</span> set_app_envs rocksdb.usage_scenario bulk_load
+<span class="o">&gt;&gt;&gt;</span> start_bulk_load <span class="nt">-a</span> TableB <span class="nt">-c</span> ClusterB <span class="nt">-p</span> hdfs_xyz <span class="nt">-r</span> /user/pegasus/split
+</code></pre></div>        </div>
+      </li>
+    </ul>
+  </li>
+</ol>
+
+<h1 id="dualwrite-with-bulkload">Dual‑Write with Bulkload</h1>
+
+<p>Both <code class="language-plaintext highlighter-rouge">copy_data</code> and cold backup migrate only existing data; incremental writes require a maintenance window. From version <code class="language-plaintext highlighter-rouge">v2.3.x</code>, Pegasus supports <strong>online migration</strong> with dual‑write plus Bulkload.</p>
+
+<h2 id="principle-2">Principle</h2>
+
+<ul>
+  <li><strong>Dual‑write:</strong> from the application to both the source and target tables, ensuring real‑time sync of new writes.</li>
+  <li><strong>Bulkload:</strong> existing data via cold backup, offline split, and <code class="language-plaintext highlighter-rouge">IngestBehind</code>, ensuring correct ordering between old and new data.</li>
+</ul>
+
+<p>RocksDB’ s <code class="language-plaintext highlighter-rouge">IngestBehind</code> assigns a global sequence number of 0 to ingested SST files, placing them below existing data so that incremental writes (with higher sequence numbers) remain in order.</p>
+
+<h2 id="stepbystep-operation-2">Step‑by‑Step Operation</h2>
+
+<ul>
+  <li>
+    <p><strong>Create the target table with <code class="language-plaintext highlighter-rouge">rocksdb.allow_ingest_behind=true</code>:</strong></p>
+
+    <div class="language-sql highlighter-rouge"><div class="highlight"><pre class="highlight"><code> <span class="k">create</span> <span class="n">TableB</span> <span class="o">-</span><span class="n">p</span> <span class="mi">64</span> <span class="o">-</span><span class="n">e</span> <span class="n">rocksdb</span><span class="p">.</span><span class="n">allow_ingest_behind</span><span class="o">=</span><span class="k">true</span>
+</code></pre></div>    </div>
+  </li>
+  <li><strong>Implement dual‑write in your application, with retry logic on failures for both tables.</strong></li>
+  <li><strong>Prepare Bulkload data via cold backup and offline split.</strong></li>
+  <li>
+    <p><strong>Start Bulkload with <code class="language-plaintext highlighter-rouge">--ingest_behind</code>:</strong></p>
+
+    <div class="language-shell highlighter-rouge"><div class="highlight"><pre class="highlight"><code> <span class="o">&gt;&gt;&gt;</span> use TableB
+ <span class="o">&gt;&gt;&gt;</span> set_app_envs rocksdb.usage_scenario bulk_load
+ <span class="o">&gt;&gt;&gt;</span> start_bulk_load <span class="nt">-a</span> TableB <span class="nt">-c</span> ClusterB <span class="nt">-p</span> hdfs_xyz <span class="nt">-r</span> /user/pegasus/split <span class="nt">--ingest_behind</span>
+</code></pre></div>    </div>
+  </li>
+  <li><strong>Rate‑limit Bulkload network I/O as needed.</strong></li>
+  <li><strong>Partition counts may differ between source and target tables.</strong></li>
+</ul>
+
+<h1 id="online-hot-migration">Online (Hot) Migration</h1>
+
+<p>From version <code class="language-plaintext highlighter-rouge">v2.4.x</code>, Pegasus supports hot backup. See <a href="/administration/duplication">Cross‑datacenter Replication</a> for details. Hot backup enables zero‑downtime migration with minimal steps.</p>
+
+<h2 id="stepbystep-operation-3">Step‑by‑Step Operation</h2>
+
+<ul>
+  <li><strong>Replace ip straigt</strong><br />
+ Route all clients through <code class="language-plaintext highlighter-rouge">MetaProxy</code>— no direct MetaServer IPs allowed.</li>
+  <li><strong>Start backup</strong><br />
+ Establish hot backup from source to target cluster (setup omitted).</li>
+  <li><strong>Switch ZooKeeper</strong><br />
+ Switch <code class="language-plaintext highlighter-rouge">MetaProxy</code> in ZooKeeper to point to the target cluster’ s MetaServer addresses.</li>
+  <li>
+    <p><strong>Refresh topology</strong><br />
+ Block reads/writes on the source table to force clients to refresh topology.</p>
+
+    <div class="language-shell highlighter-rouge"><div class="highlight"><pre class="highlight"><code> <span class="o">&gt;&gt;&gt;</span> use TableB
+ <span class="o">&gt;&gt;&gt;</span> set_app_envs replica.deny_client_request reconfig<span class="k">*</span>all
+</code></pre></div>    </div>
+  </li>
+  <li><strong>Verify migration</strong><br />
+ Verify migration success by observing that:
+    <ul>
+      <li>QPS on the source table drops to zero;</li>
+      <li>QPS on the target table rises to match the original;</li>
+      <li><code class="language-plaintext highlighter-rouge">dup.disabled_non_idempotent_write_count</code> remains at 0 on both clusters;</li>
+      <li><code class="language-plaintext highlighter-rouge">recent.read.fail.count</code> and <code class="language-plaintext highlighter-rouge">recent.write.fail.count</code> remain at 0 on both clusters.</li>
+    </ul>
+  </li>
+</ul>
+
+<p><strong>Note:</strong> C++ and Python clients currently do not support connecting via MetaProxy.</p>
 
                 </div>
             </section>
@@ -777,7 +1009,31 @@
     </span>
     Table of contents
 </p>
-
+<ul class="menu-list">
+  <li><a href="#shell-tool-command-migration">Shell Tool Command Migration</a>
+    <ul>
+      <li><a href="#principle">Principle</a></li>
+      <li><a href="#stepbystep-operation">Step‑by‑Step Operation</a></li>
+    </ul>
+  </li>
+  <li><a href="#cold-backup-migration">Cold Backup Migration</a>
+    <ul>
+      <li><a href="#principle-1">Principle</a></li>
+      <li><a href="#stepbystep-operation-1">Step‑by‑Step Operation</a></li>
+    </ul>
+  </li>
+  <li><a href="#dualwrite-with-bulkload">Dual‑Write with Bulkload</a>
+    <ul>
+      <li><a href="#principle-2">Principle</a></li>
+      <li><a href="#stepbystep-operation-2">Step‑by‑Step Operation</a></li>
+    </ul>
+  </li>
+  <li><a href="#online-hot-migration">Online (Hot) Migration</a>
+    <ul>
+      <li><a href="#stepbystep-operation-3">Step‑by‑Step Operation</a></li>
+    </ul>
+  </li>
+</ul>
 
         </div>
     </div>
