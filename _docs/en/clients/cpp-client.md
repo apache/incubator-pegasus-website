@@ -11,8 +11,6 @@ First, you need to compile [Pegasus](/overview/compilation). After compilation i
 ```
 After successful execution, a folder named `pegasus-client-{version}-{platform}-{buildType}` and a corresponding `.tar.gz` file will be generated in the local directory. Inside this folder, there is a `sample/` subdirectory. Navigate into it and run `make` to compile the example programs.
 
-
-
 # Configuration File
 
 The C++ client uses the RDSN framework, so its configuration file is relatively complex, as shown below:
