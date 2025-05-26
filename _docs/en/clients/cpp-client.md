@@ -135,7 +135,7 @@ if (!pegasus::pegasus_client_factory::initialize("config.ini")) {
     fprintf(stderr, "ERROR: init pegasus failed\n");
     return -1;
 }
-/**succeed， continue**/
+/**succeed, continue**/
 ```
 **Note：**
 
