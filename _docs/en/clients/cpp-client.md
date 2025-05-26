@@ -95,8 +95,6 @@ another_cluster = @SOME_IP@:34601,@SOME_IP@:34601,@SOME_IP@:34601
 ```
 For detailed explanations of the configuration file, please refer to [Configuration Guide](/administration/config).
 
-
-
 # Interface Definition
 
 ## Creating a Client Instance
