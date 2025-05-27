@@ -1,0 +1,1428 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Pegasus | Go Client</title>
+    <link rel="stylesheet" href="/zh/assets/css/app.css">
+    <link rel="shortcut icon" href="/zh/assets/images/favicon.ico">
+    <link rel="stylesheet" href="/zh/assets/css/utilities.min.css">
+    <link rel="stylesheet" href="/zh/assets/css/docsearch.v3.css">
+    <script src="/assets/js/jquery.min.js"></script>
+    <script src="/assets/js/all.min.js"></script>
+    <script src="/assets/js/docsearch.v3.js"></script>
+    <!-- Begin Jekyll SEO tag v2.8.0 -->
+<title>Go Client | Pegasus</title>
+<meta name="generator" content="Jekyll v4.4.1" />
+<meta property="og:title" content="Go Client" />
+<meta property="og:locale" content="en_US" />
+<meta name="description" content="获取go客户端" />
+<meta property="og:description" content="获取go客户端" />
+<meta property="og:site_name" content="Pegasus" />
+<meta property="og:type" content="article" />
+<meta property="article:published_time" content="2025-05-27T06:31:52+00:00" />
+<meta name="twitter:card" content="summary" />
+<meta property="twitter:title" content="Go Client" />
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"BlogPosting","dateModified":"2025-05-27T06:31:52+00:00","datePublished":"2025-05-27T06:31:52+00:00","description":"获取go客户端","headline":"Go Client","mainEntityOfPage":{"@type":"WebPage","@id":"/clients/go-client"},"url":"/clients/go-client"}</script>
+<!-- End Jekyll SEO tag -->
+
+</head>
+
+
+<body>
+    <div class="dashboard is-full-height">
+        <!-- left panel -->
+        <div class="dashboard-panel is-medium is-hidden-mobile pl-0">
+            <div class="dashboard-panel-header has-text-centered">
+                <a href="/zh/">
+                    <img src="/assets/images/pegasus-logo-inv.png" style="width: 80%;">
+                </a>
+                
+            </div>
+            <div class="dashboard-panel-main is-scrollable pl-6">
+                
+
+<aside class="menu">
+    
+    <p class="menu-label">Pegasus 产品文档</p>
+    <ul class="menu-list">
+        
+        <li>
+            <a href="/zh/docs/downloads"
+                class="">
+                下载
+            </a>
+        </li>
+        
+    </ul>
+    
+    <p class="menu-label">编译构建</p>
+    <ul class="menu-list">
+        
+        <li>
+            <a href="/zh/docs/build/compile-by-docker"
+                class="">
+                使用 Docker 完成编译（推荐）
+            </a>
+        </li>
+        
+        <li>
+            <a href="/zh/docs/build/compile-from-source"
+                class="">
+                从源码编译
+            </a>
+        </li>
+        
+    </ul>
+    
+    <p class="menu-label">客户端库</p>
+    <ul class="menu-list">
+        
+        <li>
+            <a href="/zh/clients/java-client"
+                class="">
+                Java 客户端
+            </a>
+        </li>
+        
+        <li>
+            <a href="/zh/clients/cpp-client"
+                class="">
+                C++ 客户端
+            </a>
+        </li>
+        
+        <li>
+            <a href="/zh/clients/go-client"
+                class="is-active">
+                Golang 客户端
+            </a>
+        </li>
+        
+        <li>
+            <a href="/zh/clients/python-client"
+                class="">
+                Python 客户端
+            </a>
+        </li>
+        
+        <li>
+            <a href="/zh/clients/node-client"
+                class="">
+                NodeJS 客户端
+            </a>
+        </li>
+        
+        <li>
+            <a href="/zh/clients/scala-client"
+                class="">
+                Scala 客户端
+            </a>
+        </li>
+        
+    </ul>
+    
+    <p class="menu-label">生态工具</p>
+    <ul class="menu-list">
+        
+        <li>
+            <a href="/zh/docs/tools/shell"
+                class="">
+                Pegasus Shell 工具
+            </a>
+        </li>
+        
+        <li>
+            <a href="https://github.com/pegasus-kv/admin-cli"
+                class="">
+                集群管理命令行
+            </a>
+        </li>
+        
+        <li>
+            <a href="https://github.com/pegasus-kv/pegic"
+                class="">
+                数据访问命令行
+            </a>
+        </li>
+        
+    </ul>
+    
+    <p class="menu-label">用户接口</p>
+    <ul class="menu-list">
+        
+        <li>
+            <a href="/zh/api/ttl"
+                class="">
+                TTL
+            </a>
+        </li>
+        
+        <li>
+            <a href="/zh/api/single-atomic"
+                class="">
+                单行原子操作
+            </a>
+        </li>
+        
+        <li>
+            <a href="/zh/api/redis"
+                class="">
+                Redis 适配
+            </a>
+        </li>
+        
+        <li>
+            <a href="/zh/api/geo"
+                class="">
+                GEO 支持
+            </a>
+        </li>
+        
+        <li>
+            <a href="/zh/api/http"
+                class="">
+                HTTP 接口
+            </a>
+        </li>
+        
+    </ul>
+    
+    <p class="menu-label">高效运维</p>
+    <ul class="menu-list">
+        
+        <li>
+            <a href="/zh/administration/deployment"
+                class="">
+                集群部署
+            </a>
+        </li>
+        
+        <li>
+            <a href="/zh/administration/config"
+                class="">
+                配置说明
+            </a>
+        </li>
+        
+        <li>
+            <a href="/zh/administration/rebalance"
+                class="">
+                负载均衡
+            </a>
+        </li>
+        
+        <li>
+            <a href="/zh/administration/monitoring"
+                class="">
+                可视化监控
+            </a>
+        </li>
+        
+        <li>
+            <a href="/zh/administration/rolling-update"
+                class="">
+                集群重启和升级
+            </a>
+        </li>
+        
+        <li>
+            <a href="/zh/administration/scale-in-out"
+                class="">
+                集群扩容缩容
+            </a>
+        </li>
+        
+        <li>
+            <a href="/zh/administration/resource-management"
+                class="">
+                资源管理
+            </a>
+        </li>
+        
+        <li>
+            <a href="/zh/administration/cold-backup"
+                class="">
+                冷备份
+            </a>
+        </li>
+        
+        <li>
+            <a href="/zh/administration/meta-recovery"
+                class="">
+                元数据恢复
+            </a>
+        </li>
+        
+        <li>
+            <a href="/zh/administration/replica-recovery"
+                class="">
+                Replica 数据恢复
+            </a>
+        </li>
+        
+        <li>
+            <a href="/zh/administration/zk-migration"
+                class="">
+                Zookeeper 迁移
+            </a>
+        </li>
+        
+        <li>
+            <a href="/zh/administration/table-migration"
+                class="">
+                Table 迁移
+            </a>
+        </li>
+        
+        <li>
+            <a href="/zh/administration/table-soft-delete"
+                class="">
+                Table 软删除
+            </a>
+        </li>
+        
+        <li>
+            <a href="/zh/administration/table-env"
+                class="">
+                Table 环境变量
+            </a>
+        </li>
+        
+        <li>
+            <a href="/zh/administration/remote-commands"
+                class="">
+                远程命令
+            </a>
+        </li>
+        
+        <li>
+            <a href="/zh/administration/partition-split"
+                class="">
+                Partition-Split
+            </a>
+        </li>
+        
+        <li>
+            <a href="/zh/administration/duplication"
+                class="">
+                跨机房同步
+            </a>
+        </li>
+        
+        <li>
+            <a href="/zh/administration/compression"
+                class="">
+                数据压缩
+            </a>
+        </li>
+        
+        <li>
+            <a href="/zh/administration/throttling"
+                class="">
+                流量控制
+            </a>
+        </li>
+        
+        <li>
+            <a href="/zh/administration/experiences"
+                class="">
+                运维经验
+            </a>
+        </li>
+        
+        <li>
+            <a href="/zh/administration/manual-compact"
+                class="">
+                Manual Compact 功能
+            </a>
+        </li>
+        
+        <li>
+            <a href="/zh/administration/usage-scenario"
+                class="">
+                Usage Scenario 功能
+            </a>
+        </li>
+        
+        <li>
+            <a href="/zh/administration/bad-disk"
+                class="">
+                坏盘检修
+            </a>
+        </li>
+        
+        <li>
+            <a href="/zh/administration/whitelist"
+                class="">
+                Replica Server 白名单
+            </a>
+        </li>
+        
+        <li>
+            <a href="/zh/administration/backup-request"
+                class="">
+                Backup Request
+            </a>
+        </li>
+        
+        <li>
+            <a href="/zh/administration/hotspot-detection"
+                class="">
+                热点检测
+            </a>
+        </li>
+        
+    </ul>
+    
+</aside>
+            </div>
+        </div>
+
+        <!-- main section -->
+        <div class="dashboard-main is-scrollable">
+            <nav class="navbar is-hidden-desktop">
+    <div class="navbar-brand">
+        <a href="/zh/" class="navbar-item">
+            <!-- Pegasus Icon -->
+            <img src="/assets/images/pegasus-square.png">
+        </a>
+        <div class="navbar-item">
+            
+
+<!--A simple language switch button that only supports zh and en.-->
+<!--IF its language is zh, then switches to en.-->
+
+<!--If you don't want a url to be relativized, you can add a space explicitly into the href to 
+    prevents a url from being relativized by polyglot.-->
+<a class="button is-light is-outlined is-inverted" href=" /clients/go-client"><strong>En</strong></a>
+
+        </div>
+        <a role="button" class="navbar-burger burger" aria-label="menu" aria-expanded="false" data-target="navMenu">
+            <!-- Appears in mobile mode only -->
+            <span aria-hidden="true"></span>
+            <span aria-hidden="true"></span>
+            <span aria-hidden="true"></span>
+        </a>
+    </div>
+    <div class="navbar-menu" id="navMenu">
+        <div class="navbar-end">
+            
+            <!--dropdown-->
+            <div class="navbar-item has-dropdown is-hoverable">
+                <a href=""
+                    class="navbar-link ">
+                    <span>
+                        Pegasus 产品文档
+                    </span>
+                </a>
+                <div class="navbar-dropdown">
+                    
+                    <a href="/zh/docs/downloads"
+                        class="navbar-item ">
+                        下载
+                    </a>
+                    
+                </div>
+            </div>
+            
+            <!--dropdown-->
+            <div class="navbar-item has-dropdown is-hoverable">
+                <a href=""
+                    class="navbar-link ">
+                    <span>
+                        编译构建
+                    </span>
+                </a>
+                <div class="navbar-dropdown">
+                    
+                    <a href="/zh/docs/build/compile-by-docker"
+                        class="navbar-item ">
+                        使用 Docker 完成编译（推荐）
+                    </a>
+                    
+                    <a href="/zh/docs/build/compile-from-source"
+                        class="navbar-item ">
+                        从源码编译
+                    </a>
+                    
+                </div>
+            </div>
+            
+            <!--dropdown-->
+            <div class="navbar-item has-dropdown is-hoverable">
+                <a href=""
+                    class="navbar-link ">
+                    <span>
+                        客户端库
+                    </span>
+                </a>
+                <div class="navbar-dropdown">
+                    
+                    <a href="/zh/clients/java-client"
+                        class="navbar-item ">
+                        Java 客户端
+                    </a>
+                    
+                    <a href="/zh/clients/cpp-client"
+                        class="navbar-item ">
+                        C++ 客户端
+                    </a>
+                    
+                    <a href="/zh/clients/go-client"
+                        class="navbar-item is-active">
+                        Golang 客户端
+                    </a>
+                    
+                    <a href="/zh/clients/python-client"
+                        class="navbar-item ">
+                        Python 客户端
+                    </a>
+                    
+                    <a href="/zh/clients/node-client"
+                        class="navbar-item ">
+                        NodeJS 客户端
+                    </a>
+                    
+                    <a href="/zh/clients/scala-client"
+                        class="navbar-item ">
+                        Scala 客户端
+                    </a>
+                    
+                </div>
+            </div>
+            
+            <!--dropdown-->
+            <div class="navbar-item has-dropdown is-hoverable">
+                <a href=""
+                    class="navbar-link ">
+                    <span>
+                        生态工具
+                    </span>
+                </a>
+                <div class="navbar-dropdown">
+                    
+                    <a href="/zh/docs/tools/shell"
+                        class="navbar-item ">
+                        Pegasus Shell 工具
+                    </a>
+                    
+                    <a href="https://github.com/pegasus-kv/admin-cli"
+                        class="navbar-item ">
+                        集群管理命令行
+                    </a>
+                    
+                    <a href="https://github.com/pegasus-kv/pegic"
+                        class="navbar-item ">
+                        数据访问命令行
+                    </a>
+                    
+                </div>
+            </div>
+            
+            <!--dropdown-->
+            <div class="navbar-item has-dropdown is-hoverable">
+                <a href=""
+                    class="navbar-link ">
+                    <span>
+                        用户接口
+                    </span>
+                </a>
+                <div class="navbar-dropdown">
+                    
+                    <a href="/zh/api/ttl"
+                        class="navbar-item ">
+                        TTL
+                    </a>
+                    
+                    <a href="/zh/api/single-atomic"
+                        class="navbar-item ">
+                        单行原子操作
+                    </a>
+                    
+                    <a href="/zh/api/redis"
+                        class="navbar-item ">
+                        Redis 适配
+                    </a>
+                    
+                    <a href="/zh/api/geo"
+                        class="navbar-item ">
+                        GEO 支持
+                    </a>
+                    
+                    <a href="/zh/api/http"
+                        class="navbar-item ">
+                        HTTP 接口
+                    </a>
+                    
+                </div>
+            </div>
+            
+            <!--dropdown-->
+            <div class="navbar-item has-dropdown is-hoverable">
+                <a href=""
+                    class="navbar-link ">
+                    <span>
+                        高效运维
+                    </span>
+                </a>
+                <div class="navbar-dropdown">
+                    
+                    <a href="/zh/administration/deployment"
+                        class="navbar-item ">
+                        集群部署
+                    </a>
+                    
+                    <a href="/zh/administration/config"
+                        class="navbar-item ">
+                        配置说明
+                    </a>
+                    
+                    <a href="/zh/administration/rebalance"
+                        class="navbar-item ">
+                        负载均衡
+                    </a>
+                    
+                    <a href="/zh/administration/monitoring"
+                        class="navbar-item ">
+                        可视化监控
+                    </a>
+                    
+                    <a href="/zh/administration/rolling-update"
+                        class="navbar-item ">
+                        集群重启和升级
+                    </a>
+                    
+                    <a href="/zh/administration/scale-in-out"
+                        class="navbar-item ">
+                        集群扩容缩容
+                    </a>
+                    
+                    <a href="/zh/administration/resource-management"
+                        class="navbar-item ">
+                        资源管理
+                    </a>
+                    
+                    <a href="/zh/administration/cold-backup"
+                        class="navbar-item ">
+                        冷备份
+                    </a>
+                    
+                    <a href="/zh/administration/meta-recovery"
+                        class="navbar-item ">
+                        元数据恢复
+                    </a>
+                    
+                    <a href="/zh/administration/replica-recovery"
+                        class="navbar-item ">
+                        Replica 数据恢复
+                    </a>
+                    
+                    <a href="/zh/administration/zk-migration"
+                        class="navbar-item ">
+                        Zookeeper 迁移
+                    </a>
+                    
+                    <a href="/zh/administration/table-migration"
+                        class="navbar-item ">
+                        Table 迁移
+                    </a>
+                    
+                    <a href="/zh/administration/table-soft-delete"
+                        class="navbar-item ">
+                        Table 软删除
+                    </a>
+                    
+                    <a href="/zh/administration/table-env"
+                        class="navbar-item ">
+                        Table 环境变量
+                    </a>
+                    
+                    <a href="/zh/administration/remote-commands"
+                        class="navbar-item ">
+                        远程命令
+                    </a>
+                    
+                    <a href="/zh/administration/partition-split"
+                        class="navbar-item ">
+                        Partition-Split
+                    </a>
+                    
+                    <a href="/zh/administration/duplication"
+                        class="navbar-item ">
+                        跨机房同步
+                    </a>
+                    
+                    <a href="/zh/administration/compression"
+                        class="navbar-item ">
+                        数据压缩
+                    </a>
+                    
+                    <a href="/zh/administration/throttling"
+                        class="navbar-item ">
+                        流量控制
+                    </a>
+                    
+                    <a href="/zh/administration/experiences"
+                        class="navbar-item ">
+                        运维经验
+                    </a>
+                    
+                    <a href="/zh/administration/manual-compact"
+                        class="navbar-item ">
+                        Manual Compact 功能
+                    </a>
+                    
+                    <a href="/zh/administration/usage-scenario"
+                        class="navbar-item ">
+                        Usage Scenario 功能
+                    </a>
+                    
+                    <a href="/zh/administration/bad-disk"
+                        class="navbar-item ">
+                        坏盘检修
+                    </a>
+                    
+                    <a href="/zh/administration/whitelist"
+                        class="navbar-item ">
+                        Replica Server 白名单
+                    </a>
+                    
+                    <a href="/zh/administration/backup-request"
+                        class="navbar-item ">
+                        Backup Request
+                    </a>
+                    
+                    <a href="/zh/administration/hotspot-detection"
+                        class="navbar-item ">
+                        热点检测
+                    </a>
+                    
+                </div>
+            </div>
+            
+        </div>
+    </div>
+</nav>
+
+<nav class="navbar is-hidden-mobile">
+    <div class="navbar-start w-full">
+        <div class="navbar-item pl-0 w-full">
+            <!--TODO(wutao): Given the limitation of docsearch that couldn't handle multiple input,
+                I make searchbox only shown in desktop. Fix this issue when docsearch.js v3 released.
+                Related issue: https://github.com/algolia/docsearch/issues/230-->
+            <div id="docsearch"></div>
+        </div>
+    </div>
+    <div class="navbar-end">
+        <div class="navbar-item">
+            
+
+<!--A simple language switch button that only supports zh and en.-->
+<!--IF its language is zh, then switches to en.-->
+
+<!--If you don't want a url to be relativized, you can add a space explicitly into the href to 
+    prevents a url from being relativized by polyglot.-->
+<a class="button is-light is-outlined is-inverted" href=" /clients/go-client"><strong>En</strong></a>
+
+        </div>
+    </div>
+</nav>
+
+            <section class="hero is-info lg:mr-3">
+                <div class="hero-body">
+                    
+                    <p class="title is-size-2 is-centered">Golang 客户端</p>
+                </div>
+            </section>
+            <section class="section" style="padding-top: 2rem;">
+                <div class="content">
+                    <h1 id="获取go客户端">获取go客户端</h1>
+
+<p>下载：</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>go get github.com/apache/incubator-pegasus/go-client@&lt;CommitId&gt;
+<span class="c"># 例如</span>
+go get github.com/apache/incubator-pegasus/go-client@df0eb5a
+</code></pre></div></div>
+
+<p>注：</p>
+<ul>
+  <li>thrift 0.13</li>
+  <li>Go1.18+</li>
+</ul>
+
+<h1 id="客户端配置">客户端配置</h1>
+<p>创建go client实例需要配置相关参数，目前仅支持参数传递方式。<br />
+go client的配置参数非常简单，仅需要指定meta servers。<br />
+用户如果需要文件配置，需自行将参数从文件从解析，再传入go client。</p>
+<div class="language-go highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c">// 参数配置</span>
+    <span class="n">cfg</span> <span class="o">:=</span> <span class="o">&amp;</span><span class="n">pegasus</span><span class="o">.</span><span class="n">Config</span><span class="p">{</span>
+        <span class="n">MetaServers</span><span class="o">:</span> <span class="p">[]</span><span class="kt">string</span><span class="p">{</span><span class="s">"0.0.0.0:34601"</span><span class="p">,</span> <span class="s">"0.0.0.0:34601"</span><span class="p">},</span>
+    <span class="p">}</span>
+    <span class="n">c</span> <span class="o">:=</span> <span class="n">pegasus</span><span class="o">.</span><span class="n">NewClient</span><span class="p">(</span><span class="o">*</span><span class="n">cfg</span><span class="p">)</span>
+
+<span class="c">// 文件配置</span>
+    <span class="n">cfgPath</span><span class="p">,</span> <span class="n">_</span> <span class="o">:=</span> <span class="n">filepath</span><span class="o">.</span><span class="n">Abs</span><span class="p">(</span><span class="s">"./example/pegasus-client-config.json"</span><span class="p">)</span>
+	<span class="n">rawCfg</span><span class="p">,</span> <span class="n">err</span> <span class="o">:=</span> <span class="n">ioutil</span><span class="o">.</span><span class="n">ReadFile</span><span class="p">(</span><span class="n">cfgPath</span><span class="p">)</span>
+	<span class="k">if</span> <span class="n">err</span> <span class="o">!=</span> <span class="no">nil</span> <span class="p">{</span>
+		<span class="n">fmt</span><span class="o">.</span><span class="n">Println</span><span class="p">(</span><span class="n">err</span><span class="p">)</span>
+		<span class="k">return</span>
+	<span class="p">}</span>
+    <span class="n">cfg</span> <span class="o">:=</span> <span class="o">&amp;</span><span class="n">pegasus</span><span class="o">.</span><span class="n">Config</span><span class="p">{}</span>
+	<span class="n">json</span><span class="o">.</span><span class="n">Unmarshal</span><span class="p">(</span><span class="n">rawCfg</span><span class="p">,</span> <span class="n">cfg</span><span class="p">)</span>
+	<span class="n">c</span> <span class="o">:=</span> <span class="n">pegasus</span><span class="o">.</span><span class="n">NewClient</span><span class="p">(</span><span class="o">*</span><span class="n">cfg</span><span class="p">)</span>
+</code></pre></div></div>
+<h1 id="接口定义">接口定义</h1>
+<h2 id="创建client实例">创建Client实例</h2>
+<div class="language-go highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c">// NewClient creates a new instance of pegasus client.</span>
+<span class="c">// It panics if the configured addresses are illegal</span>
+<span class="k">func</span> <span class="n">NewClient</span><span class="p">(</span><span class="n">cfg</span> <span class="n">Config</span><span class="p">)</span> <span class="n">Client</span>
+
+<span class="c">// Config is the configuration of pegasus client.</span>
+<span class="k">type</span> <span class="n">Config</span> <span class="k">struct</span> <span class="p">{</span>
+	<span class="n">MetaServers</span> <span class="p">[]</span><span class="kt">string</span> <span class="s">`json:"meta_servers"`</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<p>使用完毕后，记得close client以释放资源，譬如：</p>
+
+<div class="language-go highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">c</span> <span class="o">:=</span> <span class="n">pegasus</span><span class="o">.</span><span class="n">NewClient</span><span class="p">(</span><span class="o">*</span><span class="n">cfg</span><span class="p">)</span>
+<span class="o">...</span> 
+<span class="o">...</span>
+<span class="n">c</span><span class="o">.</span><span class="n">Close</span><span class="p">();</span>
+</code></pre></div></div>
+
+<h2 id="创建tableconnector实例">创建TableConnector实例</h2>
+<p>go client 操作数据的接口都在TableConnector中定义。<br />
+一个client可以有多个TableConnector实例，每一个TableConnector对应一张表。</p>
+
+<div class="language-go highlighter-rouge"><div class="highlight"><pre class="highlight"><code>    <span class="c">// Open the specific pegasus table. If the table was opened before,</span>
+	<span class="c">// it will reuse the previous connection to the table.</span>
+	<span class="n">OpenTable</span><span class="p">(</span><span class="n">ctx</span> <span class="n">context</span><span class="o">.</span><span class="n">Context</span><span class="p">,</span> <span class="n">tableName</span> <span class="kt">string</span><span class="p">)</span> <span class="p">(</span><span class="n">TableConnector</span><span class="p">,</span> <span class="kt">error</span><span class="p">)</span>
+</code></pre></div></div>
+<h2 id="tableconnector接口">TableConnector接口</h2>
+<h3 id="get">get</h3>
+<p>读单行数据。</p>
+<div class="language-go highlighter-rouge"><div class="highlight"><pre class="highlight"><code>	<span class="c">// Get retrieves the entry for `hashKey` + `sortKey`.</span>
+	<span class="c">// Returns nil if no entry matches.</span>
+	<span class="c">// `hashKey` : CAN'T be nil or empty.</span>
+	<span class="c">// `sortKey` : CAN'T be nil but CAN be empty.</span>
+	<span class="n">Get</span><span class="p">(</span><span class="n">ctx</span> <span class="n">context</span><span class="o">.</span><span class="n">Context</span><span class="p">,</span> <span class="n">hashKey</span> <span class="p">[]</span><span class="kt">byte</span><span class="p">,</span> <span class="n">sortKey</span> <span class="p">[]</span><span class="kt">byte</span><span class="p">)</span> <span class="p">([]</span><span class="kt">byte</span><span class="p">,</span> <span class="kt">error</span><span class="p">)</span>
+</code></pre></div></div>
+<p>注：</p>
+<ul>
+  <li>参数：需传入context、hashKey、sortKey。</li>
+  <li>返回值：value、error. 如果返回(nil,nil)，表示key对应的数据不存在。</li>
+  <li>异常：如果出现异常，譬如网络错误、超时错误、服务端错误等，可以访问error获取具体错误类型(key对应数据不存在返回nil)。</li>
+</ul>
+
+<h3 id="set--setttl">Set | SetTTL</h3>
+<p>写单行数据, SetTTL可以设置单条kv的TTL。</p>
+<div class="language-go highlighter-rouge"><div class="highlight"><pre class="highlight"><code>    <span class="c">// Set the entry for `hashKey` + `sortKey` to `value`.</span>
+	<span class="c">// If Set is called or `ttl` == 0, no data expiration is specified.</span>
+	<span class="c">// `hashKey` : CAN'T be nil or empty.</span>
+	<span class="c">// `sortKey` / `value` : CAN'T be nil but CAN be empty.</span>
+	<span class="n">Set</span><span class="p">(</span><span class="n">ctx</span> <span class="n">context</span><span class="o">.</span><span class="n">Context</span><span class="p">,</span> <span class="n">hashKey</span> <span class="p">[]</span><span class="kt">byte</span><span class="p">,</span> <span class="n">sortKey</span> <span class="p">[]</span><span class="kt">byte</span><span class="p">,</span> <span class="n">value</span> <span class="p">[]</span><span class="kt">byte</span><span class="p">)</span> <span class="kt">error</span>
+	<span class="n">SetTTL</span><span class="p">(</span><span class="n">ctx</span> <span class="n">context</span><span class="o">.</span><span class="n">Context</span><span class="p">,</span> <span class="n">hashKey</span> <span class="p">[]</span><span class="kt">byte</span><span class="p">,</span> <span class="n">sortKey</span> <span class="p">[]</span><span class="kt">byte</span><span class="p">,</span> <span class="n">value</span> <span class="p">[]</span><span class="kt">byte</span><span class="p">,</span> <span class="n">ttl</span> <span class="n">time</span><span class="o">.</span><span class="n">Duration</span><span class="p">)</span> <span class="kt">error</span>
+</code></pre></div></div>
+<p>注：</p>
+<ul>
+  <li>提供了两个版本的接口，其中第二个接口可以指定TTL时间。</li>
+  <li>参数：需传入context、hashKey、sortKey、value, ttl单位为秒(s)</li>
+  <li>返回值：error</li>
+  <li>异常：如果出现异常，譬如网络错误、超时错误、服务端错误等，可以访问error获取具体错误类型。</li>
+</ul>
+
+<h3 id="del">Del</h3>
+<p>删除单行数据</p>
+<div class="language-go highlighter-rouge"><div class="highlight"><pre class="highlight"><code>    <span class="c">// Delete the entry for `hashKey` + `sortKey`.</span>
+	<span class="c">// `hashKey` : CAN'T be nil or empty.</span>
+	<span class="c">// `sortKey` : CAN'T be nil but CAN be empty.</span>
+	<span class="n">Del</span><span class="p">(</span><span class="n">ctx</span> <span class="n">context</span><span class="o">.</span><span class="n">Context</span><span class="p">,</span> <span class="n">hashKey</span> <span class="p">[]</span><span class="kt">byte</span><span class="p">,</span> <span class="n">sortKey</span> <span class="p">[]</span><span class="kt">byte</span><span class="p">)</span> <span class="kt">error</span>
+</code></pre></div></div>
+<p>注：</p>
+<ul>
+  <li>参数：需传入context、hashKey、sortKey。</li>
+  <li>异常：如果出现异常，譬如网络错误、超时错误、服务端错误等，可以访问error获取具体错误类型。</li>
+</ul>
+
+<h3 id="multiget--multigetopt">MultiGet | MultiGetOpt</h3>
+<p>读<strong>同一HashKey下</strong>的多行数据。</p>
+<div class="language-go highlighter-rouge"><div class="highlight"><pre class="highlight"><code>    <span class="c">// MultiGet/MultiGetOpt retrieves the multiple entries for `hashKey` + `sortKeys[i]` atomically in one operation.</span>
+	<span class="c">// MultiGet is identical to MultiGetOpt except that the former uses DefaultMultiGetOptions as `options`.</span>
+	<span class="c">//</span>
+	<span class="c">// If `sortKeys` are given empty or nil, all entries under `hashKey` will be retrieved.</span>
+	<span class="c">// `hashKey` : CAN'T be nil or empty.</span>
+	<span class="c">// `sortKeys[i]` : CAN'T be nil but CAN be empty.</span>
+	<span class="c">//</span>
+	<span class="c">// The returned key-value pairs are sorted by sort key in ascending order.</span>
+	<span class="c">// Returns nil if no entries match.</span>
+	<span class="c">// Returns true if all data is fetched, false if only partial data is fetched.</span>
+	<span class="c">//</span>
+	<span class="n">MultiGet</span><span class="p">(</span><span class="n">ctx</span> <span class="n">context</span><span class="o">.</span><span class="n">Context</span><span class="p">,</span> <span class="n">hashKey</span> <span class="p">[]</span><span class="kt">byte</span><span class="p">,</span> <span class="n">sortKeys</span> <span class="p">[][]</span><span class="kt">byte</span><span class="p">)</span> <span class="p">([]</span><span class="o">*</span><span class="n">KeyValue</span><span class="p">,</span> <span class="kt">bool</span><span class="p">,</span> <span class="kt">error</span><span class="p">)</span>
+	<span class="n">MultiGetOpt</span><span class="p">(</span><span class="n">ctx</span> <span class="n">context</span><span class="o">.</span><span class="n">Context</span><span class="p">,</span> <span class="n">hashKey</span> <span class="p">[]</span><span class="kt">byte</span><span class="p">,</span> <span class="n">sortKeys</span> <span class="p">[][]</span><span class="kt">byte</span><span class="p">,</span> <span class="n">options</span> <span class="o">*</span><span class="n">MultiGetOptions</span><span class="p">)</span> <span class="p">([]</span><span class="o">*</span><span class="n">KeyValue</span><span class="p">,</span> <span class="kt">bool</span><span class="p">,</span> <span class="kt">error</span><span class="p">)</span>
+</code></pre></div></div>
+<p>注:</p>
+<ul>
+  <li>参数：需传入context、hashKey、sortKeys。</li>
+  <li>返回值：得到的kvs、bool值代表是否all fetched, error</li>
+  <li>异常：如果出现异常，譬如网络错误、超时错误、服务端错误等，可以访问error获取具体错误类型(key对应数据不存在不会报错)。</li>
+  <li>bool值表示:如果用户指定了maxFetchCount或者maxFetchSize，单次查询可能只获取到部分结果。如果所有满足条件的数据都已经获取到，则返回true；否则返回false。
+    <div class="language-go highlighter-rouge"><div class="highlight"><pre class="highlight"><code>  <span class="c">// MultiGetOptions is the options for MultiGet and MultiGetRange, defaults to DefaultMultiGetOptions.</span>
+  <span class="k">type</span> <span class="n">MultiGetOptions</span> <span class="k">struct</span> <span class="p">{</span>
+      <span class="n">StartInclusive</span> <span class="kt">bool</span>
+      <span class="n">StopInclusive</span>  <span class="kt">bool</span>
+      <span class="n">SortKeyFilter</span>  <span class="n">Filter</span>
+      <span class="c">// MaxFetchCount and MaxFetchSize limit the size of returned result.</span>
+      <span class="c">// Max count of k-v pairs to be fetched. MaxFetchCount &lt;= 0 means no limit.</span>
+      <span class="n">MaxFetchCount</span> <span class="kt">int</span>
+      <span class="c">// Max size of k-v pairs to be fetched. MaxFetchSize &lt;= 0 means no limit.</span>
+      <span class="n">MaxFetchSize</span> <span class="kt">int</span>
+      <span class="c">// Query order</span>
+      <span class="n">Reverse</span> <span class="kt">bool</span>
+      <span class="c">// Whether to retrieve keys only, without value.</span>
+      <span class="c">// Enabling this option will reduce the network load, improve the RPC latency.</span>
+      <span class="n">NoValue</span> <span class="kt">bool</span>
+  <span class="p">}</span>
+
+  <span class="c">// Filter is used to filter based on the key.</span>
+  <span class="k">type</span> <span class="n">Filter</span> <span class="k">struct</span> <span class="p">{</span>
+      <span class="n">Type</span>    <span class="n">FilterType</span>
+      <span class="n">Pattern</span> <span class="p">[]</span><span class="kt">byte</span>
+  <span class="p">}</span>
+
+  <span class="c">// Filter types</span>
+  <span class="k">const</span> <span class="p">(</span>
+  <span class="n">FilterTypeNoFilter</span>      <span class="o">=</span> <span class="n">FilterType</span><span class="p">(</span><span class="n">rrdb</span><span class="o">.</span><span class="n">FilterType_FT_NO_FILTER</span><span class="p">)</span>
+  <span class="n">FilterTypeMatchAnywhere</span> <span class="o">=</span> <span class="n">FilterType</span><span class="p">(</span><span class="n">rrdb</span><span class="o">.</span><span class="n">FilterType_FT_MATCH_ANYWHERE</span><span class="p">)</span>
+  <span class="n">FilterTypeMatchPrefix</span>   <span class="o">=</span> <span class="n">FilterType</span><span class="p">(</span><span class="n">rrdb</span><span class="o">.</span><span class="n">FilterType_FT_MATCH_PREFIX</span><span class="p">)</span>
+  <span class="n">FilterTypeMatchPostfix</span>  <span class="o">=</span> <span class="n">FilterType</span><span class="p">(</span><span class="n">rrdb</span><span class="o">.</span><span class="n">FilterType_FT_MATCH_POSTFIX</span><span class="p">)</span>
+  <span class="p">)</span>
+</code></pre></div>    </div>
+    <p>注：</p>
+  </li>
+  <li>MultiGetOptions说明：
+    <ul>
+      <li>startInclusive：是否包含StartSortKey，默认为true。</li>
+      <li>stopInclusive：是否包含StopSortKey，默认为false。</li>
+      <li>SortKeyFilter: SortKey过滤项</li>
+      <li>maxFetchCount和maxFetchSize用于限制读取的数据量，maxFetchCount表示最多读取的数据条数，maxFetchSize表示最多读取的数据字节数，两者任一达到限制就停止读取. MaxFetchCount 默认为100, MaxFetchSize 默认为100000</li>
+      <li>noValue：只返回HashKey和SortKey，不返回Value数据，默认为false。</li>
+      <li>reverse：是否逆向扫描数据库，从后往前查找数据。但是查找得到的结果在list中还是按照SortKey从小到大顺序存放。从Pegasus Server 1.8.0 时开始支持。</li>
+    </ul>
+  </li>
+  <li>Filter说明：
+    <ul>
+      <li>type: 过滤类型，包括无过滤、任意位置匹配、前缀匹配和后缀匹配</li>
+      <li>Pattern: 过滤模式串，空串相当于无过滤。</li>
+    </ul>
+  </li>
+  <li>Filter types 说明：
+    <ul>
+      <li>FilterTypeNoFilter：无过滤</li>
+      <li>FilterTypeMatchAnywhere： 任意位置匹配</li>
+      <li>FilterTypeMatchPrefix： 前缀匹配</li>
+      <li>FilterTypeMatchPostfix: 后缀匹配</li>
+    </ul>
+  </li>
+</ul>
+
+<h3 id="multigetrange--multigetrangeopt">MultiGetRange | MultiGetRangeOpt</h3>
+<p>读<strong>同一HashKey下</strong>的多行数据，支持范围查询。</p>
+<div class="language-go highlighter-rouge"><div class="highlight"><pre class="highlight"><code>	<span class="c">// MultiGetRange retrieves the multiple entries under `hashKey`, between range (`startSortKey`, `stopSortKey`),</span>
+	<span class="c">// atomically in one operation.</span>
+	<span class="c">//</span>
+	<span class="c">// startSortKey: nil or len(startSortKey) == 0 means start from begin.</span>
+	<span class="c">// stopSortKey: nil or len(stopSortKey) == 0 means stop to end.</span>
+	<span class="c">// `hashKey` : CAN'T be nil.</span>
+	<span class="c">//</span>
+	<span class="c">// The returned key-value pairs are sorted by sort keys in ascending order.</span>
+	<span class="c">// Returns nil if no entries match.</span>
+	<span class="c">// Returns true if all data is fetched, false if only partial data is fetched.</span>
+	<span class="c">//</span>
+	<span class="n">MultiGetRange</span><span class="p">(</span><span class="n">ctx</span> <span class="n">context</span><span class="o">.</span><span class="n">Context</span><span class="p">,</span> <span class="n">hashKey</span> <span class="p">[]</span><span class="kt">byte</span><span class="p">,</span> <span class="n">startSortKey</span> <span class="p">[]</span><span class="kt">byte</span><span class="p">,</span> <span class="n">stopSortKey</span> <span class="p">[]</span><span class="kt">byte</span><span class="p">)</span> <span class="p">([]</span><span class="o">*</span><span class="n">KeyValue</span><span class="p">,</span> <span class="kt">bool</span><span class="p">,</span> <span class="kt">error</span><span class="p">)</span>
+	<span class="n">MultiGetRangeOpt</span><span class="p">(</span><span class="n">ctx</span> <span class="n">context</span><span class="o">.</span><span class="n">Context</span><span class="p">,</span> <span class="n">hashKey</span> <span class="p">[]</span><span class="kt">byte</span><span class="p">,</span> <span class="n">startSortKey</span> <span class="p">[]</span><span class="kt">byte</span><span class="p">,</span> <span class="n">stopSortKey</span> <span class="p">[]</span><span class="kt">byte</span><span class="p">,</span> <span class="n">options</span> <span class="o">*</span><span class="n">MultiGetOptions</span><span class="p">)</span> <span class="p">([]</span><span class="o">*</span><span class="n">KeyValue</span><span class="p">,</span> <span class="kt">bool</span><span class="p">,</span> <span class="kt">error</span><span class="p">)</span>
+</code></pre></div></div>
+<p>注：</p>
+<ul>
+  <li>参数：需传入context、hashKey、startSortKey、stopSortKey</li>
+  <li>返回值：kvs、bool值代表是否all fetched, error</li>
+  <li>异常：如果出现异常，譬如网络错误、超时错误、服务端错误等，可以访问error获取具体错误类型(key对应数据不存在不会报错)。</li>
+</ul>
+
+<h3 id="multiset--multisetopt">MultiSet | MultiSetOpt</h3>
+<p>写同一HashKey下的多行数据。</p>
+<div class="language-go highlighter-rouge"><div class="highlight"><pre class="highlight"><code>	<span class="c">// MultiSet sets the multiple entries for `hashKey` + `sortKeys[i]` atomically in one operation.</span>
+	<span class="c">// `hashKey` / `sortKeys` / `values` : CAN'T be nil or empty.</span>
+	<span class="c">// `sortKeys[i]` / `values[i]` : CAN'T be nil but CAN be empty.</span>
+	<span class="n">MultiSet</span><span class="p">(</span><span class="n">ctx</span> <span class="n">context</span><span class="o">.</span><span class="n">Context</span><span class="p">,</span> <span class="n">hashKey</span> <span class="p">[]</span><span class="kt">byte</span><span class="p">,</span> <span class="n">sortKeys</span> <span class="p">[][]</span><span class="kt">byte</span><span class="p">,</span> <span class="n">values</span> <span class="p">[][]</span><span class="kt">byte</span><span class="p">)</span> <span class="kt">error</span>
+	<span class="n">MultiSetOpt</span><span class="p">(</span><span class="n">ctx</span> <span class="n">context</span><span class="o">.</span><span class="n">Context</span><span class="p">,</span> <span class="n">hashKey</span> <span class="p">[]</span><span class="kt">byte</span><span class="p">,</span> <span class="n">sortKeys</span> <span class="p">[][]</span><span class="kt">byte</span><span class="p">,</span> <span class="n">values</span> <span class="p">[][]</span><span class="kt">byte</span><span class="p">,</span> <span class="n">ttl</span> <span class="n">time</span><span class="o">.</span><span class="n">Duration</span><span class="p">)</span> <span class="kt">error</span>
+
+</code></pre></div></div>
+<p>注：</p>
+<ul>
+  <li>MultiSet调用了rocksdb的WriteBatch接口，因此MultiSet是一个原子操作</li>
+  <li>提供了两个版本的接口，其中第二个接口可以指定TTL时间。</li>
+  <li>参数：需传入context、hashKey、sortKeys、values、ttl(可选，单位为s)</li>
+  <li>返回值：error</li>
+  <li>异常：如果出现异常，譬如网络错误、超时错误、服务端错误等，可以访问error获取具体错误类型</li>
+</ul>
+
+<h3 id="multidel">MultiDel</h3>
+<div class="language-go highlighter-rouge"><div class="highlight"><pre class="highlight"><code>	<span class="c">// MultiDel deletes the multiple entries under `hashKey` all atomically in one operation.</span>
+	<span class="c">// `hashKey` / `sortKeys` : CAN'T be nil or empty.</span>
+	<span class="c">// `sortKeys[i]` : CAN'T be nil but CAN be empty.</span>
+	<span class="n">MultiDel</span><span class="p">(</span><span class="n">ctx</span> <span class="n">context</span><span class="o">.</span><span class="n">Context</span><span class="p">,</span> <span class="n">hashKey</span> <span class="p">[]</span><span class="kt">byte</span><span class="p">,</span> <span class="n">sortKeys</span> <span class="p">[][]</span><span class="kt">byte</span><span class="p">)</span> <span class="kt">error</span>
+</code></pre></div></div>
+<p>注：</p>
+<ul>
+  <li>MultiDel调用了rocksdb的WriteBatch接口，因此MultiDel是一个原子操作</li>
+  <li>参数：需传入context、hashKey、sortKeys</li>
+  <li>返回值：error</li>
+  <li>异常：如果出现异常，譬如网络错误、超时错误、服务端错误等，可以访问error获取具体错误类型</li>
+</ul>
+
+<h3 id="delrange--delrangeopt">DelRange | DelRangeOpt</h3>
+<div class="language-go highlighter-rouge"><div class="highlight"><pre class="highlight"><code>	<span class="c">// DelRange /DelRangeOpt deletes the multiple entries under `hashKey`, between range (`startSortKey`, `stopSortKey`),</span>
+	<span class="c">// atomically in one operation.</span>
+	<span class="c">// DelRange is identical to DelRangeOpt except that the former uses DefaultDelRangeOptions as `options`.</span>
+	<span class="c">//</span>
+	<span class="c">// startSortKey: nil or len(startSortKey) == 0 means to start from the first entry in the sorted key range.</span>
+	<span class="c">// stopSortKey: nil or len(stopSortKey) == 0 means to stop at the last entry in the sorted key range.</span>
+	<span class="c">// `hashKey` : CAN'T be nil or empty.</span>
+	<span class="n">DelRange</span><span class="p">(</span><span class="n">ctx</span> <span class="n">context</span><span class="o">.</span><span class="n">Context</span><span class="p">,</span> <span class="n">hashKey</span> <span class="p">[]</span><span class="kt">byte</span><span class="p">,</span> <span class="n">startSortKey</span> <span class="p">[]</span><span class="kt">byte</span><span class="p">,</span> <span class="n">stopSortKey</span> <span class="p">[]</span><span class="kt">byte</span><span class="p">)</span> <span class="kt">error</span>
+	<span class="n">DelRangeOpt</span><span class="p">(</span><span class="n">ctx</span> <span class="n">context</span><span class="o">.</span><span class="n">Context</span><span class="p">,</span> <span class="n">hashKey</span> <span class="p">[]</span><span class="kt">byte</span><span class="p">,</span> <span class="n">startSortKey</span> <span class="p">[]</span><span class="kt">byte</span><span class="p">,</span> <span class="n">stopSortKey</span> <span class="p">[]</span><span class="kt">byte</span><span class="p">,</span> <span class="n">options</span> <span class="o">*</span><span class="n">DelRangeOptions</span><span class="p">)</span> <span class="kt">error</span>
+
+	<span class="c">// DelRangeOptions is the options for DelRange, defaults to DefaultDelRangeOptions.</span>
+	<span class="k">type</span> <span class="n">DelRangeOptions</span> <span class="k">struct</span> <span class="p">{</span>
+		<span class="n">nextSortKey</span>    <span class="p">[]</span><span class="kt">byte</span>
+		<span class="n">StartInclusive</span> <span class="kt">bool</span>
+		<span class="n">StopInclusive</span>  <span class="kt">bool</span>
+		<span class="n">SortKeyFilter</span>  <span class="n">Filter</span>
+	<span class="p">}</span>
+</code></pre></div></div>
+<p>注：</p>
+<ul>
+  <li>DelRange实际调用了多次MultiDel, 每次MultiDel是原子的，但是DelRange整体可能不是原子的。</li>
+  <li>参数：需传入context、hashKey、startSortKey、stopSortKey</li>
+  <li>返回值：error</li>
+  <li>异常：如果出现异常，譬如网络错误、超时错误、服务端错误等，可以访问error获取具体错误类型</li>
+  <li>DelRangeOptions：
+    <ul>
+      <li>nextSortKey： DelRange会按照sortkey的大小顺序进行删除，假如删除过程中失败，会将未删除成功第一个sortkey保存在nextSortKey</li>
+      <li>StartInclusive: 删除时是否包括startSortKey</li>
+      <li>StopInclusive: 删除时是否包括stopSortKey</li>
+      <li>SortKeyFilter: 可以对Sortkey进行筛选</li>
+    </ul>
+  </li>
+</ul>
+
+<h3 id="ttl">TTL</h3>
+<p>获取某个key的TTL</p>
+<div class="language-go highlighter-rouge"><div class="highlight"><pre class="highlight"><code>	<span class="c">// Returns ttl(time-to-live) in seconds: -1 if ttl is not set; -2 if entry doesn't exist.</span>
+	<span class="c">// `hashKey` : CAN'T be nil or empty.</span>
+	<span class="c">// `sortKey` : CAN'T be nil but CAN be empty.</span>
+	<span class="n">TTL</span><span class="p">(</span><span class="n">ctx</span> <span class="n">context</span><span class="o">.</span><span class="n">Context</span><span class="p">,</span> <span class="n">hashKey</span> <span class="p">[]</span><span class="kt">byte</span><span class="p">,</span> <span class="n">sortKey</span> <span class="p">[]</span><span class="kt">byte</span><span class="p">)</span> <span class="p">(</span><span class="kt">int</span><span class="p">,</span> <span class="kt">error</span><span class="p">)</span>
+</code></pre></div></div>
+<p>注：</p>
+<ul>
+  <li>参数：需传入context、hashKey、sortKey</li>
+  <li>返回值：int,error</li>
+  <li>异常：如果出现异常，譬如网络错误、超时错误、服务端错误等，可以访问error获取具体错误类型</li>
+</ul>
+
+<h3 id="exist">Exist</h3>
+<p>判断某个key是否存在</p>
+<div class="language-go highlighter-rouge"><div class="highlight"><pre class="highlight"><code>	<span class="c">// Check value existence for the entry for `hashKey` + `sortKey`.</span>
+	<span class="c">// `hashKey`: CAN'T be nil or empty.</span>
+	<span class="n">Exist</span><span class="p">(</span><span class="n">ctx</span> <span class="n">context</span><span class="o">.</span><span class="n">Context</span><span class="p">,</span> <span class="n">hashKey</span> <span class="p">[]</span><span class="kt">byte</span><span class="p">,</span> <span class="n">sortKey</span> <span class="p">[]</span><span class="kt">byte</span><span class="p">)</span> <span class="p">(</span><span class="kt">bool</span><span class="p">,</span> <span class="kt">error</span><span class="p">)</span>
+</code></pre></div></div>
+<p>注：</p>
+<ul>
+  <li>参数：需传入context、hashKey、sortKey</li>
+  <li>返回值：bool,error</li>
+  <li>异常：如果出现异常，譬如网络错误、超时错误、服务端错误等，可以访问error获取具体错误类型</li>
+</ul>
+
+<h3 id="getscanner">GetScanner</h3>
+<p>获取遍历某个HashKey下所有数据的迭代器，用于局部扫描。</p>
+<div class="language-go highlighter-rouge"><div class="highlight"><pre class="highlight"><code>	<span class="c">// Get Scanner for {startSortKey, stopSortKey} within hashKey.</span>
+	<span class="c">// startSortKey: nil or len(startSortKey) == 0 means start from begin.</span>
+	<span class="c">// stopSortKey: nil or len(stopSortKey) == 0 means stop to end.</span>
+	<span class="c">// `hashKey`: CAN'T be nil or empty.</span>
+	<span class="n">GetScanner</span><span class="p">(</span><span class="n">ctx</span> <span class="n">context</span><span class="o">.</span><span class="n">Context</span><span class="p">,</span> <span class="n">hashKey</span> <span class="p">[]</span><span class="kt">byte</span><span class="p">,</span> <span class="n">startSortKey</span> <span class="p">[]</span><span class="kt">byte</span><span class="p">,</span> <span class="n">stopSortKey</span> <span class="p">[]</span><span class="kt">byte</span><span class="p">,</span> <span class="n">options</span> <span class="o">*</span><span class="n">ScannerOptions</span><span class="p">)</span> <span class="p">(</span><span class="n">Scanner</span><span class="p">,</span> <span class="kt">error</span><span class="p">)</span>
+
+	<span class="c">// ScannerOptions is the options for GetScanner and GetUnorderedScanners.</span>
+	<span class="k">type</span> <span class="n">ScannerOptions</span> <span class="k">struct</span> <span class="p">{</span>
+		<span class="n">BatchSize</span>      <span class="kt">int</span>  <span class="c">// internal buffer batch size</span>
+		<span class="n">StartInclusive</span> <span class="kt">bool</span> <span class="c">// if the startSortKey is included</span>
+		<span class="n">StopInclusive</span>  <span class="kt">bool</span> <span class="c">// if the stopSortKey is included</span>
+		<span class="n">HashKeyFilter</span>  <span class="n">Filter</span>
+		<span class="n">SortKeyFilter</span>  <span class="n">Filter</span>
+		<span class="n">NoValue</span>        <span class="kt">bool</span> <span class="c">// only fetch hash_key and sort_key, but not fetch value</span>
+	<span class="p">}</span>
+</code></pre></div></div>
+<p>注：</p>
+<ul>
+  <li>参数：需传入context、hashKey、startSortKey、stopSortKey、ScannnerOptions
+    <ul>
+      <li>startSortKey和stopSortKey用于指定scan的返回，并通过ScanOptions指定区间的开闭。</li>
+      <li>如果startSortKey为null，表示从头开始；如果stopSortKey为null，表示一直读到尾。</li>
+      <li>ScannnerOptions说明：
+        <ul>
+          <li>BatchSize： 从server端读取数据时每批数据的个数，默认值为1000</li>
+          <li>startInclusive：是否包含startSortKey，默认为true</li>
+          <li>stopInclusive： 是否包含stopSortKey，默认为false</li>
+          <li>HashKeyFilter: hashkey的筛选，默认无筛选</li>
+          <li>SortKeyFilter: sortkey的筛选，默认无筛选</li>
+          <li>NoValue: 只返回HashKey和SortKey，不返回Value数据，默认为false</li>
+        </ul>
+      </li>
+    </ul>
+  </li>
+  <li>返回值：迭代器Scanner, error</li>
+  <li>异常：如果出现异常，譬如网络错误、超时错误、服务端错误等，可以访问error获取具体错误类型</li>
+</ul>
+
+<h3 id="getunorderedscanners">GetUnorderedScanners</h3>
+<p>获取遍历整个表的所有数据的迭代器，用于全局扫描。</p>
+<div class="language-go highlighter-rouge"><div class="highlight"><pre class="highlight"><code>	<span class="c">// Get Scanners for all data in pegasus, the count of scanners will</span>
+	<span class="c">// be no more than maxSplitCount</span>
+	<span class="n">GetUnorderedScanners</span><span class="p">(</span><span class="n">ctx</span> <span class="n">context</span><span class="o">.</span><span class="n">Context</span><span class="p">,</span> <span class="n">maxSplitCount</span> <span class="kt">int</span><span class="p">,</span> <span class="n">options</span> <span class="o">*</span><span class="n">ScannerOptions</span><span class="p">)</span> <span class="p">([]</span><span class="n">Scanner</span><span class="p">,</span> <span class="kt">error</span><span class="p">)</span>
+</code></pre></div></div>
+<p>注：</p>
+<ul>
+  <li>参数：需传入context、maxSplitCount、ScannnerOptions
+    <ul>
+      <li>maxSplitCount：用于决定返回的迭代器的个数。当返回多个迭代器时，每个迭代器可以访问表中的部分数据。通过返回迭代器列表，用户可以进行并发scan或者在MapReduce中使用。如果不需要多个迭代器，可以将其设置为1。</li>
+    </ul>
+  </li>
+  <li>返回值：迭代器Scanner数组, error</li>
+  <li>异常：如果出现异常，譬如网络错误、超时错误、服务端错误等，可以访问error获取具体错误类型</li>
+</ul>
+
+<h3 id="next">Next</h3>
+<p>在scan操作时，同步获取下一条数据。</p>
+<div class="language-go highlighter-rouge"><div class="highlight"><pre class="highlight"><code>	<span class="c">// Scanner defines the interface of client-side scanning.</span>
+	<span class="k">type</span> <span class="n">Scanner</span> <span class="k">interface</span> <span class="p">{</span>
+	<span class="c">// Grabs the next entry.</span>
+		<span class="n">Next</span><span class="p">(</span><span class="n">ctx</span> <span class="n">context</span><span class="o">.</span><span class="n">Context</span><span class="p">)</span> <span class="p">(</span><span class="n">completed</span> <span class="kt">bool</span><span class="p">,</span> <span class="n">hashKey</span> <span class="p">[]</span><span class="kt">byte</span><span class="p">,</span> <span class="n">sortKey</span> <span class="p">[]</span><span class="kt">byte</span><span class="p">,</span> <span class="n">value</span> <span class="p">[]</span><span class="kt">byte</span><span class="p">,</span> <span class="n">err</span> <span class="kt">error</span><span class="p">)</span>
+
+		<span class="n">Close</span><span class="p">()</span> <span class="kt">error</span>
+	<span class="p">}</span>
+</code></pre></div></div>
+<p>注：</p>
+<ul>
+  <li>参数：需传入context</li>
+  <li>返回值：completed、hashKey、sortKey、value、err
+    <ul>
+      <li>completed: true表示遍历结束.</li>
+    </ul>
+  </li>
+  <li>异常：如果出现异常，譬如网络错误、超时错误、服务端错误等，可以访问error获取具体错误类型</li>
+</ul>
+
+<h3 id="checkandset">CheckAndSet</h3>
+<p>单hashKey数据的原子CAS操作（可以理解为单行原子操作）。详细说明参见<a href="/zh/api/single-atomic#cas操作">单行原子操作</a>。<br />
+该操作先对某个SortKey（称之为checkSortKey）的value做条件检查：</p>
+<ul>
+  <li>如果检查的条件满足，则将另一个SortKey（称之为setSortKey）的value设置为新值。</li>
+  <li>如果检查的条件不满足，则不执行set操作。</li>
+</ul>
+
+<p>checkSortKey和setSortKey可以相同也可以不同。<br />
+用户还可以设置<code class="language-plaintext highlighter-rouge">CheckAndSetOptions.ReturnCheckValue</code>来获取CheckSortKey对应的value。如果CheckSortKey和SetSortKey相同并且set成功，则获取set之前的旧值。</p>
+
+<div class="language-go highlighter-rouge"><div class="highlight"><pre class="highlight"><code>	<span class="c">// Atomically check and set value by key from the cluster. The value will be set if and only if check passed.</span>
+	<span class="c">// The sort key for checking and setting can be the same or different.</span>
+	<span class="c">//</span>
+	<span class="c">// `checkSortKey`: The sort key for checking.</span>
+	<span class="c">// `setSortKey`: The sort key for setting.</span>
+	<span class="c">// `checkOperand`:</span>
+	<span class="n">CheckAndSet</span><span class="p">(</span><span class="n">ctx</span> <span class="n">context</span><span class="o">.</span><span class="n">Context</span><span class="p">,</span> <span class="n">hashKey</span> <span class="p">[]</span><span class="kt">byte</span><span class="p">,</span> <span class="n">checkSortKey</span> <span class="p">[]</span><span class="kt">byte</span><span class="p">,</span> <span class="n">checkType</span> <span class="n">CheckType</span><span class="p">,</span>
+		<span class="n">checkOperand</span> <span class="p">[]</span><span class="kt">byte</span><span class="p">,</span> <span class="n">setSortKey</span> <span class="p">[]</span><span class="kt">byte</span><span class="p">,</span> <span class="n">setValue</span> <span class="p">[]</span><span class="kt">byte</span><span class="p">,</span> <span class="n">options</span> <span class="o">*</span><span class="n">CheckAndSetOptions</span><span class="p">)</span> <span class="p">(</span><span class="o">*</span><span class="n">CheckAndSetResult</span><span class="p">,</span> <span class="kt">error</span><span class="p">)</span>
+	
+
+	<span class="c">// The value checking types</span>
+	<span class="k">const</span> <span class="p">(</span>
+		<span class="n">CheckTypeNoCheck</span> <span class="o">=</span> <span class="n">CheckType</span><span class="p">(</span><span class="n">rrdb</span><span class="o">.</span><span class="n">CasCheckType_CT_NO_CHECK</span><span class="p">)</span>
+
+		<span class="c">// existence</span>
+		<span class="n">CheckTypeValueNotExist</span>        <span class="o">=</span> <span class="n">CheckType</span><span class="p">(</span><span class="n">rrdb</span><span class="o">.</span><span class="n">CasCheckType_CT_VALUE_NOT_EXIST</span><span class="p">)</span>          <span class="c">// value is 	not exist</span>
+		<span class="n">CheckTypeValueNotExistOrEmpty</span> <span class="o">=</span> <span class="n">CheckType</span><span class="p">(</span><span class="n">rrdb</span><span class="o">.</span><span class="n">CasCheckType_CT_VALUE_NOT_EXIST_OR_EMPTY</span><span class="p">)</span> <span class="c">// value is 	not exist or value is empty</span>
+		<span class="n">CheckTypeValueExist</span>           <span class="o">=</span> <span class="n">CheckType</span><span class="p">(</span><span class="n">rrdb</span><span class="o">.</span><span class="n">CasCheckType_CT_VALUE_EXIST</span><span class="p">)</span>              <span class="c">// value is 	exist</span>
+		<span class="n">CheckTypeValueNotEmpty</span>        <span class="o">=</span> <span class="n">CheckType</span><span class="p">(</span><span class="n">rrdb</span><span class="o">.</span><span class="n">CasCheckType_CT_VALUE_NOT_EMPTY</span><span class="p">)</span>          <span class="c">// value is 	exist and not empty</span>
+
+		<span class="c">// match</span>
+		<span class="n">CheckTypeMatchAnywhere</span> <span class="o">=</span> <span class="n">CheckType</span><span class="p">(</span><span class="n">rrdb</span><span class="o">.</span><span class="n">CasCheckType_CT_VALUE_MATCH_ANYWHERE</span><span class="p">)</span> <span class="c">// operand matches 	anywhere in value</span>
+		<span class="n">CheckTypeMatchPrefix</span>   <span class="o">=</span> <span class="n">CheckType</span><span class="p">(</span><span class="n">rrdb</span><span class="o">.</span><span class="n">CasCheckType_CT_VALUE_MATCH_PREFIX</span><span class="p">)</span>   <span class="c">// operand matches 	prefix in value</span>
+		<span class="n">CheckTypeMatchPostfix</span>  <span class="o">=</span> <span class="n">CheckType</span><span class="p">(</span><span class="n">rrdb</span><span class="o">.</span><span class="n">CasCheckType_CT_VALUE_MATCH_POSTFIX</span><span class="p">)</span>  <span class="c">// operand matches 	postfix in value</span>
+
+		<span class="c">// bytes compare</span>
+		<span class="n">CheckTypeBytesLess</span>           <span class="o">=</span> <span class="n">CheckType</span><span class="p">(</span><span class="n">rrdb</span><span class="o">.</span><span class="n">CasCheckType_CT_VALUE_BYTES_LESS</span><span class="p">)</span>             <span class="c">// bytes 	compare: value &lt; operand</span>
+		<span class="n">CheckTypeBytesLessOrEqual</span>    <span class="o">=</span> <span class="n">CheckType</span><span class="p">(</span><span class="n">rrdb</span><span class="o">.</span><span class="n">CasCheckType_CT_VALUE_BYTES_LESS_OR_EQUAL</span><span class="p">)</span>    <span class="c">// bytes 	compare: value &lt;= operand</span>
+		<span class="n">CheckTypeBytesEqual</span>          <span class="o">=</span> <span class="n">CheckType</span><span class="p">(</span><span class="n">rrdb</span><span class="o">.</span><span class="n">CasCheckType_CT_VALUE_BYTES_EQUAL</span><span class="p">)</span>            <span class="c">// bytes 	compare: value == operand</span>
+		<span class="n">CheckTypeBytesGreaterOrEqual</span> <span class="o">=</span> <span class="n">CheckType</span><span class="p">(</span><span class="n">rrdb</span><span class="o">.</span><span class="n">CasCheckType_CT_VALUE_BYTES_GREATER_OR_EQUAL</span><span class="p">)</span> <span class="c">// bytes 	compare: value &gt;= operand</span>
+		<span class="n">CheckTypeBytesGreater</span>        <span class="o">=</span> <span class="n">CheckType</span><span class="p">(</span><span class="n">rrdb</span><span class="o">.</span><span class="n">CasCheckType_CT_VALUE_BYTES_GREATER</span><span class="p">)</span>          <span class="c">// bytes 	compare: value &gt; operand</span>
+
+		<span class="c">// int compare: first transfer bytes to int64; then compare by int value</span>
+		<span class="n">CheckTypeIntLess</span>           <span class="o">=</span> <span class="n">CheckType</span><span class="p">(</span><span class="n">rrdb</span><span class="o">.</span><span class="n">CasCheckType_CT_VALUE_INT_LESS</span><span class="p">)</span>             <span class="c">// int 	compare: value &lt; operand</span>
+		<span class="n">CheckTypeIntLessOrEqual</span>    <span class="o">=</span> <span class="n">CheckType</span><span class="p">(</span><span class="n">rrdb</span><span class="o">.</span><span class="n">CasCheckType_CT_VALUE_INT_LESS_OR_EQUAL</span><span class="p">)</span>    <span class="c">// int 	compare: value &lt;= operand</span>
+		<span class="n">CheckTypeIntEqual</span>          <span class="o">=</span> <span class="n">CheckType</span><span class="p">(</span><span class="n">rrdb</span><span class="o">.</span><span class="n">CasCheckType_CT_VALUE_INT_EQUAL</span><span class="p">)</span>            <span class="c">// int 	compare: value == operand</span>
+		<span class="n">CheckTypeIntGreaterOrEqual</span> <span class="o">=</span> <span class="n">CheckType</span><span class="p">(</span><span class="n">rrdb</span><span class="o">.</span><span class="n">CasCheckType_CT_VALUE_INT_GREATER_OR_EQUAL</span><span class="p">)</span> <span class="c">// int 	compare: value &gt;= operand</span>
+		<span class="n">CheckTypeIntGreater</span>        <span class="o">=</span> <span class="n">CheckType</span><span class="p">(</span><span class="n">rrdb</span><span class="o">.</span><span class="n">CasCheckType_CT_VALUE_BYTES_GREATER</span><span class="p">)</span>        <span class="c">// int 	compare: value &gt; operand</span>
+	<span class="p">)</span>
+
+
+	<span class="c">// CheckAndSetOptions is the options of a CAS.</span>
+	<span class="k">type</span> <span class="n">CheckAndSetOptions</span> <span class="k">struct</span> <span class="p">{</span>
+		<span class="n">SetValueTTLSeconds</span> <span class="kt">int</span>  <span class="c">// time to live in seconds of the set value, 0 means no ttl.</span>
+		<span class="n">ReturnCheckValue</span>   <span class="kt">bool</span> <span class="c">// if return the check value in results.</span>
+	<span class="p">}</span>
+	
+
+	<span class="c">// CheckAndSetResult is the result of a CAS.</span>
+	<span class="k">type</span> <span class="n">CheckAndSetResult</span> <span class="k">struct</span> <span class="p">{</span>
+		<span class="c">// true if set value succeed.</span>
+		<span class="n">SetSucceed</span> <span class="kt">bool</span>
+
+		<span class="c">// the actual value if set value failed; null means the actual value is not exist.</span>
+		<span class="n">CheckValue</span> <span class="p">[]</span><span class="kt">byte</span>
+
+		<span class="c">// if the check value is exist; can be used only when checkValueReturned is true.</span>
+		<span class="n">CheckValueExist</span> <span class="kt">bool</span>
+
+		<span class="c">// return the check value if exist; can be used only when checkValueExist is true.</span>
+		<span class="n">CheckValueReturned</span> <span class="kt">bool</span>
+	<span class="p">}</span>
+
+</code></pre></div></div>
+<p>注：</p>
+<ul>
+  <li>参数：需传入context、hashKey、checkSortKey、checkType、checkOperand、setSortKey、setValue、CheckAndSetOptions
+    <ul>
+      <li>checkSortKey、checkType、checkOperand：用于指定检查的条件。</li>
+      <li>setSortKey、setValue：用于指定条件检查成功后要set的新值。</li>
+      <li>options：其他选项，包括：
+        <ul>
+          <li>SetValueTTLSeconds：新值的TTL时间；TTL必须&gt;=0，0表示不设置TTL限制。当&lt;0时返回报错。</li>
+          <li>ReturnCheckValue：是否需要返回CheckSortKey对应的value。</li>
+        </ul>
+      </li>
+    </ul>
+  </li>
+  <li>返回值：CheckAndSetResult、error
+    <ul>
+      <li>SetSucceed: 是否set成功。</li>
+      <li>CheckValue: CheckSortKey对应的value值；该域只有在checkValueExist=true时有意义。</li>
+      <li>CheckValueExist: CheckSortKey对应的value是否存在；该域只有在checkValueReturned=true时有意义。</li>
+      <li>CheckValueReturned: 是否返回了CheckSortKey对应的value。</li>
+    </ul>
+  </li>
+  <li>异常：如果出现异常，譬如网络错误、超时错误、服务端错误等，可以访问error获取具体错误类型</li>
+</ul>
+
+<h3 id="sortkeycount">SortKeyCount</h3>
+<p>获取某个HashKey下所有SortKey的个数。</p>
+
+<div class="language-go highlighter-rouge"><div class="highlight"><pre class="highlight"><code>	<span class="c">// Returns the count of sortkeys under hashkey.</span>
+	<span class="c">// `hashKey`: CAN'T be nil or empty.</span>
+	<span class="n">SortKeyCount</span><span class="p">(</span><span class="n">ctx</span> <span class="n">context</span><span class="o">.</span><span class="n">Context</span><span class="p">,</span> <span class="n">hashKey</span> <span class="p">[]</span><span class="kt">byte</span><span class="p">)</span> <span class="p">(</span><span class="kt">int64</span><span class="p">,</span> <span class="kt">error</span><span class="p">)</span>
+</code></pre></div></div>
+<p>注：</p>
+<ul>
+  <li>参数：需传入context、hashKey</li>
+  <li>返回值：返回HashKey下所有SortKey的个数</li>
+  <li>异常：如果出现异常，譬如网络错误、超时错误、服务端错误等，可以访问error获取具体错误类型</li>
+</ul>
+
+<h3 id="incr">Incr</h3>
+<p>单行原子增(减)操作。详细说明参见<a href="/zh/api/single-atomic#cas操作">单行原子操作</a>。<br />
+该操作先将key所指向的value的字节串转换为int64类型, 然后加上increment，将结果转换为字节串设置为新值。
+当参数increment为正数时，即原子加；当参数increment为负数时，即原子减。</p>
+<div class="language-go highlighter-rouge"><div class="highlight"><pre class="highlight"><code>	<span class="c">// Atomically increment value by key from the cluster.</span>
+	<span class="c">// Returns the new value.</span>
+	<span class="c">// `hashKey` / `sortKeys` : CAN'T be nil or empty</span>
+	<span class="n">Incr</span><span class="p">(</span><span class="n">ctx</span> <span class="n">context</span><span class="o">.</span><span class="n">Context</span><span class="p">,</span> <span class="n">hashKey</span> <span class="p">[]</span><span class="kt">byte</span><span class="p">,</span> <span class="n">sortKey</span> <span class="p">[]</span><span class="kt">byte</span><span class="p">,</span> <span class="n">increment</span> <span class="kt">int64</span><span class="p">)</span> <span class="p">(</span><span class="kt">int64</span><span class="p">,</span> <span class="kt">error</span><span class="p">)</span>
+</code></pre></div></div>
+<p>注：</p>
+<ul>
+  <li>参数：需传入context、hashKey、sortkey、increment</li>
+  <li>返回值：操作成功后的新值、error</li>
+  <li>异常：如果出现异常，譬如网络错误、超时错误、服务端错误等，可以访问error获取具体错误类型。另外以下情况也会抛出异常：
+    <ul>
+      <li>旧值转换为int64时出错，譬如不是合法的数字或者超出int64范围。</li>
+      <li>旧值加上increment后的结果超出int64范围。</li>
+    </ul>
+  </li>
+  <li>其他说明：
+    <ul>
+      <li>如果旧值不存在，则把旧值当做0处理，即新值等于increment。</li>
+      <li>TTL语义：如果旧值存在，新值的TTL和旧值保持一致；如果旧值不存在，新值将不设TTL。</li>
+    </ul>
+  </li>
+</ul>
+
+<h3 id="batchget">BatchGet</h3>
+<p>读取一批数据，对get函数的批量封装。该函数并发地向server发送异步请求，并等待结果。如果有任意一个请求失败，就提前终止并抛出异常。如果抛出了异常，则values中的结果是未定义的。</p>
+<div class="language-go highlighter-rouge"><div class="highlight"><pre class="highlight"><code>	<span class="c">// Gets values from a batch of CompositeKeys. Internally it distributes each key</span>
+	<span class="c">// into a Get call and wait until all returned.</span>
+	<span class="c">//</span>
+	<span class="c">// `keys`: CAN'T be nil or empty, `hashkey` in `keys` can't be nil or empty either.</span>
+	<span class="c">// The returned values are in sequence order of each key, aka `keys[i] =&gt; values[i]`.</span>
+	<span class="c">// If keys[i] is not found, or the Get failed, values[i] is set nil.</span>
+	<span class="c">//</span>
+	<span class="c">// Returns a non-nil `err` once there's a failed Get call. It doesn't mean all calls failed.</span>
+	<span class="c">//</span>
+	<span class="c">// NOTE: this operation is not guaranteed to be atomic</span>
+	<span class="n">BatchGet</span><span class="p">(</span><span class="n">ctx</span> <span class="n">context</span><span class="o">.</span><span class="n">Context</span><span class="p">,</span> <span class="n">keys</span> <span class="p">[]</span><span class="n">CompositeKey</span><span class="p">)</span> <span class="p">(</span><span class="n">values</span> <span class="p">[][]</span><span class="kt">byte</span><span class="p">,</span> <span class="n">err</span> <span class="kt">error</span><span class="p">)</span>
+</code></pre></div></div>
+<p>注：</p>
+<ul>
+  <li>参数：需传入context、CompositeKey</li>
+  <li>返回值：Values、error。如果读取成功，Values[i]中存放Keys[i]对应的结果，如果value不存在则为null。</li>
+  <li>异常：如果出现异常，譬如网络错误、超时错误、服务端错误等，可以访问error获取具体错误类型。</li>
+  <li>其他说明：
+    <ul>
+      <li>该方法不是原子的，有可能出现部分成功部分失败的情况，只要任意一个失败都会抛出异常。</li>
+    </ul>
+  </li>
+</ul>
+
+                </div>
+            </section>
+            <footer class="footer">
+    <div class="container">
+        <div class="content is-small has-text-centered">
+            <div style="margin-bottom: 20px;">
+                <a href="http://incubator.apache.org">
+                    <img src="/assets/images/egg-logo.png"
+                         width="15%"
+                         alt="Apache Incubator"/>
+                </a>
+            </div>
+            Copyright &copy; 2023 <a href="http://www.apache.org">The Apache Software Foundation</a>.
+            Licensed under the <a href="http://www.apache.org/licenses/LICENSE-2.0">Apache License, Version
+            2.0</a>.
+            <br><br>
+            
+            Apache Pegasus is an effort undergoing incubation at The Apache Software Foundation (ASF),
+            sponsored by the Apache Incubator. Incubation is required of all newly accepted projects
+            until a further review indicates that the infrastructure, communications, and decision making process
+            have stabilized in a manner consistent with other successful ASF projects. While incubation status is
+            not necessarily a reflection of the completeness or stability of the code, it does indicate that the
+            project has yet to be fully endorsed by the ASF.
+            
+            <br><br>
+            Apache Pegasus, Pegasus, Apache, the Apache feather logo, and the Apache Pegasus project logo are either
+            registered trademarks or trademarks of The Apache Software Foundation in the United States and other
+            countries.
+        </div>
+    </div>
+</footer>
+        </div>
+
+        <!-- right panel -->
+        <div class="dashboard-panel is-small is-scrollable is-hidden-mobile">
+            <p class="menu-label">
+    <span class="icon">
+        <i class="fa fa-bars" aria-hidden="true"></i>
+    </span>
+    本页导航
+</p>
+<ul class="menu-list">
+  <li><a href="#获取go客户端">获取go客户端</a></li>
+  <li><a href="#客户端配置">客户端配置</a></li>
+  <li><a href="#接口定义">接口定义</a>
+    <ul>
+      <li><a href="#创建client实例">创建Client实例</a></li>
+      <li><a href="#创建tableconnector实例">创建TableConnector实例</a></li>
+      <li><a href="#tableconnector接口">TableConnector接口</a>
+        <ul>
+          <li><a href="#get">get</a></li>
+          <li>
+            <table>
+              <tbody>
+                <tr>
+                  <td>[Set</td>
+                  <td>SetTTL](#set–setttl)</td>
+                </tr>
+              </tbody>
+            </table>
+          </li>
+          <li><a href="#del">Del</a></li>
+          <li>
+            <table>
+              <tbody>
+                <tr>
+                  <td>[MultiGet</td>
+                  <td>MultiGetOpt](#multiget–multigetopt)</td>
+                </tr>
+              </tbody>
+            </table>
+          </li>
+          <li>
+            <table>
+              <tbody>
+                <tr>
+                  <td>[MultiGetRange</td>
+                  <td>MultiGetRangeOpt](#multigetrange–multigetrangeopt)</td>
+                </tr>
+              </tbody>
+            </table>
+          </li>
+          <li>
+            <table>
+              <tbody>
+                <tr>
+                  <td>[MultiSet</td>
+                  <td>MultiSetOpt](#multiset–multisetopt)</td>
+                </tr>
+              </tbody>
+            </table>
+          </li>
+          <li><a href="#multidel">MultiDel</a></li>
+          <li>
+            <table>
+              <tbody>
+                <tr>
+                  <td>[DelRange</td>
+                  <td>DelRangeOpt](#delrange–delrangeopt)</td>
+                </tr>
+              </tbody>
+            </table>
+          </li>
+          <li><a href="#ttl">TTL</a></li>
+          <li><a href="#exist">Exist</a></li>
+          <li><a href="#getscanner">GetScanner</a></li>
+          <li><a href="#getunorderedscanners">GetUnorderedScanners</a></li>
+          <li><a href="#next">Next</a></li>
+          <li><a href="#checkandset">CheckAndSet</a></li>
+          <li><a href="#sortkeycount">SortKeyCount</a></li>
+          <li><a href="#incr">Incr</a></li>
+          <li><a href="#batchget">BatchGet</a></li>
+        </ul>
+      </li>
+    </ul>
+  </li>
+</ul>
+
+        </div>
+    </div>
+
+    <script src="/assets/js/app.js" type="text/javascript"></script>
+     <script>
+     docsearch({
+         container: '#docsearch',
+         appId: 'QRN30RBW0S',
+         indexName: 'pegasus-apache',
+         apiKey: 'd3a3252fa344359766707a106c4ed88f',
+         debug: true
+     });
+ </script>
+
+</body>
+
+</html>
