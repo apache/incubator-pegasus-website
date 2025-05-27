@@ -73,7 +73,7 @@ OpenTable(ctx context.Context, tableName string) (TableConnector, error)
 
 ## TableConnector接口
 
-### get  
+### Get
 读单行数据。
 ```go
 // Get retrieves the entry for `hashKey` + `sortKey`.
