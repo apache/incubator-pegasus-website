@@ -183,7 +183,7 @@ go client 操作数据的接口都在TableConnector中定义。
     * FilterTypeMatchPrefix： 前缀匹配
     * FilterTypeMatchPostfix: 后缀匹配
 
-### MultiGetRange | MultiGetRangeOpt
+### MultiGetRange and MultiGetRangeOpt
 读**同一HashKey下**的多行数据，支持范围查询。
 ``` go
 	// MultiGetRange retrieves the multiple entries under `hashKey`, between range (`startSortKey`, `stopSortKey`),
