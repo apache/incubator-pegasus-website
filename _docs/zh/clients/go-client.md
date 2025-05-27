@@ -143,13 +143,17 @@ type MultiGetOptions struct {
     StartInclusive bool
     StopInclusive  bool
     SortKeyFilter  Filter
+
     // MaxFetchCount and MaxFetchSize limit the size of returned result.
     // Max count of k-v pairs to be fetched. MaxFetchCount <= 0 means no limit.
     MaxFetchCount int
+
     // Max size of k-v pairs to be fetched. MaxFetchSize <= 0 means no limit.
     MaxFetchSize int
+
     // Query order
     Reverse bool
+
     // Whether to retrieve keys only, without value.
     // Enabling this option will reduce the network load, improve the RPC latency.
     NoValue bool
@@ -163,10 +167,10 @@ type Filter struct {
 
 // Filter types
 const (
-FilterTypeNoFilter      = FilterType(rrdb.FilterType_FT_NO_FILTER)
-FilterTypeMatchAnywhere = FilterType(rrdb.FilterType_FT_MATCH_ANYWHERE)
-FilterTypeMatchPrefix   = FilterType(rrdb.FilterType_FT_MATCH_PREFIX)
-FilterTypeMatchPostfix  = FilterType(rrdb.FilterType_FT_MATCH_POSTFIX)
+    FilterTypeNoFilter      = FilterType(rrdb.FilterType_FT_NO_FILTER)
+    FilterTypeMatchAnywhere = FilterType(rrdb.FilterType_FT_MATCH_ANYWHERE)
+    FilterTypeMatchPrefix   = FilterType(rrdb.FilterType_FT_MATCH_PREFIX)
+    FilterTypeMatchPostfix  = FilterType(rrdb.FilterType_FT_MATCH_POSTFIX)
 )
 ```
 注：  
@@ -199,7 +203,6 @@ FilterTypeMatchPostfix  = FilterType(rrdb.FilterType_FT_MATCH_POSTFIX)
 // The returned key-value pairs are sorted by sort keys in ascending order.
 // Returns nil if no entries match.
 // Returns true if all data is fetched, false if only partial data is fetched.
-//
 MultiGetRange(ctx context.Context, hashKey []byte, startSortKey []byte, stopSortKey []byte) ([]*KeyValue, bool, error)
 MultiGetRangeOpt(ctx context.Context, hashKey []byte, startSortKey []byte, stopSortKey []byte, options *MultiGetOptions) ([]*KeyValue, bool, error)
 ```
