@@ -87,7 +87,7 @@ Get(ctx context.Context, hashKey []byte, sortKey []byte) ([]byte, error)
 * 返回值：value、error. 如果返回(nil,nil)，表示key对应的数据不存在。  
 * 异常：如果出现异常，譬如网络错误、超时错误、服务端错误等，可以访问error获取具体错误类型(key对应数据不存在返回nil)。
 
-### Set | SetTTL
+### Set and SetTTL
 写单行数据, SetTTL可以设置单条kv的TTL。
 ```go
 // Set the entry for `hashKey` + `sortKey` to `value`.
@@ -115,7 +115,7 @@ Del(ctx context.Context, hashKey []byte, sortKey []byte) error
 * 参数：需传入context、hashKey、sortKey。  
 * 异常：如果出现异常，譬如网络错误、超时错误、服务端错误等，可以访问error获取具体错误类型。
 
-### MultiGet | MultiGetOpt
+### MultiGet and MultiGetOpt
 读**同一HashKey下**的多行数据。
 ```go
 // MultiGet/MultiGetOpt retrieves the multiple entries for `hashKey` + `sortKeys[i]` atomically in one operation.
@@ -190,7 +190,7 @@ const (
     * FilterTypeMatchPrefix： 前缀匹配
     * FilterTypeMatchPostfix: 后缀匹配
 
-### MultiGetRange | MultiGetRangeOpt
+### MultiGetRange and MultiGetRangeOpt
 读**同一HashKey下**的多行数据，支持范围查询。
 ``` go
 // MultiGetRange retrieves the multiple entries under `hashKey`, between range (`startSortKey`, `stopSortKey`),
@@ -212,7 +212,7 @@ MultiGetRangeOpt(ctx context.Context, hashKey []byte, startSortKey []byte, stopS
 * 异常：如果出现异常，譬如网络错误、超时错误、服务端错误等，可以访问error获取具体错误类型(key对应数据不存在不会报错)。  
 
 
-### MultiSet | MultiSetOpt
+### MultiSet and MultiSetOpt
 写同一HashKey下的多行数据。
 ``` go
 // MultiSet sets the multiple entries for `hashKey` + `sortKeys[i]` atomically in one operation.
@@ -241,7 +241,7 @@ MultiDel(ctx context.Context, hashKey []byte, sortKeys [][]byte) error
 * 返回值：error 
 * 异常：如果出现异常，譬如网络错误、超时错误、服务端错误等，可以访问error获取具体错误类型
 
-### DelRange | DelRangeOpt
+### DelRange and DelRangeOpt
 ``` go
 // DelRange /DelRangeOpt deletes the multiple entries under `hashKey`, between range (`startSortKey`, `stopSortKey`),
 // atomically in one operation.
