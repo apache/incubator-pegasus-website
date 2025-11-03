@@ -16,15 +16,15 @@
 <meta name="generator" content="Jekyll v4.4.1" />
 <meta property="og:title" content="Administration" />
 <meta property="og:locale" content="en_US" />
-<meta name="description" content="Pegasus 不仅仅只提供简单的 key value 存储接口，我们还基于稳定性考虑，增加了许多有助于高效运维的特性。" />
-<meta property="og:description" content="Pegasus 不仅仅只提供简单的 key value 存储接口，我们还基于稳定性考虑，增加了许多有助于高效运维的特性。" />
+<meta name="description" content="Pegasus not only provides simple key-value storage interfaces; based on stability considerations, we have added many features that help efficient operations and maintenance." />
+<meta property="og:description" content="Pegasus not only provides simple key-value storage interfaces; based on stability considerations, we have added many features that help efficient operations and maintenance." />
 <meta property="og:site_name" content="Pegasus" />
 <meta property="og:type" content="article" />
-<meta property="article:published_time" content="2025-06-05T07:10:47+00:00" />
+<meta property="article:published_time" content="2025-11-03T07:37:49+00:00" />
 <meta name="twitter:card" content="summary" />
 <meta property="twitter:title" content="Administration" />
 <script type="application/ld+json">
-{"@context":"https://schema.org","@type":"BlogPosting","dateModified":"2025-06-05T07:10:47+00:00","datePublished":"2025-06-05T07:10:47+00:00","description":"Pegasus 不仅仅只提供简单的 key value 存储接口，我们还基于稳定性考虑，增加了许多有助于高效运维的特性。","headline":"Administration","mainEntityOfPage":{"@type":"WebPage","@id":"/administration/"},"url":"/administration/"}</script>
+{"@context":"https://schema.org","@type":"BlogPosting","dateModified":"2025-11-03T07:37:49+00:00","datePublished":"2025-11-03T07:37:49+00:00","description":"Pegasus not only provides simple key-value storage interfaces; based on stability considerations, we have added many features that help efficient operations and maintenance.","headline":"Administration","mainEntityOfPage":{"@type":"WebPage","@id":"/administration/"},"url":"/administration/"}</script>
 <!-- End Jekyll SEO tag -->
 
 </head>
@@ -734,42 +734,37 @@
             </section>
             <section class="section" style="padding-top: 2rem;">
                 <div class="content">
-                    <p>Pegasus 不仅仅只提供简单的 key value 存储接口，我们还基于稳定性考虑，增加了许多有助于高效运维的特性。</p>
+                    <p>Pegasus not only provides simple key-value storage interfaces; based on stability considerations, we have added many features that help efficient operations and maintenance.</p>
 
-<p>如果你刚开始使用 Pegasus，想要把已编译好的系统部署在你的机器上，你首先需要参考 <a href="config">配置管理</a>，
-根据环境来调整参数。然后你应该参考 <a href="deployment">集群部署</a> 将 Pegasus 搭载在你的机器集群上。</p>
+<p>If you are new to Pegasus and want to deploy the compiled system on your machines, you should first refer to <a href="config">Configuration Management</a> to adjust parameters according to your environment. Then refer to <a href="deployment">Cluster Deployment</a> to deploy Pegasus on your machine cluster.</p>
 
-<p>在成功部署后，你应该着重观察系统运行情况，参考 <a href="monitoring">可视化监控</a> 来查看相关指标。</p>
+<p>After a successful deployment, you should focus on observing the system’s runtime status. Refer to <a href="monitoring">Monitoring</a> to view the relevant metrics.</p>
 
-<p>在服务运行后，偶然的异常(可能是网络，磁盘，系统故障，潜在 Bug 导致的异常)会使集群抖动。如果造成了节点负载不均衡，你可以参照 <a href="rebalance">负载均衡</a> 进行操作。</p>
+<p>During service operation, occasional anomalies (possibly due to network issues, disk failures, system errors, or potential bugs) may cause cluster fluctuations. If this results in uneven node load, you can perform operations according to <a href="rebalance">Load Balancing</a>.</p>
 
-<p>如果是随着业务量增大，超出了你的服务资源所能承受的能力，你可以参照 <a href="scale-in-out">集群扩容缩容</a> 来增加节点数。
-如果有机器发生持久性的故障，你也可以参照 <a href="scale-in-out">集群扩容缩容</a> 剔除这个坏节点。
-如果是机器的某个SSD盘出故障，可以参照 <a href="bad-disk">坏盘检修</a> 剔除这个坏盘。</p>
+<p>If business volume grows beyond what your service resources can handle, you can increase the number of nodes by following <a href="scale-in-out">Scale In/Out</a>. If a machine experiences persistent failure, you can also remove the bad node via <a href="scale-in-out">Scale In/Out</a>. If a specific SSD disk on a machine fails, refer to <a href="bad-disk">Bad Disk Maintenance</a> to remove the faulty disk.</p>
 
-<p>如果需要重启或升级集群，请参照 <a href="rolling-update">集群重启</a>。</p>
+<p>If you need to restart or upgrade the cluster, please refer to <a href="rolling-update">Rolling Update</a>.</p>
 
-<p>集群运行过程中，你需要时刻关注资源（磁盘、内存、网络）的使用情况，并及时做出运维调整，请参照 <a href="resource-management">资源管理</a>。</p>
+<p>During cluster operation, you must continuously monitor resource usage (disk, memory, network) and make timely operational adjustments. Please refer to <a href="resource-management">Resource Management</a>.</p>
 
-<p>如果业务数据量很大或者单条value很长，你可以参照 <a href="compression">数据压缩</a> 来提高磁盘利用率和提升读写性能。</p>
+<p>If the business data volume is large or individual values are long, refer to <a href="compression">Compression</a> to improve disk utilization and boost read/write performance.</p>
 
-<p>对一些重要的业务，你可以将相关的表定期进行 <a href="cold-backup">冷备份</a> 来保证数据安全性。冷备份的功能也常常用作于快速的大量数据迁移。</p>
+<p>For some critical businesses, you can regularly perform <a href="cold-backup">Cold Backup</a> on related tables to ensure data safety. The cold backup feature is also often used for fast large-scale data migration.</p>
 
-<p>对于一些极端情况，譬如元数据丢失、多个节点同时宕机，可能会造成集群数据的不一致。
-如果元数据丢失，建议你参考 <a href="meta-recovery">元数据恢复</a>；对于数据备份丢失造成的不一致，建议你参考 <a href="replica-recovery">Replica数据恢复</a>。</p>
+<p>In extreme situations, such as metadata loss or multiple nodes failing simultaneously, the cluster may become inconsistent. If metadata is lost, refer to <a href="meta-recovery">Meta Recovery</a>; if inconsistencies are caused by backup loss, refer to <a href="replica-recovery">Replica Recovery</a>.</p>
 
-<p>如果集群要依赖一个新的Zookeeper，需要迁移Zookeeper数据，请参考 <a href="zk-migration">Zookeeper迁移</a>。</p>
+<p>If the cluster needs to rely on a new ZooKeeper and migrate ZooKeeper data, please refer to <a href="zk-migration">ZooKeeper Migration</a>.</p>
 
-<p>通常一个集群内会服务于许多表，所有的表都有相同的优先级，换言之，有某个表的请求量过大，
-其他表的服务质量就会下滑，这通常被称为 “多租户” 问题，你可以通过 <a href="throttling">流量控制</a> 满足每个表的 SLA。</p>
+<p>Typically, a cluster serves many tables, and all tables have the same priority. In other words, if a certain table’s request volume becomes excessive, the service quality of other tables will decline. This is commonly called a “multi-tenancy” problem. You can use <a href="throttling">Throttling</a> to meet each table’s SLA.</p>
 
-<p>如果要迁移一个表的数据到另外一个表，请参考 <a href="table-migration">Table迁移</a>。</p>
+<p>If you need to migrate a table’s data to another table, please refer to <a href="table-migration">Table Migration</a>.</p>
 
-<p>表级的运维操作还包括 <a href="table-soft-delete">Table软删除</a> 、<a href="table-env">Table环境变量</a>、<a href="partition-split">Partition Split</a>、<a href="manual-compact">Manual Compact功能</a>、<a href="usage-scenario">Usage Scenario功能</a> 等。</p>
+<p>Table-level operational tasks also include <a href="table-soft-delete">Table Soft Delete</a>, <a href="table-env">Table Environment Variables</a>, <a href="partition-split">Partition Split</a>, <a href="manual-compact">Manual Compaction</a>, and <a href="usage-scenario">Usage Scenario</a>.</p>
 
-<p>除此之外，我们还支持了 <a href="remote-commands">远程命令</a>，方便运维人员对Server进行直接控制，并提供了 <a href="http">HTTP接口</a>。</p>
+<p>In addition, we support <a href="remote-commands">Remote Commands</a> for administrators to directly control servers, and provide an <a href="http">HTTP API</a>.</p>
 
-<p>我们在运维集群服务业务的过程中，也积累了很多 <a href="experiences">运维经验</a>，你可以参考。</p>
+<p>From our experience operating cluster services for various businesses, we have accumulated many <a href="experiences">Operational Experiences</a> for your reference.</p>
 
                 </div>
             </section>

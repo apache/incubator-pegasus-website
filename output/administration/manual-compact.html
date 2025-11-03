@@ -20,11 +20,11 @@
 <meta property="og:description" content="Note: The manual compact feature has been supported since v1.8.1." />
 <meta property="og:site_name" content="Pegasus" />
 <meta property="og:type" content="article" />
-<meta property="article:published_time" content="2025-06-05T07:10:47+00:00" />
+<meta property="article:published_time" content="2025-11-03T07:37:49+00:00" />
 <meta name="twitter:card" content="summary" />
 <meta property="twitter:title" content="Manual Compact" />
 <script type="application/ld+json">
-{"@context":"https://schema.org","@type":"BlogPosting","dateModified":"2025-06-05T07:10:47+00:00","datePublished":"2025-06-05T07:10:47+00:00","description":"Note: The manual compact feature has been supported since v1.8.1.","headline":"Manual Compact","mainEntityOfPage":{"@type":"WebPage","@id":"/administration/manual-compact"},"url":"/administration/manual-compact"}</script>
+{"@context":"https://schema.org","@type":"BlogPosting","dateModified":"2025-11-03T07:37:49+00:00","datePublished":"2025-11-03T07:37:49+00:00","description":"Note: The manual compact feature has been supported since v1.8.1.","headline":"Manual Compact","mainEntityOfPage":{"@type":"WebPage","@id":"/administration/manual-compact"},"url":"/administration/manual-compact"}</script>
 <!-- End Jekyll SEO tag -->
 
 </head>
@@ -835,12 +835,12 @@ virtual Status CompactRange(const CompactRangeOptions&amp; options,
 
     <p>in the config file. If Manual Compaction is frequently used, consider increasing the thread count (e.g., to be close to the number of CPU cores):</p>
 
-    <div class="language-ini highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nn">[threadpool.THREAD_POOL_COMPACT]</span>
-<span class="py">name</span> <span class="p">=</span> <span class="s">compact</span>
-<span class="py">partitioned</span> <span class="p">=</span> <span class="s">false</span>
-<span class="py">max_input_queue_length</span> <span class="p">=</span> <span class="s">128</span>
-<span class="py">worker_priority</span> <span class="p">=</span> <span class="s">THREAD_xPRIORITY_NORMAL</span>
-<span class="py">worker_count</span> <span class="p">=</span> <span class="s">16</span>
+    <div class="language-ini highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nn">[threadpool.THREAD_POOL_COMPACT]</span><span class="w">
+</span><span class="py">name</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="s">compact</span>
+<span class="py">partitioned</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="s">false</span>
+<span class="py">max_input_queue_length</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="s">128</span>
+<span class="py">worker_priority</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="s">THREAD_xPRIORITY_NORMAL</span>
+<span class="py">worker_count</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="s">16</span>
 </code></pre></div>    </div>
   </li>
   <li>

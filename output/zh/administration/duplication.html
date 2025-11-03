@@ -20,11 +20,11 @@
 <meta property="og:description" content="在 pegasus 中，跨机房同步又被称为 热备份，或 duplication，简称 dup。这一功能的主要目的是保证 数据中心级别的可用性。当业务需要保证服务与数据能够容忍机房故障时，可以考虑使用此功能。" />
 <meta property="og:site_name" content="Pegasus" />
 <meta property="og:type" content="article" />
-<meta property="article:published_time" content="2025-06-05T07:10:47+00:00" />
+<meta property="article:published_time" content="2025-11-03T07:37:49+00:00" />
 <meta name="twitter:card" content="summary" />
 <meta property="twitter:title" content="Duplication" />
 <script type="application/ld+json">
-{"@context":"https://schema.org","@type":"BlogPosting","dateModified":"2025-06-05T07:10:47+00:00","datePublished":"2025-06-05T07:10:47+00:00","description":"在 pegasus 中，跨机房同步又被称为 热备份，或 duplication，简称 dup。这一功能的主要目的是保证 数据中心级别的可用性。当业务需要保证服务与数据能够容忍机房故障时，可以考虑使用此功能。","headline":"Duplication","mainEntityOfPage":{"@type":"WebPage","@id":"/administration/duplication"},"url":"/administration/duplication"}</script>
+{"@context":"https://schema.org","@type":"BlogPosting","dateModified":"2025-11-03T07:37:49+00:00","datePublished":"2025-11-03T07:37:49+00:00","description":"在 pegasus 中，跨机房同步又被称为 热备份，或 duplication，简称 dup。这一功能的主要目的是保证 数据中心级别的可用性。当业务需要保证服务与数据能够容忍机房故障时，可以考虑使用此功能。","headline":"Duplication","mainEntityOfPage":{"@type":"WebPage","@id":"/administration/duplication"},"url":"/administration/duplication"}</script>
 <!-- End Jekyll SEO tag -->
 
 </head>
@@ -1005,8 +1005,8 @@ successfully add duplication [dupid: 1669972761]
   <li>
     <p><code class="language-plaintext highlighter-rouge">replica*app.pegasus*dup.lagging_writes@&lt;app_name&gt;</code>：当前有多少写花费了过长的时间才到达目的集群。我们可以配置一个阈值，耗时超过该阈值的一条复制会被记录一次：</p>
 
-    <div class="language-ini highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nn">[pegasus.server]</span>
-  <span class="py">dup_lagging_write_threshold_ms</span> <span class="p">=</span> <span class="s">10000</span>
+    <div class="language-ini highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nn">[pegasus.server]</span><span class="w">
+  </span><span class="py">dup_lagging_write_threshold_ms</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="s">10000</span>
 </code></pre></div>    </div>
   </li>
   <li>
@@ -1031,23 +1031,23 @@ successfully add duplication [dupid: 1669972761]
 
 <h2 id="热备相关配置项列表">热备相关配置项列表</h2>
 
-<div class="language-ini highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nn">[replication]</span>
-  <span class="c"># 如果遇到紧急情况想要手动关闭热备份，可以将该项设置为 false，默认为 true。
-</span>  <span class="py">duplication_enabled</span> <span class="p">=</span> <span class="s">true</span>
-
-<span class="nn">[pegasus.clusters]</span>
-  <span class="c"># 开启热备份的集群必须配置目的集群的具体地址：
-</span>  <span class="py">tjsrv-account</span> <span class="p">=</span> <span class="s">127.0.0.1:51601,127.0.0.1:51601</span>
-
-<span class="nn">[pegasus.server]</span>
-  <span class="py">dup_lagging_write_threshold_ms</span> <span class="p">=</span> <span class="s">10000</span>
-
-<span class="c"># 热备份的两个集群需要登记源集群和目的集群的“cluster_id”：
-</span><span class="nn">[duplication-group]</span>
-  <span class="py">bjsrv-account</span> <span class="p">=</span> <span class="s">1</span>
-  <span class="py">tjsrv-account</span> <span class="p">=</span> <span class="s">2</span>
-  
-</code></pre></div></div>
+<div class="language-ini highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nn">[replication]</span><span class="w">
+  </span><span class="c"># 如果遇到紧急情况想要手动关闭热备份，可以将该项设置为 false，默认为 true。
+</span><span class="w">  </span><span class="py">duplication_enabled</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="s">true</span>
+<span class="w">
+</span><span class="nn">[pegasus.clusters]</span><span class="w">
+  </span><span class="c"># 开启热备份的集群必须配置目的集群的具体地址：
+</span><span class="w">  </span><span class="py">tjsrv-account</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="s">127.0.0.1:51601,127.0.0.1:51601</span>
+<span class="w">
+</span><span class="nn">[pegasus.server]</span><span class="w">
+  </span><span class="py">dup_lagging_write_threshold_ms</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="s">10000</span>
+<span class="w">
+</span><span class="c"># 热备份的两个集群需要登记源集群和目的集群的“cluster_id”：
+</span><span class="nn">[duplication-group]</span><span class="w">
+  </span><span class="py">bjsrv-account</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="s">1</span>
+<span class="w">  </span><span class="py">tjsrv-account</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="s">2</span>
+<span class="w">  
+</span></code></pre></div></div>
 
 <p>我们在每条数据前都会加上 <code class="language-plaintext highlighter-rouge">timestamp+cluster_id</code> 的前缀，timestamp 即数据写到 pegasus 的时间戳，cluster_id 即上面 duplication-group 中所配置的，bjsrv-account集群的cluster_id 为 1，tjsrv-account集群的 cluster_id 为 2。</p>
 

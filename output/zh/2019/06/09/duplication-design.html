@@ -368,9 +368,9 @@ hashkey sortkey 20190912 =&gt; value
 
 <p>两集群的写仅用时间戳会出现极偶然的情况: 时间戳冲突, 换句话说就是两集群恰好在同一时间写某个 key。为了避免两集群数据不同的情况, 我们引入 <code class="language-plaintext highlighter-rouge">cluster_id</code> 的概念。运维在配置热备份时需要配置各个集群的 cluster_id, 例如 A 集群为 1, B 集群为 2, 如下:</p>
 
-<div class="language-ini highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nn">[duplication-group]</span>
- <span class="py">A</span><span class="p">=</span><span class="s">1</span>
- <span class="py">B</span><span class="p">=</span><span class="s">2</span>
+<div class="language-ini highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nn">[duplication-group]</span><span class="w">
+ </span><span class="py">A</span><span class="p">=</span><span class="s">1</span>
+<span class="w"> </span><span class="py">B</span><span class="p">=</span><span class="s">2</span>
 </code></pre></div></div>
 
 <p>这样当 timestamp 相同时我们比较 cluster_id, 如 B 集群的 id 更大, 则冲突写会以 B 集群的数据为准。我们将 timestamp 和 cluster_id 结合编码为一个 uint64 整型数, 引入了 <code class="language-plaintext highlighter-rouge">timetag</code> 的概念。这样比较大小时只需要比较一个整数, 并且存储更紧凑。</p>

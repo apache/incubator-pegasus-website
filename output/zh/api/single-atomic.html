@@ -20,11 +20,11 @@
 <meta property="og:description" content="从 v1.10.0 版本开始，Pegasus 支持了单行原子操作。 这里的单行是指同一 HashKey 下的所有数据。" />
 <meta property="og:site_name" content="Pegasus" />
 <meta property="og:type" content="article" />
-<meta property="article:published_time" content="2025-06-05T07:10:47+00:00" />
+<meta property="article:published_time" content="2025-11-03T07:37:49+00:00" />
 <meta name="twitter:card" content="summary" />
 <meta property="twitter:title" content="Single Atomic" />
 <script type="application/ld+json">
-{"@context":"https://schema.org","@type":"BlogPosting","dateModified":"2025-06-05T07:10:47+00:00","datePublished":"2025-06-05T07:10:47+00:00","description":"从 v1.10.0 版本开始，Pegasus 支持了单行原子操作。 这里的单行是指同一 HashKey 下的所有数据。","headline":"Single Atomic","mainEntityOfPage":{"@type":"WebPage","@id":"/api/single-atomic"},"url":"/api/single-atomic"}</script>
+{"@context":"https://schema.org","@type":"BlogPosting","dateModified":"2025-11-03T07:37:49+00:00","datePublished":"2025-11-03T07:37:49+00:00","description":"从 v1.10.0 版本开始，Pegasus 支持了单行原子操作。 这里的单行是指同一 HashKey 下的所有数据。","headline":"Single Atomic","mainEntityOfPage":{"@type":"WebPage","@id":"/api/single-atomic"},"url":"/api/single-atomic"}</script>
 <!-- End Jekyll SEO tag -->
 
 </head>
@@ -757,8 +757,8 @@
 </ul>
 
 <p>由于非幂等特性，这类操作会和 Pegasus 的另外一些特性冲突，譬如 <a href="/zh/administration/duplication">跨机房同步</a>。所以我们在 1.10.0 版本中还提供了一个配置项，用于配置集群是否允许非幂等操作，如果配置为 false，则所有非幂等操作都会返回<code class="language-plaintext highlighter-rouge">ERR_OPERATION_DISABLED</code>：</p>
-<div class="language-ini highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nn">[replication]</span>
-    <span class="py">allow_non_idempotent_write</span> <span class="p">=</span> <span class="s">false</span>
+<div class="language-ini highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nn">[replication]</span><span class="w">
+    </span><span class="py">allow_non_idempotent_write</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="s">false</span>
 </code></pre></div></div>
 
 <h1 id="原子增减">原子增减</h1>

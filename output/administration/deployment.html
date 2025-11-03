@@ -20,11 +20,11 @@
 <meta property="og:description" content="Prepare servers" />
 <meta property="og:site_name" content="Pegasus" />
 <meta property="og:type" content="article" />
-<meta property="article:published_time" content="2025-06-05T07:10:47+00:00" />
+<meta property="article:published_time" content="2025-11-03T07:37:49+00:00" />
 <meta name="twitter:card" content="summary" />
 <meta property="twitter:title" content="Deployment" />
 <script type="application/ld+json">
-{"@context":"https://schema.org","@type":"BlogPosting","dateModified":"2025-06-05T07:10:47+00:00","datePublished":"2025-06-05T07:10:47+00:00","description":"Prepare servers","headline":"Deployment","mainEntityOfPage":{"@type":"WebPage","@id":"/administration/deployment"},"url":"/administration/deployment"}</script>
+{"@context":"https://schema.org","@type":"BlogPosting","dateModified":"2025-11-03T07:37:49+00:00","datePublished":"2025-11-03T07:37:49+00:00","description":"Prepare servers","headline":"Deployment","mainEntityOfPage":{"@type":"WebPage","@id":"/administration/deployment"},"url":"/administration/deployment"}</script>
 <!-- End Jekyll SEO tag -->
 
 </head>
@@ -814,22 +814,22 @@
 <p>If there are multiple SSD disks, it is recommended to use one SSD disk specifically for slog (i.e., shared-log) and the other disks to store user data for each replicas.</p>
 
 <p>For example, suppose the server has 4 disks and the mounting path is <code class="language-plaintext highlighter-rouge">/home/work/ssd{id}</code>, where {id}=1,2,3,4. So you can use ssd1 for slog, which can be configured as follows:</p>
-<div class="language-ini highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nn">[replication]</span>
-  <span class="py">slog_dir</span> <span class="p">=</span> <span class="s">/home/work/ssd1/pegasus</span>
-  <span class="py">data_dirs</span> <span class="p">=</span> <span class="s">ssd2:/home/work/ssd2/pegasus,ssd3:/home/work/ssd3/pegasus,ssd4:/home/work/ssd4/pegasus</span>
+<div class="language-ini highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nn">[replication]</span><span class="w">
+  </span><span class="py">slog_dir</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="s">/home/work/ssd1/pegasus</span>
+<span class="w">  </span><span class="py">data_dirs</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="s">ssd2:/home/work/ssd2/pegasus,ssd3:/home/work/ssd3/pegasus,ssd4:/home/work/ssd4/pegasus</span>
 </code></pre></div></div>
 
 <p>If there is only one SSD drive, then both slog and each replicas data share this drive. Assuming the SSD disk mounting path is <code class="language-plaintext highlighter-rouge">/home/work/ssd</code>, it can be configured as follows:</p>
-<div class="language-ini highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nn">[replication]</span>
-  <span class="py">slog_dir</span> <span class="p">=</span> <span class="s">/home/work/ssd/pegasus/{cluster.name}</span>
-  <span class="py">data_dirs</span> <span class="p">=</span> <span class="s">ssd:/home/work/ssd/pegasus/{cluster.name}</span>
+<div class="language-ini highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nn">[replication]</span><span class="w">
+  </span><span class="py">slog_dir</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="s">/home/work/ssd/pegasus/{cluster.name}</span>
+<span class="w">  </span><span class="py">data_dirs</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="s">ssd:/home/work/ssd/pegasus/{cluster.name}</span>
 </code></pre></div></div>
 
 <h2 id="how-to-configure-multiple-network-cards">How to configure multiple network cards</h2>
 
 <p>There is a section in the configuration file:</p>
-<div class="language-ini highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nn">[network]</span>
-  <span class="py">primary_interface</span> <span class="p">=</span>
+<div class="language-ini highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nn">[network]</span><span class="w">
+  </span><span class="py">primary_interface</span><span class="w"> </span><span class="p">=</span>
 </code></pre></div></div>
 <p>Specify network card through <code class="language-plaintext highlighter-rouge">primary_interface</code>:</p>
 <ul>
@@ -838,8 +838,8 @@
 </ul>
 
 <p>For example, if there are multiple network cards and you want to use the <code class="language-plaintext highlighter-rouge">eth2</code> network card, you can configure it as follows:</p>
-<div class="language-ini highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nn">[network]</span>
-  <span class="py">primary_interface</span> <span class="p">=</span> <span class="s">eth2</span>
+<div class="language-ini highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nn">[network]</span><span class="w">
+  </span><span class="py">primary_interface</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="s">eth2</span>
 </code></pre></div></div>
 
 <h1 id="preparing-to-deploy-packages">Preparing to deploy packages</h1>

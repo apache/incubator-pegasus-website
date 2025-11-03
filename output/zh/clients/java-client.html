@@ -20,11 +20,11 @@
 <meta property="og:description" content="获取Java客户端" />
 <meta property="og:site_name" content="Pegasus" />
 <meta property="og:type" content="article" />
-<meta property="article:published_time" content="2025-06-05T07:10:47+00:00" />
+<meta property="article:published_time" content="2025-11-03T07:37:49+00:00" />
 <meta name="twitter:card" content="summary" />
 <meta property="twitter:title" content="Java Client" />
 <script type="application/ld+json">
-{"@context":"https://schema.org","@type":"BlogPosting","dateModified":"2025-06-05T07:10:47+00:00","datePublished":"2025-06-05T07:10:47+00:00","description":"获取Java客户端","headline":"Java Client","mainEntityOfPage":{"@type":"WebPage","@id":"/clients/java-client"},"url":"/clients/java-client"}</script>
+{"@context":"https://schema.org","@type":"BlogPosting","dateModified":"2025-11-03T07:37:49+00:00","datePublished":"2025-11-03T07:37:49+00:00","description":"获取Java客户端","headline":"Java Client","mainEntityOfPage":{"@type":"WebPage","@id":"/clients/java-client"},"url":"/clients/java-client"}</script>
 <!-- End Jekyll SEO tag -->
 
 </head>
@@ -784,14 +784,14 @@ mvn clean package <span class="nt">-DskipTests</span>
 
 <p>配置文件一般命名为<code class="language-plaintext highlighter-rouge">pegasus.properties</code>，样例：</p>
 
-<div class="language-ini highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="py">meta_servers</span> <span class="p">=</span> <span class="s">127.0.0.1:34601,127.0.0.1:34602,127.0.0.1:34603</span>
-<span class="py">operation_timeout</span> <span class="p">=</span> <span class="s">1000</span>
+<div class="language-ini highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="py">meta_servers</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="s">127.0.0.1:34601,127.0.0.1:34602,127.0.0.1:34603</span>
+<span class="py">operation_timeout</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="s">1000</span>
 <span class="c"># 以下参数可以根据需要添加，否则以默认值即可
-</span><span class="py">async_workers</span> <span class="p">=</span> <span class="s">4</span>
-<span class="py">enable_perf_counter</span> <span class="p">=</span> <span class="s">true</span>
-<span class="py">perf_counter_tags</span> <span class="p">=</span> <span class="s">cluster=onebox,app=unit_test</span>
-<span class="py">push_counter_interval_secs</span> <span class="p">=</span> <span class="s">10</span>
-<span class="py">meta_query_timeout</span> <span class="p">=</span> <span class="s">5000</span>
+</span><span class="py">async_workers</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="s">4</span>
+<span class="py">enable_perf_counter</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="s">true</span>
+<span class="py">perf_counter_tags</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="s">cluster=onebox,app=unit_test</span>
+<span class="py">push_counter_interval_secs</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="s">10</span>
+<span class="py">meta_query_timeout</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="s">5000</span>
 </code></pre></div></div>
 <p>其中：</p>
 <ul>

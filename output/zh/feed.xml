@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="4.4.1">Jekyll</generator><link href="/zh/feed.xml" rel="self" type="application/atom+xml" /><link href="/zh/" rel="alternate" type="text/html" /><updated>2025-06-05T07:10:47+00:00</updated><id>/feed.xml</id><title type="html">Pegasus</title><entry><title type="html">Pegasus Server 2.0.0 来了</title><link href="/zh/2020/06/19/pegasus-2.0.0-is-out.html" rel="alternate" type="text/html" title="Pegasus Server 2.0.0 来了" /><published>2020-06-19T00:00:00+00:00</published><updated>2020-06-19T00:00:00+00:00</updated><id>/2020/06/19/pegasus-2.0.0-is-out</id><content type="html" xml:base="/2020/06/19/pegasus-2.0.0-is-out.html"><![CDATA[<p>Pegasus Server 又发布新版本了！在去年的几个版本演进中，我们把工作的重点放在了Pegasus的服务稳定性上。在今年的 2.0.0 版本中，我们更进一步，提供了如下几个能够显著减少延迟和抖动的机制。</p>
+<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="4.4.1">Jekyll</generator><link href="/zh/feed.xml" rel="self" type="application/atom+xml" /><link href="/zh/" rel="alternate" type="text/html" /><updated>2025-11-03T07:37:49+00:00</updated><id>/feed.xml</id><title type="html">Pegasus</title><entry><title type="html">Pegasus Server 2.0.0 来了</title><link href="/zh/2020/06/19/pegasus-2.0.0-is-out.html" rel="alternate" type="text/html" title="Pegasus Server 2.0.0 来了" /><published>2020-06-19T00:00:00+00:00</published><updated>2020-06-19T00:00:00+00:00</updated><id>/2020/06/19/pegasus-2.0.0-is-out</id><content type="html" xml:base="/2020/06/19/pegasus-2.0.0-is-out.html"><![CDATA[<p>Pegasus Server 又发布新版本了！在去年的几个版本演进中，我们把工作的重点放在了Pegasus的服务稳定性上。在今年的 2.0.0 版本中，我们更进一步，提供了如下几个能够显著减少延迟和抖动的机制。</p>
 
 <blockquote>
   <p>Github Release: <a href="https://github.com/apache/incubator-pegasus/releases/tag/v2.0.0">https://github.com/apache/incubator-pegasus/releases/tag/v2.0.0</a></p>
@@ -701,9 +701,9 @@ hashkey sortkey 20190912 =&gt; value
 
 <p>两集群的写仅用时间戳会出现极偶然的情况: 时间戳冲突, 换句话说就是两集群恰好在同一时间写某个 key。为了避免两集群数据不同的情况, 我们引入 <code class="language-plaintext highlighter-rouge">cluster_id</code> 的概念。运维在配置热备份时需要配置各个集群的 cluster_id, 例如 A 集群为 1, B 集群为 2, 如下:</p>
 
-<div class="language-ini highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nn">[duplication-group]</span>
- <span class="py">A</span><span class="p">=</span><span class="s">1</span>
- <span class="py">B</span><span class="p">=</span><span class="s">2</span>
+<div class="language-ini highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nn">[duplication-group]</span><span class="w">
+ </span><span class="py">A</span><span class="p">=</span><span class="s">1</span>
+<span class="w"> </span><span class="py">B</span><span class="p">=</span><span class="s">2</span>
 </code></pre></div></div>
 
 <p>这样当 timestamp 相同时我们比较 cluster_id, 如 B 集群的 id 更大, 则冲突写会以 B 集群的数据为准。我们将 timestamp 和 cluster_id 结合编码为一个 uint64 整型数, 引入了 <code class="language-plaintext highlighter-rouge">timetag</code> 的概念。这样比较大小时只需要比较一个整数, 并且存储更紧凑。</p>
@@ -1015,8 +1015,8 @@ worker_count = 8
 
 <p>相关配置：</p>
 
-<div class="language-ini highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nn">[network]</span>
-<span class="py">io_service_worker_count</span> <span class="p">=</span> <span class="s">4</span>
+<div class="language-ini highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nn">[network]</span><span class="w">
+</span><span class="py">io_service_worker_count</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="s">4</span>
 </code></pre></div></div>
 
 <h3 id="2-个线程负责上报监控到-falcon">2 个线程负责上报监控到 falcon</h3>
@@ -1041,8 +1041,8 @@ worker_count = 8
 
 <p>相关配置：</p>
 
-<div class="language-ini highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nn">[pegasus.server]</span>
-<span class="py">rocksdb_max_background_flushes</span><span class="p">=</span><span class="s">4</span>
+<div class="language-ini highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nn">[pegasus.server]</span><span class="w">
+</span><span class="py">rocksdb_max_background_flushes</span><span class="p">=</span><span class="s">4</span>
 <span class="py">rocksdb_max_background_compactions</span><span class="p">=</span><span class="s">12</span>
 </code></pre></div></div>
 
@@ -1052,8 +1052,8 @@ worker_count = 8
 
 <p>相关配置：</p>
 
-<div class="language-ini highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nn">[core]</span>
-<span class="py">timer_service_worker_count</span><span class="p">=</span><span class="s">2</span>
+<div class="language-ini highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nn">[core]</span><span class="w">
+</span><span class="py">timer_service_worker_count</span><span class="p">=</span><span class="s">2</span>
 </code></pre></div></div>]]></content><author><name>吴涛</name></author><summary type="html"><![CDATA[当前在我们的推荐配置下，Pegasus Replica Server 一共会有 174 线程在工作，所有的线程都是长线程。 这些线程到底是用来做什么的，我们在这篇文章进行梳理。]]></summary></entry><entry><title type="html">Pegasus 的 last_flushed_decree</title><link href="/zh/2018/03/07/last_flushed_decree.html" rel="alternate" type="text/html" title="Pegasus 的 last_flushed_decree" /><published>2018-03-07T00:00:00+00:00</published><updated>2018-03-07T00:00:00+00:00</updated><id>/2018/03/07/last_flushed_decree</id><content type="html" xml:base="/2018/03/07/last_flushed_decree.html"><![CDATA[<p>本文主要为大家梳理 <code class="language-plaintext highlighter-rouge">last_flushed_decree</code> 的原理。</p>
 
 <hr />

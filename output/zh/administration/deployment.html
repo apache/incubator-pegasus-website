@@ -20,11 +20,11 @@
 <meta property="og:description" content="准备服务器" />
 <meta property="og:site_name" content="Pegasus" />
 <meta property="og:type" content="article" />
-<meta property="article:published_time" content="2025-06-05T07:10:47+00:00" />
+<meta property="article:published_time" content="2025-11-03T07:37:49+00:00" />
 <meta name="twitter:card" content="summary" />
 <meta property="twitter:title" content="Deployment" />
 <script type="application/ld+json">
-{"@context":"https://schema.org","@type":"BlogPosting","dateModified":"2025-06-05T07:10:47+00:00","datePublished":"2025-06-05T07:10:47+00:00","description":"准备服务器","headline":"Deployment","mainEntityOfPage":{"@type":"WebPage","@id":"/administration/deployment"},"url":"/administration/deployment"}</script>
+{"@context":"https://schema.org","@type":"BlogPosting","dateModified":"2025-11-03T07:37:49+00:00","datePublished":"2025-11-03T07:37:49+00:00","description":"准备服务器","headline":"Deployment","mainEntityOfPage":{"@type":"WebPage","@id":"/administration/deployment"},"url":"/administration/deployment"}</script>
 <!-- End Jekyll SEO tag -->
 
 </head>
@@ -818,22 +818,22 @@
 <p>如果有多个 SSD 盘，推荐使用一个 SSD 盘专门用于 slog（即 shared-log），其他盘用于存储各分片的用户数据。</p>
 
 <p>譬如，假设服务器有 4 个盘，挂载路径为 <code class="language-plaintext highlighter-rouge">/home/work/ssd{id}</code>，其中 {id}=1,2,3,4。那么可以将 ssd1 用于 slog，可配置如下：</p>
-<div class="language-ini highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nn">[replication]</span>
-  <span class="py">slog_dir</span> <span class="p">=</span> <span class="s">/home/work/ssd1/pegasus</span>
-  <span class="py">data_dirs</span> <span class="p">=</span> <span class="s">ssd2:/home/work/ssd2/pegasus,ssd3:/home/work/ssd3/pegasus,ssd4:/home/work/ssd4/pegasus</span>
+<div class="language-ini highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nn">[replication]</span><span class="w">
+  </span><span class="py">slog_dir</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="s">/home/work/ssd1/pegasus</span>
+<span class="w">  </span><span class="py">data_dirs</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="s">ssd2:/home/work/ssd2/pegasus,ssd3:/home/work/ssd3/pegasus,ssd4:/home/work/ssd4/pegasus</span>
 </code></pre></div></div>
 
 <p>如果只有一个 SSD 盘，那么就只能将 slog 和 data 共享这一块盘。假设 SSD 盘挂载路径为 <code class="language-plaintext highlighter-rouge">/home/work/ssd</code>，可配置如下：</p>
-<div class="language-ini highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nn">[replication]</span>
-  <span class="py">slog_dir</span> <span class="p">=</span> <span class="s">/home/work/ssd/pegasus/{cluster.name}</span>
-  <span class="py">data_dirs</span> <span class="p">=</span> <span class="s">ssd:/home/work/ssd/pegasus/{cluster.name}</span>
+<div class="language-ini highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nn">[replication]</span><span class="w">
+  </span><span class="py">slog_dir</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="s">/home/work/ssd/pegasus/{cluster.name}</span>
+<span class="w">  </span><span class="py">data_dirs</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="s">ssd:/home/work/ssd/pegasus/{cluster.name}</span>
 </code></pre></div></div>
 
 <h2 id="多个网卡如何配置">多个网卡如何配置</h2>
 
 <p>在配置文件中有以下 section：</p>
-<div class="language-ini highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nn">[network]</span>
-  <span class="py">primary_interface</span> <span class="p">=</span>
+<div class="language-ini highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nn">[network]</span><span class="w">
+  </span><span class="py">primary_interface</span><span class="w"> </span><span class="p">=</span>
 </code></pre></div></div>
 
 <p>通过 <code class="language-plaintext highlighter-rouge">primary_interface</code> 指定网卡：</p>
@@ -843,8 +843,8 @@
 </ul>
 
 <p>譬如，如果有多个网卡，想使用 eth2 所在网卡，可配置如下：</p>
-<div class="language-ini highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nn">[network]</span>
-  <span class="py">primary_interface</span> <span class="p">=</span> <span class="s">eth2</span>
+<div class="language-ini highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nn">[network]</span><span class="w">
+  </span><span class="py">primary_interface</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="s">eth2</span>
 </code></pre></div></div>
 
 <h1 id="准备部署包">准备部署包</h1>

@@ -20,11 +20,11 @@
 <meta property="og:description" content="Table migration refers to moving all data of a table from one Pegasus cluster to another Pegasus cluster." />
 <meta property="og:site_name" content="Pegasus" />
 <meta property="og:type" content="article" />
-<meta property="article:published_time" content="2025-06-05T07:10:47+00:00" />
+<meta property="article:published_time" content="2025-11-03T07:37:49+00:00" />
 <meta name="twitter:card" content="summary" />
 <meta property="twitter:title" content="Table Migration" />
 <script type="application/ld+json">
-{"@context":"https://schema.org","@type":"BlogPosting","dateModified":"2025-06-05T07:10:47+00:00","datePublished":"2025-06-05T07:10:47+00:00","description":"Table migration refers to moving all data of a table from one Pegasus cluster to another Pegasus cluster.","headline":"Table Migration","mainEntityOfPage":{"@type":"WebPage","@id":"/administration/table-migration"},"url":"/administration/table-migration"}</script>
+{"@context":"https://schema.org","@type":"BlogPosting","dateModified":"2025-11-03T07:37:49+00:00","datePublished":"2025-11-03T07:37:49+00:00","description":"Table migration refers to moving all data of a table from one Pegasus cluster to another Pegasus cluster.","headline":"Table Migration","mainEntityOfPage":{"@type":"WebPage","@id":"/administration/table-migration"},"url":"/administration/table-migration"}</script>
 <!-- End Jekyll SEO tag -->
 
 </head>
@@ -780,8 +780,8 @@ The <code class="language-plaintext highlighter-rouge">copy_data</code> command 
     <p><strong>Add the target cluster’s configuration to the Shell config file.</strong><br />
 Since you specify the target cluster with <code class="language-plaintext highlighter-rouge">-c</code>, you need to list <code class="language-plaintext highlighter-rouge">ClusterB</code>’ s MetaServer addresses in <code class="language-plaintext highlighter-rouge">src/shell/config.ini</code>. In the Shell working directory, append:</p>
 
-    <div class="language-ini highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nn">[pegasus.clusters]</span>
- <span class="py">ClusterB</span> <span class="p">=</span> <span class="s">{MetaServer addresses of ClusterB}</span>
+    <div class="language-ini highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nn">[pegasus.clusters]</span><span class="w">
+ </span><span class="py">ClusterB</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="s">{MetaServer addresses of ClusterB}</span>
 </code></pre></div>    </div>
   </li>
   <li>
@@ -846,9 +846,9 @@ remote_command <span class="nt">-t</span> replica-server nfs.max_send_rate_megab
 
     <p>The <code class="language-plaintext highlighter-rouge">hdfs_xyz</code> region is defined in <code class="language-plaintext highlighter-rouge">config.ini</code>:</p>
 
-    <div class="language-ini highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nn">[block_service.hdfs_xyz]</span>
-<span class="py">type</span> <span class="p">=</span> <span class="s">hdfs_service</span>
-<span class="py">args</span> <span class="p">=</span> <span class="s">hdfs://xxxprc-hadoop/</span>
+    <div class="language-ini highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nn">[block_service.hdfs_xyz]</span><span class="w">
+</span><span class="py">type</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="s">hdfs_service</span>
+<span class="py">args</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="s">hdfs://xxxprc-hadoop/</span>
 </code></pre></div>    </div>
   </li>
   <li>
