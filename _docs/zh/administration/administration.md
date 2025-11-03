@@ -13,20 +13,20 @@ Pegasus 不仅仅只提供简单的 key value 存储接口，我们还基于稳�
 
 如果是随着业务量增大，超出了你的服务资源所能承受的能力，你可以参照 [集群扩容缩容](scale-in-out) 来增加节点数。
 如果有机器发生持久性的故障，你也可以参照 [集群扩容缩容](scale-in-out) 剔除这个坏节点。
-如果是机器的某个SSD盘出故障，可以参照 [坏盘检修](bad-disk) 剔除这个坏盘。
+如果是机器的某个 SSD 盘出故障，可以参照 [坏盘检修](bad-disk) 剔除这个坏盘。
 
 如果需要重启或升级集群，请参照 [集群重启](rolling-update)。
 
 集群运行过程中，你需要时刻关注资源（磁盘、内存、网络）的使用情况，并及时做出运维调整，请参照 [资源管理](resource-management)。
 
-如果业务数据量很大或者单条value很长，你可以参照 [数据压缩](compression) 来提高磁盘利用率和提升读写性能。
+如果业务数据量很大或者单条 value 很长，你可以参照 [数据压缩](compression) 来提高磁盘利用率和提升读写性能。
 
 对一些重要的业务，你可以将相关的表定期进行 [冷备份](cold-backup) 来保证数据安全性。冷备份的功能也常常用作于快速的大量数据迁移。
 
 对于一些极端情况，譬如元数据丢失、多个节点同时宕机，可能会造成集群数据的不一致。
 如果元数据丢失，建议你参考 [元数据恢复](meta-recovery)；对于数据备份丢失造成的不一致，建议你参考 [Replica数据恢复](replica-recovery)。
 
-如果集群要依赖一个新的Zookeeper，需要迁移Zookeeper数据，请参考 [Zookeeper迁移](zk-migration)。
+如果集群要依赖一个新的 Zookeeper，需要迁移 Zookeeper 数据，请参考 [Zookeeper迁移](zk-migration)。
 
 通常一个集群内会服务于许多表，所有的表都有相同的优先级，换言之，有某个表的请求量过大，
 其他表的服务质量就会下滑，这通常被称为 “多租户” 问题，你可以通过 [流量控制](throttling) 满足每个表的 SLA。
@@ -35,6 +35,6 @@ Pegasus 不仅仅只提供简单的 key value 存储接口，我们还基于稳�
 
 表级的运维操作还包括 [Table软删除](table-soft-delete) 、[Table环境变量](table-env)、[Partition Split](partition-split)、[Manual Compact功能](manual-compact)、[Usage Scenario功能](usage-scenario) 等。
 
-除此之外，我们还支持了 [远程命令](remote-commands)，方便运维人员对Server进行直接控制，并提供了 [HTTP接口](http)。
+除此之外，我们还支持了 [远程命令](remote-commands)，方便运维人员对 Server 进行直接控制，并提供了 [HTTP接口](http)。
 
 我们在运维集群服务业务的过程中，也积累了很多 [运维经验](experiences)，你可以参考。
