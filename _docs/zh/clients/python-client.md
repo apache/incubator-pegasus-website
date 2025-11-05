@@ -18,11 +18,11 @@ Python 3.7+
 
 ## 使用
 
-pegasus python client使用了[twisted](https://github.com/twisted/twisted), 编写的代码会带有twisted的影子。
+pegasus python client 使用了 [twisted](https://github.com/twisted/twisted), 编写的代码会带有 twisted 的影子。
 
 ### 示例
 
-完整的示例请参考[sample](https://github.com/apache/incubator-pegasus/tree/master/python-client/sample.py)。以下是简单的示例：
+完整的示例请参考 [sample](https://github.com/apache/incubator-pegasus/tree/master/python-client/sample.py)。以下是简单的示例：
 
 ```
 #!/usr/bin/env python
@@ -64,9 +64,9 @@ if __name__ == "__main__":
     reactor.run()
 ```
 
-### log配置文件
+### log 配置文件
 
-pegasus python client使用了[logging](https://docs.python.org/2/library/logging.html)日志包，默认配置如下：
+pegasus python client 使用了 [logging](https://docs.python.org/2/library/logging.html)日志包，默认配置如下：
 
 ```
 [loggers]
@@ -88,13 +88,13 @@ format=%(asctime)s [%(thread)d] [%(levelname)s] %(filename)s:%(lineno)d %(messag
 datefmt=%Y-%m-%d %H:%M:%S
 ```
 
-如果用户有定制需求，可以在自己的代码目录添加配置文件`logger.conf`
+如果用户有定制需求，可以在自己的代码目录添加配置文件 `logger.conf`
 
-### API说明
+### API 说明
 
 #### 初始化
 
-初始化先构造Pegasus对象，在使用init函数完成初始化：
+初始化先构造 Pegasus 对象，在使用 init 函数完成初始化：
 
 ```
 class Pegasus(object):
@@ -123,7 +123,7 @@ class Pegasus(object):
 
 #### ttl
 
-判断key的剩余的ttl时间
+判断 key 的剩余的 ttl 时间
 
 ```
 def ttl(self, hash_key, sort_key, timeout=0):
@@ -143,7 +143,7 @@ def ttl(self, hash_key, sort_key, timeout=0):
 
 #### exist
 
-判断key是否存在
+判断 key 是否存在
 
 ```
 def exist(self, hash_key, sort_key, timeout=0):
@@ -185,7 +185,7 @@ def set(self, hash_key, sort_key, value, ttl=0, timeout=0):
 
 #### multi_set
 
-同时写一条hashkey的多条sortkey数据
+同时写一条 hashkey 的多条 sortkey 数据
 
 ```
 def multi_set(self, hash_key, sortkey_value_dict, ttl=0, timeout=0):
@@ -226,7 +226,7 @@ def get(self, hash_key, sort_key, timeout=0):
 
 #### multi_get
 
-同时读一条hashkey的多条sortkey数据
+同时读一条 hashkey 的多条 sortkey 数据
 
 ```
 def multi_get(self, hash_key,
@@ -254,7 +254,7 @@ def multi_get(self, hash_key,
 
 #### multi_get_opt
 
-同时读一条hashkey的多条sortkey数据, 读取的数据根据`multi_get_options`参数指定的模式确定。
+同时读一条 hashkey 的多条 sortkey 数据, 读取的数据根据 `multi_get_options` 参数指定的模式确定。
 
 ```
 def multi_get_opt(self, hash_key,
@@ -281,7 +281,7 @@ def multi_get_opt(self, hash_key,
     """
 ```
 
-其中，`MultiGetOptions`可以指定sortkey的范围、是否包含边界、子串匹配、是否返回value、是否逆序等，具体定义如下：
+其中，`MultiGetOptions` 可以指定 sortkey 的范围、是否包含边界、子串匹配、是否返回 value、是否逆序等，具体定义如下：
 
 ```
 class MultiGetOptions(object):
@@ -326,7 +326,7 @@ def remove(self, hash_key, sort_key, timeout=0):
 
 #### multi_del
 
-批量删除一个hashkey下的多条sortkey数据
+批量删除一个 hashkey 下的多条 sortkey 数据
 
 ```
 def multi_del(self, hash_key, sortkey_set, timeout=0):
@@ -346,7 +346,7 @@ def multi_del(self, hash_key, sortkey_set, timeout=0):
 
 #### sort_key_count
 
-获取一个hashkey下的sortkey数量
+获取一个 hashkey 下的 sortkey 数量
 
 ```
 def sort_key_count(self, hash_key, timeout=0):
@@ -365,7 +365,7 @@ def sort_key_count(self, hash_key, timeout=0):
 
 #### get_sort_keys
 
-获取一个hashkey下的sortkey值
+获取一个 hashkey 下的 sortkey 值
 
 ```
 def get_sort_keys(self, hash_key,
@@ -389,7 +389,7 @@ def get_sort_keys(self, hash_key,
 
 #### get_scanner
 
-获取scanner对象，用于指定范围的数据扫描。可以通过`scan_options`参数指定扫描的模式。
+获取 scanner 对象，用于指定范围的数据扫描。可以通过 `scan_options` 参数指定扫描的模式。
 
 ```
 def get_scanner(self, hash_key,
@@ -407,7 +407,7 @@ def get_scanner(self, hash_key,
     """
 ```
 
-其中，`ScanOptions`可以指定是否包含边界、超时时间、一次从replica server批量获取的sortkey-value数量等，具体定义如下：
+其中，`ScanOptions` 可以指定是否包含边界、超时时间、一次从 replica server 批量获取的 sortkey-value 数量等，具体定义如下：
 
 ```
 class ScanOptions(object):
@@ -425,7 +425,7 @@ class ScanOptions(object):
 
 #### get_unordered_scanners
 
-一次性获取多个scanner，用于整个table的数据扫描。可以通过`scan_options`参数指定扫描的模式。
+一次性获取多个 scanner，用于整个 table 的数据扫描。可以通过 `scan_options` 参数指定扫描的模式。
 
 ```
 def get_unordered_scanners(self, max_split_count, scan_options):
@@ -441,7 +441,7 @@ def get_unordered_scanners(self, max_split_count, scan_options):
 
 #### scanner对象
 
-用于数据扫描的对象，由`get_scanner`和`get_unordered_scanners`返回。使用它的`next`函数执行扫描过程。
+用于数据扫描的对象，由 `get_scanner` 和 `get_unordered_scanners` 返回。使用它的 `next` 函数执行扫描过程。
 
 ```
 class PegasusScanner(object):
@@ -452,7 +452,7 @@ class PegasusScanner(object):
 
 #### get_next
 
-获取扫描得到的数据，需要循环执行，直到返回`None`结束扫描。
+获取扫描得到的数据，需要循环执行，直到返回 `None` 结束扫描。
 
 ```
 def get_next(self):
