@@ -2,7 +2,7 @@
 permalink: clients/go-client
 ---
 
-# 获取go客户端
+# 获取 go 客户端
 
 下载：
 
@@ -17,9 +17,9 @@ go get github.com/apache/incubator-pegasus/go-client@df0eb5a
 * Thrift 0.13
 
 # 客户端配置
-创建go client实例需要配置相关参数，目前仅支持参数传递方式。  
-go client的配置参数非常简单，仅需要指定meta servers。  
-用户如果需要文件配置，需自行将参数从文件从解析，再传入go client。
+创建 go client 实例需要配置相关参数，目前仅支持参数传递方式。  
+go client 的配置参数非常简单，仅需要指定 meta servers。  
+用户如果需要文件配置，需自行将参数从文件从解析，再传入 go client。
 ```go
 // 参数配置
 cfg := &pegasus.Config{
@@ -41,7 +41,7 @@ c := pegasus.NewClient(*cfg)
 
 # 接口定义
 
-## 创建Client实例
+## 创建 Client 实例
 ```go
 // NewClient creates a new instance of pegasus client.
 // It panics if the configured addresses are illegal
@@ -53,25 +53,25 @@ type Config struct {
 }
 ```
 
-使用完毕后，记得close client以释放资源，譬如：
+使用完毕后，记得 close client 以释放资源，譬如：
 ```go
 c := pegasus.NewClient(*cfg)
 
 ...
 
-c.Close();
+c.Close()
 ```
 
-## 创建TableConnector实例
-go client 操作数据的接口都在TableConnector中定义。  
-一个client可以有多个TableConnector实例，每一个TableConnector对应一张表。
+## 创建 TableConnector 实例
+go client 操作数据的接口都在 TableConnector 中定义。  
+一个 client 可以有多个 TableConnector 实例，每一个 TableConnector 对应一张表。
 ```go
 // Open the specific pegasus table. If the table was opened before,
 // it will reuse the previous connection to the table.
 OpenTable(ctx context.Context, tableName string) (TableConnector, error)
 ```
 
-## TableConnector接口
+## TableConnector 接口
 
 ### Get
 读单行数据。
@@ -83,12 +83,12 @@ OpenTable(ctx context.Context, tableName string) (TableConnector, error)
 Get(ctx context.Context, hashKey []byte, sortKey []byte) ([]byte, error)
 ```
 注：   
-* 参数：需传入context、hashKey、sortKey。  
-* 返回值：value、error. 如果返回(nil,nil)，表示key对应的数据不存在。  
-* 异常：如果出现异常，譬如网络错误、超时错误、服务端错误等，可以访问error获取具体错误类型(key对应数据不存在返回nil)。
+* 参数：需传入 `context`、`hashKey`、`sortKey`。  
+* 返回值：`value`、`error`。 如果返回 (nil,nil)，表示 key 对应的数据不存在。  
+* 异常：如果出现异常，譬如网络错误、超时错误、服务端错误等，可以访问 error 获取具体错误类型 (key 对应数据不存在返回 nil)。
 
 ### Set and SetTTL
-写单行数据, SetTTL可以设置单条kv的TTL。
+写单行数据, SetTTL 可以设置单条 kv 的 TTL。
 ```go
 // Set the entry for `hashKey` + `sortKey` to `value`.
 // If Set is called or `ttl` == 0, no data expiration is specified.
@@ -98,10 +98,10 @@ Set(ctx context.Context, hashKey []byte, sortKey []byte, value []byte) error
 SetTTL(ctx context.Context, hashKey []byte, sortKey []byte, value []byte, ttl time.Duration) error
 ```
 注：  
-* 提供了两个版本的接口，其中第二个接口可以指定TTL时间。
-* 参数：需传入context、hashKey、sortKey、value, ttl单位为秒(s)  
-* 返回值：error
-* 异常：如果出现异常，譬如网络错误、超时错误、服务端错误等，可以访问error获取具体错误类型。
+* 提供了两个版本的接口，其中第二个接口可以指定 TTL 时间。
+* 参数：需传入 `context`、`hashKey`、`sortKey`、`value`、`ttl`。 `ttl` 单位为秒(s)。  
+* 返回值：`error`。
+* 异常：如果出现异常，譬如网络错误、超时错误、服务端错误等，可以访问 error 获取具体错误类型。
 
 ### Del
 删除单行数据
@@ -112,11 +112,12 @@ SetTTL(ctx context.Context, hashKey []byte, sortKey []byte, value []byte, ttl ti
 Del(ctx context.Context, hashKey []byte, sortKey []byte) error
 ```
 注：  
-* 参数：需传入context、hashKey、sortKey。  
-* 异常：如果出现异常，譬如网络错误、超时错误、服务端错误等，可以访问error获取具体错误类型。
+* 参数：需传入 `context`、`hashKey`、`sortKey`。  
+* 返回值：`error`。
+* 异常：如果出现异常，譬如网络错误、超时错误、服务端错误等，可以访问 error 获取具体错误类型。
 
 ### MultiGet and MultiGetOpt
-读**同一HashKey下**的多行数据。
+读**同一 HashKey 下**的多行数据。
 ```go
 // MultiGet/MultiGetOpt retrieves the multiple entries for `hashKey` + `sortKeys[i]` atomically in one operation.
 // MultiGet is identical to MultiGetOpt except that the former uses DefaultMultiGetOptions as `options`.
@@ -133,10 +134,11 @@ MultiGet(ctx context.Context, hashKey []byte, sortKeys [][]byte) ([]*KeyValue, b
 MultiGetOpt(ctx context.Context, hashKey []byte, sortKeys [][]byte, options *MultiGetOptions) ([]*KeyValue, bool, error)
 ```
 注:  
-* 参数：需传入context、hashKey、sortKeys。  
-* 返回值：得到的kvs、bool值代表是否all fetched, error  
-* 异常：如果出现异常，譬如网络错误、超时错误、服务端错误等，可以访问error获取具体错误类型(key对应数据不存在不会报错)。  
-* bool值表示:如果用户指定了maxFetchCount或者maxFetchSize，单次查询可能只获取到部分结果。如果所有满足条件的数据都已经获取到，则返回true；否则返回false。
+* 参数：需传入 `context`、`hashKey`、`sortKeys`。  
+* 返回值：得到的 kvs、bool 值代表是否 all fetched, error  
+* 异常：如果出现异常，譬如网络错误、超时错误、服务端错误等，可以访问 error 获取具体错误类型 (key 对应数据不存在不会报错)。  
+* bool 值表示:如果用户指定了 `maxFetchCount` 或者 `maxFetchSize`，单次查询可能只获取到部分结果。如果所有满足条件的数据都已经获取到，则返回 `true`；否则返回 `false`。
+
 ``` go
 // MultiGetOptions is the options for MultiGet and MultiGetRange, defaults to DefaultMultiGetOptions.
 type MultiGetOptions struct {
@@ -174,24 +176,25 @@ const (
 )
 ```
 注：  
-* MultiGetOptions说明：  
-    * startInclusive：是否包含StartSortKey，默认为true。  
-    * stopInclusive：是否包含StopSortKey，默认为false。  
-    * SortKeyFilter: SortKey过滤项  
-    * maxFetchCount和maxFetchSize用于限制读取的数据量，maxFetchCount表示最多读取的数据条数，maxFetchSize表示最多读取的数据字节数，两者任一达到限制就停止读取. MaxFetchCount 默认为100, MaxFetchSize 默认为100000  
-    * noValue：只返回HashKey和SortKey，不返回Value数据，默认为false。  
-    * reverse：是否逆向扫描数据库，从后往前查找数据。但是查找得到的结果在list中还是按照SortKey从小到大顺序存放。从Pegasus Server 1.8.0 时开始支持。  
+* MultiGetOptions 说明：  
+    * startInclusive: 是否包含 StartSortKey，默认为 `true`。  
+    * stopInclusive: 是否包含 StopSortKey，默认为 `false`。  
+    * SortKeyFilter: SortKey 过滤项  
+    * maxFetchCount 和 maxFetchSize 用于限制读取的数据量，maxFetchCount 表示最多读取的数据条数，maxFetchSize 表示最多读取的数据字节数，两者任一达到限制就停止读取. MaxFetchCount 默认为 100, MaxFetchSize 默认为 100000  
+    * noValue: 只返回 HashKey 和 SortKey，不返回 Value 数据，默认为false。  
+    * reverse: 是否逆向扫描数据库，从后往前查找数据。但是查找得到的结果在list 中还是按照 SortKey 从小到大顺序存放。从 Pegasus Server 1.8.0 时开始支持。  
 * Filter说明：  
     * type: 过滤类型，包括无过滤、任意位置匹配、前缀匹配和后缀匹配  
     * Pattern: 过滤模式串，空串相当于无过滤。
 * Filter types 说明：    
-    * FilterTypeNoFilter：无过滤
-    * FilterTypeMatchAnywhere： 任意位置匹配
-    * FilterTypeMatchPrefix： 前缀匹配
+    * FilterTypeNoFilter: 无过滤
+    * FilterTypeMatchAnywhere: 任意位置匹配
+    * FilterTypeMatchPrefix: 前缀匹配
     * FilterTypeMatchPostfix: 后缀匹配
 
 ### MultiGetRange and MultiGetRangeOpt
-读**同一HashKey下**的多行数据，支持范围查询。
+读**同一 HashKey 下**的多行数据，支持范围查询。
+
 ``` go
 // MultiGetRange retrieves the multiple entries under `hashKey`, between range (`startSortKey`, `stopSortKey`),
 // atomically in one operation.
@@ -206,14 +209,15 @@ const (
 MultiGetRange(ctx context.Context, hashKey []byte, startSortKey []byte, stopSortKey []byte) ([]*KeyValue, bool, error)
 MultiGetRangeOpt(ctx context.Context, hashKey []byte, startSortKey []byte, stopSortKey []byte, options *MultiGetOptions) ([]*KeyValue, bool, error)
 ```
+
 注：
-* 参数：需传入context、hashKey、startSortKey、stopSortKey  
-* 返回值：kvs、bool值代表是否all fetched, error  
-* 异常：如果出现异常，譬如网络错误、超时错误、服务端错误等，可以访问error获取具体错误类型(key对应数据不存在不会报错)。  
+* 参数：需传入 `context`、`hashKey`、`startSortKey`、`stopSortKey`  
+* 返回值：`kvs`、`bool` 值代表是否 all fetched, error  
+* 异常：如果出现异常，譬如网络错误、超时错误、服务端错误等，可以访问 error 获取具体错误类型 (key 对应数据不存在不会报错)。  
 
 
 ### MultiSet and MultiSetOpt
-写同一HashKey下的多行数据。
+写**同一 HashKey 下**的多行数据。
 ``` go
 // MultiSet sets the multiple entries for `hashKey` + `sortKeys[i]` atomically in one operation.
 // `hashKey` / `sortKeys` / `values` : CAN'T be nil or empty.
@@ -222,11 +226,11 @@ MultiSet(ctx context.Context, hashKey []byte, sortKeys [][]byte, values [][]byte
 MultiSetOpt(ctx context.Context, hashKey []byte, sortKeys [][]byte, values [][]byte, ttl time.Duration) error
 ```
 注：
-* MultiSet调用了rocksdb的WriteBatch接口，因此MultiSet是一个原子操作
-* 提供了两个版本的接口，其中第二个接口可以指定TTL时间。
-* 参数：需传入context、hashKey、sortKeys、values、ttl(可选，单位为s)
+* `MultiSet` 调用了 rocksdb 的 WriteBatch 接口，因此 `MultiSet` 是一个原子操作
+* 提供了两个版本的接口，其中第二个接口可以指定 TTL 时间。
+* 参数：需传入 `context`、`hashKey`、`sortKeys`、`values`、`ttl` (可选，单位为 s)
 * 返回值：error 
-* 异常：如果出现异常，譬如网络错误、超时错误、服务端错误等，可以访问error获取具体错误类型
+* 异常：如果出现异常，譬如网络错误、超时错误、服务端错误等，可以访问 error 获取具体错误类型
   
 ### MultiDel
 ``` go
@@ -236,10 +240,10 @@ MultiSetOpt(ctx context.Context, hashKey []byte, sortKeys [][]byte, values [][]b
 MultiDel(ctx context.Context, hashKey []byte, sortKeys [][]byte) error
 ```
 注：
-* MultiDel调用了rocksdb的WriteBatch接口，因此MultiDel是一个原子操作
-* 参数：需传入context、hashKey、sortKeys
+* `MultiDel` 调用了 rocksdb 的 WriteBatch 接口，因此 `MultiDel` 是一个原子操作
+* 参数：需传入 `context`、`hashKey`、`sortKeys`
 * 返回值：error 
-* 异常：如果出现异常，譬如网络错误、超时错误、服务端错误等，可以访问error获取具体错误类型
+* 异常：如果出现异常，譬如网络错误、超时错误、服务端错误等，可以访问 error 获取具体错误类型
 
 ### DelRange and DelRangeOpt
 ``` go
@@ -262,18 +266,18 @@ type DelRangeOptions struct {
 }
 ```
 注：
-* DelRange实际调用了多次MultiDel, 每次MultiDel是原子的，但是DelRange整体可能不是原子的。
-* 参数：需传入context、hashKey、startSortKey、stopSortKey
+* `DelRange` 实际调用了多次 `MultiDel`, 每次 `MultiDel` 是原子的，但是 `DelRange` 整体可能不是原子的。
+* 参数：需传入 `context`、`hashKey`、`startSortKey`、`stopSortKey`
 * 返回值：error 
-* 异常：如果出现异常，譬如网络错误、超时错误、服务端错误等，可以访问error获取具体错误类型
-* DelRangeOptions：
-    * nextSortKey： DelRange会按照sortkey的大小顺序进行删除，假如删除过程中失败，会将未删除成功第一个sortkey保存在nextSortKey
-    * StartInclusive: 删除时是否包括startSortKey
-    * StopInclusive: 删除时是否包括stopSortKey
-    * SortKeyFilter: 可以对Sortkey进行筛选
+* 异常：如果出现异常，譬如网络错误、超时错误、服务端错误等，可以访问 error 获取具体错误类型
+* `DelRangeOptions`:
+    * `nextSortKey`: `DelRange` 会按照 sortkey 的大小顺序进行删除，假如删除过程中失败，会将未删除成功第一个 sortkey 保存在 `nextSortKey`
+    * `StartInclusive`: 删除时是否包括 `startSortKey`
+    * `StopInclusive`: 删除时是否包括 `stopSortKey`
+    * `SortKeyFilter`: 可以对 Sortkey 进行筛选
 
 ### TTL
-获取某个key的TTL。
+获取某个 key 的TTL。
 ``` go
 // Returns ttl(time-to-live) in seconds: -1 if ttl is not set; -2 if entry doesn't exist.
 // `hashKey` : CAN'T be nil or empty.
@@ -281,24 +285,24 @@ type DelRangeOptions struct {
 TTL(ctx context.Context, hashKey []byte, sortKey []byte) (int, error)
 ```
 注：
-* 参数：需传入context、hashKey、sortKey
-* 返回值：int,error 
-* 异常：如果出现异常，譬如网络错误、超时错误、服务端错误等，可以访问error获取具体错误类型	
+* 参数：需传入 `context`、`hashKey`、`sortKey`
+* 返回值：`int` 代表 ttl 时间，单位为 s；`error` 代表异常信息
+* 异常：如果出现异常，譬如网络错误、超时错误、服务端错误等，可以访问 error 获取具体错误类型	
 
 ### Exist
-判断某个key是否存在。
+判断某个 key 是否存在。
 ``` go
 // Check value existence for the entry for `hashKey` + `sortKey`.
 // `hashKey`: CAN'T be nil or empty.
 Exist(ctx context.Context, hashKey []byte, sortKey []byte) (bool, error)
 ```
 注：
-* 参数：需传入context、hashKey、sortKey
-* 返回值：bool,error 
-* 异常：如果出现异常，譬如网络错误、超时错误、服务端错误等，可以访问error获取具体错误类型	
+* 参数：需传入 `context`、`hashKey`、`sortKey`
+* 返回值：`bool` 代表 key 是否存在；`error` 代表异常信息
+* 异常：如果出现异常，譬如网络错误、超时错误、服务端错误等，可以访问 error 获取具体错误类型	
 
 ### GetScanner
-获取遍历某个HashKey下所有数据的迭代器，用于局部扫描。
+获取遍历某个 HashKey 下所有数据的迭代器，用于局部扫描。
 ``` go
 // Get Scanner for {startSortKey, stopSortKey} within hashKey.
 // startSortKey: nil or len(startSortKey) == 0 means start from begin.
@@ -317,18 +321,18 @@ type ScannerOptions struct {
 }
 ```  
 注：
-* 参数：需传入context、hashKey、startSortKey、stopSortKey、ScannnerOptions
-    * startSortKey和stopSortKey用于指定scan的返回，并通过ScanOptions指定区间的开闭。
-    * 如果startSortKey为null，表示从头开始；如果stopSortKey为null，表示一直读到尾。
-    * ScannnerOptions说明：
-        * BatchSize： 从server端读取数据时每批数据的个数，默认值为1000
-        * startInclusive：是否包含startSortKey，默认为true
-        * stopInclusive： 是否包含stopSortKey，默认为false
-        * HashKeyFilter: hashkey的筛选，默认无筛选
-        * SortKeyFilter: sortkey的筛选，默认无筛选
-        * NoValue: 只返回HashKey和SortKey，不返回Value数据，默认为false
-* 返回值：迭代器Scanner, error
-* 异常：如果出现异常，譬如网络错误、超时错误、服务端错误等，可以访问error获取具体错误类型	
+* 参数: 需传入 `context`、`hashKey`、`startSortKey`、`stopSortKey`、`ScannerOptions`
+    * `startSortKey` 和 `stopSortKey` 用于指定 scan 的返回，并通过 `ScannerOptions` 指定区间的开闭。
+    * 如果 `startSortKey` 为 null，表示从头开始；如果 `stopSortKey` 为 null，表示一直读到尾。
+    * `ScannerOptions` 说明:
+        * `BatchSize`: 从 server 端读取数据时每批数据的个数，默认值为 1000
+        * `StartInclusive`:是否包含 `startSortKey`，默认为 true
+        * `StopInclusive`: 是否包含 `stopSortKey`，默认为 false
+        * `HashKeyFilter`: hashkey 的筛选，默认无筛选
+        * `SortKeyFilter`: sortkey 的筛选，默认无筛选
+        * `NoValue`： 只返回 HashKey 和 SortKey，不返回 Value 数据，默认为 false
+* 返回值：迭代器 `Scanner`、`error`
+* 异常：如果出现异常，譬如网络错误、超时错误、服务端错误等，可以访问 error 获取具体错误类型	
 
 ### GetUnorderedScanners
 获取遍历整个表的所有数据的迭代器，用于全局扫描。
@@ -338,13 +342,13 @@ type ScannerOptions struct {
 GetUnorderedScanners(ctx context.Context, maxSplitCount int, options *ScannerOptions) ([]Scanner, error)
 ```
 注：
-* 参数：需传入context、maxSplitCount、ScannnerOptions
-    * maxSplitCount：用于决定返回的迭代器的个数。当返回多个迭代器时，每个迭代器可以访问表中的部分数据。通过返回迭代器列表，用户可以进行并发scan或者在MapReduce中使用。如果不需要多个迭代器，可以将其设置为1。
-* 返回值：迭代器Scanner数组, error
-* 异常：如果出现异常，譬如网络错误、超时错误、服务端错误等，可以访问error获取具体错误类型
+* 参数: 需传入 `context`、`maxSplitCount`、`ScannnerOptions`
+    * `maxSplitCount`: 用于决定返回的迭代器的个数。当返回多个迭代器时，每个迭代器可以访问表中的部分数据。通过返回迭代器列表，用户可以进行并发scan 或者在 MapReduce 中使用。如果不需要多个迭代器，可以将其设置为1。
+* 返回值：迭代器 Scanner 数组, error
+* 异常：如果出现异常，譬如网络错误、超时错误、服务端错误等，可以访问 error 获取具体错误类型
 
 ### Next
-在scan操作时，同步获取下一条数据。
+在 scan 操作时，同步获取下一条数据。
 ``` go
 // Scanner defines the interface of client-side scanning.
 type Scanner interface {
@@ -355,19 +359,19 @@ type Scanner interface {
 }
 ```
 注：
-* 参数：需传入context
-* 返回值：completed、hashKey、sortKey、value、err
-    * completed: true表示遍历结束.
-* 异常：如果出现异常，譬如网络错误、超时错误、服务端错误等，可以访问error获取具体错误类型
+* 参数: 需传入 `context`
+* 返回值：`completed`、`hashKey`、`sortKey`、`value`、`err`
+    * `completed`: `true` 表示遍历结束.
+* 异常：如果出现异常，譬如网络错误、超时错误、服务端错误等，可以访问 error 获取具体错误类型
 
 ### CheckAndSet  
-单hashKey数据的原子CAS操作（可以理解为单行原子操作）。详细说明参见[单行原子操作](/api/single-atomic#cas操作)。  
-该操作先对某个SortKey（称之为checkSortKey）的value做条件检查：    
-* 如果检查的条件满足，则将另一个SortKey（称之为setSortKey）的value设置为新值。  
-* 如果检查的条件不满足，则不执行set操作。    
+单 hashKey 数据的原子 CAS 操作（可以理解为单行原子操作）。详细说明参见[单行原子操作](/api/single-atomic#cas操作)。  
+该操作先对某个 SortKey（称之为 checkSortKey）的 value 做条件检查：    
+* 如果检查的条件满足，则将另一个 SortKey（称之为 setSortKey）的 value 设置为新值。  
+* 如果检查的条件不满足，则不执行 set 操作。    
 
-checkSortKey和setSortKey可以相同也可以不同。  
-用户还可以设置`CheckAndSetOptions.ReturnCheckValue`来获取CheckSortKey对应的value。如果CheckSortKey和SetSortKey相同并且set成功，则获取set之前的旧值。
+`checkSortKey` 和 `setSortKey` 可以相同也可以不同。  
+用户还可以设置 `CheckAndSetOptions.ReturnCheckValue` 来获取 `CheckSortKey` 对应的 value。如果 `CheckSortKey` 和 `SetSortKey` 相同并且 set 成功，则获取 set 之前的旧值。
 
 ``` go
 // Atomically check and set value by key from the cluster. The value will be set if and only if check passed.
@@ -431,35 +435,35 @@ type CheckAndSetResult struct {
 }
 ```
 注：
-* 参数：需传入context、hashKey、checkSortKey、checkType、checkOperand、setSortKey、setValue、CheckAndSetOptions
-    * checkSortKey、checkType、checkOperand：用于指定检查的条件。
-    * setSortKey、setValue：用于指定条件检查成功后要set的新值。
-    * options：其他选项，包括：
-        * SetValueTTLSeconds：新值的TTL时间；TTL必须>=0，0表示不设置TTL限制。当<0时返回报错。
-        * ReturnCheckValue：是否需要返回CheckSortKey对应的value。
-* 返回值：CheckAndSetResult、error
-    * SetSucceed: 是否set成功。
-    * CheckValue: CheckSortKey对应的value值；该域只有在checkValueExist=true时有意义。
-    * CheckValueExist: CheckSortKey对应的value是否存在；该域只有在checkValueReturned=true时有意义。
-    * CheckValueReturned: 是否返回了CheckSortKey对应的value。
-* 异常：如果出现异常，譬如网络错误、超时错误、服务端错误等，可以访问error获取具体错误类型
+* 参数：需传入 `context`、`hashKey`、`checkSortKey`、`checkType`、`checkOperand`、`setSortKey`、`setValue`、`CheckAndSetOptions`
+    * `checkSortKey`、`checkType`、`checkOperand`：用于指定检查的条件。
+    * `setSortKey`、`setValue`：用于指定条件检查成功后要 set 的新值。
+    * `options`：其他选项，包括：
+        * `SetValueTTLSeconds`：新值的 TTL 时间；TTL 必须 >= 0，0 表示不设置 TTL 限制。当 < 0 时返回报错。
+        * `ReturnCheckValue`：是否需要返回 `CheckSortKey` 对应的 value。
+* 返回值：`CheckAndSetResult`、`error`
+    * `SetSucceed`: 是否 set 成功。
+    * `CheckValue`: `CheckSortKey` 对应的 value 值；该域只有在 `CheckValueExist` 为 `true` 时有意义。
+    * `CheckValueExist`: `CheckSortKey` 对应的 value 是否存在；该域只有在 `ReturnCheckValue` 为 `true` 时有意义。
+    * `ReturnCheckValue`: 是否返回了 `CheckSortKey` 对应的 value。
+* 异常：如果出现异常，譬如网络错误、超时错误、服务端错误等，可以访问 error 获取具体错误类型
 
 ### SortKeyCount
-获取某个HashKey下所有SortKey的个数。
+获取某个 HashKey 下所有 SortKey 的个数。
 ``` go
 // Returns the count of sortkeys under hashkey.
 // `hashKey`: CAN'T be nil or empty.
 SortKeyCount(ctx context.Context, hashKey []byte) (int64, error)
 ```
 注：
-* 参数：需传入context、hashKey
-* 返回值：返回HashKey下所有SortKey的个数
-* 异常：如果出现异常，譬如网络错误、超时错误、服务端错误等，可以访问error获取具体错误类型
+* 参数：需传入 `context`、`hashKey`
+* 返回值：返回 `HashKey` 下所有 `SortKey` 的个数
+* 异常：如果出现异常，譬如网络错误、超时错误、服务端错误等，可以访问 error 获取具体错误类型
   
 ### Incr
 单行原子增(减)操作。详细说明参见[单行原子操作](/api/single-atomic#cas操作)。  
-该操作先将key所指向的value的字节串转换为int64类型, 然后加上increment，将结果转换为字节串设置为新值。
-当参数increment为正数时，即原子加；当参数increment为负数时，即原子减。
+该操作先将 key 所指向的 value 的字节串转换为 int64 类型, 然后加上 increment，将结果转换为字节串设置为新值。
+当参数 increment 为正数时，即原子加；当参数 increment 为负数时，即原子减。
 ``` go
 // Atomically increment value by key from the cluster.
 // Returns the new value.
@@ -467,17 +471,17 @@ SortKeyCount(ctx context.Context, hashKey []byte) (int64, error)
 Incr(ctx context.Context, hashKey []byte, sortKey []byte, increment int64) (int64, error)
 ```
 注：
-* 参数：需传入context、hashKey、sortkey、increment
+* 参数：需传入 `context`、`hashKey`、`sortKey`、`increment`
 * 返回值：操作成功后的新值、error
-* 异常：如果出现异常，譬如网络错误、超时错误、服务端错误等，可以访问error获取具体错误类型。另外以下情况也会抛出异常：
-    * 旧值转换为int64时出错，譬如不是合法的数字或者超出int64范围。
-    * 旧值加上increment后的结果超出int64范围。
+* 异常：如果出现异常，譬如网络错误、超时错误、服务端错误等，可以访问 error 获取具体错误类型。另外以下情况也会抛出异常：
+    * 旧值转换为 int64 时出错，譬如不是合法的数字或者超出 int64 范围。
+    * 旧值加上 increment 后的结果超出 int64 范围。
 * 其他说明：
-    * 如果旧值不存在，则把旧值当做0处理，即新值等于increment。
-    * TTL语义：如果旧值存在，新值的TTL和旧值保持一致；如果旧值不存在，新值将不设TTL。
+    * 如果旧值不存在，则把旧值当做 0 处理，即新值等于 increment。
+    * TTL 语义：如果旧值存在，新值的 TTL 和旧值保持一致；如果旧值不存在，新值将不设 TTL。
   
 ### BatchGet
-读取一批数据，对get函数的批量封装。该函数并发地向server发送异步请求，并等待结果。如果有任意一个请求失败，就提前终止并抛出异常。如果抛出了异常，则values中的结果是未定义的。
+读取一批数据，对 get 函数的批量封装。该函数并发地向 server 发送异步请求，并等待结果。如果有任意一个请求失败，就提前终止并抛出异常。如果抛出了异常，则 values 中的结果是未定义的。
 ``` go
 // Gets values from a batch of CompositeKeys. Internally it distributes each key
 // into a Get call and wait until all returned.
@@ -492,8 +496,8 @@ Incr(ctx context.Context, hashKey []byte, sortKey []byte, increment int64) (int6
 BatchGet(ctx context.Context, keys []CompositeKey) (values [][]byte, err error)
 ```
 注：
-* 参数：需传入context、CompositeKey
-* 返回值：Values、error。如果读取成功，Values[i]中存放Keys[i]对应的结果，如果value不存在则为null。
-* 异常：如果出现异常，譬如网络错误、超时错误、服务端错误等，可以访问error获取具体错误类型。
+* 参数：需传入 `context`、`keys`
+* 返回值：`values`、`error`。如果读取成功，`values[i]` 中存放 `keys[i]` 对应的结果，如果 value 不存在则为 `nil`。
+* 异常：如果出现异常，譬如网络错误、超时错误、服务端错误等，可以访问 `error` 获取具体错误类型。
 * 其他说明：
     * 该方法不是原子的，有可能出现部分成功部分失败的情况，只要任意一个失败都会抛出异常。
