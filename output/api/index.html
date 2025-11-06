@@ -16,15 +16,15 @@
 <meta name="generator" content="Jekyll v4.4.1" />
 <meta property="og:title" content="Api" />
 <meta property="og:locale" content="en_US" />
-<meta name="description" content="这里介绍Pegasus服务所提供的用户接口。客户端可以在我们的服务接口上做二次封装。 通常你只需要通过 客户端文档 学习如何与Pegasus交互。" />
-<meta property="og:description" content="这里介绍Pegasus服务所提供的用户接口。客户端可以在我们的服务接口上做二次封装。 通常你只需要通过 客户端文档 学习如何与Pegasus交互。" />
+<meta name="description" content="This page introduces the user interfaces provided by the Pegasus service. Clients can build secondary wrappers on top of these service interfaces. In most cases, you only need to learn how to interact with Pegasus via the Client Documentation." />
+<meta property="og:description" content="This page introduces the user interfaces provided by the Pegasus service. Clients can build secondary wrappers on top of these service interfaces. In most cases, you only need to learn how to interact with Pegasus via the Client Documentation." />
 <meta property="og:site_name" content="Pegasus" />
 <meta property="og:type" content="article" />
-<meta property="article:published_time" content="2025-11-06T10:27:35+00:00" />
+<meta property="article:published_time" content="2025-11-06T10:36:30+00:00" />
 <meta name="twitter:card" content="summary" />
 <meta property="twitter:title" content="Api" />
 <script type="application/ld+json">
-{"@context":"https://schema.org","@type":"BlogPosting","dateModified":"2025-11-06T10:27:35+00:00","datePublished":"2025-11-06T10:27:35+00:00","description":"这里介绍Pegasus服务所提供的用户接口。客户端可以在我们的服务接口上做二次封装。 通常你只需要通过 客户端文档 学习如何与Pegasus交互。","headline":"Api","mainEntityOfPage":{"@type":"WebPage","@id":"/api/"},"url":"/api/"}</script>
+{"@context":"https://schema.org","@type":"BlogPosting","dateModified":"2025-11-06T10:36:30+00:00","datePublished":"2025-11-06T10:36:30+00:00","description":"This page introduces the user interfaces provided by the Pegasus service. Clients can build secondary wrappers on top of these service interfaces. In most cases, you only need to learn how to interact with Pegasus via the Client Documentation.","headline":"Api","mainEntityOfPage":{"@type":"WebPage","@id":"/api/"},"url":"/api/"}</script>
 <!-- End Jekyll SEO tag -->
 
 </head>
@@ -734,37 +734,29 @@
             </section>
             <section class="section" style="padding-top: 2rem;">
                 <div class="content">
-                    <p>这里介绍Pegasus服务所提供的用户接口。客户端可以在我们的服务接口上做二次封装。
-通常你只需要通过 <a href="/clients">客户端文档</a> 学习如何与Pegasus交互。</p>
+                    <p>This page introduces the user interfaces provided by the Pegasus service. Clients can build secondary wrappers on top of these service interfaces.
+In most cases, you only need to learn how to interact with Pegasus via the <a href="/clients">Client Documentation</a>.</p>
 
-<p>当前Pegasus支持几种接口协议：</p>
+<p>Pegasus currently supports several interface protocols:</p>
 
-<h2 id="pegasus-协议">Pegasus 协议</h2>
+<h2 id="pegasus-protocol">Pegasus Protocol</h2>
 
-<p>这也是我们的客户端与Pegasus服务端交互所使用的协议。我们通过该协议暴露了</p>
+<p>This is the protocol used by our clients to interact with Pegasus servers. Through this protocol we expose:</p>
 
 <ul>
-  <li>
-    <p>单行幂等原子操作，如 set/get/del/ttl…</p>
-  </li>
-  <li>
-    <p>单行非幂等原子操作，如 check_and_mutate/incr…</p>
-  </li>
-  <li>
-    <p>多行幂等原子操作，如 multiset/multiget/multidel…</p>
-  </li>
-  <li>
-    <p>支持过滤的扫描操作，如 hash_scan/unordered_scan…</p>
-  </li>
+  <li>Single-row idempotent atomic operations, such as <code class="language-plaintext highlighter-rouge">set/get/del/ttl</code>…</li>
+  <li>Single-row non-idempotent atomic operations, such as <code class="language-plaintext highlighter-rouge">check_and_mutate/incr</code>…</li>
+  <li>Multi-row idempotent atomic operations, such as <code class="language-plaintext highlighter-rouge">multiset/multiget/multidel</code>…</li>
+  <li>Scan operations with filtering, such as <code class="language-plaintext highlighter-rouge">hash_scan/unordered_scan</code>…</li>
 </ul>
 
-<h2 id="redis-协议">Redis 协议</h2>
+<h2 id="redis-protocol">Redis Protocol</h2>
 
-<p>我们通过Pegasus Redis Proxy这一组件在Pegasus协议之上支持了Redis协议。
-你可以阅读 <a href="/redis">Redis适配</a> 了解更多。</p>
+<p>We support the Redis protocol on top of the Pegasus protocol via the Pegasus Redis Proxy component.
+You can read <a href="/redis">Redis Adaptation</a> to learn more.</p>
 
-<p>因为Redis接口提供了GEO支持，我们也借此支持了地理信息查询的功能。
-你可以阅读 <a href="/geo">GEO支持</a> 了解更多。</p>
+<p>Since the Redis interface provides GEO support, we also support geospatial query capabilities through it.
+You can read <a href="/geo">GEO Support</a> to learn more.</p>
 
                 </div>
             </section>
@@ -808,8 +800,8 @@
     Table of contents
 </p>
 <ul class="menu-list">
-  <li><a href="#pegasus-协议">Pegasus 协议</a></li>
-  <li><a href="#redis-协议">Redis 协议</a></li>
+  <li><a href="#pegasus-protocol">Pegasus Protocol</a></li>
+  <li><a href="#redis-protocol">Redis Protocol</a></li>
 </ul>
 
         </div>

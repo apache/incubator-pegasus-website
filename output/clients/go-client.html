@@ -16,15 +16,15 @@
 <meta name="generator" content="Jekyll v4.4.1" />
 <meta property="og:title" content="Go Client" />
 <meta property="og:locale" content="en_US" />
-<meta name="description" content="TRANSLATING" />
-<meta property="og:description" content="TRANSLATING" />
+<meta name="description" content="Get the Go Client" />
+<meta property="og:description" content="Get the Go Client" />
 <meta property="og:site_name" content="Pegasus" />
 <meta property="og:type" content="article" />
-<meta property="article:published_time" content="2025-11-06T10:27:35+00:00" />
+<meta property="article:published_time" content="2025-11-06T10:36:30+00:00" />
 <meta name="twitter:card" content="summary" />
 <meta property="twitter:title" content="Go Client" />
 <script type="application/ld+json">
-{"@context":"https://schema.org","@type":"BlogPosting","dateModified":"2025-11-06T10:27:35+00:00","datePublished":"2025-11-06T10:27:35+00:00","description":"TRANSLATING","headline":"Go Client","mainEntityOfPage":{"@type":"WebPage","@id":"/clients/go-client"},"url":"/clients/go-client"}</script>
+{"@context":"https://schema.org","@type":"BlogPosting","dateModified":"2025-11-06T10:36:30+00:00","datePublished":"2025-11-06T10:36:30+00:00","description":"Get the Go Client","headline":"Go Client","mainEntityOfPage":{"@type":"WebPage","@id":"/clients/go-client"},"url":"/clients/go-client"}</script>
 <!-- End Jekyll SEO tag -->
 
 </head>
@@ -734,7 +734,561 @@
             </section>
             <section class="section" style="padding-top: 2rem;">
                 <div class="content">
-                    <p>TRANSLATING</p>
+                    <h1 id="get-the-go-client">Get the Go Client</h1>
+
+<p>Download:</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>go get github.com/apache/incubator-pegasus/go-client@&lt;CommitId&gt;
+<span class="c"># Example</span>
+go get github.com/apache/incubator-pegasus/go-client@df0eb5a
+</code></pre></div></div>
+
+<p>Requirements:</p>
+<ul>
+  <li>Go 1.18+</li>
+  <li>Thrift 0.13</li>
+</ul>
+
+<h1 id="client-configuration">Client Configuration</h1>
+<p>Creating a Go client instance requires configuration. Currently, only parameter passing is supported.
+The configuration is simple — you only need to specify the meta servers.
+If you prefer file-based configuration, parse your config file yourself and pass the parameters to the Go client.</p>
+
+<div class="language-go highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c">// Parameter configuration</span>
+<span class="n">cfg</span> <span class="o">:=</span> <span class="o">&amp;</span><span class="n">pegasus</span><span class="o">.</span><span class="n">Config</span><span class="p">{</span>
+    <span class="n">MetaServers</span><span class="o">:</span> <span class="p">[]</span><span class="kt">string</span><span class="p">{</span><span class="s">"0.0.0.0:34601"</span><span class="p">,</span> <span class="s">"0.0.0.0:34601"</span><span class="p">},</span>
+<span class="p">}</span>
+<span class="n">c</span> <span class="o">:=</span> <span class="n">pegasus</span><span class="o">.</span><span class="n">NewClient</span><span class="p">(</span><span class="o">*</span><span class="n">cfg</span><span class="p">)</span>
+
+<span class="c">// File configuration</span>
+<span class="n">cfgPath</span><span class="p">,</span> <span class="n">_</span> <span class="o">:=</span> <span class="n">filepath</span><span class="o">.</span><span class="n">Abs</span><span class="p">(</span><span class="s">"./example/pegasus-client-config.json"</span><span class="p">)</span>
+<span class="n">rawCfg</span><span class="p">,</span> <span class="n">err</span> <span class="o">:=</span> <span class="n">ioutil</span><span class="o">.</span><span class="n">ReadFile</span><span class="p">(</span><span class="n">cfgPath</span><span class="p">)</span>
+<span class="k">if</span> <span class="n">err</span> <span class="o">!=</span> <span class="no">nil</span> <span class="p">{</span>
+    <span class="n">fmt</span><span class="o">.</span><span class="n">Println</span><span class="p">(</span><span class="n">err</span><span class="p">)</span>
+    <span class="k">return</span>
+<span class="p">}</span>
+<span class="n">cfg</span> <span class="o">:=</span> <span class="o">&amp;</span><span class="n">pegasus</span><span class="o">.</span><span class="n">Config</span><span class="p">{}</span>
+<span class="n">json</span><span class="o">.</span><span class="n">Unmarshal</span><span class="p">(</span><span class="n">rawCfg</span><span class="p">,</span> <span class="n">cfg</span><span class="p">)</span>
+<span class="n">c</span> <span class="o">:=</span> <span class="n">pegasus</span><span class="o">.</span><span class="n">NewClient</span><span class="p">(</span><span class="o">*</span><span class="n">cfg</span><span class="p">)</span>
+</code></pre></div></div>
+
+<h1 id="api-reference">API Reference</h1>
+
+<h2 id="create-client-instance">Create Client instance</h2>
+<div class="language-go highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c">// NewClient creates a new instance of pegasus client.</span>
+<span class="c">// It panics if the configured addresses are illegal</span>
+<span class="k">func</span> <span class="n">NewClient</span><span class="p">(</span><span class="n">cfg</span> <span class="n">Config</span><span class="p">)</span> <span class="n">Client</span>
+
+<span class="c">// Config is the configuration of pegasus client.</span>
+<span class="k">type</span> <span class="n">Config</span> <span class="k">struct</span> <span class="p">{</span>
+    <span class="n">MetaServers</span> <span class="p">[]</span><span class="kt">string</span> <span class="s">`json:"meta_servers"`</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<p>After using the client, remember to close it to release resources, for example:</p>
+<div class="language-go highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">c</span> <span class="o">:=</span> <span class="n">pegasus</span><span class="o">.</span><span class="n">NewClient</span><span class="p">(</span><span class="o">*</span><span class="n">cfg</span><span class="p">)</span>
+
+<span class="o">...</span>
+
+<span class="n">c</span><span class="o">.</span><span class="n">Close</span><span class="p">()</span>
+</code></pre></div></div>
+
+<h2 id="create-tableconnector-instance">Create TableConnector instance</h2>
+<p>All data operations are defined in <code class="language-plaintext highlighter-rouge">TableConnector</code>.
+One client can open multiple <code class="language-plaintext highlighter-rouge">TableConnector</code> instances, each corresponding to a table.</p>
+<div class="language-go highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c">// Open the specific pegasus table. If the table was opened before,</span>
+<span class="c">// it will reuse the previous connection to the table.</span>
+<span class="n">OpenTable</span><span class="p">(</span><span class="n">ctx</span> <span class="n">context</span><span class="o">.</span><span class="n">Context</span><span class="p">,</span> <span class="n">tableName</span> <span class="kt">string</span><span class="p">)</span> <span class="p">(</span><span class="n">TableConnector</span><span class="p">,</span> <span class="kt">error</span><span class="p">)</span>
+</code></pre></div></div>
+
+<h2 id="tableconnector-api">TableConnector API</h2>
+
+<h3 id="get">Get</h3>
+<p>Read a single row.</p>
+<div class="language-go highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c">// Get retrieves the entry for `hashKey` + `sortKey`.</span>
+<span class="c">// Returns nil if no entry matches.</span>
+<span class="c">// `hashKey` : CAN'T be nil or empty.</span>
+<span class="c">// `sortKey` : CAN'T be nil but CAN be empty.</span>
+<span class="n">Get</span><span class="p">(</span><span class="n">ctx</span> <span class="n">context</span><span class="o">.</span><span class="n">Context</span><span class="p">,</span> <span class="n">hashKey</span> <span class="p">[]</span><span class="kt">byte</span><span class="p">,</span> <span class="n">sortKey</span> <span class="p">[]</span><span class="kt">byte</span><span class="p">)</span> <span class="p">([]</span><span class="kt">byte</span><span class="p">,</span> <span class="kt">error</span><span class="p">)</span>
+</code></pre></div></div>
+<p>Notes:</p>
+<ul>
+  <li>Parameters: <code class="language-plaintext highlighter-rouge">context</code>, <code class="language-plaintext highlighter-rouge">hashKey</code>, <code class="language-plaintext highlighter-rouge">sortKey</code>.</li>
+  <li>Returns: <code class="language-plaintext highlighter-rouge">value</code>, <code class="language-plaintext highlighter-rouge">error</code>. If <code class="language-plaintext highlighter-rouge">(nil, nil)</code> is returned, the key does not exist.</li>
+  <li>Errors: network error, timeout, server error, etc. If the key does not exist, <code class="language-plaintext highlighter-rouge">value</code> is nil without error.</li>
+</ul>
+
+<h3 id="set-and-setttl">Set and SetTTL</h3>
+<p>Write a single row. <code class="language-plaintext highlighter-rouge">SetTTL</code> sets TTL for a single key-value.</p>
+<div class="language-go highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c">// Set the entry for `hashKey` + `sortKey` to `value`.</span>
+<span class="c">// If Set is called or `ttl` == 0, no data expiration is specified.</span>
+<span class="c">// `hashKey` : CAN'T be nil or empty.</span>
+<span class="c">// `sortKey` / `value` : CAN'T be nil but CAN be empty.</span>
+<span class="n">Set</span><span class="p">(</span><span class="n">ctx</span> <span class="n">context</span><span class="o">.</span><span class="n">Context</span><span class="p">,</span> <span class="n">hashKey</span> <span class="p">[]</span><span class="kt">byte</span><span class="p">,</span> <span class="n">sortKey</span> <span class="p">[]</span><span class="kt">byte</span><span class="p">,</span> <span class="n">value</span> <span class="p">[]</span><span class="kt">byte</span><span class="p">)</span> <span class="kt">error</span>
+<span class="n">SetTTL</span><span class="p">(</span><span class="n">ctx</span> <span class="n">context</span><span class="o">.</span><span class="n">Context</span><span class="p">,</span> <span class="n">hashKey</span> <span class="p">[]</span><span class="kt">byte</span><span class="p">,</span> <span class="n">sortKey</span> <span class="p">[]</span><span class="kt">byte</span><span class="p">,</span> <span class="n">value</span> <span class="p">[]</span><span class="kt">byte</span><span class="p">,</span> <span class="n">ttl</span> <span class="n">time</span><span class="o">.</span><span class="n">Duration</span><span class="p">)</span> <span class="kt">error</span>
+</code></pre></div></div>
+<p>Notes:</p>
+<ul>
+  <li>Two interfaces are provided; the second allows specifying TTL time (in seconds).</li>
+  <li>Parameters: <code class="language-plaintext highlighter-rouge">context</code>, <code class="language-plaintext highlighter-rouge">hashKey</code>, <code class="language-plaintext highlighter-rouge">sortKey</code>, <code class="language-plaintext highlighter-rouge">value</code>, <code class="language-plaintext highlighter-rouge">ttl</code>.</li>
+  <li>Returns: <code class="language-plaintext highlighter-rouge">error</code>.</li>
+  <li>Errors: network error, timeout, server error, etc.</li>
+</ul>
+
+<h3 id="del">Del</h3>
+<p>Delete a single row.</p>
+<div class="language-go highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c">// Delete the entry for `hashKey` + `sortKey`.</span>
+<span class="c">// `hashKey` : CAN'T be nil or empty.</span>
+<span class="c">// `sortKey` : CAN'T be nil but CAN be empty.</span>
+<span class="n">Del</span><span class="p">(</span><span class="n">ctx</span> <span class="n">context</span><span class="o">.</span><span class="n">Context</span><span class="p">,</span> <span class="n">hashKey</span> <span class="p">[]</span><span class="kt">byte</span><span class="p">,</span> <span class="n">sortKey</span> <span class="p">[]</span><span class="kt">byte</span><span class="p">)</span> <span class="kt">error</span>
+</code></pre></div></div>
+<p>Notes:</p>
+<ul>
+  <li>Parameters: <code class="language-plaintext highlighter-rouge">context</code>, <code class="language-plaintext highlighter-rouge">hashKey</code>, <code class="language-plaintext highlighter-rouge">sortKey</code>.</li>
+  <li>Errors: network error, timeout, server error, etc.</li>
+</ul>
+
+<h3 id="multiget-and-multigetopt">MultiGet and MultiGetOpt</h3>
+<p>Read multiple rows under the same HashKey.</p>
+<div class="language-go highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c">// MultiGet/MultiGetOpt retrieves the multiple entries for `hashKey` + `sortKeys[i]` atomically in one operation.</span>
+<span class="c">// MultiGet is identical to MultiGetOpt except that the former uses DefaultMultiGetOptions as `options`.</span>
+<span class="c">//</span>
+<span class="c">// If `sortKeys` are given empty or nil, all entries under `hashKey` will be retrieved.</span>
+<span class="c">// `hashKey` : CAN'T be nil or empty.</span>
+<span class="c">// `sortKeys[i]` : CAN'T be nil but CAN be empty.</span>
+<span class="c">//</span>
+<span class="c">// The returned key-value pairs are sorted by sort key in ascending order.</span>
+<span class="c">// Returns nil if no entries match.</span>
+<span class="c">// Returns true if all data is fetched, false if only partial data is fetched.</span>
+<span class="c">//</span>
+<span class="n">MultiGet</span><span class="p">(</span><span class="n">ctx</span> <span class="n">context</span><span class="o">.</span><span class="n">Context</span><span class="p">,</span> <span class="n">hashKey</span> <span class="p">[]</span><span class="kt">byte</span><span class="p">,</span> <span class="n">sortKeys</span> <span class="p">[][]</span><span class="kt">byte</span><span class="p">)</span> <span class="p">([]</span><span class="o">*</span><span class="n">KeyValue</span><span class="p">,</span> <span class="kt">bool</span><span class="p">,</span> <span class="kt">error</span><span class="p">)</span>
+<span class="n">MultiGetOpt</span><span class="p">(</span><span class="n">ctx</span> <span class="n">context</span><span class="o">.</span><span class="n">Context</span><span class="p">,</span> <span class="n">hashKey</span> <span class="p">[]</span><span class="kt">byte</span><span class="p">,</span> <span class="n">sortKeys</span> <span class="p">[][]</span><span class="kt">byte</span><span class="p">,</span> <span class="n">options</span> <span class="o">*</span><span class="n">MultiGetOptions</span><span class="p">)</span> <span class="p">([]</span><span class="o">*</span><span class="n">KeyValue</span><span class="p">,</span> <span class="kt">bool</span><span class="p">,</span> <span class="kt">error</span><span class="p">)</span>
+</code></pre></div></div>
+<p>Notes:</p>
+<ul>
+  <li>Parameters: <code class="language-plaintext highlighter-rouge">context</code>, <code class="language-plaintext highlighter-rouge">hashKey</code>, <code class="language-plaintext highlighter-rouge">sortKeys</code>.</li>
+  <li>Returns: <code class="language-plaintext highlighter-rouge">kvs</code>, <code class="language-plaintext highlighter-rouge">bool</code> indicating whether all data fetched, <code class="language-plaintext highlighter-rouge">error</code>.</li>
+  <li>Errors: network error, timeout, server error, etc. If the key does not exist, it does not report an error.</li>
+  <li>The <code class="language-plaintext highlighter-rouge">bool</code> indicates: if <code class="language-plaintext highlighter-rouge">maxFetchCount</code> or <code class="language-plaintext highlighter-rouge">maxFetchSize</code> is set, a single query may return only part of the result. If all data satisfying the conditions are fetched, returns <code class="language-plaintext highlighter-rouge">true</code>; otherwise <code class="language-plaintext highlighter-rouge">false</code>.</li>
+</ul>
+
+<div class="language-go highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c">// MultiGetOptions is the options for MultiGet and MultiGetRange, defaults to DefaultMultiGetOptions.</span>
+<span class="k">type</span> <span class="n">MultiGetOptions</span> <span class="k">struct</span> <span class="p">{</span>
+    <span class="n">StartInclusive</span> <span class="kt">bool</span>
+    <span class="n">StopInclusive</span>  <span class="kt">bool</span>
+    <span class="n">SortKeyFilter</span>  <span class="n">Filter</span>
+
+    <span class="c">// MaxFetchCount and MaxFetchSize limit the size of returned result.</span>
+    <span class="c">// Max count of k-v pairs to be fetched. MaxFetchCount &lt;= 0 means no limit.</span>
+    <span class="n">MaxFetchCount</span> <span class="kt">int</span>
+
+    <span class="c">// Max size of k-v pairs to be fetched. MaxFetchSize &lt;= 0 means no limit.</span>
+    <span class="n">MaxFetchSize</span> <span class="kt">int</span>
+
+    <span class="c">// Query order</span>
+    <span class="n">Reverse</span> <span class="kt">bool</span>
+
+    <span class="c">// Whether to retrieve keys only, without value.</span>
+    <span class="c">// Enabling this option will reduce the network load, improve the RPC latency.</span>
+    <span class="n">NoValue</span> <span class="kt">bool</span>
+<span class="p">}</span>
+
+<span class="c">// Filter is used to filter based on the key.</span>
+<span class="k">type</span> <span class="n">Filter</span> <span class="k">struct</span> <span class="p">{</span>
+    <span class="n">Type</span>    <span class="n">FilterType</span>
+    <span class="n">Pattern</span> <span class="p">[]</span><span class="kt">byte</span>
+<span class="p">}</span>
+
+<span class="c">// Filter types</span>
+<span class="k">const</span> <span class="p">(</span>
+    <span class="n">FilterTypeNoFilter</span>      <span class="o">=</span> <span class="n">FilterType</span><span class="p">(</span><span class="n">rrdb</span><span class="o">.</span><span class="n">FilterType_FT_NO_FILTER</span><span class="p">)</span>
+    <span class="n">FilterTypeMatchAnywhere</span> <span class="o">=</span> <span class="n">FilterType</span><span class="p">(</span><span class="n">rrdb</span><span class="o">.</span><span class="n">FilterType_FT_MATCH_ANYWHERE</span><span class="p">)</span>
+    <span class="n">FilterTypeMatchPrefix</span>   <span class="o">=</span> <span class="n">FilterType</span><span class="p">(</span><span class="n">rrdb</span><span class="o">.</span><span class="n">FilterType_FT_MATCH_PREFIX</span><span class="p">)</span>
+    <span class="n">FilterTypeMatchPostfix</span>  <span class="o">=</span> <span class="n">FilterType</span><span class="p">(</span><span class="n">rrdb</span><span class="o">.</span><span class="n">FilterType_FT_MATCH_POSTFIX</span><span class="p">)</span>
+<span class="p">)</span>
+</code></pre></div></div>
+<p>Notes:</p>
+<ul>
+  <li>MultiGetOptions:
+    <ul>
+      <li>startInclusive: whether to include StartSortKey, default <code class="language-plaintext highlighter-rouge">true</code>.</li>
+      <li>stopInclusive: whether to include StopSortKey, default <code class="language-plaintext highlighter-rouge">false</code>.</li>
+      <li>SortKeyFilter: filter on sort key.</li>
+      <li>maxFetchCount and maxFetchSize limit the amount of data read; maxFetchCount is the maximum number of entries; maxFetchSize is the maximum bytes. Stop reading once either is reached. Defaults: <code class="language-plaintext highlighter-rouge">maxFetchCount=100</code>, <code class="language-plaintext highlighter-rouge">maxFetchSize=100000</code>.</li>
+      <li>noValue: only returns HashKey and SortKey, without Value, default <code class="language-plaintext highlighter-rouge">false</code>.</li>
+      <li>reverse: scan in reverse order. Results are still sorted ascending by sort key within the returned list. Supported since Pegasus Server 1.8.0.</li>
+    </ul>
+  </li>
+  <li>Filter:
+    <ul>
+      <li>type: filtering type: no filter, match anywhere, match prefix, match postfix.</li>
+      <li>Pattern: filtering pattern. Empty is equivalent to no filter.</li>
+    </ul>
+  </li>
+  <li>Filter types description:
+    <ul>
+      <li>FilterTypeNoFilter: no filter</li>
+      <li>FilterTypeMatchAnywhere: match anywhere</li>
+      <li>FilterTypeMatchPrefix: prefix match</li>
+      <li>FilterTypeMatchPostfix: postfix match</li>
+    </ul>
+  </li>
+</ul>
+
+<h3 id="multigetrange-and-multigetrangeopt">MultiGetRange and MultiGetRangeOpt</h3>
+<p>Read multiple rows under the same HashKey with range query.</p>
+<div class="language-go highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c">// MultiGetRange retrieves the multiple entries under `hashKey`, between range (`startSortKey`, `stopSortKey`),</span>
+<span class="c">// atomically in one operation.</span>
+<span class="c">//</span>
+<span class="c">// startSortKey: nil or len(startSortKey) == 0 means start from begin.</span>
+<span class="c">// stopSortKey: nil or len(stopSortKey) == 0 means stop to end.</span>
+<span class="c">// `hashKey` : CAN'T be nil.</span>
+<span class="c">//</span>
+<span class="c">// The returned key-value pairs are sorted by sort keys in ascending order.</span>
+<span class="c">// Returns nil if no entries match.</span>
+<span class="c">// Returns true if all data is fetched, false if only partial data is fetched.</span>
+<span class="n">MultiGetRange</span><span class="p">(</span><span class="n">ctx</span> <span class="n">context</span><span class="o">.</span><span class="n">Context</span><span class="p">,</span> <span class="n">hashKey</span> <span class="p">[]</span><span class="kt">byte</span><span class="p">,</span> <span class="n">startSortKey</span> <span class="p">[]</span><span class="kt">byte</span><span class="p">,</span> <span class="n">stopSortKey</span> <span class="p">[]</span><span class="kt">byte</span><span class="p">)</span> <span class="p">([]</span><span class="o">*</span><span class="n">KeyValue</span><span class="p">,</span> <span class="kt">bool</span><span class="p">,</span> <span class="kt">error</span><span class="p">)</span>
+<span class="n">MultiGetRangeOpt</span><span class="p">(</span><span class="n">ctx</span> <span class="n">context</span><span class="o">.</span><span class="n">Context</span><span class="p">,</span> <span class="n">hashKey</span> <span class="p">[]</span><span class="kt">byte</span><span class="p">,</span> <span class="n">startSortKey</span> <span class="p">[]</span><span class="kt">byte</span><span class="p">,</span> <span class="n">stopSortKey</span> <span class="p">[]</span><span class="kt">byte</span><span class="p">,</span> <span class="n">options</span> <span class="o">*</span><span class="n">MultiGetOptions</span><span class="p">)</span> <span class="p">([]</span><span class="o">*</span><span class="n">KeyValue</span><span class="p">,</span> <span class="kt">bool</span><span class="p">,</span> <span class="kt">error</span><span class="p">)</span>
+</code></pre></div></div>
+<p>Notes:</p>
+<ul>
+  <li>Parameters: <code class="language-plaintext highlighter-rouge">context</code>, <code class="language-plaintext highlighter-rouge">hashKey</code>, <code class="language-plaintext highlighter-rouge">startSortKey</code>, <code class="language-plaintext highlighter-rouge">stopSortKey</code>.</li>
+  <li>Returns: <code class="language-plaintext highlighter-rouge">kvs</code>, <code class="language-plaintext highlighter-rouge">bool</code> indicating whether all data fetched, <code class="language-plaintext highlighter-rouge">error</code>.</li>
+  <li>Errors: network error, timeout, server error, etc. If the key does not exist, it does not report an error.</li>
+</ul>
+
+<h3 id="multiset-and-multisetopt">MultiSet and MultiSetOpt</h3>
+<p>Write multiple rows under the same HashKey.</p>
+<div class="language-go highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c">// MultiSet sets the multiple entries for `hashKey` + `sortKeys[i]` atomically in one operation.</span>
+<span class="c">// `hashKey` / `sortKeys` / `values` : CAN'T be nil or empty.</span>
+<span class="c">// `sortKeys[i]` / `values[i]` : CAN'T be nil but CAN be empty.</span>
+<span class="n">MultiSet</span><span class="p">(</span><span class="n">ctx</span> <span class="n">context</span><span class="o">.</span><span class="n">Context</span><span class="p">,</span> <span class="n">hashKey</span> <span class="p">[]</span><span class="kt">byte</span><span class="p">,</span> <span class="n">sortKeys</span> <span class="p">[][]</span><span class="kt">byte</span><span class="p">,</span> <span class="n">values</span> <span class="p">[][]</span><span class="kt">byte</span><span class="p">)</span> <span class="kt">error</span>
+<span class="n">MultiSetOpt</span><span class="p">(</span><span class="n">ctx</span> <span class="n">context</span><span class="o">.</span><span class="n">Context</span><span class="p">,</span> <span class="n">hashKey</span> <span class="p">[]</span><span class="kt">byte</span><span class="p">,</span> <span class="n">sortKeys</span> <span class="p">[][]</span><span class="kt">byte</span><span class="p">,</span> <span class="n">values</span> <span class="p">[][]</span><span class="kt">byte</span><span class="p">,</span> <span class="n">ttl</span> <span class="n">time</span><span class="o">.</span><span class="n">Duration</span><span class="p">)</span> <span class="kt">error</span>
+</code></pre></div></div>
+<p>Notes:</p>
+<ul>
+  <li><code class="language-plaintext highlighter-rouge">MultiSet</code> uses RocksDB <code class="language-plaintext highlighter-rouge">WriteBatch</code>, so it is atomic.</li>
+  <li>Two interfaces are provided; the second allows specifying TTL.</li>
+  <li>Parameters: <code class="language-plaintext highlighter-rouge">context</code>, <code class="language-plaintext highlighter-rouge">hashKey</code>, <code class="language-plaintext highlighter-rouge">sortKeys</code>, <code class="language-plaintext highlighter-rouge">values</code>, <code class="language-plaintext highlighter-rouge">ttl</code> (optional, seconds).</li>
+  <li>Returns: <code class="language-plaintext highlighter-rouge">error</code>.</li>
+  <li>Errors: network error, timeout, server error, etc.</li>
+</ul>
+
+<h3 id="multidel">MultiDel</h3>
+<div class="language-go highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c">// MultiDel deletes the multiple entries under `hashKey` all atomically in one operation.</span>
+<span class="c">// `hashKey` / `sortKeys` : CAN'T be nil or empty.</span>
+<span class="c">// `sortKeys[i]` : CAN'T be nil but CAN be empty.</span>
+<span class="n">MultiDel</span><span class="p">(</span><span class="n">ctx</span> <span class="n">context</span><span class="o">.</span><span class="n">Context</span><span class="p">,</span> <span class="n">hashKey</span> <span class="p">[]</span><span class="kt">byte</span><span class="p">,</span> <span class="n">sortKeys</span> <span class="p">[][]</span><span class="kt">byte</span><span class="p">)</span> <span class="kt">error</span>
+</code></pre></div></div>
+<p>Notes:</p>
+<ul>
+  <li><code class="language-plaintext highlighter-rouge">MultiDel</code> uses RocksDB <code class="language-plaintext highlighter-rouge">WriteBatch</code>, so it is atomic.</li>
+  <li>Parameters: <code class="language-plaintext highlighter-rouge">context</code>, <code class="language-plaintext highlighter-rouge">hashKey</code>, <code class="language-plaintext highlighter-rouge">sortKeys</code>.</li>
+  <li>Returns: <code class="language-plaintext highlighter-rouge">error</code>.</li>
+  <li>Errors: network error, timeout, server error, etc.</li>
+</ul>
+
+<h3 id="delrange-and-delrangeopt">DelRange and DelRangeOpt</h3>
+<div class="language-go highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c">// DelRange /DelRangeOpt deletes the multiple entries under `hashKey`, between range (`startSortKey`, `stopSortKey`),</span>
+<span class="c">// atomically in one operation.</span>
+<span class="c">// DelRange is identical to DelRangeOpt except that the former uses DefaultDelRangeOptions as `options`.</span>
+<span class="c">//</span>
+<span class="c">// startSortKey: nil or len(startSortKey) == 0 means to start from the first entry in the sorted key range.</span>
+<span class="c">// stopSortKey: nil or len(stopSortKey) == 0 means to stop at the last entry in the sorted key range.</span>
+<span class="c">// `hashKey` : CAN'T be nil or empty.</span>
+<span class="n">DelRange</span><span class="p">(</span><span class="n">ctx</span> <span class="n">context</span><span class="o">.</span><span class="n">Context</span><span class="p">,</span> <span class="n">hashKey</span> <span class="p">[]</span><span class="kt">byte</span><span class="p">,</span> <span class="n">startSortKey</span> <span class="p">[]</span><span class="kt">byte</span><span class="p">,</span> <span class="n">stopSortKey</span> <span class="p">[]</span><span class="kt">byte</span><span class="p">)</span> <span class="kt">error</span>
+<span class="n">DelRangeOpt</span><span class="p">(</span><span class="n">ctx</span> <span class="n">context</span><span class="o">.</span><span class="n">Context</span><span class="p">,</span> <span class="n">hashKey</span> <span class="p">[]</span><span class="kt">byte</span><span class="p">,</span> <span class="n">startSortKey</span> <span class="p">[]</span><span class="kt">byte</span><span class="p">,</span> <span class="n">stopSortKey</span> <span class="p">[]</span><span class="kt">byte</span><span class="p">,</span> <span class="n">options</span> <span class="o">*</span><span class="n">DelRangeOptions</span><span class="p">)</span> <span class="kt">error</span>
+
+<span class="c">// DelRangeOptions is the options for DelRange, defaults to DefaultDelRangeOptions.</span>
+<span class="k">type</span> <span class="n">DelRangeOptions</span> <span class="k">struct</span> <span class="p">{</span>
+    <span class="n">nextSortKey</span>    <span class="p">[]</span><span class="kt">byte</span>
+    <span class="n">StartInclusive</span> <span class="kt">bool</span>
+    <span class="n">StopInclusive</span>  <span class="kt">bool</span>
+    <span class="n">SortKeyFilter</span>  <span class="n">Filter</span>
+<span class="p">}</span>
+</code></pre></div></div>
+<p>Notes:</p>
+<ul>
+  <li><code class="language-plaintext highlighter-rouge">DelRange</code> internally calls <code class="language-plaintext highlighter-rouge">MultiDel</code> multiple times. Each <code class="language-plaintext highlighter-rouge">MultiDel</code> is atomic, but the overall <code class="language-plaintext highlighter-rouge">DelRange</code> may not be atomic.</li>
+  <li>Parameters: <code class="language-plaintext highlighter-rouge">context</code>, <code class="language-plaintext highlighter-rouge">hashKey</code>, <code class="language-plaintext highlighter-rouge">startSortKey</code>, <code class="language-plaintext highlighter-rouge">stopSortKey</code>.</li>
+  <li>Returns: <code class="language-plaintext highlighter-rouge">error</code>.</li>
+  <li>Errors: network error, timeout, server error, etc.</li>
+  <li><code class="language-plaintext highlighter-rouge">DelRangeOptions</code>:
+    <ul>
+      <li><code class="language-plaintext highlighter-rouge">nextSortKey</code>: deletion proceeds in ascending order of sort keys. If deletion fails midway, the first undeleted sort key is saved into <code class="language-plaintext highlighter-rouge">nextSortKey</code>.</li>
+      <li><code class="language-plaintext highlighter-rouge">StartInclusive</code>: whether to include <code class="language-plaintext highlighter-rouge">startSortKey</code>.</li>
+      <li><code class="language-plaintext highlighter-rouge">StopInclusive</code>: whether to include <code class="language-plaintext highlighter-rouge">stopSortKey</code>.</li>
+      <li><code class="language-plaintext highlighter-rouge">SortKeyFilter</code>: filter sort keys.</li>
+    </ul>
+  </li>
+</ul>
+
+<h3 id="ttl">TTL</h3>
+<p>Get TTL of a key.</p>
+<div class="language-go highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c">// Returns ttl(time-to-live) in seconds: -1 if ttl is not set; -2 if entry doesn't exist.</span>
+<span class="c">// `hashKey` : CAN'T be nil or empty.</span>
+<span class="c">// `sortKey` : CAN'T be nil but CAN be empty.</span>
+<span class="n">TTL</span><span class="p">(</span><span class="n">ctx</span> <span class="n">context</span><span class="o">.</span><span class="n">Context</span><span class="p">,</span> <span class="n">hashKey</span> <span class="p">[]</span><span class="kt">byte</span><span class="p">,</span> <span class="n">sortKey</span> <span class="p">[]</span><span class="kt">byte</span><span class="p">)</span> <span class="p">(</span><span class="kt">int</span><span class="p">,</span> <span class="kt">error</span><span class="p">)</span>
+</code></pre></div></div>
+<p>Notes:</p>
+<ul>
+  <li>Parameters: <code class="language-plaintext highlighter-rouge">context</code>, <code class="language-plaintext highlighter-rouge">hashKey</code>, <code class="language-plaintext highlighter-rouge">sortKey</code>.</li>
+  <li>Returns: <code class="language-plaintext highlighter-rouge">int</code>, <code class="language-plaintext highlighter-rouge">error</code>.</li>
+  <li>Errors: network error, timeout, server error, etc.</li>
+</ul>
+
+<h3 id="exist">Exist</h3>
+<p>Check whether a key exists.</p>
+<div class="language-go highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c">// Check value existence for the entry for `hashKey` + `sortKey`.</span>
+<span class="c">// `hashKey`: CAN'T be nil or empty.</span>
+<span class="n">Exist</span><span class="p">(</span><span class="n">ctx</span> <span class="n">context</span><span class="o">.</span><span class="n">Context</span><span class="p">,</span> <span class="n">hashKey</span> <span class="p">[]</span><span class="kt">byte</span><span class="p">,</span> <span class="n">sortKey</span> <span class="p">[]</span><span class="kt">byte</span><span class="p">)</span> <span class="p">(</span><span class="kt">bool</span><span class="p">,</span> <span class="kt">error</span><span class="p">)</span>
+</code></pre></div></div>
+<p>Notes:</p>
+<ul>
+  <li>Parameters: <code class="language-plaintext highlighter-rouge">context</code>, <code class="language-plaintext highlighter-rouge">hashKey</code>, <code class="language-plaintext highlighter-rouge">sortKey</code>.</li>
+  <li>Returns: <code class="language-plaintext highlighter-rouge">bool</code>, <code class="language-plaintext highlighter-rouge">error</code>.</li>
+  <li>Errors: network error, timeout, server error, etc.</li>
+</ul>
+
+<h3 id="getscanner">GetScanner</h3>
+<p>Get an iterator to scan all data under a HashKey (local scan).</p>
+<div class="language-go highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c">// Get Scanner for {startSortKey, stopSortKey} within hashKey.</span>
+<span class="c">// startSortKey: nil or len(startSortKey) == 0 means start from begin.</span>
+<span class="c">// stopSortKey: nil or len(stopSortKey) == 0 means stop to end.</span>
+<span class="c">// `hashKey`: CAN'T be nil or empty.</span>
+<span class="n">GetScanner</span><span class="p">(</span><span class="n">ctx</span> <span class="n">context</span><span class="o">.</span><span class="n">Context</span><span class="p">,</span> <span class="n">hashKey</span> <span class="p">[]</span><span class="kt">byte</span><span class="p">,</span> <span class="n">startSortKey</span> <span class="p">[]</span><span class="kt">byte</span><span class="p">,</span> <span class="n">stopSortKey</span> <span class="p">[]</span><span class="kt">byte</span><span class="p">,</span> <span class="n">options</span> <span class="o">*</span><span class="n">ScannerOptions</span><span class="p">)</span> <span class="p">(</span><span class="n">Scanner</span><span class="p">,</span> <span class="kt">error</span><span class="p">)</span>
+
+<span class="c">// ScannerOptions is the options for GetScanner and GetUnorderedScanners.</span>
+<span class="k">type</span> <span class="n">ScannerOptions</span> <span class="k">struct</span> <span class="p">{</span>
+    <span class="n">BatchSize</span>      <span class="kt">int</span>  <span class="c">// internal buffer batch size</span>
+    <span class="n">StartInclusive</span> <span class="kt">bool</span> <span class="c">// if the startSortKey is included</span>
+    <span class="n">StopInclusive</span>  <span class="kt">bool</span> <span class="c">// if the stopSortKey is included</span>
+    <span class="n">HashKeyFilter</span>  <span class="n">Filter</span>
+    <span class="n">SortKeyFilter</span>  <span class="n">Filter</span>
+    <span class="n">NoValue</span>        <span class="kt">bool</span> <span class="c">// only fetch hash_key and sort_key, but not fetch value</span>
+<span class="p">}</span>
+</code></pre></div></div>
+<p>Notes:</p>
+<ul>
+  <li>Parameters: <code class="language-plaintext highlighter-rouge">context</code>, <code class="language-plaintext highlighter-rouge">hashKey</code>, <code class="language-plaintext highlighter-rouge">startSortKey</code>, <code class="language-plaintext highlighter-rouge">stopSortKey</code>, <code class="language-plaintext highlighter-rouge">ScannerOptions</code>.
+    <ul>
+      <li><code class="language-plaintext highlighter-rouge">startSortKey</code> and <code class="language-plaintext highlighter-rouge">stopSortKey</code> specify the range; use <code class="language-plaintext highlighter-rouge">ScannerOptions</code> to configure open/closed intervals.</li>
+      <li>If <code class="language-plaintext highlighter-rouge">startSortKey</code> is nil, start from the beginning; if <code class="language-plaintext highlighter-rouge">stopSortKey</code> is nil, scan to the end.</li>
+    </ul>
+  </li>
+  <li><code class="language-plaintext highlighter-rouge">ScannerOptions</code>:
+    <ul>
+      <li><code class="language-plaintext highlighter-rouge">BatchSize</code>: number of entries per batch fetched from server, default 1000.</li>
+      <li><code class="language-plaintext highlighter-rouge">StartInclusive</code>: whether to include <code class="language-plaintext highlighter-rouge">startSortKey</code>, default <code class="language-plaintext highlighter-rouge">true</code>.</li>
+      <li><code class="language-plaintext highlighter-rouge">StopInclusive</code>: whether to include <code class="language-plaintext highlighter-rouge">stopSortKey</code>, default <code class="language-plaintext highlighter-rouge">false</code>.</li>
+      <li><code class="language-plaintext highlighter-rouge">HashKeyFilter</code>: filter on hash key, default none.</li>
+      <li><code class="language-plaintext highlighter-rouge">SortKeyFilter</code>: filter on sort key, default none.</li>
+      <li><code class="language-plaintext highlighter-rouge">NoValue</code>: return only hash and sort keys without values, default <code class="language-plaintext highlighter-rouge">false</code>.</li>
+    </ul>
+  </li>
+  <li>Returns: <code class="language-plaintext highlighter-rouge">Scanner</code>, <code class="language-plaintext highlighter-rouge">error</code>.</li>
+  <li>Errors: network error, timeout, server error, etc.</li>
+</ul>
+
+<h3 id="getunorderedscanners">GetUnorderedScanners</h3>
+<p>Get iterators to scan the entire table (global scan).</p>
+<div class="language-go highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c">// Get Scanners for all data in pegasus, the count of scanners will</span>
+<span class="c">// be no more than maxSplitCount</span>
+<span class="n">GetUnorderedScanners</span><span class="p">(</span><span class="n">ctx</span> <span class="n">context</span><span class="o">.</span><span class="n">Context</span><span class="p">,</span> <span class="n">maxSplitCount</span> <span class="kt">int</span><span class="p">,</span> <span class="n">options</span> <span class="o">*</span><span class="n">ScannerOptions</span><span class="p">)</span> <span class="p">([]</span><span class="n">Scanner</span><span class="p">,</span> <span class="kt">error</span><span class="p">)</span>
+</code></pre></div></div>
+<p>Notes:</p>
+<ul>
+  <li>Parameters: <code class="language-plaintext highlighter-rouge">context</code>, <code class="language-plaintext highlighter-rouge">maxSplitCount</code>, <code class="language-plaintext highlighter-rouge">ScannerOptions</code>.
+    <ul>
+      <li><code class="language-plaintext highlighter-rouge">maxSplitCount</code> determines the number of returned iterators. When multiple iterators are returned, each can access a portion of the table. This enables concurrent scanning or use in MapReduce. Set to 1 if multiple iterators are not needed.</li>
+    </ul>
+  </li>
+  <li>Returns: array of <code class="language-plaintext highlighter-rouge">Scanner</code>, <code class="language-plaintext highlighter-rouge">error</code>.</li>
+  <li>Errors: network error, timeout, server error, etc.</li>
+</ul>
+
+<h3 id="next">Next</h3>
+<p>Fetch the next entry during scan.</p>
+<div class="language-go highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c">// Scanner defines the interface of client-side scanning.</span>
+<span class="k">type</span> <span class="n">Scanner</span> <span class="k">interface</span> <span class="p">{</span>
+    <span class="c">// Grabs the next entry.</span>
+    <span class="n">Next</span><span class="p">(</span><span class="n">ctx</span> <span class="n">context</span><span class="o">.</span><span class="n">Context</span><span class="p">)</span> <span class="p">(</span><span class="n">completed</span> <span class="kt">bool</span><span class="p">,</span> <span class="n">hashKey</span> <span class="p">[]</span><span class="kt">byte</span><span class="p">,</span> <span class="n">sortKey</span> <span class="p">[]</span><span class="kt">byte</span><span class="p">,</span> <span class="n">value</span> <span class="p">[]</span><span class="kt">byte</span><span class="p">,</span> <span class="n">err</span> <span class="kt">error</span><span class="p">)</span>
+
+    <span class="n">Close</span><span class="p">()</span> <span class="kt">error</span>
+<span class="p">}</span>
+</code></pre></div></div>
+<p>Notes:</p>
+<ul>
+  <li>Parameters: <code class="language-plaintext highlighter-rouge">context</code>.</li>
+  <li>Returns: <code class="language-plaintext highlighter-rouge">completed</code>, <code class="language-plaintext highlighter-rouge">hashKey</code>, <code class="language-plaintext highlighter-rouge">sortKey</code>, <code class="language-plaintext highlighter-rouge">value</code>, <code class="language-plaintext highlighter-rouge">err</code>.
+    <ul>
+      <li><code class="language-plaintext highlighter-rouge">completed</code>: <code class="language-plaintext highlighter-rouge">true</code> indicates scan finished.</li>
+    </ul>
+  </li>
+  <li>Errors: network error, timeout, server error, etc.</li>
+</ul>
+
+<h3 id="checkandset">CheckAndSet</h3>
+<p>Atomic CAS (Compare-And-Swap) on data under a single HashKey (single-row atomic operation). See <a href="/api/single-atomic">Single Row Atomic Operations</a>.
+This operation first checks the value of a SortKey (<code class="language-plaintext highlighter-rouge">checkSortKey</code>) against some condition:</p>
+<ul>
+  <li>If the condition is met, set the value of another SortKey (<code class="language-plaintext highlighter-rouge">setSortKey</code>) to the new value.</li>
+  <li>If the condition is not met, do not perform the set operation.</li>
+</ul>
+
+<p><code class="language-plaintext highlighter-rouge">checkSortKey</code> and <code class="language-plaintext highlighter-rouge">setSortKey</code> can be identical or different.
+You can set <code class="language-plaintext highlighter-rouge">CheckAndSetOptions.ReturnCheckValue</code> to return the value of <code class="language-plaintext highlighter-rouge">checkSortKey</code>. If <code class="language-plaintext highlighter-rouge">checkSortKey</code> and <code class="language-plaintext highlighter-rouge">setSortKey</code> are the same and the set succeeds, the returned value is the old value before setting.</p>
+
+<div class="language-go highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c">// Atomically check and set value by key from the cluster. The value will be set if and only if check passed.</span>
+<span class="c">// The sort key for checking and setting can be the same or different.</span>
+<span class="c">//</span>
+<span class="c">// `checkSortKey`: The sort key for checking.</span>
+<span class="c">// `setSortKey`: The sort key for setting.</span>
+<span class="c">// `checkOperand`:</span>
+<span class="n">CheckAndSet</span><span class="p">(</span><span class="n">ctx</span> <span class="n">context</span><span class="o">.</span><span class="n">Context</span><span class="p">,</span> <span class="n">hashKey</span> <span class="p">[]</span><span class="kt">byte</span><span class="p">,</span> <span class="n">checkSortKey</span> <span class="p">[]</span><span class="kt">byte</span><span class="p">,</span> <span class="n">checkType</span> <span class="n">CheckType</span><span class="p">,</span>
+    <span class="n">checkOperand</span> <span class="p">[]</span><span class="kt">byte</span><span class="p">,</span> <span class="n">setSortKey</span> <span class="p">[]</span><span class="kt">byte</span><span class="p">,</span> <span class="n">setValue</span> <span class="p">[]</span><span class="kt">byte</span><span class="p">,</span> <span class="n">options</span> <span class="o">*</span><span class="n">CheckAndSetOptions</span><span class="p">)</span> <span class="p">(</span><span class="o">*</span><span class="n">CheckAndSetResult</span><span class="p">,</span> <span class="kt">error</span><span class="p">)</span>
+
+<span class="c">// The value checking types</span>
+<span class="k">const</span> <span class="p">(</span>
+    <span class="n">CheckTypeNoCheck</span> <span class="o">=</span> <span class="n">CheckType</span><span class="p">(</span><span class="n">rrdb</span><span class="o">.</span><span class="n">CasCheckType_CT_NO_CHECK</span><span class="p">)</span>
+
+    <span class="c">// existence</span>
+    <span class="n">CheckTypeValueNotExist</span>        <span class="o">=</span> <span class="n">CheckType</span><span class="p">(</span><span class="n">rrdb</span><span class="o">.</span><span class="n">CasCheckType_CT_VALUE_NOT_EXIST</span><span class="p">)</span>          <span class="c">// value is  not exist</span>
+    <span class="n">CheckTypeValueNotExistOrEmpty</span> <span class="o">=</span> <span class="n">CheckType</span><span class="p">(</span><span class="n">rrdb</span><span class="o">.</span><span class="n">CasCheckType_CT_VALUE_NOT_EXIST_OR_EMPTY</span><span class="p">)</span> <span class="c">// value is  not exist or value is empty</span>
+    <span class="n">CheckTypeValueExist</span>           <span class="o">=</span> <span class="n">CheckType</span><span class="p">(</span><span class="n">rrdb</span><span class="o">.</span><span class="n">CasCheckType_CT_VALUE_EXIST</span><span class="p">)</span>              <span class="c">// value is  exist</span>
+    <span class="n">CheckTypeValueNotEmpty</span>        <span class="o">=</span> <span class="n">CheckType</span><span class="p">(</span><span class="n">rrdb</span><span class="o">.</span><span class="n">CasCheckType_CT_VALUE_NOT_EMPTY</span><span class="p">)</span>          <span class="c">// value is  exist and not empty</span>
+
+    <span class="c">// match</span>
+    <span class="n">CheckTypeMatchAnywhere</span> <span class="o">=</span> <span class="n">CheckType</span><span class="p">(</span><span class="n">rrdb</span><span class="o">.</span><span class="n">CasCheckType_CT_VALUE_MATCH_ANYWHERE</span><span class="p">)</span> <span class="c">// operand matches  anywhere in value</span>
+    <span class="n">CheckTypeMatchPrefix</span>   <span class="o">=</span> <span class="n">CheckType</span><span class="p">(</span><span class="n">rrdb</span><span class="o">.</span><span class="n">CasCheckType_CT_VALUE_MATCH_PREFIX</span><span class="p">)</span>   <span class="c">// operand matches  prefix in value</span>
+    <span class="n">CheckTypeMatchPostfix</span>  <span class="o">=</span> <span class="n">CheckType</span><span class="p">(</span><span class="n">rrdb</span><span class="o">.</span><span class="n">CasCheckType_CT_VALUE_MATCH_POSTFIX</span><span class="p">)</span>  <span class="c">// operand matches  postfix in value</span>
+
+    <span class="c">// bytes compare</span>
+    <span class="n">CheckTypeBytesLess</span>           <span class="o">=</span> <span class="n">CheckType</span><span class="p">(</span><span class="n">rrdb</span><span class="o">.</span><span class="n">CasCheckType_CT_VALUE_BYTES_LESS</span><span class="p">)</span>             <span class="c">// bytes  compare: value &lt; operand</span>
+    <span class="n">CheckTypeBytesLessOrEqual</span>    <span class="o">=</span> <span class="n">CheckType</span><span class="p">(</span><span class="n">rrdb</span><span class="o">.</span><span class="n">CasCheckType_CT_VALUE_BYTES_LESS_OR_EQUAL</span><span class="p">)</span>    <span class="c">// bytes  compare: value &lt;= operand</span>
+    <span class="n">CheckTypeBytesEqual</span>          <span class="o">=</span> <span class="n">CheckType</span><span class="p">(</span><span class="n">rrdb</span><span class="o">.</span><span class="n">CasCheckType_CT_VALUE_BYTES_EQUAL</span><span class="p">)</span>            <span class="c">// bytes  compare: value == operand</span>
+    <span class="n">CheckTypeBytesGreaterOrEqual</span> <span class="o">=</span> <span class="n">CheckType</span><span class="p">(</span><span class="n">rrdb</span><span class="o">.</span><span class="n">CasCheckType_CT_VALUE_BYTES_GREATER_OR_EQUAL</span><span class="p">)</span> <span class="c">// bytes  compare: value &gt;= operand</span>
+    <span class="n">CheckTypeBytesGreater</span>        <span class="o">=</span> <span class="n">CheckType</span><span class="p">(</span><span class="n">rrdb</span><span class="o">.</span><span class="n">CasCheckType_CT_VALUE_BYTES_GREATER</span><span class="p">)</span>          <span class="c">// bytes  compare: value &gt; operand</span>
+
+    <span class="c">// int compare: first transfer bytes to int64; then compare by int value</span>
+    <span class="n">CheckTypeIntLess</span>           <span class="o">=</span> <span class="n">CheckType</span><span class="p">(</span><span class="n">rrdb</span><span class="o">.</span><span class="n">CasCheckType_CT_VALUE_INT_LESS</span><span class="p">)</span>             <span class="c">// int  compare: value &lt; operand</span>
+    <span class="n">CheckTypeIntLessOrEqual</span>    <span class="o">=</span> <span class="n">CheckType</span><span class="p">(</span><span class="n">rrdb</span><span class="o">.</span><span class="n">CasCheckType_CT_VALUE_INT_LESS_OR_EQUAL</span><span class="p">)</span>    <span class="c">// int  compare: value &lt;= operand</span>
+    <span class="n">CheckTypeIntEqual</span>          <span class="o">=</span> <span class="n">CheckType</span><span class="p">(</span><span class="n">rrdb</span><span class="o">.</span><span class="n">CasCheckType_CT_VALUE_INT_EQUAL</span><span class="p">)</span>            <span class="c">// int  compare: value == operand</span>
+    <span class="n">CheckTypeIntGreaterOrEqual</span> <span class="o">=</span> <span class="n">CheckType</span><span class="p">(</span><span class="n">rrdb</span><span class="o">.</span><span class="n">CasCheckType_CT_VALUE_INT_GREATER_OR_EQUAL</span><span class="p">)</span> <span class="c">// int  compare: value &gt;= operand</span>
+    <span class="n">CheckTypeIntGreater</span>        <span class="o">=</span> <span class="n">CheckType</span><span class="p">(</span><span class="n">rrdb</span><span class="o">.</span><span class="n">CasCheckType_CT_VALUE_BYTES_GREATER</span><span class="p">)</span>        <span class="c">// int  compare: value &gt; operand</span>
+<span class="p">)</span>
+
+<span class="c">// CheckAndSetOptions is the options of a CAS.</span>
+<span class="k">type</span> <span class="n">CheckAndSetOptions</span> <span class="k">struct</span> <span class="p">{</span>
+    <span class="n">SetValueTTLSeconds</span> <span class="kt">int</span>  <span class="c">// time to live in seconds of the set value, 0 means no ttl.</span>
+    <span class="n">ReturnCheckValue</span>   <span class="kt">bool</span> <span class="c">// if return the check value in results.</span>
+<span class="p">}</span>
+
+<span class="c">// CheckAndSetResult is the result of a CAS.</span>
+<span class="k">type</span> <span class="n">CheckAndSetResult</span> <span class="k">struct</span> <span class="p">{</span>
+    <span class="c">// true if set value succeed.</span>
+    <span class="n">SetSucceed</span> <span class="kt">bool</span>
+
+    <span class="c">// the actual value if set value failed; null means the actual value is not exist.</span>
+    <span class="n">CheckValue</span> <span class="p">[]</span><span class="kt">byte</span>
+
+    <span class="c">// if the check value is exist; can be used only when checkValueReturned is true.</span>
+    <span class="n">CheckValueExist</span> <span class="kt">bool</span>
+
+    <span class="c">// return the check value if exist; can be used only when checkValueExist is true.</span>
+    <span class="n">CheckValueReturned</span> <span class="kt">bool</span>
+<span class="p">}</span>
+</code></pre></div></div>
+<p>Notes:</p>
+<ul>
+  <li>Parameters: <code class="language-plaintext highlighter-rouge">context</code>, <code class="language-plaintext highlighter-rouge">hashKey</code>, <code class="language-plaintext highlighter-rouge">checkSortKey</code>, <code class="language-plaintext highlighter-rouge">checkType</code>, <code class="language-plaintext highlighter-rouge">checkOperand</code>, <code class="language-plaintext highlighter-rouge">setSortKey</code>, <code class="language-plaintext highlighter-rouge">setValue</code>, <code class="language-plaintext highlighter-rouge">CheckAndSetOptions</code>.
+    <ul>
+      <li><code class="language-plaintext highlighter-rouge">checkSortKey</code>, <code class="language-plaintext highlighter-rouge">checkType</code>, <code class="language-plaintext highlighter-rouge">checkOperand</code>: specify the check condition.</li>
+      <li><code class="language-plaintext highlighter-rouge">setSortKey</code>, <code class="language-plaintext highlighter-rouge">setValue</code>: specify the new value to set once the condition passes.</li>
+      <li><code class="language-plaintext highlighter-rouge">options</code>:
+        <ul>
+          <li><code class="language-plaintext highlighter-rouge">SetValueTTLSeconds</code>: TTL of the new value; must be <code class="language-plaintext highlighter-rouge">&gt;= 0</code>, <code class="language-plaintext highlighter-rouge">0</code> means no TTL; <code class="language-plaintext highlighter-rouge">&lt; 0</code> returns error.</li>
+          <li><code class="language-plaintext highlighter-rouge">ReturnCheckValue</code>: whether to return the value of <code class="language-plaintext highlighter-rouge">checkSortKey</code>.</li>
+        </ul>
+      </li>
+    </ul>
+  </li>
+  <li>Returns: <code class="language-plaintext highlighter-rouge">CheckAndSetResult</code>, <code class="language-plaintext highlighter-rouge">error</code>.
+    <ul>
+      <li><code class="language-plaintext highlighter-rouge">SetSucceed</code>: whether set succeeded.</li>
+      <li><code class="language-plaintext highlighter-rouge">CheckValue</code>: value of <code class="language-plaintext highlighter-rouge">checkSortKey</code>; meaningful only when <code class="language-plaintext highlighter-rouge">checkValueExist = true</code>.</li>
+      <li><code class="language-plaintext highlighter-rouge">CheckValueExist</code>: whether <code class="language-plaintext highlighter-rouge">checkSortKey</code> exists; meaningful only when <code class="language-plaintext highlighter-rouge">checkValueReturned = true</code>.</li>
+      <li><code class="language-plaintext highlighter-rouge">CheckValueReturned</code>: whether <code class="language-plaintext highlighter-rouge">checkSortKey</code> value was returned.</li>
+    </ul>
+  </li>
+  <li>Errors: network error, timeout, server error, etc.</li>
+</ul>
+
+<h3 id="sortkeycount">SortKeyCount</h3>
+<p>Get the number of sort keys under a HashKey.</p>
+<div class="language-go highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c">// Returns the count of sortkeys under hashkey.</span>
+<span class="c">// `hashKey`: CAN'T be nil or empty.</span>
+<span class="n">SortKeyCount</span><span class="p">(</span><span class="n">ctx</span> <span class="n">context</span><span class="o">.</span><span class="n">Context</span><span class="p">,</span> <span class="n">hashKey</span> <span class="p">[]</span><span class="kt">byte</span><span class="p">)</span> <span class="p">(</span><span class="kt">int64</span><span class="p">,</span> <span class="kt">error</span><span class="p">)</span>
+</code></pre></div></div>
+<p>Notes:</p>
+<ul>
+  <li>Parameters: <code class="language-plaintext highlighter-rouge">context</code>, <code class="language-plaintext highlighter-rouge">hashKey</code>.</li>
+  <li>Returns: the count of sort keys under the HashKey.</li>
+  <li>Errors: network error, timeout, server error, etc.</li>
+</ul>
+
+<h3 id="incr">Incr</h3>
+<p>Atomic increment/decrement on a single row. See <a href="/api/single-atomic">Single Row Atomic Operations</a>.
+This operation reads the value as a byte string, converts it to <code class="language-plaintext highlighter-rouge">int64</code>, adds <code class="language-plaintext highlighter-rouge">increment</code>, converts the result back to a byte string, and sets it as the new value.
+When <code class="language-plaintext highlighter-rouge">increment</code> is positive, it is atomic increment; when negative, atomic decrement.</p>
+<div class="language-go highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c">// Atomically increment value by key from the cluster.</span>
+<span class="c">// Returns the new value.</span>
+<span class="c">// `hashKey` / `sortKeys` : CAN'T be nil or empty</span>
+<span class="n">Incr</span><span class="p">(</span><span class="n">ctx</span> <span class="n">context</span><span class="o">.</span><span class="n">Context</span><span class="p">,</span> <span class="n">hashKey</span> <span class="p">[]</span><span class="kt">byte</span><span class="p">,</span> <span class="n">sortKey</span> <span class="p">[]</span><span class="kt">byte</span><span class="p">,</span> <span class="n">increment</span> <span class="kt">int64</span><span class="p">)</span> <span class="p">(</span><span class="kt">int64</span><span class="p">,</span> <span class="kt">error</span><span class="p">)</span>
+</code></pre></div></div>
+<p>Notes:</p>
+<ul>
+  <li>Parameters: <code class="language-plaintext highlighter-rouge">context</code>, <code class="language-plaintext highlighter-rouge">hashKey</code>, <code class="language-plaintext highlighter-rouge">sortKey</code>, <code class="language-plaintext highlighter-rouge">increment</code>.</li>
+  <li>Returns: new value after operation, <code class="language-plaintext highlighter-rouge">error</code>.</li>
+  <li>Errors: network error, timeout, server error, etc. Also errors in the following cases:
+    <ul>
+      <li>Old value cannot be converted to <code class="language-plaintext highlighter-rouge">int64</code> (invalid number or overflow).</li>
+      <li>Result of old value plus <code class="language-plaintext highlighter-rouge">increment</code> overflows <code class="language-plaintext highlighter-rouge">int64</code>.</li>
+    </ul>
+  </li>
+  <li>Other:
+    <ul>
+      <li>If old value does not exist, treat it as <code class="language-plaintext highlighter-rouge">0</code>, so new value equals <code class="language-plaintext highlighter-rouge">increment</code>.</li>
+      <li>TTL: If old value exists, new value keeps the same TTL as old; if old value does not exist, new value has no TTL.</li>
+    </ul>
+  </li>
+</ul>
+
+<h3 id="batchget">BatchGet</h3>
+<p>Read a batch of keys; a batched wrapper of <code class="language-plaintext highlighter-rouge">Get</code>. This method concurrently sends asynchronous requests to the server and waits for results. If any request fails, it aborts early and returns error. When error is returned, <code class="language-plaintext highlighter-rouge">values</code> are undefined.</p>
+<div class="language-go highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c">// Gets values from a batch of CompositeKeys. Internally it distributes each key</span>
+<span class="c">// into a Get call and wait until all returned.</span>
+<span class="c">//</span>
+<span class="c">// `keys`: CAN'T be nil or empty, `hashkey` in `keys` can't be nil or empty either.</span>
+<span class="c">// The returned values are in sequence order of each key, aka `keys[i] =&gt; values[i]`.</span>
+<span class="c">// If keys[i] is not found, or the Get failed, values[i] is set nil.</span>
+<span class="c">//</span>
+<span class="c">// Returns a non-nil `err` once there's a failed Get call. It doesn't mean all calls failed.</span>
+<span class="c">//</span>
+<span class="c">// NOTE: this operation is not guaranteed to be atomic</span>
+<span class="n">BatchGet</span><span class="p">(</span><span class="n">ctx</span> <span class="n">context</span><span class="o">.</span><span class="n">Context</span><span class="p">,</span> <span class="n">keys</span> <span class="p">[]</span><span class="n">CompositeKey</span><span class="p">)</span> <span class="p">(</span><span class="n">values</span> <span class="p">[][]</span><span class="kt">byte</span><span class="p">,</span> <span class="n">err</span> <span class="kt">error</span><span class="p">)</span>
+</code></pre></div></div>
+<p>Notes:</p>
+<ul>
+  <li>Parameters: <code class="language-plaintext highlighter-rouge">context</code>, <code class="language-plaintext highlighter-rouge">CompositeKey</code>.</li>
+  <li>Returns: <code class="language-plaintext highlighter-rouge">values</code>, <code class="language-plaintext highlighter-rouge">error</code>. If read succeeds, <code class="language-plaintext highlighter-rouge">values[i]</code> holds the result for <code class="language-plaintext highlighter-rouge">keys[i]</code>; if value does not exist, it is <code class="language-plaintext highlighter-rouge">nil</code>.</li>
+  <li>Errors: network error, timeout, server error, etc.</li>
+  <li>Other:
+    <ul>
+      <li>This method is not atomic; partial success and partial failure may occur. An error is returned if any call fails.</li>
+    </ul>
+  </li>
+</ul>
 
                 </div>
             </section>
@@ -777,7 +1331,37 @@
     </span>
     Table of contents
 </p>
-
+<ul class="menu-list">
+  <li><a href="#get-the-go-client">Get the Go Client</a></li>
+  <li><a href="#client-configuration">Client Configuration</a></li>
+  <li><a href="#api-reference">API Reference</a>
+    <ul>
+      <li><a href="#create-client-instance">Create Client instance</a></li>
+      <li><a href="#create-tableconnector-instance">Create TableConnector instance</a></li>
+      <li><a href="#tableconnector-api">TableConnector API</a>
+        <ul>
+          <li><a href="#get">Get</a></li>
+          <li><a href="#set-and-setttl">Set and SetTTL</a></li>
+          <li><a href="#del">Del</a></li>
+          <li><a href="#multiget-and-multigetopt">MultiGet and MultiGetOpt</a></li>
+          <li><a href="#multigetrange-and-multigetrangeopt">MultiGetRange and MultiGetRangeOpt</a></li>
+          <li><a href="#multiset-and-multisetopt">MultiSet and MultiSetOpt</a></li>
+          <li><a href="#multidel">MultiDel</a></li>
+          <li><a href="#delrange-and-delrangeopt">DelRange and DelRangeOpt</a></li>
+          <li><a href="#ttl">TTL</a></li>
+          <li><a href="#exist">Exist</a></li>
+          <li><a href="#getscanner">GetScanner</a></li>
+          <li><a href="#getunorderedscanners">GetUnorderedScanners</a></li>
+          <li><a href="#next">Next</a></li>
+          <li><a href="#checkandset">CheckAndSet</a></li>
+          <li><a href="#sortkeycount">SortKeyCount</a></li>
+          <li><a href="#incr">Incr</a></li>
+          <li><a href="#batchget">BatchGet</a></li>
+        </ul>
+      </li>
+    </ul>
+  </li>
+</ul>
 
         </div>
     </div>

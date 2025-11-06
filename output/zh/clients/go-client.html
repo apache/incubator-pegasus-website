@@ -16,15 +16,15 @@
 <meta name="generator" content="Jekyll v4.4.1" />
 <meta property="og:title" content="Go Client" />
 <meta property="og:locale" content="en_US" />
-<meta name="description" content="获取go客户端" />
-<meta property="og:description" content="获取go客户端" />
+<meta name="description" content="获取 go 客户端" />
+<meta property="og:description" content="获取 go 客户端" />
 <meta property="og:site_name" content="Pegasus" />
 <meta property="og:type" content="article" />
-<meta property="article:published_time" content="2025-11-06T10:27:35+00:00" />
+<meta property="article:published_time" content="2025-11-06T10:36:30+00:00" />
 <meta name="twitter:card" content="summary" />
 <meta property="twitter:title" content="Go Client" />
 <script type="application/ld+json">
-{"@context":"https://schema.org","@type":"BlogPosting","dateModified":"2025-11-06T10:27:35+00:00","datePublished":"2025-11-06T10:27:35+00:00","description":"获取go客户端","headline":"Go Client","mainEntityOfPage":{"@type":"WebPage","@id":"/clients/go-client"},"url":"/clients/go-client"}</script>
+{"@context":"https://schema.org","@type":"BlogPosting","dateModified":"2025-11-06T10:36:30+00:00","datePublished":"2025-11-06T10:36:30+00:00","description":"获取 go 客户端","headline":"Go Client","mainEntityOfPage":{"@type":"WebPage","@id":"/clients/go-client"},"url":"/clients/go-client"}</script>
 <!-- End Jekyll SEO tag -->
 
 </head>
@@ -738,7 +738,7 @@
             </section>
             <section class="section" style="padding-top: 2rem;">
                 <div class="content">
-                    <h1 id="获取go客户端">获取go客户端</h1>
+                    <h1 id="获取-go-客户端">获取 go 客户端</h1>
 
 <p>下载：</p>
 
@@ -754,9 +754,9 @@ go get github.com/apache/incubator-pegasus/go-client@df0eb5a
 </ul>
 
 <h1 id="客户端配置">客户端配置</h1>
-<p>创建go client实例需要配置相关参数，目前仅支持参数传递方式。<br />
-go client的配置参数非常简单，仅需要指定meta servers。<br />
-用户如果需要文件配置，需自行将参数从文件从解析，再传入go client。</p>
+<p>创建 go client 实例需要配置相关参数，目前仅支持参数传递方式。<br />
+go client 的配置参数非常简单，仅需要指定 meta servers。<br />
+用户如果需要文件配置，需自行将参数从文件从解析，再传入 go client。</p>
 <div class="language-go highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c">// 参数配置</span>
 <span class="n">cfg</span> <span class="o">:=</span> <span class="o">&amp;</span><span class="n">pegasus</span><span class="o">.</span><span class="n">Config</span><span class="p">{</span>
     <span class="n">MetaServers</span><span class="o">:</span> <span class="p">[]</span><span class="kt">string</span><span class="p">{</span><span class="s">"0.0.0.0:34601"</span><span class="p">,</span> <span class="s">"0.0.0.0:34601"</span><span class="p">},</span>
@@ -777,7 +777,7 @@ go client的配置参数非常简单，仅需要指定meta servers。<br />
 
 <h1 id="接口定义">接口定义</h1>
 
-<h2 id="创建client实例">创建Client实例</h2>
+<h2 id="创建-client-实例">创建 Client 实例</h2>
 <div class="language-go highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c">// NewClient creates a new instance of pegasus client.</span>
 <span class="c">// It panics if the configured addresses are illegal</span>
 <span class="k">func</span> <span class="n">NewClient</span><span class="p">(</span><span class="n">cfg</span> <span class="n">Config</span><span class="p">)</span> <span class="n">Client</span>
@@ -788,23 +788,23 @@ go client的配置参数非常简单，仅需要指定meta servers。<br />
 <span class="p">}</span>
 </code></pre></div></div>
 
-<p>使用完毕后，记得close client以释放资源，譬如：</p>
+<p>使用完毕后，记得 close client 以释放资源，譬如：</p>
 <div class="language-go highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">c</span> <span class="o">:=</span> <span class="n">pegasus</span><span class="o">.</span><span class="n">NewClient</span><span class="p">(</span><span class="o">*</span><span class="n">cfg</span><span class="p">)</span>
 
 <span class="o">...</span>
 
-<span class="n">c</span><span class="o">.</span><span class="n">Close</span><span class="p">();</span>
+<span class="n">c</span><span class="o">.</span><span class="n">Close</span><span class="p">()</span>
 </code></pre></div></div>
 
-<h2 id="创建tableconnector实例">创建TableConnector实例</h2>
-<p>go client 操作数据的接口都在TableConnector中定义。<br />
-一个client可以有多个TableConnector实例，每一个TableConnector对应一张表。</p>
+<h2 id="创建-tableconnector-实例">创建 TableConnector 实例</h2>
+<p>go client 操作数据的接口都在 TableConnector 中定义。<br />
+一个 client 可以有多个 TableConnector 实例，每一个 TableConnector 对应一张表。</p>
 <div class="language-go highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c">// Open the specific pegasus table. If the table was opened before,</span>
 <span class="c">// it will reuse the previous connection to the table.</span>
 <span class="n">OpenTable</span><span class="p">(</span><span class="n">ctx</span> <span class="n">context</span><span class="o">.</span><span class="n">Context</span><span class="p">,</span> <span class="n">tableName</span> <span class="kt">string</span><span class="p">)</span> <span class="p">(</span><span class="n">TableConnector</span><span class="p">,</span> <span class="kt">error</span><span class="p">)</span>
 </code></pre></div></div>
 
-<h2 id="tableconnector接口">TableConnector接口</h2>
+<h2 id="tableconnector-接口">TableConnector 接口</h2>
 
 <h3 id="get">Get</h3>
 <p>读单行数据。</p>
@@ -816,13 +816,13 @@ go client的配置参数非常简单，仅需要指定meta servers。<br />
 </code></pre></div></div>
 <p>注：</p>
 <ul>
-  <li>参数：需传入context、hashKey、sortKey。</li>
-  <li>返回值：value、error. 如果返回(nil,nil)，表示key对应的数据不存在。</li>
-  <li>异常：如果出现异常，譬如网络错误、超时错误、服务端错误等，可以访问error获取具体错误类型(key对应数据不存在返回nil)。</li>
+  <li>参数：需传入 <code class="language-plaintext highlighter-rouge">context</code>、<code class="language-plaintext highlighter-rouge">hashKey</code>、<code class="language-plaintext highlighter-rouge">sortKey</code>。</li>
+  <li>返回值：<code class="language-plaintext highlighter-rouge">value</code>、<code class="language-plaintext highlighter-rouge">error</code>。 如果返回 (nil,nil)，表示 key 对应的数据不存在。</li>
+  <li>异常：如果出现异常，譬如网络错误、超时错误、服务端错误等，可以访问 error 获取具体错误类型 (key 对应数据不存在返回 nil)。</li>
 </ul>
 
 <h3 id="set-and-setttl">Set and SetTTL</h3>
-<p>写单行数据, SetTTL可以设置单条kv的TTL。</p>
+<p>写单行数据, SetTTL 可以设置单条 kv 的 TTL。</p>
 <div class="language-go highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c">// Set the entry for `hashKey` + `sortKey` to `value`.</span>
 <span class="c">// If Set is called or `ttl` == 0, no data expiration is specified.</span>
 <span class="c">// `hashKey` : CAN'T be nil or empty.</span>
@@ -832,10 +832,10 @@ go client的配置参数非常简单，仅需要指定meta servers。<br />
 </code></pre></div></div>
 <p>注：</p>
 <ul>
-  <li>提供了两个版本的接口，其中第二个接口可以指定TTL时间。</li>
-  <li>参数：需传入context、hashKey、sortKey、value, ttl单位为秒(s)</li>
-  <li>返回值：error</li>
-  <li>异常：如果出现异常，譬如网络错误、超时错误、服务端错误等，可以访问error获取具体错误类型。</li>
+  <li>提供了两个版本的接口，其中第二个接口可以指定 TTL 时间。</li>
+  <li>参数：需传入 <code class="language-plaintext highlighter-rouge">context</code>、<code class="language-plaintext highlighter-rouge">hashKey</code>、<code class="language-plaintext highlighter-rouge">sortKey</code>、<code class="language-plaintext highlighter-rouge">value</code>、<code class="language-plaintext highlighter-rouge">ttl</code>。 <code class="language-plaintext highlighter-rouge">ttl</code> 单位为秒(s)。</li>
+  <li>返回值：<code class="language-plaintext highlighter-rouge">error</code>。</li>
+  <li>异常：如果出现异常，譬如网络错误、超时错误、服务端错误等，可以访问 error 获取具体错误类型。</li>
 </ul>
 
 <h3 id="del">Del</h3>
@@ -847,12 +847,13 @@ go client的配置参数非常简单，仅需要指定meta servers。<br />
 </code></pre></div></div>
 <p>注：</p>
 <ul>
-  <li>参数：需传入context、hashKey、sortKey。</li>
-  <li>异常：如果出现异常，譬如网络错误、超时错误、服务端错误等，可以访问error获取具体错误类型。</li>
+  <li>参数：需传入 <code class="language-plaintext highlighter-rouge">context</code>、<code class="language-plaintext highlighter-rouge">hashKey</code>、<code class="language-plaintext highlighter-rouge">sortKey</code>。</li>
+  <li>返回值：<code class="language-plaintext highlighter-rouge">error</code>。</li>
+  <li>异常：如果出现异常，譬如网络错误、超时错误、服务端错误等，可以访问 error 获取具体错误类型。</li>
 </ul>
 
 <h3 id="multiget-and-multigetopt">MultiGet and MultiGetOpt</h3>
-<p>读<strong>同一HashKey下</strong>的多行数据。</p>
+<p>读<strong>同一 HashKey 下</strong>的多行数据。</p>
 <div class="language-go highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c">// MultiGet/MultiGetOpt retrieves the multiple entries for `hashKey` + `sortKeys[i]` atomically in one operation.</span>
 <span class="c">// MultiGet is identical to MultiGetOpt except that the former uses DefaultMultiGetOptions as `options`.</span>
 <span class="c">//</span>
@@ -869,90 +870,101 @@ go client的配置参数非常简单，仅需要指定meta servers。<br />
 </code></pre></div></div>
 <p>注:</p>
 <ul>
-  <li>参数：需传入context、hashKey、sortKeys。</li>
-  <li>返回值：得到的kvs、bool值代表是否all fetched, error</li>
-  <li>异常：如果出现异常，譬如网络错误、超时错误、服务端错误等，可以访问error获取具体错误类型(key对应数据不存在不会报错)。</li>
-  <li>
-    <p>bool值表示:如果用户指定了maxFetchCount或者maxFetchSize，单次查询可能只获取到部分结果。如果所有满足条件的数据都已经获取到，则返回true；否则返回false。
-``` go
-// MultiGetOptions is the options for MultiGet and MultiGetRange, defaults to DefaultMultiGetOptions.
-type MultiGetOptions struct {
-  StartInclusive bool
-  StopInclusive  bool
-  SortKeyFilter  Filter</p>
-
-    <p>// MaxFetchCount and MaxFetchSize limit the size of returned result.
-  // Max count of k-v pairs to be fetched. MaxFetchCount &lt;= 0 means no limit.
-  MaxFetchCount int</p>
-
-    <p>// Max size of k-v pairs to be fetched. MaxFetchSize &lt;= 0 means no limit.
-  MaxFetchSize int</p>
-
-    <p>// Query order
-  Reverse bool</p>
-
-    <p>// Whether to retrieve keys only, without value.
-  // Enabling this option will reduce the network load, improve the RPC latency.
-  NoValue bool
-}</p>
-  </li>
+  <li>参数：需传入 <code class="language-plaintext highlighter-rouge">context</code>、<code class="language-plaintext highlighter-rouge">hashKey</code>、<code class="language-plaintext highlighter-rouge">sortKeys</code>。</li>
+  <li>返回值：得到的 kvs、bool 值代表是否 all fetched, error</li>
+  <li>异常：如果出现异常，譬如网络错误、超时错误、服务端错误等，可以访问 error 获取具体错误类型 (key 对应数据不存在不会报错)。</li>
+  <li>bool 值表示:如果用户指定了 <code class="language-plaintext highlighter-rouge">maxFetchCount</code> 或者 <code class="language-plaintext highlighter-rouge">maxFetchSize</code>，单次查询可能只获取到部分结果。如果所有满足条件的数据都已经获取到，则返回 <code class="language-plaintext highlighter-rouge">true</code>；否则返回 <code class="language-plaintext highlighter-rouge">false</code>。</li>
 </ul>
 
-<p>// Filter is used to filter based on the key.
-type Filter struct {
-    Type    FilterType
-    Pattern []byte
-}</p>
+<div class="language-go highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c">// MultiGetOptions is the options for MultiGet and MultiGetRange, defaults to DefaultMultiGetOptions.</span>
+<span class="k">type</span> <span class="n">MultiGetOptions</span> <span class="k">struct</span> <span class="p">{</span>
+    <span class="n">StartInclusive</span> <span class="kt">bool</span>
+    <span class="n">StopInclusive</span>  <span class="kt">bool</span>
+    <span class="n">SortKeyFilter</span>  <span class="n">Filter</span>
 
-<p>// Filter types
-const (
-    FilterTypeNoFilter      = FilterType(rrdb.FilterType_FT_NO_FILTER)
-    FilterTypeMatchAnywhere = FilterType(rrdb.FilterType_FT_MATCH_ANYWHERE)
-    FilterTypeMatchPrefix   = FilterType(rrdb.FilterType_FT_MATCH_PREFIX)
-    FilterTypeMatchPostfix  = FilterType(rrdb.FilterType_FT_MATCH_POSTFIX)
-)</p>
-<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>注：  
-* MultiGetOptions说明：  
-    * startInclusive：是否包含StartSortKey，默认为true。  
-    * stopInclusive：是否包含StopSortKey，默认为false。  
-    * SortKeyFilter: SortKey过滤项  
-    * maxFetchCount和maxFetchSize用于限制读取的数据量，maxFetchCount表示最多读取的数据条数，maxFetchSize表示最多读取的数据字节数，两者任一达到限制就停止读取. MaxFetchCount 默认为100, MaxFetchSize 默认为100000  
-    * noValue：只返回HashKey和SortKey，不返回Value数据，默认为false。  
-    * reverse：是否逆向扫描数据库，从后往前查找数据。但是查找得到的结果在list中还是按照SortKey从小到大顺序存放。从Pegasus Server 1.8.0 时开始支持。  
-* Filter说明：  
-    * type: 过滤类型，包括无过滤、任意位置匹配、前缀匹配和后缀匹配  
-    * Pattern: 过滤模式串，空串相当于无过滤。
-* Filter types 说明：    
-    * FilterTypeNoFilter：无过滤
-    * FilterTypeMatchAnywhere： 任意位置匹配
-    * FilterTypeMatchPrefix： 前缀匹配
-    * FilterTypeMatchPostfix: 后缀匹配
+    <span class="c">// MaxFetchCount and MaxFetchSize limit the size of returned result.</span>
+    <span class="c">// Max count of k-v pairs to be fetched. MaxFetchCount &lt;= 0 means no limit.</span>
+    <span class="n">MaxFetchCount</span> <span class="kt">int</span>
 
-### MultiGetRange and MultiGetRangeOpt
-读**同一HashKey下**的多行数据，支持范围查询。
-``` go
-// MultiGetRange retrieves the multiple entries under `hashKey`, between range (`startSortKey`, `stopSortKey`),
-// atomically in one operation.
-//
-// startSortKey: nil or len(startSortKey) == 0 means start from begin.
-// stopSortKey: nil or len(stopSortKey) == 0 means stop to end.
-// `hashKey` : CAN'T be nil.
-//
-// The returned key-value pairs are sorted by sort keys in ascending order.
-// Returns nil if no entries match.
-// Returns true if all data is fetched, false if only partial data is fetched.
-MultiGetRange(ctx context.Context, hashKey []byte, startSortKey []byte, stopSortKey []byte) ([]*KeyValue, bool, error)
-MultiGetRangeOpt(ctx context.Context, hashKey []byte, startSortKey []byte, stopSortKey []byte, options *MultiGetOptions) ([]*KeyValue, bool, error)
+    <span class="c">// Max size of k-v pairs to be fetched. MaxFetchSize &lt;= 0 means no limit.</span>
+    <span class="n">MaxFetchSize</span> <span class="kt">int</span>
+
+    <span class="c">// Query order</span>
+    <span class="n">Reverse</span> <span class="kt">bool</span>
+
+    <span class="c">// Whether to retrieve keys only, without value.</span>
+    <span class="c">// Enabling this option will reduce the network load, improve the RPC latency.</span>
+    <span class="n">NoValue</span> <span class="kt">bool</span>
+<span class="p">}</span>
+
+<span class="c">// Filter is used to filter based on the key.</span>
+<span class="k">type</span> <span class="n">Filter</span> <span class="k">struct</span> <span class="p">{</span>
+    <span class="n">Type</span>    <span class="n">FilterType</span>
+    <span class="n">Pattern</span> <span class="p">[]</span><span class="kt">byte</span>
+<span class="p">}</span>
+
+<span class="c">// Filter types</span>
+<span class="k">const</span> <span class="p">(</span>
+    <span class="n">FilterTypeNoFilter</span>      <span class="o">=</span> <span class="n">FilterType</span><span class="p">(</span><span class="n">rrdb</span><span class="o">.</span><span class="n">FilterType_FT_NO_FILTER</span><span class="p">)</span>
+    <span class="n">FilterTypeMatchAnywhere</span> <span class="o">=</span> <span class="n">FilterType</span><span class="p">(</span><span class="n">rrdb</span><span class="o">.</span><span class="n">FilterType_FT_MATCH_ANYWHERE</span><span class="p">)</span>
+    <span class="n">FilterTypeMatchPrefix</span>   <span class="o">=</span> <span class="n">FilterType</span><span class="p">(</span><span class="n">rrdb</span><span class="o">.</span><span class="n">FilterType_FT_MATCH_PREFIX</span><span class="p">)</span>
+    <span class="n">FilterTypeMatchPostfix</span>  <span class="o">=</span> <span class="n">FilterType</span><span class="p">(</span><span class="n">rrdb</span><span class="o">.</span><span class="n">FilterType_FT_MATCH_POSTFIX</span><span class="p">)</span>
+<span class="p">)</span>
 </code></pre></div></div>
 <p>注：</p>
 <ul>
-  <li>参数：需传入context、hashKey、startSortKey、stopSortKey</li>
-  <li>返回值：kvs、bool值代表是否all fetched, error</li>
-  <li>异常：如果出现异常，譬如网络错误、超时错误、服务端错误等，可以访问error获取具体错误类型(key对应数据不存在不会报错)。</li>
+  <li>MultiGetOptions 说明：
+    <ul>
+      <li>startInclusive: 是否包含 StartSortKey，默认为 <code class="language-plaintext highlighter-rouge">true</code>。</li>
+      <li>stopInclusive: 是否包含 StopSortKey，默认为 <code class="language-plaintext highlighter-rouge">false</code>。</li>
+      <li>SortKeyFilter: SortKey 过滤项</li>
+      <li>maxFetchCount 和 maxFetchSize 用于限制读取的数据量，maxFetchCount 表示最多读取的数据条数，maxFetchSize 表示最多读取的数据字节数，两者任一达到限制就停止读取. MaxFetchCount 默认为 100, MaxFetchSize 默认为 100000</li>
+      <li>noValue: 只返回 HashKey 和 SortKey，不返回 Value 数据，默认为false。</li>
+      <li>reverse: 是否逆向扫描数据库，从后往前查找数据。但是查找得到的结果在list 中还是按照 SortKey 从小到大顺序存放。从 Pegasus Server 1.8.0 时开始支持。</li>
+    </ul>
+  </li>
+  <li>Filter说明：
+    <ul>
+      <li>type: 过滤类型，包括无过滤、任意位置匹配、前缀匹配和后缀匹配</li>
+      <li>Pattern: 过滤模式串，空串相当于无过滤。</li>
+    </ul>
+  </li>
+  <li>Filter types 说明：
+    <ul>
+      <li>FilterTypeNoFilter: 无过滤</li>
+      <li>FilterTypeMatchAnywhere: 任意位置匹配</li>
+      <li>FilterTypeMatchPrefix: 前缀匹配</li>
+      <li>FilterTypeMatchPostfix: 后缀匹配</li>
+    </ul>
+  </li>
+</ul>
+
+<h3 id="multigetrange-and-multigetrangeopt">MultiGetRange and MultiGetRangeOpt</h3>
+<p>读<strong>同一 HashKey 下</strong>的多行数据，支持范围查询。</p>
+
+<div class="language-go highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c">// MultiGetRange retrieves the multiple entries under `hashKey`, between range (`startSortKey`, `stopSortKey`),</span>
+<span class="c">// atomically in one operation.</span>
+<span class="c">//</span>
+<span class="c">// startSortKey: nil or len(startSortKey) == 0 means start from begin.</span>
+<span class="c">// stopSortKey: nil or len(stopSortKey) == 0 means stop to end.</span>
+<span class="c">// `hashKey` : CAN'T be nil.</span>
+<span class="c">//</span>
+<span class="c">// The returned key-value pairs are sorted by sort keys in ascending order.</span>
+<span class="c">// Returns nil if no entries match.</span>
+<span class="c">// Returns true if all data is fetched, false if only partial data is fetched.</span>
+<span class="n">MultiGetRange</span><span class="p">(</span><span class="n">ctx</span> <span class="n">context</span><span class="o">.</span><span class="n">Context</span><span class="p">,</span> <span class="n">hashKey</span> <span class="p">[]</span><span class="kt">byte</span><span class="p">,</span> <span class="n">startSortKey</span> <span class="p">[]</span><span class="kt">byte</span><span class="p">,</span> <span class="n">stopSortKey</span> <span class="p">[]</span><span class="kt">byte</span><span class="p">)</span> <span class="p">([]</span><span class="o">*</span><span class="n">KeyValue</span><span class="p">,</span> <span class="kt">bool</span><span class="p">,</span> <span class="kt">error</span><span class="p">)</span>
+<span class="n">MultiGetRangeOpt</span><span class="p">(</span><span class="n">ctx</span> <span class="n">context</span><span class="o">.</span><span class="n">Context</span><span class="p">,</span> <span class="n">hashKey</span> <span class="p">[]</span><span class="kt">byte</span><span class="p">,</span> <span class="n">startSortKey</span> <span class="p">[]</span><span class="kt">byte</span><span class="p">,</span> <span class="n">stopSortKey</span> <span class="p">[]</span><span class="kt">byte</span><span class="p">,</span> <span class="n">options</span> <span class="o">*</span><span class="n">MultiGetOptions</span><span class="p">)</span> <span class="p">([]</span><span class="o">*</span><span class="n">KeyValue</span><span class="p">,</span> <span class="kt">bool</span><span class="p">,</span> <span class="kt">error</span><span class="p">)</span>
+</code></pre></div></div>
+
+<p>注：</p>
+<ul>
+  <li>参数：需传入 <code class="language-plaintext highlighter-rouge">context</code>、<code class="language-plaintext highlighter-rouge">hashKey</code>、<code class="language-plaintext highlighter-rouge">startSortKey</code>、<code class="language-plaintext highlighter-rouge">stopSortKey</code></li>
+  <li>返回值：<code class="language-plaintext highlighter-rouge">kvs</code>、<code class="language-plaintext highlighter-rouge">bool</code> 值代表是否 all fetched, error</li>
+  <li>异常：如果出现异常，譬如网络错误、超时错误、服务端错误等，可以访问 error 获取具体错误类型 (key 对应数据不存在不会报错)。</li>
 </ul>
 
 <h3 id="multiset-and-multisetopt">MultiSet and MultiSetOpt</h3>
-<p>写同一HashKey下的多行数据。</p>
+<p>写<strong>同一 HashKey 下</strong>的多行数据。</p>
 <div class="language-go highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c">// MultiSet sets the multiple entries for `hashKey` + `sortKeys[i]` atomically in one operation.</span>
 <span class="c">// `hashKey` / `sortKeys` / `values` : CAN'T be nil or empty.</span>
 <span class="c">// `sortKeys[i]` / `values[i]` : CAN'T be nil but CAN be empty.</span>
@@ -961,11 +973,11 @@ MultiGetRangeOpt(ctx context.Context, hashKey []byte, startSortKey []byte, stopS
 </code></pre></div></div>
 <p>注：</p>
 <ul>
-  <li>MultiSet调用了rocksdb的WriteBatch接口，因此MultiSet是一个原子操作</li>
-  <li>提供了两个版本的接口，其中第二个接口可以指定TTL时间。</li>
-  <li>参数：需传入context、hashKey、sortKeys、values、ttl(可选，单位为s)</li>
+  <li><code class="language-plaintext highlighter-rouge">MultiSet</code> 调用了 rocksdb 的 WriteBatch 接口，因此 <code class="language-plaintext highlighter-rouge">MultiSet</code> 是一个原子操作</li>
+  <li>提供了两个版本的接口，其中第二个接口可以指定 TTL 时间。</li>
+  <li>参数：需传入 <code class="language-plaintext highlighter-rouge">context</code>、<code class="language-plaintext highlighter-rouge">hashKey</code>、<code class="language-plaintext highlighter-rouge">sortKeys</code>、<code class="language-plaintext highlighter-rouge">values</code>、<code class="language-plaintext highlighter-rouge">ttl</code> (可选，单位为 s)</li>
   <li>返回值：error</li>
-  <li>异常：如果出现异常，譬如网络错误、超时错误、服务端错误等，可以访问error获取具体错误类型</li>
+  <li>异常：如果出现异常，譬如网络错误、超时错误、服务端错误等，可以访问 error 获取具体错误类型</li>
 </ul>
 
 <h3 id="multidel">MultiDel</h3>
@@ -976,10 +988,10 @@ MultiGetRangeOpt(ctx context.Context, hashKey []byte, startSortKey []byte, stopS
 </code></pre></div></div>
 <p>注：</p>
 <ul>
-  <li>MultiDel调用了rocksdb的WriteBatch接口，因此MultiDel是一个原子操作</li>
-  <li>参数：需传入context、hashKey、sortKeys</li>
+  <li><code class="language-plaintext highlighter-rouge">MultiDel</code> 调用了 rocksdb 的 WriteBatch 接口，因此 <code class="language-plaintext highlighter-rouge">MultiDel</code> 是一个原子操作</li>
+  <li>参数：需传入 <code class="language-plaintext highlighter-rouge">context</code>、<code class="language-plaintext highlighter-rouge">hashKey</code>、<code class="language-plaintext highlighter-rouge">sortKeys</code></li>
   <li>返回值：error</li>
-  <li>异常：如果出现异常，譬如网络错误、超时错误、服务端错误等，可以访问error获取具体错误类型</li>
+  <li>异常：如果出现异常，譬如网络错误、超时错误、服务端错误等，可以访问 error 获取具体错误类型</li>
 </ul>
 
 <h3 id="delrange-and-delrangeopt">DelRange and DelRangeOpt</h3>
@@ -1003,22 +1015,22 @@ MultiGetRangeOpt(ctx context.Context, hashKey []byte, startSortKey []byte, stopS
 </code></pre></div></div>
 <p>注：</p>
 <ul>
-  <li>DelRange实际调用了多次MultiDel, 每次MultiDel是原子的，但是DelRange整体可能不是原子的。</li>
-  <li>参数：需传入context、hashKey、startSortKey、stopSortKey</li>
+  <li><code class="language-plaintext highlighter-rouge">DelRange</code> 实际调用了多次 <code class="language-plaintext highlighter-rouge">MultiDel</code>, 每次 <code class="language-plaintext highlighter-rouge">MultiDel</code> 是原子的，但是 <code class="language-plaintext highlighter-rouge">DelRange</code> 整体可能不是原子的。</li>
+  <li>参数：需传入 <code class="language-plaintext highlighter-rouge">context</code>、<code class="language-plaintext highlighter-rouge">hashKey</code>、<code class="language-plaintext highlighter-rouge">startSortKey</code>、<code class="language-plaintext highlighter-rouge">stopSortKey</code></li>
   <li>返回值：error</li>
-  <li>异常：如果出现异常，譬如网络错误、超时错误、服务端错误等，可以访问error获取具体错误类型</li>
-  <li>DelRangeOptions：
+  <li>异常：如果出现异常，譬如网络错误、超时错误、服务端错误等，可以访问 error 获取具体错误类型</li>
+  <li><code class="language-plaintext highlighter-rouge">DelRangeOptions</code>:
     <ul>
-      <li>nextSortKey： DelRange会按照sortkey的大小顺序进行删除，假如删除过程中失败，会将未删除成功第一个sortkey保存在nextSortKey</li>
-      <li>StartInclusive: 删除时是否包括startSortKey</li>
-      <li>StopInclusive: 删除时是否包括stopSortKey</li>
-      <li>SortKeyFilter: 可以对Sortkey进行筛选</li>
+      <li><code class="language-plaintext highlighter-rouge">nextSortKey</code>: <code class="language-plaintext highlighter-rouge">DelRange</code> 会按照 sortkey 的大小顺序进行删除，假如删除过程中失败，会将未删除成功第一个 sortkey 保存在 <code class="language-plaintext highlighter-rouge">nextSortKey</code></li>
+      <li><code class="language-plaintext highlighter-rouge">StartInclusive</code>: 删除时是否包括 <code class="language-plaintext highlighter-rouge">startSortKey</code></li>
+      <li><code class="language-plaintext highlighter-rouge">StopInclusive</code>: 删除时是否包括 <code class="language-plaintext highlighter-rouge">stopSortKey</code></li>
+      <li><code class="language-plaintext highlighter-rouge">SortKeyFilter</code>: 可以对 Sortkey 进行筛选</li>
     </ul>
   </li>
 </ul>
 
 <h3 id="ttl">TTL</h3>
-<p>获取某个key的TTL。</p>
+<p>获取某个 key 的TTL。</p>
 <div class="language-go highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c">// Returns ttl(time-to-live) in seconds: -1 if ttl is not set; -2 if entry doesn't exist.</span>
 <span class="c">// `hashKey` : CAN'T be nil or empty.</span>
 <span class="c">// `sortKey` : CAN'T be nil but CAN be empty.</span>
@@ -1026,26 +1038,26 @@ MultiGetRangeOpt(ctx context.Context, hashKey []byte, startSortKey []byte, stopS
 </code></pre></div></div>
 <p>注：</p>
 <ul>
-  <li>参数：需传入context、hashKey、sortKey</li>
-  <li>返回值：int,error</li>
-  <li>异常：如果出现异常，譬如网络错误、超时错误、服务端错误等，可以访问error获取具体错误类型</li>
+  <li>参数：需传入 <code class="language-plaintext highlighter-rouge">context</code>、<code class="language-plaintext highlighter-rouge">hashKey</code>、<code class="language-plaintext highlighter-rouge">sortKey</code></li>
+  <li>返回值：<code class="language-plaintext highlighter-rouge">int</code> 代表 ttl 时间，单位为 s；<code class="language-plaintext highlighter-rouge">error</code> 代表异常信息</li>
+  <li>异常：如果出现异常，譬如网络错误、超时错误、服务端错误等，可以访问 error 获取具体错误类型</li>
 </ul>
 
 <h3 id="exist">Exist</h3>
-<p>判断某个key是否存在。</p>
+<p>判断某个 key 是否存在。</p>
 <div class="language-go highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c">// Check value existence for the entry for `hashKey` + `sortKey`.</span>
 <span class="c">// `hashKey`: CAN'T be nil or empty.</span>
 <span class="n">Exist</span><span class="p">(</span><span class="n">ctx</span> <span class="n">context</span><span class="o">.</span><span class="n">Context</span><span class="p">,</span> <span class="n">hashKey</span> <span class="p">[]</span><span class="kt">byte</span><span class="p">,</span> <span class="n">sortKey</span> <span class="p">[]</span><span class="kt">byte</span><span class="p">)</span> <span class="p">(</span><span class="kt">bool</span><span class="p">,</span> <span class="kt">error</span><span class="p">)</span>
 </code></pre></div></div>
 <p>注：</p>
 <ul>
-  <li>参数：需传入context、hashKey、sortKey</li>
-  <li>返回值：bool,error</li>
-  <li>异常：如果出现异常，譬如网络错误、超时错误、服务端错误等，可以访问error获取具体错误类型</li>
+  <li>参数：需传入 <code class="language-plaintext highlighter-rouge">context</code>、<code class="language-plaintext highlighter-rouge">hashKey</code>、<code class="language-plaintext highlighter-rouge">sortKey</code></li>
+  <li>返回值：<code class="language-plaintext highlighter-rouge">bool</code> 代表 key 是否存在；<code class="language-plaintext highlighter-rouge">error</code> 代表异常信息</li>
+  <li>异常：如果出现异常，譬如网络错误、超时错误、服务端错误等，可以访问 error 获取具体错误类型</li>
 </ul>
 
 <h3 id="getscanner">GetScanner</h3>
-<p>获取遍历某个HashKey下所有数据的迭代器，用于局部扫描。</p>
+<p>获取遍历某个 HashKey 下所有数据的迭代器，用于局部扫描。</p>
 <div class="language-go highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c">// Get Scanner for {startSortKey, stopSortKey} within hashKey.</span>
 <span class="c">// startSortKey: nil or len(startSortKey) == 0 means start from begin.</span>
 <span class="c">// stopSortKey: nil or len(stopSortKey) == 0 means stop to end.</span>
@@ -1064,24 +1076,24 @@ MultiGetRangeOpt(ctx context.Context, hashKey []byte, startSortKey []byte, stopS
 </code></pre></div></div>
 <p>注：</p>
 <ul>
-  <li>参数：需传入context、hashKey、startSortKey、stopSortKey、ScannnerOptions
+  <li>参数: 需传入 <code class="language-plaintext highlighter-rouge">context</code>、<code class="language-plaintext highlighter-rouge">hashKey</code>、<code class="language-plaintext highlighter-rouge">startSortKey</code>、<code class="language-plaintext highlighter-rouge">stopSortKey</code>、<code class="language-plaintext highlighter-rouge">ScannerOptions</code>
     <ul>
-      <li>startSortKey和stopSortKey用于指定scan的返回，并通过ScanOptions指定区间的开闭。</li>
-      <li>如果startSortKey为null，表示从头开始；如果stopSortKey为null，表示一直读到尾。</li>
-      <li>ScannnerOptions说明：
+      <li><code class="language-plaintext highlighter-rouge">startSortKey</code> 和 <code class="language-plaintext highlighter-rouge">stopSortKey</code> 用于指定 scan 的返回，并通过 <code class="language-plaintext highlighter-rouge">ScannerOptions</code> 指定区间的开闭。</li>
+      <li>如果 <code class="language-plaintext highlighter-rouge">startSortKey</code> 为 null，表示从头开始；如果 <code class="language-plaintext highlighter-rouge">stopSortKey</code> 为 null，表示一直读到尾。</li>
+      <li><code class="language-plaintext highlighter-rouge">ScannerOptions</code> 说明:
         <ul>
-          <li>BatchSize： 从server端读取数据时每批数据的个数，默认值为1000</li>
-          <li>startInclusive：是否包含startSortKey，默认为true</li>
-          <li>stopInclusive： 是否包含stopSortKey，默认为false</li>
-          <li>HashKeyFilter: hashkey的筛选，默认无筛选</li>
-          <li>SortKeyFilter: sortkey的筛选，默认无筛选</li>
-          <li>NoValue: 只返回HashKey和SortKey，不返回Value数据，默认为false</li>
+          <li><code class="language-plaintext highlighter-rouge">BatchSize</code>: 从 server 端读取数据时每批数据的个数，默认值为 1000</li>
+          <li><code class="language-plaintext highlighter-rouge">StartInclusive</code>:是否包含 <code class="language-plaintext highlighter-rouge">startSortKey</code>，默认为 true</li>
+          <li><code class="language-plaintext highlighter-rouge">StopInclusive</code>: 是否包含 <code class="language-plaintext highlighter-rouge">stopSortKey</code>，默认为 false</li>
+          <li><code class="language-plaintext highlighter-rouge">HashKeyFilter</code>: hashkey 的筛选，默认无筛选</li>
+          <li><code class="language-plaintext highlighter-rouge">SortKeyFilter</code>: sortkey 的筛选，默认无筛选</li>
+          <li><code class="language-plaintext highlighter-rouge">NoValue</code>： 只返回 HashKey 和 SortKey，不返回 Value 数据，默认为 false</li>
         </ul>
       </li>
     </ul>
   </li>
-  <li>返回值：迭代器Scanner, error</li>
-  <li>异常：如果出现异常，譬如网络错误、超时错误、服务端错误等，可以访问error获取具体错误类型</li>
+  <li>返回值：迭代器 <code class="language-plaintext highlighter-rouge">Scanner</code>、<code class="language-plaintext highlighter-rouge">error</code></li>
+  <li>异常：如果出现异常，譬如网络错误、超时错误、服务端错误等，可以访问 error 获取具体错误类型</li>
 </ul>
 
 <h3 id="getunorderedscanners">GetUnorderedScanners</h3>
@@ -1092,17 +1104,17 @@ MultiGetRangeOpt(ctx context.Context, hashKey []byte, startSortKey []byte, stopS
 </code></pre></div></div>
 <p>注：</p>
 <ul>
-  <li>参数：需传入context、maxSplitCount、ScannnerOptions
+  <li>参数: 需传入 <code class="language-plaintext highlighter-rouge">context</code>、<code class="language-plaintext highlighter-rouge">maxSplitCount</code>、<code class="language-plaintext highlighter-rouge">ScannnerOptions</code>
     <ul>
-      <li>maxSplitCount：用于决定返回的迭代器的个数。当返回多个迭代器时，每个迭代器可以访问表中的部分数据。通过返回迭代器列表，用户可以进行并发scan或者在MapReduce中使用。如果不需要多个迭代器，可以将其设置为1。</li>
+      <li><code class="language-plaintext highlighter-rouge">maxSplitCount</code>: 用于决定返回的迭代器的个数。当返回多个迭代器时，每个迭代器可以访问表中的部分数据。通过返回迭代器列表，用户可以进行并发scan 或者在 MapReduce 中使用。如果不需要多个迭代器，可以将其设置为1。</li>
     </ul>
   </li>
-  <li>返回值：迭代器Scanner数组, error</li>
-  <li>异常：如果出现异常，譬如网络错误、超时错误、服务端错误等，可以访问error获取具体错误类型</li>
+  <li>返回值：迭代器 Scanner 数组, error</li>
+  <li>异常：如果出现异常，譬如网络错误、超时错误、服务端错误等，可以访问 error 获取具体错误类型</li>
 </ul>
 
 <h3 id="next">Next</h3>
-<p>在scan操作时，同步获取下一条数据。</p>
+<p>在 scan 操作时，同步获取下一条数据。</p>
 <div class="language-go highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c">// Scanner defines the interface of client-side scanning.</span>
 <span class="k">type</span> <span class="n">Scanner</span> <span class="k">interface</span> <span class="p">{</span>
     <span class="c">// Grabs the next entry.</span>
@@ -1113,25 +1125,25 @@ MultiGetRangeOpt(ctx context.Context, hashKey []byte, startSortKey []byte, stopS
 </code></pre></div></div>
 <p>注：</p>
 <ul>
-  <li>参数：需传入context</li>
-  <li>返回值：completed、hashKey、sortKey、value、err
+  <li>参数: 需传入 <code class="language-plaintext highlighter-rouge">context</code></li>
+  <li>返回值：<code class="language-plaintext highlighter-rouge">completed</code>、<code class="language-plaintext highlighter-rouge">hashKey</code>、<code class="language-plaintext highlighter-rouge">sortKey</code>、<code class="language-plaintext highlighter-rouge">value</code>、<code class="language-plaintext highlighter-rouge">err</code>
     <ul>
-      <li>completed: true表示遍历结束.</li>
+      <li><code class="language-plaintext highlighter-rouge">completed</code>: <code class="language-plaintext highlighter-rouge">true</code> 表示遍历结束.</li>
     </ul>
   </li>
-  <li>异常：如果出现异常，譬如网络错误、超时错误、服务端错误等，可以访问error获取具体错误类型</li>
+  <li>异常：如果出现异常，譬如网络错误、超时错误、服务端错误等，可以访问 error 获取具体错误类型</li>
 </ul>
 
 <h3 id="checkandset">CheckAndSet</h3>
-<p>单hashKey数据的原子CAS操作（可以理解为单行原子操作）。详细说明参见<a href="/zh/api/single-atomic#cas操作">单行原子操作</a>。<br />
-该操作先对某个SortKey（称之为checkSortKey）的value做条件检查：</p>
+<p>单 hashKey 数据的原子 CAS 操作（可以理解为单行原子操作）。详细说明参见<a href="/zh/api/single-atomic#cas操作">单行原子操作</a>。<br />
+该操作先对某个 SortKey（称之为 checkSortKey）的 value 做条件检查：</p>
 <ul>
-  <li>如果检查的条件满足，则将另一个SortKey（称之为setSortKey）的value设置为新值。</li>
-  <li>如果检查的条件不满足，则不执行set操作。</li>
+  <li>如果检查的条件满足，则将另一个 SortKey（称之为 setSortKey）的 value 设置为新值。</li>
+  <li>如果检查的条件不满足，则不执行 set 操作。</li>
 </ul>
 
-<p>checkSortKey和setSortKey可以相同也可以不同。<br />
-用户还可以设置<code class="language-plaintext highlighter-rouge">CheckAndSetOptions.ReturnCheckValue</code>来获取CheckSortKey对应的value。如果CheckSortKey和SetSortKey相同并且set成功，则获取set之前的旧值。</p>
+<p><code class="language-plaintext highlighter-rouge">checkSortKey</code> 和 <code class="language-plaintext highlighter-rouge">setSortKey</code> 可以相同也可以不同。<br />
+用户还可以设置 <code class="language-plaintext highlighter-rouge">CheckAndSetOptions.ReturnCheckValue</code> 来获取 <code class="language-plaintext highlighter-rouge">CheckSortKey</code> 对应的 value。如果 <code class="language-plaintext highlighter-rouge">CheckSortKey</code> 和 <code class="language-plaintext highlighter-rouge">SetSortKey</code> 相同并且 set 成功，则获取 set 之前的旧值。</p>
 
 <div class="language-go highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c">// Atomically check and set value by key from the cluster. The value will be set if and only if check passed.</span>
 <span class="c">// The sort key for checking and setting can be the same or different.</span>
@@ -1195,46 +1207,46 @@ MultiGetRangeOpt(ctx context.Context, hashKey []byte, startSortKey []byte, stopS
 </code></pre></div></div>
 <p>注：</p>
 <ul>
-  <li>参数：需传入context、hashKey、checkSortKey、checkType、checkOperand、setSortKey、setValue、CheckAndSetOptions
+  <li>参数：需传入 <code class="language-plaintext highlighter-rouge">context</code>、<code class="language-plaintext highlighter-rouge">hashKey</code>、<code class="language-plaintext highlighter-rouge">checkSortKey</code>、<code class="language-plaintext highlighter-rouge">checkType</code>、<code class="language-plaintext highlighter-rouge">checkOperand</code>、<code class="language-plaintext highlighter-rouge">setSortKey</code>、<code class="language-plaintext highlighter-rouge">setValue</code>、<code class="language-plaintext highlighter-rouge">CheckAndSetOptions</code>
     <ul>
-      <li>checkSortKey、checkType、checkOperand：用于指定检查的条件。</li>
-      <li>setSortKey、setValue：用于指定条件检查成功后要set的新值。</li>
-      <li>options：其他选项，包括：
+      <li><code class="language-plaintext highlighter-rouge">checkSortKey</code>、<code class="language-plaintext highlighter-rouge">checkType</code>、<code class="language-plaintext highlighter-rouge">checkOperand</code>：用于指定检查的条件。</li>
+      <li><code class="language-plaintext highlighter-rouge">setSortKey</code>、<code class="language-plaintext highlighter-rouge">setValue</code>：用于指定条件检查成功后要 set 的新值。</li>
+      <li><code class="language-plaintext highlighter-rouge">options</code>：其他选项，包括：
         <ul>
-          <li>SetValueTTLSeconds：新值的TTL时间；TTL必须&gt;=0，0表示不设置TTL限制。当&lt;0时返回报错。</li>
-          <li>ReturnCheckValue：是否需要返回CheckSortKey对应的value。</li>
+          <li><code class="language-plaintext highlighter-rouge">SetValueTTLSeconds</code>：新值的 TTL 时间；TTL 必须 &gt;= 0，0 表示不设置 TTL 限制。当 &lt; 0 时返回报错。</li>
+          <li><code class="language-plaintext highlighter-rouge">ReturnCheckValue</code>：是否需要返回 <code class="language-plaintext highlighter-rouge">CheckSortKey</code> 对应的 value。</li>
         </ul>
       </li>
     </ul>
   </li>
-  <li>返回值：CheckAndSetResult、error
+  <li>返回值：<code class="language-plaintext highlighter-rouge">CheckAndSetResult</code>、<code class="language-plaintext highlighter-rouge">error</code>
     <ul>
-      <li>SetSucceed: 是否set成功。</li>
-      <li>CheckValue: CheckSortKey对应的value值；该域只有在checkValueExist=true时有意义。</li>
-      <li>CheckValueExist: CheckSortKey对应的value是否存在；该域只有在checkValueReturned=true时有意义。</li>
-      <li>CheckValueReturned: 是否返回了CheckSortKey对应的value。</li>
+      <li><code class="language-plaintext highlighter-rouge">SetSucceed</code>: 是否 set 成功。</li>
+      <li><code class="language-plaintext highlighter-rouge">CheckValue</code>: <code class="language-plaintext highlighter-rouge">CheckSortKey</code> 对应的 value 值；该域只有在 <code class="language-plaintext highlighter-rouge">CheckValueExist</code> 为 <code class="language-plaintext highlighter-rouge">true</code> 时有意义。</li>
+      <li><code class="language-plaintext highlighter-rouge">CheckValueExist</code>: <code class="language-plaintext highlighter-rouge">CheckSortKey</code> 对应的 value 是否存在；该域只有在 <code class="language-plaintext highlighter-rouge">ReturnCheckValue</code> 为 <code class="language-plaintext highlighter-rouge">true</code> 时有意义。</li>
+      <li><code class="language-plaintext highlighter-rouge">ReturnCheckValue</code>: 是否返回了 <code class="language-plaintext highlighter-rouge">CheckSortKey</code> 对应的 value。</li>
     </ul>
   </li>
-  <li>异常：如果出现异常，譬如网络错误、超时错误、服务端错误等，可以访问error获取具体错误类型</li>
+  <li>异常：如果出现异常，譬如网络错误、超时错误、服务端错误等，可以访问 error 获取具体错误类型</li>
 </ul>
 
 <h3 id="sortkeycount">SortKeyCount</h3>
-<p>获取某个HashKey下所有SortKey的个数。</p>
+<p>获取某个 HashKey 下所有 SortKey 的个数。</p>
 <div class="language-go highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c">// Returns the count of sortkeys under hashkey.</span>
 <span class="c">// `hashKey`: CAN'T be nil or empty.</span>
 <span class="n">SortKeyCount</span><span class="p">(</span><span class="n">ctx</span> <span class="n">context</span><span class="o">.</span><span class="n">Context</span><span class="p">,</span> <span class="n">hashKey</span> <span class="p">[]</span><span class="kt">byte</span><span class="p">)</span> <span class="p">(</span><span class="kt">int64</span><span class="p">,</span> <span class="kt">error</span><span class="p">)</span>
 </code></pre></div></div>
 <p>注：</p>
 <ul>
-  <li>参数：需传入context、hashKey</li>
-  <li>返回值：返回HashKey下所有SortKey的个数</li>
-  <li>异常：如果出现异常，譬如网络错误、超时错误、服务端错误等，可以访问error获取具体错误类型</li>
+  <li>参数：需传入 <code class="language-plaintext highlighter-rouge">context</code>、<code class="language-plaintext highlighter-rouge">hashKey</code></li>
+  <li>返回值：返回 <code class="language-plaintext highlighter-rouge">HashKey</code> 下所有 <code class="language-plaintext highlighter-rouge">SortKey</code> 的个数</li>
+  <li>异常：如果出现异常，譬如网络错误、超时错误、服务端错误等，可以访问 error 获取具体错误类型</li>
 </ul>
 
 <h3 id="incr">Incr</h3>
 <p>单行原子增(减)操作。详细说明参见<a href="/zh/api/single-atomic#cas操作">单行原子操作</a>。<br />
-该操作先将key所指向的value的字节串转换为int64类型, 然后加上increment，将结果转换为字节串设置为新值。
-当参数increment为正数时，即原子加；当参数increment为负数时，即原子减。</p>
+该操作先将 key 所指向的 value 的字节串转换为 int64 类型, 然后加上 increment，将结果转换为字节串设置为新值。
+当参数 increment 为正数时，即原子加；当参数 increment 为负数时，即原子减。</p>
 <div class="language-go highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c">// Atomically increment value by key from the cluster.</span>
 <span class="c">// Returns the new value.</span>
 <span class="c">// `hashKey` / `sortKeys` : CAN'T be nil or empty</span>
@@ -1242,24 +1254,24 @@ MultiGetRangeOpt(ctx context.Context, hashKey []byte, startSortKey []byte, stopS
 </code></pre></div></div>
 <p>注：</p>
 <ul>
-  <li>参数：需传入context、hashKey、sortkey、increment</li>
+  <li>参数：需传入 <code class="language-plaintext highlighter-rouge">context</code>、<code class="language-plaintext highlighter-rouge">hashKey</code>、<code class="language-plaintext highlighter-rouge">sortKey</code>、<code class="language-plaintext highlighter-rouge">increment</code></li>
   <li>返回值：操作成功后的新值、error</li>
-  <li>异常：如果出现异常，譬如网络错误、超时错误、服务端错误等，可以访问error获取具体错误类型。另外以下情况也会抛出异常：
+  <li>异常：如果出现异常，譬如网络错误、超时错误、服务端错误等，可以访问 error 获取具体错误类型。另外以下情况也会抛出异常：
     <ul>
-      <li>旧值转换为int64时出错，譬如不是合法的数字或者超出int64范围。</li>
-      <li>旧值加上increment后的结果超出int64范围。</li>
+      <li>旧值转换为 int64 时出错，譬如不是合法的数字或者超出 int64 范围。</li>
+      <li>旧值加上 increment 后的结果超出 int64 范围。</li>
     </ul>
   </li>
   <li>其他说明：
     <ul>
-      <li>如果旧值不存在，则把旧值当做0处理，即新值等于increment。</li>
-      <li>TTL语义：如果旧值存在，新值的TTL和旧值保持一致；如果旧值不存在，新值将不设TTL。</li>
+      <li>如果旧值不存在，则把旧值当做 0 处理，即新值等于 increment。</li>
+      <li>TTL 语义：如果旧值存在，新值的 TTL 和旧值保持一致；如果旧值不存在，新值将不设 TTL。</li>
     </ul>
   </li>
 </ul>
 
 <h3 id="batchget">BatchGet</h3>
-<p>读取一批数据，对get函数的批量封装。该函数并发地向server发送异步请求，并等待结果。如果有任意一个请求失败，就提前终止并抛出异常。如果抛出了异常，则values中的结果是未定义的。</p>
+<p>读取一批数据，对 get 函数的批量封装。该函数并发地向 server 发送异步请求，并等待结果。如果有任意一个请求失败，就提前终止并抛出异常。如果抛出了异常，则 values 中的结果是未定义的。</p>
 <div class="language-go highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c">// Gets values from a batch of CompositeKeys. Internally it distributes each key</span>
 <span class="c">// into a Get call and wait until all returned.</span>
 <span class="c">//</span>
@@ -1274,9 +1286,9 @@ MultiGetRangeOpt(ctx context.Context, hashKey []byte, startSortKey []byte, stopS
 </code></pre></div></div>
 <p>注：</p>
 <ul>
-  <li>参数：需传入context、CompositeKey</li>
-  <li>返回值：Values、error。如果读取成功，Values[i]中存放Keys[i]对应的结果，如果value不存在则为null。</li>
-  <li>异常：如果出现异常，譬如网络错误、超时错误、服务端错误等，可以访问error获取具体错误类型。</li>
+  <li>参数：需传入 <code class="language-plaintext highlighter-rouge">context</code>、<code class="language-plaintext highlighter-rouge">keys</code></li>
+  <li>返回值：<code class="language-plaintext highlighter-rouge">values</code>、<code class="language-plaintext highlighter-rouge">error</code>。如果读取成功，<code class="language-plaintext highlighter-rouge">values[i]</code> 中存放 <code class="language-plaintext highlighter-rouge">keys[i]</code> 对应的结果，如果 value 不存在则为 <code class="language-plaintext highlighter-rouge">nil</code>。</li>
+  <li>异常：如果出现异常，譬如网络错误、超时错误、服务端错误等，可以访问 <code class="language-plaintext highlighter-rouge">error</code> 获取具体错误类型。</li>
   <li>其他说明：
     <ul>
       <li>该方法不是原子的，有可能出现部分成功部分失败的情况，只要任意一个失败都会抛出异常。</li>
@@ -1326,18 +1338,19 @@ MultiGetRangeOpt(ctx context.Context, hashKey []byte, startSortKey []byte, stopS
     本页导航
 </p>
 <ul class="menu-list">
-  <li><a href="#获取go客户端">获取go客户端</a></li>
+  <li><a href="#获取-go-客户端">获取 go 客户端</a></li>
   <li><a href="#客户端配置">客户端配置</a></li>
   <li><a href="#接口定义">接口定义</a>
     <ul>
-      <li><a href="#创建client实例">创建Client实例</a></li>
-      <li><a href="#创建tableconnector实例">创建TableConnector实例</a></li>
-      <li><a href="#tableconnector接口">TableConnector接口</a>
+      <li><a href="#创建-client-实例">创建 Client 实例</a></li>
+      <li><a href="#创建-tableconnector-实例">创建 TableConnector 实例</a></li>
+      <li><a href="#tableconnector-接口">TableConnector 接口</a>
         <ul>
           <li><a href="#get">Get</a></li>
           <li><a href="#set-and-setttl">Set and SetTTL</a></li>
           <li><a href="#del">Del</a></li>
           <li><a href="#multiget-and-multigetopt">MultiGet and MultiGetOpt</a></li>
+          <li><a href="#multigetrange-and-multigetrangeopt">MultiGetRange and MultiGetRangeOpt</a></li>
           <li><a href="#multiset-and-multisetopt">MultiSet and MultiSetOpt</a></li>
           <li><a href="#multidel">MultiDel</a></li>
           <li><a href="#delrange-and-delrangeopt">DelRange and DelRangeOpt</a></li>
