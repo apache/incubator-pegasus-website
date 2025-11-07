@@ -2,11 +2,11 @@
 permalink: clients/index.html
 ---
 
-Pegasus 目前提供以下多种客户端支持：
+Pegasus currently provides support for the following clients:
 
-| 编程语言 | 项目链接 |
+| Programming Language | Project Link |
 | Java | <https://github.com/apache/incubator-pegasus/tree/master/java-client> |
 | Scala | <https://github.com/apache/incubator-pegasus/tree/master/scala-client> |
 | Go | <https://github.com/apache/incubator-pegasus/tree/master/go-client> |
 | Python | <https://github.com/apache/incubator-pegasus/tree/master/python-client> |
-| NodeJs | <https://github.com/apache/incubator-pegasus/tree/master/nodejs-client> |
+| Node.js | <https://github.com/apache/incubator-pegasus/tree/master/nodejs-client> |
