@@ -16,15 +16,15 @@
 <meta name="generator" content="Jekyll v4.4.1" />
 <meta property="og:title" content="Node Client" />
 <meta property="og:locale" content="en_US" />
-<meta name="description" content="安装NodeJs客户端 项目地址：Pegasus NodeJS Client 下载并将客户端依赖添加到package.json中： npm install pegasus-nodejs-client --save 创建/关闭客户端 create let pegasusClient = require(&#39;pegasus-nodejs-client&#39;); /** * Create a client instance * @param {Object} configs * {Array} configs.metaServers required * {String} configs.metaServers[i] required * {Number} configs.operationTimeout(ms) optional * {Object} configs.log optional * @return {Client} client instance * @throws {InvalidParamException} */ client = pegasusClient.create({ metaServers: [&#39;127.0.0.1:34601&#39;, &#39;127.0.0.1:34602&#39;, &#39;127.0.0.1:34603&#39;], operationTimeout : 5000, log : log, }); metaServers为meta server地址列表，为必填项 operationTimeout为本次操作的超时时间，单位是毫秒，默认是1000ms log为日志库实例 我们使用日志库 log4js 默认使用的日志配置在log_config.js文件中，配置如下： let filename = &quot;./logs/&quot;+process.pid+&quot;/pegasus-nodejs-client.log&quot;; let logConfig = { appenders: { pegasus: { type: &quot;file&quot;, filename: filename, maxLogSize: 104857600, backups: 10 } }, categories: { default: { appenders: [&quot;pegasus&quot;], level: &quot;INFO&quot; } } }; 上述配置表示，会将错误级别等于及高于INFO级别的日志存储在文件中，每个日志文件最大100M，最多保留10个日志文件 若不想使用默认配置，则需要重新定义如上的logConfig对象，作为创建客户端时的log对象 当参数有误时，会抛出异常，停止后续操作" />
-<meta property="og:description" content="安装NodeJs客户端 项目地址：Pegasus NodeJS Client 下载并将客户端依赖添加到package.json中： npm install pegasus-nodejs-client --save 创建/关闭客户端 create let pegasusClient = require(&#39;pegasus-nodejs-client&#39;); /** * Create a client instance * @param {Object} configs * {Array} configs.metaServers required * {String} configs.metaServers[i] required * {Number} configs.operationTimeout(ms) optional * {Object} configs.log optional * @return {Client} client instance * @throws {InvalidParamException} */ client = pegasusClient.create({ metaServers: [&#39;127.0.0.1:34601&#39;, &#39;127.0.0.1:34602&#39;, &#39;127.0.0.1:34603&#39;], operationTimeout : 5000, log : log, }); metaServers为meta server地址列表，为必填项 operationTimeout为本次操作的超时时间，单位是毫秒，默认是1000ms log为日志库实例 我们使用日志库 log4js 默认使用的日志配置在log_config.js文件中，配置如下： let filename = &quot;./logs/&quot;+process.pid+&quot;/pegasus-nodejs-client.log&quot;; let logConfig = { appenders: { pegasus: { type: &quot;file&quot;, filename: filename, maxLogSize: 104857600, backups: 10 } }, categories: { default: { appenders: [&quot;pegasus&quot;], level: &quot;INFO&quot; } } }; 上述配置表示，会将错误级别等于及高于INFO级别的日志存储在文件中，每个日志文件最大100M，最多保留10个日志文件 若不想使用默认配置，则需要重新定义如上的logConfig对象，作为创建客户端时的log对象 当参数有误时，会抛出异常，停止后续操作" />
+<meta name="description" content="安装NodeJs客户端 项目地址：Pegasus NodeJS Client 下载并将客户端依赖添加到 package.json 中： npm install pegasus-nodejs-client --save 创建/关闭客户端 create let pegasusClient = require(&#39;pegasus-nodejs-client&#39;); /** * Create a client instance * @param {Object} configs * {Array} configs.metaServers required * {String} configs.metaServers[i] required * {Number} configs.operationTimeout(ms) optional * {Object} configs.log optional * @return {Client} client instance * @throws {InvalidParamException} */ client = pegasusClient.create({ metaServers: [&#39;127.0.0.1:34601&#39;, &#39;127.0.0.1:34602&#39;, &#39;127.0.0.1:34603&#39;], operationTimeout : 5000, log : log, }); metaServers 为 meta server 地址列表，为必填项 operationTimeout 为本次操作的超时时间，单位是毫秒，默认是1000ms log 为日志库实例 我们使用日志库 log4js 默认使用的日志配置在 log_config.js 文件中，配置如下： let filename = &quot;./logs/&quot;+process.pid+&quot;/pegasus-nodejs-client.log&quot;; let logConfig = { appenders: { pegasus: { type: &quot;file&quot;, filename: filename, maxLogSize: 104857600, backups: 10 } }, categories: { default: { appenders: [&quot;pegasus&quot;], level: &quot;INFO&quot; } } }; 上述配置表示，会将错误级别等于及高于 INFO 级别的日志存储在文件中，每个日志文件最大 100M，最多保留 10 个日志文件 若不想使用默认配置，则需要重新定义如上的 logConfig 对象，作为创建客户端时的 log 对象 当参数有误时，会抛出异常，停止后续操作" />
+<meta property="og:description" content="安装NodeJs客户端 项目地址：Pegasus NodeJS Client 下载并将客户端依赖添加到 package.json 中： npm install pegasus-nodejs-client --save 创建/关闭客户端 create let pegasusClient = require(&#39;pegasus-nodejs-client&#39;); /** * Create a client instance * @param {Object} configs * {Array} configs.metaServers required * {String} configs.metaServers[i] required * {Number} configs.operationTimeout(ms) optional * {Object} configs.log optional * @return {Client} client instance * @throws {InvalidParamException} */ client = pegasusClient.create({ metaServers: [&#39;127.0.0.1:34601&#39;, &#39;127.0.0.1:34602&#39;, &#39;127.0.0.1:34603&#39;], operationTimeout : 5000, log : log, }); metaServers 为 meta server 地址列表，为必填项 operationTimeout 为本次操作的超时时间，单位是毫秒，默认是1000ms log 为日志库实例 我们使用日志库 log4js 默认使用的日志配置在 log_config.js 文件中，配置如下： let filename = &quot;./logs/&quot;+process.pid+&quot;/pegasus-nodejs-client.log&quot;; let logConfig = { appenders: { pegasus: { type: &quot;file&quot;, filename: filename, maxLogSize: 104857600, backups: 10 } }, categories: { default: { appenders: [&quot;pegasus&quot;], level: &quot;INFO&quot; } } }; 上述配置表示，会将错误级别等于及高于 INFO 级别的日志存储在文件中，每个日志文件最大 100M，最多保留 10 个日志文件 若不想使用默认配置，则需要重新定义如上的 logConfig 对象，作为创建客户端时的 log 对象 当参数有误时，会抛出异常，停止后续操作" />
 <meta property="og:site_name" content="Pegasus" />
 <meta property="og:type" content="article" />
-<meta property="article:published_time" content="2025-11-16T14:10:33+00:00" />
+<meta property="article:published_time" content="2025-11-16T14:11:34+00:00" />
 <meta name="twitter:card" content="summary" />
 <meta property="twitter:title" content="Node Client" />
 <script type="application/ld+json">
-{"@context":"https://schema.org","@type":"BlogPosting","dateModified":"2025-11-16T14:10:33+00:00","datePublished":"2025-11-16T14:10:33+00:00","description":"安装NodeJs客户端 项目地址：Pegasus NodeJS Client 下载并将客户端依赖添加到package.json中： npm install pegasus-nodejs-client --save 创建/关闭客户端 create let pegasusClient = require(&#39;pegasus-nodejs-client&#39;); /** * Create a client instance * @param {Object} configs * {Array} configs.metaServers required * {String} configs.metaServers[i] required * {Number} configs.operationTimeout(ms) optional * {Object} configs.log optional * @return {Client} client instance * @throws {InvalidParamException} */ client = pegasusClient.create({ metaServers: [&#39;127.0.0.1:34601&#39;, &#39;127.0.0.1:34602&#39;, &#39;127.0.0.1:34603&#39;], operationTimeout : 5000, log : log, }); metaServers为meta server地址列表，为必填项 operationTimeout为本次操作的超时时间，单位是毫秒，默认是1000ms log为日志库实例 我们使用日志库 log4js 默认使用的日志配置在log_config.js文件中，配置如下： let filename = &quot;./logs/&quot;+process.pid+&quot;/pegasus-nodejs-client.log&quot;; let logConfig = { appenders: { pegasus: { type: &quot;file&quot;, filename: filename, maxLogSize: 104857600, backups: 10 } }, categories: { default: { appenders: [&quot;pegasus&quot;], level: &quot;INFO&quot; } } }; 上述配置表示，会将错误级别等于及高于INFO级别的日志存储在文件中，每个日志文件最大100M，最多保留10个日志文件 若不想使用默认配置，则需要重新定义如上的logConfig对象，作为创建客户端时的log对象 当参数有误时，会抛出异常，停止后续操作","headline":"Node Client","mainEntityOfPage":{"@type":"WebPage","@id":"/clients/node-client"},"url":"/clients/node-client"}</script>
+{"@context":"https://schema.org","@type":"BlogPosting","dateModified":"2025-11-16T14:11:34+00:00","datePublished":"2025-11-16T14:11:34+00:00","description":"安装NodeJs客户端 项目地址：Pegasus NodeJS Client 下载并将客户端依赖添加到 package.json 中： npm install pegasus-nodejs-client --save 创建/关闭客户端 create let pegasusClient = require(&#39;pegasus-nodejs-client&#39;); /** * Create a client instance * @param {Object} configs * {Array} configs.metaServers required * {String} configs.metaServers[i] required * {Number} configs.operationTimeout(ms) optional * {Object} configs.log optional * @return {Client} client instance * @throws {InvalidParamException} */ client = pegasusClient.create({ metaServers: [&#39;127.0.0.1:34601&#39;, &#39;127.0.0.1:34602&#39;, &#39;127.0.0.1:34603&#39;], operationTimeout : 5000, log : log, }); metaServers 为 meta server 地址列表，为必填项 operationTimeout 为本次操作的超时时间，单位是毫秒，默认是1000ms log 为日志库实例 我们使用日志库 log4js 默认使用的日志配置在 log_config.js 文件中，配置如下： let filename = &quot;./logs/&quot;+process.pid+&quot;/pegasus-nodejs-client.log&quot;; let logConfig = { appenders: { pegasus: { type: &quot;file&quot;, filename: filename, maxLogSize: 104857600, backups: 10 } }, categories: { default: { appenders: [&quot;pegasus&quot;], level: &quot;INFO&quot; } } }; 上述配置表示，会将错误级别等于及高于 INFO 级别的日志存储在文件中，每个日志文件最大 100M，最多保留 10 个日志文件 若不想使用默认配置，则需要重新定义如上的 logConfig 对象，作为创建客户端时的 log 对象 当参数有误时，会抛出异常，停止后续操作","headline":"Node Client","mainEntityOfPage":{"@type":"WebPage","@id":"/clients/node-client"},"url":"/clients/node-client"}</script>
 <!-- End Jekyll SEO tag -->
 
 </head>
@@ -740,7 +740,7 @@
                 <div class="content">
                     <h1 id="安装nodejs客户端">安装NodeJs客户端</h1>
 <p>项目地址：<a href="https://github.com/apache/incubator-pegasus/tree/master/nodejs-client">Pegasus NodeJS Client</a>
-下载并将客户端依赖添加到package.json中：<br />
+下载并将客户端依赖添加到 package.json 中：<br />
 <code class="language-plaintext highlighter-rouge">npm install pegasus-nodejs-client --save</code></p>
 <h1 id="创建关闭客户端">创建/关闭客户端</h1>
 <h2 id="create">create</h2>
@@ -762,11 +762,11 @@ client = pegasusClient.create({
 });
 </code></pre></div></div>
 <ul>
-  <li>metaServers为meta server地址列表，为必填项</li>
-  <li>operationTimeout为本次操作的超时时间，单位是毫秒，默认是1000ms</li>
-  <li>log为日志库实例</li>
+  <li>metaServers 为 meta server 地址列表，为必填项</li>
+  <li>operationTimeout 为本次操作的超时时间，单位是毫秒，默认是1000ms</li>
+  <li>log 为日志库实例</li>
   <li>我们使用日志库 <a href="https://github.com/log4js-node/log4js-node">log4js</a></li>
-  <li>默认使用的日志配置在<code class="language-plaintext highlighter-rouge">log_config.js</code>文件中，配置如下：
+  <li>默认使用的日志配置在 <code class="language-plaintext highlighter-rouge">log_config.js</code> 文件中，配置如下：
     <div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>let filename = "./logs/"+process.pid+"/pegasus-nodejs-client.log";
 let logConfig = {
  appenders: { 
@@ -782,9 +782,9 @@ let logConfig = {
  }
 };
 </code></pre></div>    </div>
-    <p>上述配置表示，会将错误级别等于及高于INFO级别的日志存储在文件中，每个日志文件最大100M，最多保留10个日志文件</p>
+    <p>上述配置表示，会将错误级别等于及高于 INFO 级别的日志存储在文件中，每个日志文件最大 100M，最多保留 10 个日志文件</p>
   </li>
-  <li>若不想使用默认配置，则需要重新定义如上的logConfig对象，作为创建客户端时的log对象</li>
+  <li>若不想使用默认配置，则需要重新定义如上的 logConfig 对象，作为创建客户端时的 log 对象</li>
   <li>当参数有误时，会抛出异常，停止后续操作</li>
 </ul>
 
@@ -817,12 +817,12 @@ client.close();
  );
 </code></pre></div></div>
 <ul>
-  <li>get操作的必填参数有表名，hashKey，sortKey和callback</li>
-  <li>hashKey，sortKey和value都是Buffer对象，这与pegasus服务端key与value均为byte的语义保持一致</li>
+  <li>get 操作的必填参数有表名，hashKey，sortKey和callback</li>
+  <li>hashKey，sortKey 和 value 都是 Buffer 对象，这与 pegasus 服务端 key 与 value 均为 byte 的语义保持一致</li>
   <li>超时时间为可选参数，默认为创建客户端时设定的超时时间</li>
-  <li>当读操作成功时，callback的err为空，result.value为读到的值</li>
-  <li>当读操作失败时，callback的result为空</li>
-  <li>客户端不认为读不到值时错误，因此当读不到值时，err仍为空，result.value为<code class="language-plaintext highlighter-rouge">Buffer('')</code></li>
+  <li>当读操作成功时，callback 的 err 为空，result.value 为读到的值</li>
+  <li>当读操作失败时，callback 的 result 为空</li>
+  <li>客户端不认为读不到值时错误，因此当读不到值时，err 仍为空，result.value 为 <code class="language-plaintext highlighter-rouge">Buffer('')</code></li>
 </ul>
 
 <h2 id="set">set</h2>
@@ -849,8 +849,8 @@ client.close();
  );
 </code></pre></div></div>
 <ul>
-  <li>set操作的必填参数有表名，hashKey，sortKey，value和callback</li>
-  <li>ttl的含义为过期时间，单位为秒，默认ttl为0，则表示该数据不过期，若用户设置ttl为86400s，则表示该数据将在1天之后过期，用户在1天之后将无法读取到该数据</li>
+  <li>set 操作的必填参数有表名，hashKey，sortKey，value 和 callback</li>
+  <li>ttl 的含义为过期时间，单位为秒，默认 ttl 为 0，则表示该数据不过期，若用户设置 ttl 为 86400s，则表示该数据将在 1 天之后过期，用户在 1 天之后将无法读取到该数据</li>
 </ul>
 
 <h2 id="del">del</h2>
@@ -875,11 +875,11 @@ client.close();
  );
 </code></pre></div></div>
 <ul>
-  <li>del操作的必填参数有表名，hashKey，sortKey和callback</li>
+  <li>del 操作的必填参数有表名，hashKey，sortKey 和 callback</li>
 </ul>
 
 <h2 id="multiget">multiGet</h2>
-<p>读同一个hashKey下的多行数据</p>
+<p>读同一个 hashKey 下的多行数据</p>
 <div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>/**
  * Multi Get
  * @param {String}      tableName
@@ -904,10 +904,10 @@ client.close();
  );
 </code></pre></div></div>
 <ul>
-  <li>multiGet操作的必填参数为表名，hashKey，sortKey数组和callback</li>
-  <li>若sortKey数据为空数组，则表示期望获取该hashKey下的所有sortKey的值</li>
-  <li>maxFetchCount为最多获取数据的条数，默认为100</li>
-  <li>maxFetchSize为最大获取数据的大小，默认为1000000字节</li>
+  <li>multiGet 操作的必填参数为表名，hashKey，sortKey 数组和 callback</li>
+  <li>若 sortKey 数据为空数组，则表示期望获取该 hashKey 下的所有 sortKey 的值</li>
+  <li>maxFetchCount 为最多获取数据的条数，默认为 100</li>
+  <li>maxFetchSize 为最大获取数据的大小，默认为 1000000 字节</li>
 </ul>
 
 <h2 id="batchget">batchGet</h2>
@@ -934,15 +934,15 @@ client.close();
  );
 </code></pre></div></div>
 <ul>
-  <li>batchGet操作的必填参数为表名，hashKey数组，sortKey数组和callback</li>
-  <li>与multiGet不同的是，batchGet支持读多个hashKey的值</li>
-  <li>batchGet将等待所有本次batch的所有get操作都返回结果后才返回</li>
-  <li>callback的err总是为null</li>
-  <li>callback的result是一个数组，result[i].error表示第i个get操作的出错情况，result[i].data表示第i个get操作的结果</li>
+  <li>batchGet 操作的必填参数为表名，hashKey 数组，sortKey 数组和 callback</li>
+  <li>与 multiGet 不同的是，batchGet 支持读多个 hashKey 的值</li>
+  <li>batchGet 将等待所有本次 batch 的所有 get 操作都返回结果后才返回</li>
+  <li>callback 的 err 总是为 null</li>
+  <li>callback 的 result 是一个数组，result[i].error 表示第 i 个 get 操作的出错情况，result[i].data 表示第 i 个 get 操作的结果</li>
 </ul>
 
 <h2 id="multiset">multiSet</h2>
-<p>写同一个hashKey下的多行数据</p>
+<p>写同一个 hashKey 下的多行数据</p>
 <div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>/**
  * Multi Set
  * @param {String}      tableName
@@ -965,7 +965,7 @@ client.close();
  );
 </code></pre></div></div>
 <ul>
-  <li>multiSet操作的必填参数为表名，hashKey，sortKey-value对象数组和callback</li>
+  <li>multiSet 操作的必填参数为表名，hashKey，sortKey-value 对象数组和 callback</li>
 </ul>
 
 <h2 id="batchset">batchSet</h2>
@@ -993,8 +993,8 @@ client.close();
  );
 </code></pre></div></div>
 <ul>
-  <li>batchSet操作的必填参数为表名，hashKey-sortKey-value对象数组和callback</li>
-  <li>callback的err总是为null，result[i].error表示第i个set操作的出错情况</li>
+  <li>batchSet 操作的必填参数为表名，hashKey-sortKey-value 对象数组和 callback</li>
+  <li>callback 的 err 总是为 null，result[i].error 表示第 i 个 set 操作的出错情况</li>
 </ul>
 
                 </div>

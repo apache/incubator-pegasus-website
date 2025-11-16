@@ -16,15 +16,15 @@
 <meta name="generator" content="Jekyll v4.4.1" />
 <meta property="og:title" content="Node Client" />
 <meta property="og:locale" content="en_US" />
-<meta name="description" content="TRANSLATING" />
-<meta property="og:description" content="TRANSLATING" />
+<meta name="description" content="Install the Node.js Client Project repository: Pegasus NodeJS Client" />
+<meta property="og:description" content="Install the Node.js Client Project repository: Pegasus NodeJS Client" />
 <meta property="og:site_name" content="Pegasus" />
 <meta property="og:type" content="article" />
-<meta property="article:published_time" content="2025-11-16T14:10:33+00:00" />
+<meta property="article:published_time" content="2025-11-16T14:11:34+00:00" />
 <meta name="twitter:card" content="summary" />
 <meta property="twitter:title" content="Node Client" />
 <script type="application/ld+json">
-{"@context":"https://schema.org","@type":"BlogPosting","dateModified":"2025-11-16T14:10:33+00:00","datePublished":"2025-11-16T14:10:33+00:00","description":"TRANSLATING","headline":"Node Client","mainEntityOfPage":{"@type":"WebPage","@id":"/clients/node-client"},"url":"/clients/node-client"}</script>
+{"@context":"https://schema.org","@type":"BlogPosting","dateModified":"2025-11-16T14:11:34+00:00","datePublished":"2025-11-16T14:11:34+00:00","description":"Install the Node.js Client Project repository: Pegasus NodeJS Client","headline":"Node Client","mainEntityOfPage":{"@type":"WebPage","@id":"/clients/node-client"},"url":"/clients/node-client"}</script>
 <!-- End Jekyll SEO tag -->
 
 </head>
@@ -734,7 +734,269 @@
             </section>
             <section class="section" style="padding-top: 2rem;">
                 <div class="content">
-                    <p>TRANSLATING</p>
+                    <h1 id="install-the-nodejs-client">Install the Node.js Client</h1>
+<p>Project repository: <a href="https://github.com/apache/incubator-pegasus/tree/master/nodejs-client">Pegasus NodeJS Client</a></p>
+
+<p>Download and add the client dependency to <code class="language-plaintext highlighter-rouge">package.json</code>:
+<code class="language-plaintext highlighter-rouge">npm install pegasus-nodejs-client --save</code></p>
+
+<h1 id="createclose-client">Create/Close Client</h1>
+<h2 id="create">create</h2>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>let pegasusClient = require('pegasus-nodejs-client');
+/**
+ * Create a client instance
+ * @param   {Object}  configs
+ *          {Array}   configs.metaServers          required
+ *          {String}  configs.metaServers[i]       required
+ *          {Number}  configs.operationTimeout(ms) optional
+ *          {Object}  configs.log                  optional
+ * @return  {Client}  client instance
+ * @throws  {InvalidParamException}
+ */
+client = pegasusClient.create({
+    metaServers: ['127.0.0.1:34601', '127.0.0.1:34602', '127.0.0.1:34603'],
+    operationTimeout : 5000,
+    log : log,
+});
+</code></pre></div></div>
+<ul>
+  <li><code class="language-plaintext highlighter-rouge">metaServers</code> is the list of meta server addresses and is required.</li>
+  <li><code class="language-plaintext highlighter-rouge">operationTimeout</code> is the timeout for the current operation in milliseconds, default is <code class="language-plaintext highlighter-rouge">1000</code> ms.</li>
+  <li><code class="language-plaintext highlighter-rouge">log</code> is the logger instance.
+    <ul>
+      <li>We use <a href="https://github.com/log4js-node/log4js-node">log4js</a>.</li>
+      <li>The default logger configuration is in <code class="language-plaintext highlighter-rouge">log_config.js</code>, as follows:
+        <div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>let filename = "./logs/"+process.pid+"/pegasus-nodejs-client.log";
+let logConfig = {
+  appenders: { 
+    pegasus: {
+      type: "file", 
+      filename: filename, 
+      maxLogSize: 104857600, 
+      backups: 10
+    } 
+  },
+  categories: { 
+    default: { appenders: ["pegasus"], level: "INFO" } 
+  }
+};
+</code></pre></div>        </div>
+        <p>The above configuration means logs of level <code class="language-plaintext highlighter-rouge">INFO</code> and above are written to file, each file is capped at 100MB, and at most 10 backup files are kept.</p>
+      </li>
+      <li>If you don’t want to use the default configuration, redefine the <code class="language-plaintext highlighter-rouge">logConfig</code> object above and pass it as the <code class="language-plaintext highlighter-rouge">log</code> object when creating the client.</li>
+    </ul>
+  </li>
+  <li>If the parameters are invalid, an exception will be thrown and subsequent operations will stop.</li>
+</ul>
+
+<h2 id="close">close</h2>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>// close client when you do not need to use it
+client.close();
+</code></pre></div></div>
+
+<h1 id="api">API</h1>
+<h2 id="get">get</h2>
+<p>Read a single row.</p>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>/**
+ * Get value
+ * @param {String}      tableName
+ * @param {Object}      args
+ *        {Buffer}      args.hashKey      required
+ *        {Buffer}      args.sortKey      required
+ *        {Number}      args.timeout(ms)  optional
+ * @param {Function}    callback
+ * @throws{InvalidParamException} callback is not function
+ */
+ client.get(
+   tableName,  
+   args, 
+   function(err, result){
+     // if get operation succeed, err will be null,
+     // result.hashKey is hashKey, result.sortKey is sortKey, result.value is value
+     // else err will be instance of PException, result will be null
+   }
+ );
+</code></pre></div></div>
+<ul>
+  <li>Required parameters for <code class="language-plaintext highlighter-rouge">get</code> are table name, <code class="language-plaintext highlighter-rouge">hashKey</code>, <code class="language-plaintext highlighter-rouge">sortKey</code>, and <code class="language-plaintext highlighter-rouge">callback</code>.</li>
+  <li><code class="language-plaintext highlighter-rouge">hashKey</code>, <code class="language-plaintext highlighter-rouge">sortKey</code>, and <code class="language-plaintext highlighter-rouge">value</code> are <code class="language-plaintext highlighter-rouge">Buffer</code> objects, consistent with Pegasus server semantics where key and value are bytes.</li>
+  <li><code class="language-plaintext highlighter-rouge">timeout</code> is optional, defaulting to the timeout configured when creating the client.</li>
+  <li>On success, <code class="language-plaintext highlighter-rouge">callback</code> receives <code class="language-plaintext highlighter-rouge">err = null</code> and <code class="language-plaintext highlighter-rouge">result.value</code> is the retrieved value.</li>
+  <li>On failure, <code class="language-plaintext highlighter-rouge">callback</code> receives <code class="language-plaintext highlighter-rouge">result = null</code>.</li>
+  <li>The client does not treat “not found” as an error. If key not found, <code class="language-plaintext highlighter-rouge">err</code> is still <code class="language-plaintext highlighter-rouge">null</code> and <code class="language-plaintext highlighter-rouge">result.value</code> is <code class="language-plaintext highlighter-rouge">Buffer('')</code>.</li>
+</ul>
+
+<h2 id="set">set</h2>
+<p>Write a single row.</p>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>/**
+ * Set Value
+ * @param {String}      tableName
+ * @param {Object}      args
+ *        {Buffer}      args.hashKey      required
+ *        {Buffer}      args.sortKey      required
+ *        {Buffer}      args.value        required
+ *        {Number}      args.ttl(s)       optional
+ *        {Number}      args.timeout(ms)  optional
+ * @param {Function}    callback
+ * @throws{InvalidParamException} callback is not function
+ */
+ client.set(
+   tableName,  
+   args, 
+   function(err){
+     // if set operation succeed, err will be null
+     // else err will be instance of PException
+   }
+ );
+</code></pre></div></div>
+<ul>
+  <li>Required parameters for <code class="language-plaintext highlighter-rouge">set</code> are table name, <code class="language-plaintext highlighter-rouge">hashKey</code>, <code class="language-plaintext highlighter-rouge">sortKey</code>, <code class="language-plaintext highlighter-rouge">value</code>, and <code class="language-plaintext highlighter-rouge">callback</code>.</li>
+  <li><code class="language-plaintext highlighter-rouge">ttl</code> is the time-to-live in seconds. The default <code class="language-plaintext highlighter-rouge">ttl</code> is <code class="language-plaintext highlighter-rouge">0</code>, meaning no expiration. For example, <code class="language-plaintext highlighter-rouge">ttl = 86400</code> means the data expires in 1 day, after which the value cannot be read.</li>
+</ul>
+
+<h2 id="del">del</h2>
+<p>Delete a single row.</p>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>/**
+ * Delete value
+ * @param {String}      tableName
+ * @param {Object}      args
+ *        {Buffer}      args.hashKey      required
+ *        {Buffer}      args.sortKey      required
+ *        {Number}      args.timeout(ms)  optional
+ * @param {Function}    callback
+ * @throws{InvalidParamException} callback is not function
+ */
+ client.del(
+   tableName,  
+   args, 
+   function(err){
+     // if set operation succeed, err will be null
+     // else err will be instance of PException
+   }
+ );
+</code></pre></div></div>
+<ul>
+  <li>Required parameters for <code class="language-plaintext highlighter-rouge">del</code> are table name, <code class="language-plaintext highlighter-rouge">hashKey</code>, <code class="language-plaintext highlighter-rouge">sortKey</code>, and <code class="language-plaintext highlighter-rouge">callback</code>.</li>
+</ul>
+
+<h2 id="multiget">multiGet</h2>
+<p>Read multiple rows under the same <code class="language-plaintext highlighter-rouge">hashKey</code>.</p>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>/**
+ * Multi Get
+ * @param {String}      tableName
+ * @param {Object}      args
+ *        {Buffer}      args.hashKey         required
+ *        {Array}       args.sortKeyArray    required
+ *        {Buffer}      args.sortKeyArray[i] required
+ *        {Number}      args.timeout(ms)     optional
+ *        {Number}      args.maxFetchCount   optional
+ *        {Number}      args.maxFetchSize    optional
+ * @param {Function}    callback
+ * @throws{InvalidParamException} callback is not function
+ */
+ client.multiGet(
+   tableName,  
+   args, 
+   function(err, result){
+     // if operation succeed, err will be null,
+     // result[i].hashKey is hashKey, result[i].sortKey is sortKey, result[i].value is value
+     // else err will be instance of PException, result will be null
+   }
+ );
+</code></pre></div></div>
+<ul>
+  <li>Required parameters for <code class="language-plaintext highlighter-rouge">multiGet</code> are table name, <code class="language-plaintext highlighter-rouge">hashKey</code>, array of <code class="language-plaintext highlighter-rouge">sortKey</code>, and <code class="language-plaintext highlighter-rouge">callback</code>.</li>
+  <li>If <code class="language-plaintext highlighter-rouge">sortKeyArray</code> is an empty array, all sort keys under the <code class="language-plaintext highlighter-rouge">hashKey</code> will be retrieved.</li>
+  <li><code class="language-plaintext highlighter-rouge">maxFetchCount</code> limits the maximum number of entries returned, default <code class="language-plaintext highlighter-rouge">100</code>.</li>
+  <li><code class="language-plaintext highlighter-rouge">maxFetchSize</code> limits the maximum bytes returned, default <code class="language-plaintext highlighter-rouge">1000000</code> bytes.</li>
+</ul>
+
+<h2 id="batchget">batchGet</h2>
+<p>Read a batch of entries.</p>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>/**
+ * Batch Get value
+ * @param {String}      tableName
+ * @param {Array}       argsArray
+ *        {Buffer}      argsArray[i].hashKey      required
+ *        {Buffer}      argsArray[i].sortKey      required
+ *        {Number}      argsArray[i].timeout(ms)  optional
+ * @param {Function}    callback
+ * @throws{InvalidParamException} callback is not function
+ */
+ client.batchGet(
+   tableName,  
+   argsArray, 
+   function(err, result){
+     // err will be always be null, result is {'error': err, 'data': result} array
+     // if batchGet[i] operation succeed, result[i].error will be null
+     // result[i].data.hashKey is hashKey, result[i].data.sortKey is sortKey, result[i].data.value is value
+     // else result[i].error will be instance of PException, result[i].data will be null
+   }
+ );
+</code></pre></div></div>
+<ul>
+  <li>Required parameters for <code class="language-plaintext highlighter-rouge">batchGet</code> are table name, arrays of <code class="language-plaintext highlighter-rouge">hashKey</code> and <code class="language-plaintext highlighter-rouge">sortKey</code>, and <code class="language-plaintext highlighter-rouge">callback</code>.</li>
+  <li>Unlike <code class="language-plaintext highlighter-rouge">multiGet</code>, <code class="language-plaintext highlighter-rouge">batchGet</code> supports reading values from multiple <code class="language-plaintext highlighter-rouge">hashKey</code>s.</li>
+  <li><code class="language-plaintext highlighter-rouge">batchGet</code> waits until all <code class="language-plaintext highlighter-rouge">get</code> operations in the batch have returned before responding.</li>
+  <li><code class="language-plaintext highlighter-rouge">callback</code>’s <code class="language-plaintext highlighter-rouge">err</code> is always <code class="language-plaintext highlighter-rouge">null</code>.</li>
+  <li><code class="language-plaintext highlighter-rouge">callback</code>’s <code class="language-plaintext highlighter-rouge">result</code> is an array, where <code class="language-plaintext highlighter-rouge">result[i].error</code> indicates the error of the i-th <code class="language-plaintext highlighter-rouge">get</code> operation, and <code class="language-plaintext highlighter-rouge">result[i].data</code> indicates its result.</li>
+</ul>
+
+<h2 id="multiset">multiSet</h2>
+<p>Write multiple rows under the same <code class="language-plaintext highlighter-rouge">hashKey</code>.</p>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>/**
+ * Multi Set
+ * @param {String}      tableName
+ * @param {Object}      args
+ *        {Buffer}      args.hashKey           required
+ *        {Array}       args.sortKeyValueArray required
+ *                      {'key' : sortKey, 'value' : value}
+ *        {Number}      args.timeout(ms)       optional
+ *        {Number}      args.ttl(s)            optional
+ * @param {Function}    callback
+ * @throws{InvalidParamException} callback is not function
+ */
+ client.multiSet(
+   tableName,  
+   args, 
+   function(err){
+     // if set operation succeed, err will be null
+     // else err will be instance of PException
+   }
+ );
+</code></pre></div></div>
+<ul>
+  <li>Required parameters for <code class="language-plaintext highlighter-rouge">multiSet</code> are table name, <code class="language-plaintext highlighter-rouge">hashKey</code>, array of <code class="language-plaintext highlighter-rouge">sortKey</code>-<code class="language-plaintext highlighter-rouge">value</code> objects, and <code class="language-plaintext highlighter-rouge">callback</code>.</li>
+</ul>
+
+<h2 id="batchset">batchSet</h2>
+<p>Write a batch of entries.</p>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>/**
+ * Batch Set value
+ * @param {String}      tableName
+ * @param {Array}       argsArray
+ *        {Buffer}      argsArray[i].hashKey      required
+ *        {Buffer}      argsArray[i].sortKey      required
+ *        {Buffer}      argsArray[i].value        required
+ *        {Number}      argsArray[i].ttl          optional
+ *        {Number}      argsArray[i].timeout(ms)  optional
+ * @param {Function}    callback
+ * @throws{InvalidParamException} callback is not function
+ */
+ client.batchSet(
+   tableName,  
+   argsArray, 
+   function(err, result){
+     // err will be always be null, result is {'error': err} array
+     // if batchSet[i] operation succeed, result[i].error will be null
+     // else result[i].error will be instance of PException
+   }
+ );
+</code></pre></div></div>
+<ul>
+  <li>Required parameters for <code class="language-plaintext highlighter-rouge">batchSet</code> are table name, array of <code class="language-plaintext highlighter-rouge">hashKey</code>-<code class="language-plaintext highlighter-rouge">sortKey</code>-<code class="language-plaintext highlighter-rouge">value</code> objects, and <code class="language-plaintext highlighter-rouge">callback</code>.</li>
+  <li><code class="language-plaintext highlighter-rouge">callback</code>’s <code class="language-plaintext highlighter-rouge">err</code> is always <code class="language-plaintext highlighter-rouge">null</code>. <code class="language-plaintext highlighter-rouge">result[i].error</code> indicates the error status of the i-th <code class="language-plaintext highlighter-rouge">set</code> operation.</li>
+</ul>
 
                 </div>
             </section>
@@ -777,7 +1039,26 @@
     </span>
     Table of contents
 </p>
-
+<ul class="menu-list">
+  <li><a href="#install-the-nodejs-client">Install the Node.js Client</a></li>
+  <li><a href="#createclose-client">Create/Close Client</a>
+    <ul>
+      <li><a href="#create">create</a></li>
+      <li><a href="#close">close</a></li>
+    </ul>
+  </li>
+  <li><a href="#api">API</a>
+    <ul>
+      <li><a href="#get">get</a></li>
+      <li><a href="#set">set</a></li>
+      <li><a href="#del">del</a></li>
+      <li><a href="#multiget">multiGet</a></li>
+      <li><a href="#batchget">batchGet</a></li>
+      <li><a href="#multiset">multiSet</a></li>
+      <li><a href="#batchset">batchSet</a></li>
+    </ul>
+  </li>
+</ul>
 
         </div>
     </div>
