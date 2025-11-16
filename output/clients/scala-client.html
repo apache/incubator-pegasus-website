@@ -16,15 +16,15 @@
 <meta name="generator" content="Jekyll v4.4.1" />
 <meta property="og:title" content="Scala Client" />
 <meta property="og:locale" content="en_US" />
-<meta name="description" content="TRANSLATING" />
-<meta property="og:description" content="TRANSLATING" />
+<meta name="description" content="Getting the Client Project repository: Pegasus Scala Client" />
+<meta property="og:description" content="Getting the Client Project repository: Pegasus Scala Client" />
 <meta property="og:site_name" content="Pegasus" />
 <meta property="og:type" content="article" />
-<meta property="article:published_time" content="2025-11-06T10:36:30+00:00" />
+<meta property="article:published_time" content="2025-11-16T14:10:33+00:00" />
 <meta name="twitter:card" content="summary" />
 <meta property="twitter:title" content="Scala Client" />
 <script type="application/ld+json">
-{"@context":"https://schema.org","@type":"BlogPosting","dateModified":"2025-11-06T10:36:30+00:00","datePublished":"2025-11-06T10:36:30+00:00","description":"TRANSLATING","headline":"Scala Client","mainEntityOfPage":{"@type":"WebPage","@id":"/clients/scala-client"},"url":"/clients/scala-client"}</script>
+{"@context":"https://schema.org","@type":"BlogPosting","dateModified":"2025-11-16T14:10:33+00:00","datePublished":"2025-11-16T14:10:33+00:00","description":"Getting the Client Project repository: Pegasus Scala Client","headline":"Scala Client","mainEntityOfPage":{"@type":"WebPage","@id":"/clients/scala-client"},"url":"/clients/scala-client"}</script>
 <!-- End Jekyll SEO tag -->
 
 </head>
@@ -734,7 +734,388 @@
             </section>
             <section class="section" style="padding-top: 2rem;">
                 <div class="content">
-                    <p>TRANSLATING</p>
+                    <h1 id="getting-the-client">Getting the Client</h1>
+<p>Project repository: <a href="https://github.com/apache/incubator-pegasus/tree/master/scala-client">Pegasus Scala Client</a></p>
+
+<p>Download:</p>
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>git clone git@github.com:apache/incubator-pegasus.git
+<span class="nb">cd </span>incubator-pegasus/scala-client
+</code></pre></div></div>
+
+<p>Choose the version to use and build. It is recommended to use the <code class="language-plaintext highlighter-rouge">master</code> version. Note that the Scala client depends on the <a href="https://github.com/apache/incubator-pegasus/tree/master/java-client">Java client</a>. Please refer to <a href="/clients/java-client#getting-the-java-client">Getting the Java Client</a> to add the Java dependency to your project. You can package it into a Jar for use:</p>
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>sbt package
+</code></pre></div></div>
+
+<p>Alternatively, install to the local sbt repository for convenient use in sbt projects:</p>
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>sbt publish-local
+</code></pre></div></div>
+
+<p>Or install to the local Maven repository:</p>
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>sbt publish-m2
+</code></pre></div></div>
+
+<p>By default, the project is built with Scala 2.11. When publishing, both 2.11 (<code class="language-plaintext highlighter-rouge">pegasus-scala-client_2.11</code>) and 2.12 (<code class="language-plaintext highlighter-rouge">pegasus-scala-client_2.12</code>) artifacts are released. If your project is built with sbt, you can configure:</p>
+<pre><code class="language-sbt">// Using sbt repository, no suffix needed. It uses the current Scala version, i.e., 2.12
+scalaVersion := "2.12.8"
+libraryDependencies ++= Seq(
+    "com.xiaomi.infra" %% "pegasus-scala-client" % "1.11.4-1-SNAPSHOT"
+)
+</code></pre>
+
+<p>Or configure:</p>
+<pre><code class="language-sbt">// Using a Maven repository (you can add custom Maven repos with resolvers ++= Seq()), suffix required
+scalaVersion := "2.12.8"
+libraryDependencies ++= Seq(
+    "com.xiaomi.infra" % "pegasus-scala-client_2.11" % "1.11.4-1-SNAPSHOT"
+)
+</code></pre>
+
+<p>If your project is built with Maven, add the dependency like:</p>
+<div class="language-xml highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nt">&lt;dependency&gt;</span>
+    <span class="nt">&lt;groupId&gt;</span>com.xiaomi.infra<span class="nt">&lt;/groupId&gt;</span>
+    <span class="nt">&lt;artifactId&gt;</span>pegasus-scala-client_2.11<span class="nt">&lt;/artifactId&gt;</span>
+    <span class="nt">&lt;version&gt;</span>1.11.4-1<span class="nt">&lt;/version&gt;</span>
+<span class="nt">&lt;/dependency&gt;</span>
+</code></pre></div></div>
+
+<h1 id="using-the-client">Using the Client</h1>
+
+<h2 id="get-an-instance">Get an Instance</h2>
+<p>Obtain an instance by specifying server configuration. Scala provides two ways to get an instance:</p>
+
+<p>1) Use file path as configuration parameter. Refer to <a href="/clients/java-client#configuration-file">Java client file-based configuration</a></p>
+<div class="language-scala highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">def</span> <span class="nf">createClient</span><span class="o">(</span><span class="n">configPath</span><span class="k">:</span> <span class="kt">String</span><span class="o">)</span><span class="k">:</span> <span class="kt">ScalaPegasusClient</span>
+</code></pre></div></div>
+<p>Example:</p>
+<div class="language-scala highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">val</span> <span class="nv">pegasusClient</span> <span class="k">=</span> <span class="nv">ScalaPegasusClientFactory</span><span class="o">.</span><span class="py">createClient</span><span class="o">(</span><span class="s">"resource:///pegasus.properties"</span><span class="o">)</span>
+</code></pre></div></div>
+
+<p>2) Use a <code class="language-plaintext highlighter-rouge">Properties</code> object as configuration:</p>
+<div class="language-scala highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">def</span> <span class="nf">createClient</span><span class="o">(</span><span class="n">props</span><span class="k">:</span> <span class="kt">Properties</span><span class="o">)</span><span class="k">:</span> <span class="kt">ScalaPegasusClient</span>
+</code></pre></div></div>
+<p>Example:</p>
+<div class="language-scala highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nc">Properties</span> <span class="n">pegasusConfig</span> <span class="k">=</span> <span class="k">new</span> <span class="nc">Properties</span><span class="o">();</span>
+<span class="nv">pegasusConfig</span><span class="o">.</span><span class="py">setProperty</span><span class="o">(</span><span class="s">"meta_servers"</span><span class="o">,</span> <span class="s">"127.0.0.1:34601,127.0.0.1:34602,127.0.0.1:34603"</span><span class="o">);</span>
+<span class="nv">pegasusConfig</span><span class="o">.</span><span class="py">setProperty</span><span class="o">(</span><span class="s">"operation_timeout"</span><span class="o">,</span> <span class="mi">100</span><span class="o">);</span>
+<span class="k">val</span> <span class="nv">pegasusClient</span> <span class="k">=</span> <span class="nv">ScalaPegasusClientFactory</span><span class="o">.</span><span class="py">createClient</span><span class="o">(</span><span class="n">pegasusConfig</span><span class="o">)</span>
+</code></pre></div></div>
+
+<h2 id="data-operations">Data Operations</h2>
+<p>Note: Before calling functions, ensure you import <code class="language-plaintext highlighter-rouge">Serializers._</code>. See <a href="#implementation-details">Implementation Details</a></p>
+<div class="language-scala highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">val</span> <span class="nv">hashKey</span> <span class="k">=</span> <span class="mi">12345L</span>
+<span class="nv">pegasusClient</span><span class="o">.</span><span class="py">set</span><span class="o">(</span><span class="n">table</span><span class="o">,</span> <span class="n">hashKey</span><span class="o">,</span> <span class="s">"sort_1"</span><span class="o">,</span> <span class="s">"value_1"</span><span class="o">)</span>
+<span class="k">val</span> <span class="nv">value</span> <span class="k">=</span> <span class="nv">pegasusClient</span><span class="o">.</span><span class="py">get</span><span class="o">(</span><span class="n">table</span><span class="o">,</span> <span class="n">hashKey</span><span class="o">,</span> <span class="s">"sort_1"</span><span class="o">).</span><span class="py">as</span><span class="o">[</span><span class="kt">String</span><span class="o">]</span>
+<span class="nv">pegasusClient</span><span class="o">.</span><span class="py">del</span><span class="o">(</span><span class="n">table</span><span class="o">,</span> <span class="n">hashKey</span><span class="o">,</span> <span class="s">"sort_1"</span><span class="o">)</span>
+<span class="nv">pegasusClient</span><span class="o">.</span><span class="py">exists</span><span class="o">(</span><span class="n">table</span><span class="o">,</span> <span class="n">hashKey</span><span class="o">,</span> <span class="s">"sort_1"</span><span class="o">)</span> 
+<span class="nv">pegasusClient</span><span class="o">.</span><span class="py">sortKeyCount</span><span class="o">(</span><span class="n">table</span><span class="o">,</span> <span class="n">hashKey</span><span class="o">)</span>
+<span class="nv">pegasusClient</span><span class="o">.</span><span class="py">close</span>
+</code></pre></div></div>
+
+<h1 id="interface-definition">Interface Definition</h1>
+<p>The Scala client classes are located in <code class="language-plaintext highlighter-rouge">com.xiaomi.infra.pegasus.scalaclient</code>, mainly including the following four classes:</p>
+
+<table>
+  <thead>
+    <tr>
+      <th>Class Name</th>
+      <th>Functionality</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>ScalaPegasusClientFactory</td>
+      <td>Client factory class for creating Client instances</td>
+    </tr>
+    <tr>
+      <td>ScalaPegasusClient</td>
+      <td>Client class that encapsulates various <strong>synchronous APIs</strong>, and can also be used to create Table instances</td>
+    </tr>
+    <tr>
+      <td>ScalaPegasusTable</td>
+      <td>Table class that encapsulates <strong>synchronous APIs</strong> for operating on a single table</td>
+    </tr>
+    <tr>
+      <td>ScalaPegasusAsyncTable</td>
+      <td>Table class that encapsulates <strong>asynchronous APIs</strong> for operating on a single table</td>
+    </tr>
+  </tbody>
+</table>
+
+<p>Users can choose to use the Client class (<code class="language-plaintext highlighter-rouge">ScalaPegasusClient</code>) or the Table classes (<code class="language-plaintext highlighter-rouge">ScalaPegasusTable</code> or <code class="language-plaintext highlighter-rouge">ScalaPegasusAsyncTable</code>) for data access. Differences:</p>
+<ul>
+  <li>The Client class specifies the table name directly in parameters, avoiding the need to open a table, making it simpler to use.</li>
+  <li>The Table classes support both <strong>synchronous and asynchronous APIs</strong>, while the Client class supports only <strong>synchronous APIs</strong>.</li>
+  <li>The Table classes allow individual timeout settings for each operation, whereas the Client class cannot specify timeouts individually and uses the default timeout in the configuration file.</li>
+  <li>The Table classes provide more accurate timeout behavior. The Client class may need to initialize the Table object internally on the first read/write request, causing the initial timeout to be less accurate.</li>
+</ul>
+
+<h2 id="scalapegasusclient-interface">ScalaPegasusClient Interface</h2>
+<h3 id="implementation-details">Implementation Details</h3>
+<p>The <code class="language-plaintext highlighter-rouge">ScalaPegasusClient</code> interface accesses specific tables by holding a <code class="language-plaintext highlighter-rouge">ScalaPegasusTable</code>, which wraps the Java client interface <code class="language-plaintext highlighter-rouge">PegasusTableInterface</code>. The function form is as follows:</p>
+<div class="language-scala highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">def</span> <span class="nf">get</span><span class="o">[</span><span class="kt">H</span>, <span class="kt">S</span><span class="o">](</span><span class="n">table</span><span class="k">:</span> <span class="kt">String</span><span class="o">,</span> <span class="n">hashKey</span><span class="k">:</span> <span class="kt">H</span><span class="o">,</span> <span class="n">sortKey</span><span class="k">:</span> <span class="kt">S</span><span class="o">)(</span><span class="k">implicit</span> <span class="n">hSer</span><span class="k">:</span> <span class="kt">SER</span><span class="o">[</span><span class="kt">H</span><span class="o">],</span> <span class="n">sSer</span><span class="k">:</span> <span class="kt">SER</span><span class="o">[</span><span class="kt">S</span><span class="o">])</span> <span class="k">=</span> <span class="o">{</span>
+    <span class="nf">getTable</span><span class="o">(</span><span class="n">table</span><span class="o">).</span><span class="py">get</span><span class="o">(</span><span class="n">hashKey</span><span class="o">,</span> <span class="n">sortKey</span><span class="o">)</span>
+<span class="o">}</span>
+</code></pre></div></div>
+<p>Each table operation function is defined as a generic function. The parameter list <code class="language-plaintext highlighter-rouge">(table: String, hashKey: H, sortKey: S)</code> is the actual passed parameters, and implicit parameters <code class="language-plaintext highlighter-rouge">(implicit hSer: SER[H], sSer: SER[S])</code> perform generic conversion of <code class="language-plaintext highlighter-rouge">(table: String, hashKey: H, sortKey: S)</code>. <code class="language-plaintext highlighter-rouge">SER[H]</code> is a generic declaration in the <code class="language-plaintext highlighter-rouge">Serializers</code> class, which contains implicit conversion functions for different generic objects (converting into <code class="language-plaintext highlighter-rouge">byte[]</code> parameters in the Java client’s <code class="language-plaintext highlighter-rouge">PegasusTableInterface</code>, corresponding to <code class="language-plaintext highlighter-rouge">Array[Byte]</code> in Scala). The example shows the implicit conversion when the generic type is defined as <code class="language-plaintext highlighter-rouge">String</code>:</p>
+<div class="language-scala highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">implicit</span> <span class="k">object</span> <span class="nc">Utf8String</span> <span class="k">extends</span> <span class="nc">Serializer</span><span class="o">[</span><span class="kt">String</span><span class="o">]</span> <span class="o">{</span>
+    <span class="k">override</span> <span class="k">def</span> <span class="nf">serialize</span><span class="o">(</span><span class="n">obj</span><span class="k">:</span> <span class="kt">String</span><span class="o">)</span><span class="k">:</span> <span class="kt">Array</span><span class="o">[</span><span class="kt">Byte</span><span class="o">]</span> <span class="k">=</span> <span class="nf">if</span> <span class="o">(</span><span class="n">obj</span> <span class="o">==</span> <span class="kc">null</span><span class="o">)</span> <span class="kc">null</span> <span class="k">else</span> <span class="nv">obj</span><span class="o">.</span><span class="py">getBytes</span><span class="o">(</span><span class="s">"UTF-8"</span><span class="o">)</span>
+    <span class="k">override</span> <span class="k">def</span> <span class="nf">deserialize</span><span class="o">(</span><span class="n">bytes</span><span class="k">:</span> <span class="kt">Array</span><span class="o">[</span><span class="kt">Byte</span><span class="o">])</span><span class="k">:</span> <span class="kt">String</span> <span class="o">=</span> <span class="nf">if</span> <span class="o">(</span><span class="n">bytes</span> <span class="o">==</span> <span class="kc">null</span><span class="o">)</span> <span class="kc">null</span> <span class="k">else</span>  <span class="k">new</span> <span class="nc">String</span><span class="o">(</span><span class="n">bytes</span><span class="o">,</span> <span class="s">"UTF-8"</span><span class="o">)</span>
+<span class="o">}</span>
+</code></pre></div></div>
+<p>When calling methods provided by <code class="language-plaintext highlighter-rouge">ScalaPegasusClient</code>, if the generic parameter in the first parameter list is a <code class="language-plaintext highlighter-rouge">String</code>, it is automatically converted to <code class="language-plaintext highlighter-rouge">Array[Byte]</code> and passed to the corresponding method of <code class="language-plaintext highlighter-rouge">PegasusTableInterface</code>. Ensure <code class="language-plaintext highlighter-rouge">Serializers._</code> is included; otherwise, parameter type conversion cannot be completed. You can use:</p>
+<div class="language-scala highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">import</span> <span class="nn">com.xiaomi.infra.pegasus.scalaclient.Serializers._</span>
+</code></pre></div></div>
+<p>to import dependencies. Currently supported automatic conversions include <code class="language-plaintext highlighter-rouge">String</code>, <code class="language-plaintext highlighter-rouge">Boolean</code>, <code class="language-plaintext highlighter-rouge">Int</code>, <code class="language-plaintext highlighter-rouge">Long</code>, <code class="language-plaintext highlighter-rouge">Short</code>, <code class="language-plaintext highlighter-rouge">Double</code>. These types can be automatically converted to <code class="language-plaintext highlighter-rouge">Array[Byte]</code>.</p>
+
+<h3 id="api-functions">API Functions</h3>
+<h4 id="exists">exists</h4>
+<p>Check whether a key exists. See <a href="/clients/java-client#exist">Java Client Doc: exist</a></p>
+<div class="language-scala highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">def</span> <span class="nf">exists</span><span class="o">[</span><span class="kt">H</span>, <span class="kt">S</span><span class="o">](</span><span class="n">table</span><span class="k">:</span> <span class="kt">String</span><span class="o">,</span> <span class="n">hashKey</span><span class="k">:</span> <span class="kt">H</span><span class="o">,</span> <span class="n">sortKey</span><span class="k">:</span> <span class="kt">S</span><span class="o">)</span>
+</code></pre></div></div>
+<p>table: table name, usually <code class="language-plaintext highlighter-rouge">String</code>
+hashKey: usually <code class="language-plaintext highlighter-rouge">String</code>
+sortKey: usually <code class="language-plaintext highlighter-rouge">String</code>
+return: whether it exists, <code class="language-plaintext highlighter-rouge">boolean</code></p>
+
+<h4 id="sortkeycount">sortKeyCount</h4>
+<p>Get the number of sort keys under a hash key. See <a href="/clients/java-client#sortkeycount">Java Client Doc: sortKeyCount</a></p>
+<div class="language-scala highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">def</span> <span class="nf">sortKeyCount</span><span class="o">[</span><span class="kt">H</span><span class="o">](</span><span class="n">table</span><span class="k">:</span> <span class="kt">String</span><span class="o">,</span> <span class="n">hashKey</span><span class="k">:</span> <span class="kt">H</span><span class="o">)</span>
+</code></pre></div></div>
+<p>table: table name, usually <code class="language-plaintext highlighter-rouge">String</code>
+hashKey: usually <code class="language-plaintext highlighter-rouge">String</code>
+return: count of sortKeys, <code class="language-plaintext highlighter-rouge">long</code></p>
+
+<h4 id="get">get</h4>
+<p>Get a single value. See <a href="/clients/java-client#get">Java Client Doc: get</a></p>
+<div class="language-scala highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">def</span> <span class="nf">get</span><span class="o">[</span><span class="kt">H</span>, <span class="kt">S</span><span class="o">](</span><span class="n">table</span><span class="k">:</span> <span class="kt">String</span><span class="o">,</span> <span class="n">hashKey</span><span class="k">:</span> <span class="kt">H</span><span class="o">,</span> <span class="n">sortKey</span><span class="k">:</span> <span class="kt">S</span><span class="o">)</span>
+</code></pre></div></div>
+<p>table: <code class="language-plaintext highlighter-rouge">String</code>
+hashKey: <code class="language-plaintext highlighter-rouge">String</code>
+sortKey: <code class="language-plaintext highlighter-rouge">String</code>
+return: value, <code class="language-plaintext highlighter-rouge">Array[Byte]</code>. You can convert with <code class="language-plaintext highlighter-rouge">as[String]</code> to <code class="language-plaintext highlighter-rouge">String</code></p>
+
+<h4 id="batchget">batchGet</h4>
+<p>Read a batch of values. It concurrently sends async requests to server and waits for results. If any request fails, it terminates early and throws an exception. If an exception is thrown, values in the result are undefined. See <a href="/clients/java-client#batchget">Java Client Doc: batchGet</a></p>
+<div class="language-scala highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">def</span> <span class="nf">batchGet</span><span class="o">[</span><span class="kt">H</span>, <span class="kt">S</span><span class="o">](</span><span class="n">table</span><span class="k">:</span> <span class="kt">String</span><span class="o">,</span> <span class="n">keys</span><span class="k">:</span> <span class="kt">List</span><span class="o">[</span><span class="kt">PegasusKey</span><span class="o">[</span><span class="kt">H</span>, <span class="kt">S</span><span class="o">]])</span>
+</code></pre></div></div>
+<p>table: <code class="language-plaintext highlighter-rouge">String</code>
+keys: list of <code class="language-plaintext highlighter-rouge">PegasusKey</code>, composed of <code class="language-plaintext highlighter-rouge">hashKey</code> and <code class="language-plaintext highlighter-rouge">sortKey</code>
+return: list of values, <code class="language-plaintext highlighter-rouge">PegasusResultList</code></p>
+
+<h4 id="batchget2">batchGet2</h4>
+<p>Read a batch of values, similar to <code class="language-plaintext highlighter-rouge">batchGet</code>. It concurrently sends async requests to server, but unlike the above, it waits for all requests to finish regardless of success or failure. See <a href="/clients/java-client#batchget">Java Client Doc: batchGet2</a></p>
+<div class="language-scala highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">def</span> <span class="nf">batchGet2</span><span class="o">[</span><span class="kt">H</span>, <span class="kt">S</span><span class="o">](</span><span class="n">table</span><span class="k">:</span> <span class="kt">String</span><span class="o">,</span> <span class="n">keys</span><span class="k">:</span> <span class="kt">Seq</span><span class="o">[</span><span class="kt">PegasusKey</span><span class="o">[</span><span class="kt">H</span>, <span class="kt">S</span><span class="o">]])</span>
+</code></pre></div></div>
+<p>table: <code class="language-plaintext highlighter-rouge">String</code>
+keys: list of <code class="language-plaintext highlighter-rouge">PegasusKey</code>, composed of <code class="language-plaintext highlighter-rouge">hashKey</code> and <code class="language-plaintext highlighter-rouge">sortKey</code>
+return: list of values, <code class="language-plaintext highlighter-rouge">PegasusResultList</code></p>
+
+<h4 id="multiget">multiGet</h4>
+<p>The Java client includes multiple <code class="language-plaintext highlighter-rouge">multiGet</code> interfaces for reading multiple rows under the same <code class="language-plaintext highlighter-rouge">hashKey</code>. This wraps the following:</p>
+<pre><code class="language-Java">public boolean multiGet(String tableName, byte[] hashKey, 
+                        List&lt;byte[]&gt; sortKeys, int maxFetchCount, 
+                        int maxFetchSize, List&lt;Pair&lt;byte[], byte[]&gt;&gt; values) throws PException;
+</code></pre>
+<p>Supports parameters <code class="language-plaintext highlighter-rouge">maxFetchCount</code> and <code class="language-plaintext highlighter-rouge">maxFetchSize</code>. See <a href="/clients/java-client#multiget">Java Client Doc: multiGet</a></p>
+<div class="language-scala highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">def</span> <span class="nf">multiGet</span><span class="o">[</span><span class="kt">H</span>, <span class="kt">S</span><span class="o">](</span><span class="n">table</span><span class="k">:</span> <span class="kt">String</span><span class="o">,</span> <span class="n">hashKey</span><span class="k">:</span> <span class="kt">H</span><span class="o">,</span> <span class="n">sortKeys</span><span class="k">:</span> <span class="kt">Seq</span><span class="o">[</span><span class="kt">S</span><span class="o">],</span>
+            <span class="n">maxFetchCount</span><span class="k">:</span> <span class="kt">Int</span> <span class="o">=</span> <span class="mi">100</span><span class="o">,</span> <span class="n">maxFetchSize</span><span class="k">:</span> <span class="kt">Int</span> <span class="o">=</span> <span class="mi">1000000</span><span class="o">)</span>
+</code></pre></div></div>
+<p>table: <code class="language-plaintext highlighter-rouge">String</code>
+hashKey: <code class="language-plaintext highlighter-rouge">String</code>
+sortKeys: list of sort keys
+maxFetchCount: maximum number of entries to fetch, default <code class="language-plaintext highlighter-rouge">100</code>
+maxFetchSize: maximum total bytes to fetch, default <code class="language-plaintext highlighter-rouge">1000000</code>
+return: list of values, <code class="language-plaintext highlighter-rouge">convertMultiGetResult</code></p>
+
+<h4 id="multigetrange">multiGetRange</h4>
+<p>The Java client includes multiple <code class="language-plaintext highlighter-rouge">multiGet</code> interfaces. This wraps the following:</p>
+<div class="language-java highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kd">public</span> <span class="kt">boolean</span> <span class="nf">multiGet</span><span class="o">(</span><span class="nc">String</span> <span class="n">tableName</span><span class="o">,</span> <span class="kt">byte</span><span class="o">[]</span> <span class="n">hashKey</span><span class="o">,</span>
+                    <span class="kt">byte</span><span class="o">[]</span> <span class="n">startSortKey</span><span class="o">,</span> <span class="kt">byte</span><span class="o">[]</span> <span class="n">stopSortKey</span><span class="o">,</span> <span class="nc">MultiGetOptions</span> <span class="n">options</span><span class="o">,</span>
+                    <span class="kt">int</span> <span class="n">maxFetchCount</span><span class="o">,</span> <span class="kt">int</span> <span class="n">maxFetchSize</span><span class="o">,</span>
+                    <span class="nc">List</span><span class="o">&lt;</span><span class="nc">Pair</span><span class="o">&lt;</span><span class="kt">byte</span><span class="o">[],</span> <span class="kt">byte</span><span class="o">[]&gt;&gt;</span> <span class="n">values</span><span class="o">)</span> <span class="kd">throws</span> <span class="nc">PException</span><span class="o">;</span>
+</code></pre></div></div>
+<p>Supports range query on sort keys and conditional filtering, only reading data that meets the conditions. See <a href="/clients/java-client#multiget">Java Client Doc: multiGet</a></p>
+<div class="language-scala highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">def</span> <span class="nf">multiGetRange</span><span class="o">[</span><span class="kt">H</span>, <span class="kt">S</span><span class="o">](</span><span class="n">hashKey</span><span class="k">:</span> <span class="kt">H</span><span class="o">,</span> <span class="n">startSortKey</span><span class="k">:</span> <span class="kt">S</span><span class="o">,</span> <span class="n">stopSortKey</span><span class="k">:</span> <span class="kt">S</span><span class="o">,</span> 
+                        <span class="n">options</span><span class="k">:</span> <span class="kt">Options.MultiGet</span><span class="o">,</span>
+                        <span class="n">maxFetchCount</span><span class="k">:</span> <span class="kt">Int</span> <span class="o">=</span> <span class="mi">100</span><span class="o">,</span> <span class="n">maxFetchSize</span><span class="k">:</span> <span class="kt">Int</span> <span class="o">=</span> <span class="mi">1000000</span><span class="o">,</span> 
+                        <span class="n">timeout</span><span class="k">:</span> <span class="kt">Duration</span> <span class="o">=</span> <span class="mi">0</span> <span class="n">milli</span><span class="o">)</span>
+</code></pre></div></div>
+<p>table: <code class="language-plaintext highlighter-rouge">String</code>
+hashKey: <code class="language-plaintext highlighter-rouge">String</code>
+startSortKey: start of sort key range
+stopSortKey: end of sort key range
+options: query options
+maxFetchCount: default <code class="language-plaintext highlighter-rouge">100</code>
+maxFetchSize: default <code class="language-plaintext highlighter-rouge">1000000</code>
+timeout: timeout for fetching, default <code class="language-plaintext highlighter-rouge">0</code> (use value from config file)
+return: list of values, <code class="language-plaintext highlighter-rouge">convertMultiGetResult</code></p>
+
+<h4 id="batchmultiget">batchMultiGet</h4>
+<p>Batch wrapper for <code class="language-plaintext highlighter-rouge">multiGet</code>. It concurrently sends async requests to server and waits for results. If any request fails, it terminates early and throws an exception. If an exception is thrown, values in the result are undefined. See <a href="/clients/java-client#batchmultiget">Java Client Doc: batchMultiGet</a></p>
+<div class="language-scala highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">def</span> <span class="nf">batchMultiGet</span><span class="o">[</span><span class="kt">H</span>, <span class="kt">S</span><span class="o">](</span><span class="n">keys</span><span class="k">:</span> <span class="kt">Seq</span><span class="o">[(</span><span class="kt">H</span>, <span class="kt">Seq</span><span class="o">[</span><span class="kt">S</span><span class="o">])],</span> <span class="n">timeout</span><span class="k">:</span> <span class="kt">Duration</span> <span class="o">=</span> <span class="mi">0</span> <span class="n">milli</span><span class="o">)</span>
+</code></pre></div></div>
+<p>keys: list of <code class="language-plaintext highlighter-rouge">hashKey</code>-<code class="language-plaintext highlighter-rouge">sortKeys</code>, e.g., <code class="language-plaintext highlighter-rouge">Seq(("1",Seq("1","2")),("1",Seq("1","2")))</code>
+timeout: timeout for fetching, default <code class="language-plaintext highlighter-rouge">0</code> (use value from config file)
+return: list of values, <code class="language-plaintext highlighter-rouge">List</code></p>
+
+<h4 id="batchmultiget2">batchMultiGet2</h4>
+<p>Batch wrapper for <code class="language-plaintext highlighter-rouge">multiGet</code>. It concurrently sends async requests to server and waits for results, but unlike the above, it waits for all requests to finish regardless of success or failure. See <a href="/clients/java-client#batchmultiget2">Java Client Doc: batchMultiGet2</a></p>
+<div class="language-scala highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">def</span> <span class="nf">batchMultiGet2</span><span class="o">[</span><span class="kt">H</span>, <span class="kt">S</span><span class="o">](</span><span class="n">keys</span><span class="k">:</span> <span class="kt">Seq</span><span class="o">[(</span><span class="kt">H</span>, <span class="kt">Seq</span><span class="o">[</span><span class="kt">S</span><span class="o">])],</span> <span class="n">timeout</span><span class="k">:</span> <span class="kt">Duration</span> <span class="o">=</span> <span class="mi">0</span> <span class="n">milli</span><span class="o">)</span>
+</code></pre></div></div>
+<p>keys: list of <code class="language-plaintext highlighter-rouge">hashKey</code>-<code class="language-plaintext highlighter-rouge">sortKeys</code>, e.g., <code class="language-plaintext highlighter-rouge">Seq(("1",Seq("1","2")),("1",Seq("1","2")))</code>
+timeout: default <code class="language-plaintext highlighter-rouge">0</code>
+return: list of values, <code class="language-plaintext highlighter-rouge">List</code></p>
+
+<h4 id="set">set</h4>
+<p>Write a single row</p>
+<div class="language-scala highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">def</span> <span class="nf">set</span><span class="o">[</span><span class="kt">H</span>, <span class="kt">S</span>, <span class="kt">V</span><span class="o">](</span><span class="n">hashKey</span><span class="k">:</span> <span class="kt">H</span><span class="o">,</span> <span class="n">sortKey</span><span class="k">:</span> <span class="kt">S</span><span class="o">,</span> <span class="n">value</span><span class="k">:</span> <span class="kt">V</span><span class="o">,</span> <span class="n">ttl</span><span class="k">:</span> <span class="kt">Duration</span> <span class="o">=</span> <span class="mi">0</span> <span class="n">second</span><span class="o">,</span> <span class="n">timeout</span><span class="k">:</span> <span class="kt">Duration</span> <span class="o">=</span> <span class="mi">0</span> <span class="n">milli</span><span class="o">)</span>
+</code></pre></div></div>
+<p>hashKey: usually <code class="language-plaintext highlighter-rouge">String</code>
+sortKey: usually <code class="language-plaintext highlighter-rouge">String</code>
+value: value to write, usually <code class="language-plaintext highlighter-rouge">String</code>
+ttl: time-to-live, default <code class="language-plaintext highlighter-rouge">0</code> (permanent)
+timeout: default <code class="language-plaintext highlighter-rouge">0</code> (use config file value)
+return: none</p>
+
+<h4 id="batchset">batchSet</h4>
+<p>Write a batch of entries, a batch wrapper for <code class="language-plaintext highlighter-rouge">set</code>. It concurrently sends async requests to server and waits for results. If any request fails, it terminates early and throws an exception. See <a href="/clients/java-client#batchset">Java Client Doc: batchSet</a></p>
+<div class="language-scala highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">def</span> <span class="nf">batchSet</span><span class="o">[</span><span class="kt">H</span>, <span class="kt">S</span>, <span class="kt">V</span><span class="o">](</span><span class="n">table</span><span class="k">:</span> <span class="kt">String</span><span class="o">,</span> <span class="n">items</span><span class="k">:</span> <span class="kt">Seq</span><span class="o">[</span><span class="kt">SetItem</span><span class="o">[</span><span class="kt">H</span>, <span class="kt">S</span>, <span class="kt">V</span><span class="o">]])</span>
+</code></pre></div></div>
+<p>table: <code class="language-plaintext highlighter-rouge">String</code>
+items: list composed of <code class="language-plaintext highlighter-rouge">hashKey</code>, <code class="language-plaintext highlighter-rouge">sortKey</code>, <code class="language-plaintext highlighter-rouge">value</code>
+return: number of successful requests (not atomic; partial success is possible. You may choose to use only successful results)</p>
+
+<h4 id="batchset2">batchSet2</h4>
+<p>Batch wrapper for <code class="language-plaintext highlighter-rouge">set</code>. It concurrently sends async requests to server and waits for results, but unlike above, it waits for all requests to finish regardless of success or failure. See <a href="/clients/java-client#batchset2">Java Client Doc: batchSet2</a></p>
+
+<h4 id="multiset">multiSet</h4>
+<p>The Java client provides two interfaces for writing multiple rows under the same <code class="language-plaintext highlighter-rouge">hashKey</code>. This wraps:</p>
+<div class="language-java highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kd">public</span> <span class="kt">void</span> <span class="nf">multiSet</span><span class="o">(</span><span class="nc">String</span> <span class="n">tableName</span><span class="o">,</span> <span class="kt">byte</span><span class="o">[]</span> <span class="n">hashKey</span><span class="o">,</span> 
+                    <span class="nc">List</span><span class="o">&lt;</span><span class="nc">Pair</span><span class="o">&lt;</span><span class="kt">byte</span><span class="o">[],</span> <span class="kt">byte</span><span class="o">[]&gt;&gt;</span> <span class="n">values</span><span class="o">,</span> 
+                    <span class="kt">int</span> <span class="n">ttl_seconds</span><span class="o">)</span> <span class="kd">throws</span> <span class="nc">PException</span><span class="o">;</span>
+</code></pre></div></div>
+<p>Supports TTL for entries</p>
+<div class="language-scala highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">def</span> <span class="nf">multiSet</span><span class="o">[</span><span class="kt">H</span>, <span class="kt">S</span>, <span class="kt">V</span><span class="o">](</span><span class="n">table</span><span class="k">:</span> <span class="kt">String</span><span class="o">,</span> <span class="n">hashKey</span><span class="k">:</span> <span class="kt">H</span><span class="o">,</span> <span class="n">values</span><span class="k">:</span> <span class="kt">Seq</span><span class="o">[(</span><span class="kt">S</span>, <span class="kt">V</span><span class="o">)],</span> <span class="n">ttl</span><span class="k">:</span> <span class="kt">Duration</span> <span class="o">=</span> <span class="mi">0</span> <span class="n">second</span><span class="o">)</span>
+</code></pre></div></div>
+<p>table: <code class="language-plaintext highlighter-rouge">String</code>
+hashKey: <code class="language-plaintext highlighter-rouge">String</code>
+value: list of values composed of <code class="language-plaintext highlighter-rouge">sortKey</code> and <code class="language-plaintext highlighter-rouge">value</code>, e.g., <code class="language-plaintext highlighter-rouge">Seq(("hashKey1","sortKey1"),("hashKey2","sortKey2"))</code>
+ttl: default <code class="language-plaintext highlighter-rouge">0</code> (permanent)
+return: none</p>
+
+<h4 id="batchmultitset">batchMultitSet</h4>
+<p>Batch wrapper for <code class="language-plaintext highlighter-rouge">multiSet</code>. It concurrently sends async requests to server and waits for results. If any request fails, it terminates early and throws an exception. See <a href="/clients/java-client#batchmultiset">Java Client Doc: batchMultiSet</a></p>
+<div class="language-scala highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">def</span> <span class="nf">batchMultitSet</span><span class="o">[</span><span class="kt">H</span>, <span class="kt">S</span>, <span class="kt">V</span><span class="o">](</span><span class="n">table</span><span class="k">:</span> <span class="kt">String</span><span class="o">,</span> <span class="n">items</span><span class="k">:</span> <span class="kt">Seq</span><span class="o">[</span><span class="kt">HashKeyData</span><span class="o">[</span><span class="kt">H</span>, <span class="kt">S</span>, <span class="kt">V</span><span class="o">]],</span> <span class="n">ttl</span><span class="k">:</span> <span class="kt">Duration</span> <span class="o">=</span> <span class="mi">0</span> <span class="n">second</span><span class="o">)</span>
+</code></pre></div></div>
+<p>table: <code class="language-plaintext highlighter-rouge">String</code>
+items: batch data to write
+ttl: default <code class="language-plaintext highlighter-rouge">0</code> (permanent)
+return: number of successful requests (not atomic; partial success is possible)</p>
+
+<h4 id="batchmultitset2">batchMultitSet2</h4>
+<p>Batch wrapper for <code class="language-plaintext highlighter-rouge">multiSet</code>. It concurrently sends async requests to server and waits for results, but unlike above, it waits for all requests to finish regardless of success or failure. See <a href="/clients/java-client#batchmultiset2">Java Client Doc: batchMultitSet2</a></p>
+<div class="language-scala highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">def</span> <span class="nf">batchMultiSet2</span><span class="o">[</span><span class="kt">H</span>, <span class="kt">S</span>, <span class="kt">V</span><span class="o">](</span><span class="n">table</span><span class="k">:</span> <span class="kt">String</span><span class="o">,</span> <span class="n">items</span><span class="k">:</span> <span class="kt">Seq</span><span class="o">[</span><span class="kt">HashKeyData</span><span class="o">[</span><span class="kt">H</span>, <span class="kt">S</span>, <span class="kt">V</span><span class="o">]],</span> <span class="n">ttl</span><span class="k">:</span> <span class="kt">Duration</span> <span class="o">=</span> <span class="mi">0</span> <span class="n">second</span><span class="o">)</span>
+</code></pre></div></div>
+<p>table: <code class="language-plaintext highlighter-rouge">String</code>
+items: batch data to write
+ttl: default <code class="language-plaintext highlighter-rouge">0</code>
+return: number of successful requests (not atomic; partial success is possible)</p>
+
+<h4 id="del">del</h4>
+<p>Delete a single row. See <a href="/clients/java-client#del">Java Client Doc: del</a></p>
+<div class="language-scala highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">def</span> <span class="nf">del</span><span class="o">[</span><span class="kt">H</span>, <span class="kt">S</span><span class="o">](</span><span class="n">table</span><span class="k">:</span> <span class="kt">String</span><span class="o">,</span> <span class="n">hashKey</span><span class="k">:</span> <span class="kt">H</span><span class="o">,</span> <span class="n">sortKey</span><span class="k">:</span> <span class="kt">S</span><span class="o">)</span>
+</code></pre></div></div>
+<p>table: <code class="language-plaintext highlighter-rouge">String</code>
+hashKey: <code class="language-plaintext highlighter-rouge">String</code>
+sortKey: <code class="language-plaintext highlighter-rouge">String</code>
+return: none</p>
+
+<h4 id="batchdel">batchDel</h4>
+<p>Delete a batch of rows, batch wrapper for <code class="language-plaintext highlighter-rouge">del</code>. It concurrently sends async requests to server and waits for results. If any request fails, it terminates early and throws an exception. See <a href="/clients/java-client#batchdel">Java Client Doc: batchDel</a></p>
+<div class="language-scala highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">batchDel</span><span class="o">[</span><span class="kt">H</span>, <span class="kt">S</span><span class="o">](</span><span class="n">table</span><span class="k">:</span> <span class="kt">String</span><span class="o">,</span> <span class="n">keys</span><span class="k">:</span> <span class="kt">Seq</span><span class="o">[</span><span class="kt">PegasusKey</span><span class="o">[</span><span class="kt">H</span>, <span class="kt">S</span><span class="o">]])</span>
+</code></pre></div></div>
+<p>table: <code class="language-plaintext highlighter-rouge">String</code>
+keys: list of keys composed of <code class="language-plaintext highlighter-rouge">hashKey</code> and <code class="language-plaintext highlighter-rouge">sortKey</code>
+return: number of successful requests (not atomic; partial success is possible)</p>
+
+<h4 id="batchdel2">batchDel2</h4>
+<p>Batch wrapper for <code class="language-plaintext highlighter-rouge">del</code>. It concurrently sends async requests to server and waits for results, but unlike above, it waits for all requests to finish regardless of success or failure. See <a href="/clients/java-client#batchdel2">Java Client Doc: batchDel2</a></p>
+<div class="language-scala highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">def</span> <span class="nf">batchDel2</span><span class="o">[</span><span class="kt">H</span>, <span class="kt">S</span><span class="o">](</span><span class="n">table</span><span class="k">:</span> <span class="kt">String</span><span class="o">,</span> <span class="n">keys</span><span class="k">:</span> <span class="kt">Seq</span><span class="o">[</span><span class="kt">PegasusKey</span><span class="o">[</span><span class="kt">H</span>, <span class="kt">S</span><span class="o">]])</span>
+</code></pre></div></div>
+
+<h4 id="multidel">multiDel</h4>
+<p>Delete multiple rows under the same <code class="language-plaintext highlighter-rouge">hashKey</code>. See <a href="/clients/java-client#multidel">Java Client Doc: multiDel</a></p>
+<div class="language-scala highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">def</span> <span class="nf">multiDel</span><span class="o">[</span><span class="kt">H</span>, <span class="kt">S</span><span class="o">](</span><span class="n">table</span><span class="k">:</span> <span class="kt">String</span><span class="o">,</span> <span class="n">hashKey</span><span class="k">:</span> <span class="kt">H</span><span class="o">,</span> <span class="n">sortKeys</span><span class="k">:</span> <span class="kt">Seq</span><span class="o">[</span><span class="kt">S</span><span class="o">])</span>
+</code></pre></div></div>
+<p>table: <code class="language-plaintext highlighter-rouge">String</code>
+hashKey: <code class="language-plaintext highlighter-rouge">String</code>
+sortKeys: list of sort keys
+return: none</p>
+
+<h4 id="batchmultidel">batchMultiDel</h4>
+<p>Batch wrapper for <code class="language-plaintext highlighter-rouge">multiDel</code>. It concurrently sends async requests to server and waits for results. If any request fails, it terminates early and throws an exception. See <a href="/clients/java-client#batchmultidel">Java Client Doc: batchMultiDel</a></p>
+<div class="language-scala highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">def</span> <span class="nf">batchMultiDel</span><span class="o">[</span><span class="kt">H</span>, <span class="kt">S</span><span class="o">](</span><span class="n">table</span><span class="k">:</span> <span class="kt">String</span><span class="o">,</span> <span class="n">keys</span><span class="k">:</span> <span class="kt">Seq</span><span class="o">[(</span><span class="kt">H</span>, <span class="kt">Seq</span><span class="o">[</span><span class="kt">S</span><span class="o">])])</span>
+</code></pre></div></div>
+<p>table: <code class="language-plaintext highlighter-rouge">String</code>
+keys: list composed of <code class="language-plaintext highlighter-rouge">hashKey</code> and <code class="language-plaintext highlighter-rouge">sortKeys</code>, e.g., <code class="language-plaintext highlighter-rouge">Seq(("hashKey1",(sortKey1,sortKey2)),("hashKey2",(sortKey3,sortKey4)))</code>
+return: none</p>
+
+<h4 id="batchmultidel2">batchMultiDel2</h4>
+<p>Batch wrapper for <code class="language-plaintext highlighter-rouge">del</code>. It concurrently sends async requests to server and waits for results, but unlike above, it waits for all requests to finish regardless of success or failure. See <a href="/clients/java-client#batchmultidel2">Java Client Doc: batchMultiDel2</a></p>
+<div class="language-scala highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">def</span> <span class="nf">batchMultiDel2</span><span class="o">[</span><span class="kt">H</span>, <span class="kt">S</span><span class="o">](</span><span class="n">table</span><span class="k">:</span> <span class="kt">String</span><span class="o">,</span> <span class="n">keys</span><span class="k">:</span> <span class="kt">Seq</span><span class="o">[(</span><span class="kt">H</span>, <span class="kt">Seq</span><span class="o">[</span><span class="kt">S</span><span class="o">])])</span>
+</code></pre></div></div>
+<p>table: <code class="language-plaintext highlighter-rouge">String</code>
+keys: list composed of <code class="language-plaintext highlighter-rouge">hashKey</code> and <code class="language-plaintext highlighter-rouge">sortKeys</code>, e.g., <code class="language-plaintext highlighter-rouge">Seq(("hashKey1",(sortKey1,sortKey2)),("hashKey2",(sortKey3,sortKey4)))</code>
+return: none</p>
+
+<h4 id="ttl">ttl</h4>
+<p>Get the TTL of a single row. TTL (Time To Live) indicates how long the data will still be alive. If the TTL expires, the data cannot be read. See <a href="/clients/java-client#ttl">Java Client Doc: ttl</a></p>
+<div class="language-scala highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">def</span> <span class="nf">ttl</span><span class="o">[</span><span class="kt">H</span>, <span class="kt">S</span><span class="o">](</span><span class="n">table</span><span class="k">:</span> <span class="kt">String</span><span class="o">,</span> <span class="n">hashKey</span><span class="k">:</span> <span class="kt">H</span><span class="o">,</span> <span class="n">sortKey</span><span class="k">:</span> <span class="kt">S</span><span class="o">)</span>
+</code></pre></div></div>
+<p>table: <code class="language-plaintext highlighter-rouge">String</code>
+hashKey: <code class="language-plaintext highlighter-rouge">String</code>
+sortKeys: <code class="language-plaintext highlighter-rouge">String</code>
+return: TTL in seconds. If no TTL is set, returns <code class="language-plaintext highlighter-rouge">-1</code>; if the data does not exist, returns <code class="language-plaintext highlighter-rouge">-2</code></p>
+
+<h4 id="incr">incr</h4>
+<p>Single-row atomic increment/decrement. See <a href="/api/single-atomic">Single Row Atomic Operations</a> for details. The operation first converts the value bytes pointed by the key to <code class="language-plaintext highlighter-rouge">int64</code> (similar to Java’s <code class="language-plaintext highlighter-rouge">Long.parseLong()</code>), then adds <code class="language-plaintext highlighter-rouge">increment</code>, converts the result to bytes and sets it as the new value. If <code class="language-plaintext highlighter-rouge">increment</code> is positive, it increments; if negative, it decrements. See <a href="/clients/java-client#incr">Java Client Doc: incr</a>.</p>
+<div class="language-scala highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">def</span> <span class="nf">incr</span><span class="o">[</span><span class="kt">H</span>, <span class="kt">S</span><span class="o">](</span><span class="n">table</span><span class="k">:</span> <span class="kt">String</span><span class="o">,</span> <span class="n">hashKey</span><span class="k">:</span> <span class="kt">H</span><span class="o">,</span> <span class="n">sortKey</span><span class="k">:</span> <span class="kt">S</span><span class="o">,</span> <span class="n">increment</span><span class="k">:</span> <span class="kt">Long</span><span class="o">,</span> <span class="n">ttl</span><span class="k">:</span> <span class="kt">Duration</span> <span class="o">=</span> <span class="mi">0</span> <span class="n">milli</span><span class="o">)</span>
+</code></pre></div></div>
+<p>table: <code class="language-plaintext highlighter-rouge">String</code>
+hashKey: <code class="language-plaintext highlighter-rouge">String</code>
+sortKey: <code class="language-plaintext highlighter-rouge">String</code>
+increment: amount to add
+ttl: default <code class="language-plaintext highlighter-rouge">0</code> (permanent)
+return: the new value after success</p>
+
+<h2 id="scalapegasustable-interface">ScalaPegasusTable Interface</h2>
+<p><code class="language-plaintext highlighter-rouge">ScalaPegasusTable</code> provides synchronous APIs. The <code class="language-plaintext highlighter-rouge">ScalaPegasusClient</code> interface wraps these by default. See <a href="#scalapegasusclient-interface">ScalaPegasusClient Interface</a> for details.</p>
+
+<h2 id="scalapegasusasynctable">ScalaPegasusAsyncTable</h2>
+<p><code class="language-plaintext highlighter-rouge">ScalaPegasusAsyncTable</code> provides asynchronous APIs, wrapping the Java client’s async interfaces. Refer to <a href="#scalapegasusclient-interface">ScalaPegasusClient Interface</a> and <a href="/clients/java-client#pegasustableinterface">Java Client Doc: PegasusTableInterface</a>. Example wrapper:</p>
+<div class="language-scala highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nd">@throws</span><span class="o">[</span><span class="kt">PException</span><span class="o">]</span>
+    <span class="k">def</span> <span class="nf">multiGet</span><span class="o">[</span><span class="kt">H</span>, <span class="kt">S</span><span class="o">](</span><span class="n">hashKey</span><span class="k">:</span> <span class="kt">H</span><span class="o">,</span> <span class="n">sortKeys</span><span class="k">:</span> <span class="kt">Seq</span><span class="o">[</span><span class="kt">S</span><span class="o">],</span> <span class="n">maxFetchCount</span><span class="k">:</span> <span class="kt">Int</span> <span class="o">=</span> <span class="mi">100</span><span class="o">,</span> <span class="n">maxFetchSize</span><span class="k">:</span> <span class="kt">Int</span> <span class="o">=</span> <span class="mi">1000000</span><span class="o">,</span> <span class="n">timeout</span><span class="k">:</span> <span class="kt">Duration</span> <span class="o">=</span> <span class="mi">0</span> <span class="n">milli</span><span class="o">)</span>
+            <span class="o">(</span><span class="k">implicit</span> <span class="n">hSer</span><span class="k">:</span> <span class="kt">SER</span><span class="o">[</span><span class="kt">H</span><span class="o">],</span> <span class="n">sSer</span><span class="k">:</span> <span class="kt">SER</span><span class="o">[</span><span class="kt">S</span><span class="o">])</span><span class="k">:</span> <span class="kt">Future</span><span class="o">[</span><span class="kt">MultiGetResult</span><span class="o">[</span><span class="kt">S</span>, <span class="kt">Array</span><span class="o">[</span><span class="kt">Byte</span><span class="o">]]]</span> <span class="k">=</span> <span class="o">{</span>
+        <span class="k">val</span> <span class="nv">result</span> <span class="k">=</span> <span class="nv">table</span><span class="o">.</span><span class="py">asyncMultiGet</span><span class="o">(</span><span class="n">hashKey</span><span class="o">,</span> <span class="n">sortKeys</span><span class="o">,</span> <span class="n">maxFetchCount</span><span class="o">,</span> <span class="n">maxFetchSize</span><span class="o">,</span> <span class="n">timeout</span><span class="o">)</span>
+        <span class="nf">toScala</span><span class="o">(</span><span class="n">result</span><span class="o">)(</span><span class="n">convertMultiGetResult</span><span class="o">[</span><span class="kt">S</span><span class="o">])</span>
+    <span class="o">}</span>
+</code></pre></div></div>
+<p>Where <code class="language-plaintext highlighter-rouge">table.asyncMultiGet(hashKey, sortKeys, maxFetchCount, maxFetchSize, timeout)</code> is the Java client interface. See <a href="#implementation-details">Implementation Details</a> for parameter passing principles. The full form of <code class="language-plaintext highlighter-rouge">toScala(result)(convertMultiGetResult[S])</code> is:</p>
+<div class="language-scala highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">implicit</span> <span class="k">private</span> <span class="o">[</span><span class="kt">scalaclient</span><span class="o">]</span> <span class="k">def</span> <span class="nf">toScala</span><span class="o">[</span><span class="kt">A</span>, <span class="kt">B</span><span class="o">](</span><span class="n">future</span><span class="k">:</span> <span class="kt">NFuture</span><span class="o">[</span><span class="kt">A</span><span class="o">])(</span><span class="k">implicit</span> <span class="n">f</span><span class="k">:</span> <span class="kt">A</span> <span class="o">=&gt;</span> <span class="n">B</span><span class="o">)</span><span class="k">:</span> <span class="kt">Future</span><span class="o">[</span><span class="kt">B</span><span class="o">]</span> <span class="k">=</span> <span class="o">{</span>
+        <span class="k">val</span> <span class="nv">promise</span> <span class="k">=</span> <span class="nc">Promise</span><span class="o">[</span><span class="kt">B</span><span class="o">]()</span>
+        <span class="nv">future</span><span class="o">.</span><span class="py">addListener</span><span class="o">(</span><span class="k">new</span> <span class="nc">GenericFutureListener</span><span class="o">[</span><span class="kt">NFuture</span><span class="o">[</span><span class="k">_</span> <span class="k">&gt;:</span> <span class="kt">A</span><span class="o">]]</span> <span class="o">{</span>
+            <span class="k">override</span> <span class="k">def</span> <span class="nf">operationComplete</span><span class="o">(</span><span class="n">future</span><span class="k">:</span> <span class="kt">NFuture</span><span class="o">[</span><span class="k">_</span> <span class="k">&gt;:</span> <span class="kt">A</span><span class="o">])</span><span class="k">:</span> <span class="kt">Unit</span> <span class="o">=</span> <span class="o">{</span>
+                <span class="nf">if</span> <span class="o">(</span><span class="nv">future</span><span class="o">.</span><span class="py">isSuccess</span><span class="o">)</span> <span class="o">{</span>
+                    <span class="nv">promise</span><span class="o">.</span><span class="py">success</span><span class="o">(</span><span class="nf">f</span><span class="o">(</span><span class="nv">future</span><span class="o">.</span><span class="py">get</span><span class="o">.</span><span class="py">asInstanceOf</span><span class="o">[</span><span class="kt">A</span><span class="o">]))</span>
+                <span class="o">}</span> <span class="k">else</span> <span class="o">{</span>
+                    <span class="nv">promise</span><span class="o">.</span><span class="py">failure</span><span class="o">(</span><span class="nv">future</span><span class="o">.</span><span class="py">cause</span><span class="o">())</span>
+                <span class="o">}</span>
+            <span class="o">}</span>
+        <span class="o">})</span>
+        <span class="nv">promise</span><span class="o">.</span><span class="py">future</span>
+    <span class="o">}</span>
+</code></pre></div></div>
+<p>This uses implicit conversion to transform Java async programming to Scala async programming, utilizing <code class="language-plaintext highlighter-rouge">io.netty.util.concurrent.{GenericFutureListener, Future =&gt; NFuture}</code>.</p>
 
                 </div>
             </section>
@@ -777,7 +1158,53 @@
     </span>
     Table of contents
 </p>
-
+<ul class="menu-list">
+  <li><a href="#getting-the-client">Getting the Client</a></li>
+  <li><a href="#using-the-client">Using the Client</a>
+    <ul>
+      <li><a href="#get-an-instance">Get an Instance</a></li>
+      <li><a href="#data-operations">Data Operations</a></li>
+    </ul>
+  </li>
+  <li><a href="#interface-definition">Interface Definition</a>
+    <ul>
+      <li><a href="#scalapegasusclient-interface">ScalaPegasusClient Interface</a>
+        <ul>
+          <li><a href="#implementation-details">Implementation Details</a></li>
+          <li><a href="#api-functions">API Functions</a>
+            <ul>
+              <li><a href="#exists">exists</a></li>
+              <li><a href="#sortkeycount">sortKeyCount</a></li>
+              <li><a href="#get">get</a></li>
+              <li><a href="#batchget">batchGet</a></li>
+              <li><a href="#batchget2">batchGet2</a></li>
+              <li><a href="#multiget">multiGet</a></li>
+              <li><a href="#multigetrange">multiGetRange</a></li>
+              <li><a href="#batchmultiget">batchMultiGet</a></li>
+              <li><a href="#batchmultiget2">batchMultiGet2</a></li>
+              <li><a href="#set">set</a></li>
+              <li><a href="#batchset">batchSet</a></li>
+              <li><a href="#batchset2">batchSet2</a></li>
+              <li><a href="#multiset">multiSet</a></li>
+              <li><a href="#batchmultitset">batchMultitSet</a></li>
+              <li><a href="#batchmultitset2">batchMultitSet2</a></li>
+              <li><a href="#del">del</a></li>
+              <li><a href="#batchdel">batchDel</a></li>
+              <li><a href="#batchdel2">batchDel2</a></li>
+              <li><a href="#multidel">multiDel</a></li>
+              <li><a href="#batchmultidel">batchMultiDel</a></li>
+              <li><a href="#batchmultidel2">batchMultiDel2</a></li>
+              <li><a href="#ttl">ttl</a></li>
+              <li><a href="#incr">incr</a></li>
+            </ul>
+          </li>
+        </ul>
+      </li>
+      <li><a href="#scalapegasustable-interface">ScalaPegasusTable Interface</a></li>
+      <li><a href="#scalapegasusasynctable">ScalaPegasusAsyncTable</a></li>
+    </ul>
+  </li>
+</ul>
 
         </div>
     </div>

@@ -16,15 +16,15 @@
 <meta name="generator" content="Jekyll v4.4.1" />
 <meta property="og:title" content="Scala Client" />
 <meta property="og:locale" content="en_US" />
-<meta name="description" content="获取客户端 项目地址：Pegasus scala client 下载： git clone git@github.com:apache/incubator-pegasus.git cd incubator-pegasus/scala-client 选择所使用的版本并构建，建议使用master版本。同时注意，scala客户端构建依赖Java客户端，请参考获取Java客户端在项目中添加Java依赖。你可以打包成Jar包进行使用： sbt package 或者，安装到本地的sbt repository，方便在sbt项目中使用： sbt publish-local 或者，安装到本地的maven repository： sbt publish-m2 项目默认使用scala-2.11进行构建，打包发布时则同时发布2.11版本（pegasus-scala-client_2.11）和2.12版本（pegasus-scala-client_2.12），如果你的项目使用sbt构建，则可配置为： //使用sbt仓库，不需要添加后缀，默认使用当前scala版本号，即使用2.12 scalaVersion := &quot;2.12.8&quot; libraryDependencies ++= Seq( &quot;com.xiaomi.infra&quot; %% &quot;pegasus-scala-client&quot; % &quot;1.11.4-1-SNAPSHOT&quot; ) 或者配置为： //使用maven仓库(你可以使用resolvers ++= Seq()添加自定义maven仓库)，需要添加后缀 scalaVersion := &quot;2.12.8&quot; libraryDependencies ++= Seq( &quot;com.xiaomi.infra&quot; % &quot;pegasus-scala-client_2.11&quot; % &quot;1.11.4-1-SNAPSHOT&quot; ) 如果你的项目通过maven构建，则可通过maven配置在项目中使用，例如： &lt;dependency&gt; &lt;groupId&gt;com.xiaomi.infra&lt;/groupId&gt; &lt;artifactId&gt;pegasus-scala-client_2.11&lt;/artifactId&gt; &lt;version&gt;1.11.4-1&lt;/version&gt; &lt;/dependency&gt; 使用客户端" />
-<meta property="og:description" content="获取客户端 项目地址：Pegasus scala client 下载： git clone git@github.com:apache/incubator-pegasus.git cd incubator-pegasus/scala-client 选择所使用的版本并构建，建议使用master版本。同时注意，scala客户端构建依赖Java客户端，请参考获取Java客户端在项目中添加Java依赖。你可以打包成Jar包进行使用： sbt package 或者，安装到本地的sbt repository，方便在sbt项目中使用： sbt publish-local 或者，安装到本地的maven repository： sbt publish-m2 项目默认使用scala-2.11进行构建，打包发布时则同时发布2.11版本（pegasus-scala-client_2.11）和2.12版本（pegasus-scala-client_2.12），如果你的项目使用sbt构建，则可配置为： //使用sbt仓库，不需要添加后缀，默认使用当前scala版本号，即使用2.12 scalaVersion := &quot;2.12.8&quot; libraryDependencies ++= Seq( &quot;com.xiaomi.infra&quot; %% &quot;pegasus-scala-client&quot; % &quot;1.11.4-1-SNAPSHOT&quot; ) 或者配置为： //使用maven仓库(你可以使用resolvers ++= Seq()添加自定义maven仓库)，需要添加后缀 scalaVersion := &quot;2.12.8&quot; libraryDependencies ++= Seq( &quot;com.xiaomi.infra&quot; % &quot;pegasus-scala-client_2.11&quot; % &quot;1.11.4-1-SNAPSHOT&quot; ) 如果你的项目通过maven构建，则可通过maven配置在项目中使用，例如： &lt;dependency&gt; &lt;groupId&gt;com.xiaomi.infra&lt;/groupId&gt; &lt;artifactId&gt;pegasus-scala-client_2.11&lt;/artifactId&gt; &lt;version&gt;1.11.4-1&lt;/version&gt; &lt;/dependency&gt; 使用客户端" />
+<meta name="description" content="获取客户端 项目地址:Pegasus scala client 下载： git clone git@github.com:apache/incubator-pegasus.git cd incubator-pegasus/scala-client 选择所使用的版本并构建，建议使用 master 版本。同时注意，scala 客户端构建依赖 Java 客户端，请参考获取 Java 客户端在项目中添加 Java 依赖。你可以打包成 Jar 包进行使用： sbt package 或者，安装到本地的 sbt repository，方便在 sbt 项目中使用： sbt publish-local 或者，安装到本地的 maven repository： sbt publish-m2 项目默认使用 scala-2.11 进行构建，打包发布时则同时发布 2.11 版本（pegasus-scala-client_2.11）和 2.12 版本（pegasus-scala-client_2.12），如果你的项目使用 sbt 构建，则可配置为： //使用 sbt 仓库，不需要添加后缀，默认使用当前 scala 版本号，即使用 2.12 scalaVersion := &quot;2.12.8&quot; libraryDependencies ++= Seq( &quot;com.xiaomi.infra&quot; %% &quot;pegasus-scala-client&quot; % &quot;1.11.4-1-SNAPSHOT&quot; ) 或者配置为： //使用 maven 仓库(你可以使用 resolvers ++= Seq()添加自定义 maven 仓库)，需要添加后缀 scalaVersion := &quot;2.12.8&quot; libraryDependencies ++= Seq( &quot;com.xiaomi.infra&quot; % &quot;pegasus-scala-client_2.11&quot; % &quot;1.11.4-1-SNAPSHOT&quot; ) 如果你的项目通过 maven 构建，则可通过 maven 配置在项目中使用，例如： &lt;dependency&gt; &lt;groupId&gt;com.xiaomi.infra&lt;/groupId&gt; &lt;artifactId&gt;pegasus-scala-client_2.11&lt;/artifactId&gt; &lt;version&gt;1.11.4-1&lt;/version&gt; &lt;/dependency&gt; 使用客户端" />
+<meta property="og:description" content="获取客户端 项目地址:Pegasus scala client 下载： git clone git@github.com:apache/incubator-pegasus.git cd incubator-pegasus/scala-client 选择所使用的版本并构建，建议使用 master 版本。同时注意，scala 客户端构建依赖 Java 客户端，请参考获取 Java 客户端在项目中添加 Java 依赖。你可以打包成 Jar 包进行使用： sbt package 或者，安装到本地的 sbt repository，方便在 sbt 项目中使用： sbt publish-local 或者，安装到本地的 maven repository： sbt publish-m2 项目默认使用 scala-2.11 进行构建，打包发布时则同时发布 2.11 版本（pegasus-scala-client_2.11）和 2.12 版本（pegasus-scala-client_2.12），如果你的项目使用 sbt 构建，则可配置为： //使用 sbt 仓库，不需要添加后缀，默认使用当前 scala 版本号，即使用 2.12 scalaVersion := &quot;2.12.8&quot; libraryDependencies ++= Seq( &quot;com.xiaomi.infra&quot; %% &quot;pegasus-scala-client&quot; % &quot;1.11.4-1-SNAPSHOT&quot; ) 或者配置为： //使用 maven 仓库(你可以使用 resolvers ++= Seq()添加自定义 maven 仓库)，需要添加后缀 scalaVersion := &quot;2.12.8&quot; libraryDependencies ++= Seq( &quot;com.xiaomi.infra&quot; % &quot;pegasus-scala-client_2.11&quot; % &quot;1.11.4-1-SNAPSHOT&quot; ) 如果你的项目通过 maven 构建，则可通过 maven 配置在项目中使用，例如： &lt;dependency&gt; &lt;groupId&gt;com.xiaomi.infra&lt;/groupId&gt; &lt;artifactId&gt;pegasus-scala-client_2.11&lt;/artifactId&gt; &lt;version&gt;1.11.4-1&lt;/version&gt; &lt;/dependency&gt; 使用客户端" />
 <meta property="og:site_name" content="Pegasus" />
 <meta property="og:type" content="article" />
-<meta property="article:published_time" content="2025-11-06T10:36:30+00:00" />
+<meta property="article:published_time" content="2025-11-16T14:10:33+00:00" />
 <meta name="twitter:card" content="summary" />
 <meta property="twitter:title" content="Scala Client" />
 <script type="application/ld+json">
-{"@context":"https://schema.org","@type":"BlogPosting","dateModified":"2025-11-06T10:36:30+00:00","datePublished":"2025-11-06T10:36:30+00:00","description":"获取客户端 项目地址：Pegasus scala client 下载： git clone git@github.com:apache/incubator-pegasus.git cd incubator-pegasus/scala-client 选择所使用的版本并构建，建议使用master版本。同时注意，scala客户端构建依赖Java客户端，请参考获取Java客户端在项目中添加Java依赖。你可以打包成Jar包进行使用： sbt package 或者，安装到本地的sbt repository，方便在sbt项目中使用： sbt publish-local 或者，安装到本地的maven repository： sbt publish-m2 项目默认使用scala-2.11进行构建，打包发布时则同时发布2.11版本（pegasus-scala-client_2.11）和2.12版本（pegasus-scala-client_2.12），如果你的项目使用sbt构建，则可配置为： //使用sbt仓库，不需要添加后缀，默认使用当前scala版本号，即使用2.12 scalaVersion := &quot;2.12.8&quot; libraryDependencies ++= Seq( &quot;com.xiaomi.infra&quot; %% &quot;pegasus-scala-client&quot; % &quot;1.11.4-1-SNAPSHOT&quot; ) 或者配置为： //使用maven仓库(你可以使用resolvers ++= Seq()添加自定义maven仓库)，需要添加后缀 scalaVersion := &quot;2.12.8&quot; libraryDependencies ++= Seq( &quot;com.xiaomi.infra&quot; % &quot;pegasus-scala-client_2.11&quot; % &quot;1.11.4-1-SNAPSHOT&quot; ) 如果你的项目通过maven构建，则可通过maven配置在项目中使用，例如： &lt;dependency&gt; &lt;groupId&gt;com.xiaomi.infra&lt;/groupId&gt; &lt;artifactId&gt;pegasus-scala-client_2.11&lt;/artifactId&gt; &lt;version&gt;1.11.4-1&lt;/version&gt; &lt;/dependency&gt; 使用客户端","headline":"Scala Client","mainEntityOfPage":{"@type":"WebPage","@id":"/clients/scala-client"},"url":"/clients/scala-client"}</script>
+{"@context":"https://schema.org","@type":"BlogPosting","dateModified":"2025-11-16T14:10:33+00:00","datePublished":"2025-11-16T14:10:33+00:00","description":"获取客户端 项目地址:Pegasus scala client 下载： git clone git@github.com:apache/incubator-pegasus.git cd incubator-pegasus/scala-client 选择所使用的版本并构建，建议使用 master 版本。同时注意，scala 客户端构建依赖 Java 客户端，请参考获取 Java 客户端在项目中添加 Java 依赖。你可以打包成 Jar 包进行使用： sbt package 或者，安装到本地的 sbt repository，方便在 sbt 项目中使用： sbt publish-local 或者，安装到本地的 maven repository： sbt publish-m2 项目默认使用 scala-2.11 进行构建，打包发布时则同时发布 2.11 版本（pegasus-scala-client_2.11）和 2.12 版本（pegasus-scala-client_2.12），如果你的项目使用 sbt 构建，则可配置为： //使用 sbt 仓库，不需要添加后缀，默认使用当前 scala 版本号，即使用 2.12 scalaVersion := &quot;2.12.8&quot; libraryDependencies ++= Seq( &quot;com.xiaomi.infra&quot; %% &quot;pegasus-scala-client&quot; % &quot;1.11.4-1-SNAPSHOT&quot; ) 或者配置为： //使用 maven 仓库(你可以使用 resolvers ++= Seq()添加自定义 maven 仓库)，需要添加后缀 scalaVersion := &quot;2.12.8&quot; libraryDependencies ++= Seq( &quot;com.xiaomi.infra&quot; % &quot;pegasus-scala-client_2.11&quot; % &quot;1.11.4-1-SNAPSHOT&quot; ) 如果你的项目通过 maven 构建，则可通过 maven 配置在项目中使用，例如： &lt;dependency&gt; &lt;groupId&gt;com.xiaomi.infra&lt;/groupId&gt; &lt;artifactId&gt;pegasus-scala-client_2.11&lt;/artifactId&gt; &lt;version&gt;1.11.4-1&lt;/version&gt; &lt;/dependency&gt; 使用客户端","headline":"Scala Client","mainEntityOfPage":{"@type":"WebPage","@id":"/clients/scala-client"},"url":"/clients/scala-client"}</script>
 <!-- End Jekyll SEO tag -->
 
 </head>
@@ -739,35 +739,35 @@
             <section class="section" style="padding-top: 2rem;">
                 <div class="content">
                     <h1 id="获取客户端">获取客户端</h1>
-<p>项目地址：<a href="https://github.com/apache/incubator-pegasus/tree/master/scala-client">Pegasus scala client</a>
+<p>项目地址:<a href="https://github.com/apache/incubator-pegasus/tree/master/scala-client">Pegasus scala client</a>
 下载：</p>
 <div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>git clone git@github.com:apache/incubator-pegasus.git
 <span class="nb">cd </span>incubator-pegasus/scala-client
 </code></pre></div></div>
-<p>选择所使用的版本并构建，建议使用master版本。同时注意，scala客户端构建依赖<a href="https://github.com/apache/incubator-pegasus/tree/master/java-client">Java客户端</a>，请参考<a href="/zh/clients/java-client#获取java客户端">获取Java客户端</a>在项目中添加Java依赖。你可以打包成Jar包进行使用：</p>
+<p>选择所使用的版本并构建，建议使用 master 版本。同时注意，scala 客户端构建依赖<a href="https://github.com/apache/incubator-pegasus/tree/master/java-client"> Java 客户端</a>，请参考<a href="/clients/java-client#获取 java 客户端">获取 Java 客户端</a>在项目中添加 Java 依赖。你可以打包成 Jar 包进行使用：</p>
 <div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>sbt package
 </code></pre></div></div>
-<p>或者，安装到本地的sbt repository，方便在sbt项目中使用：</p>
+<p>或者，安装到本地的 sbt repository，方便在 sbt 项目中使用：</p>
 <div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>sbt publish-local
 </code></pre></div></div>
-<p>或者，安装到本地的maven repository：</p>
+<p>或者，安装到本地的 maven repository：</p>
 <div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>sbt publish-m2
 </code></pre></div></div>
-<p>项目默认使用scala-2.11进行构建，打包发布时则同时发布2.11版本（pegasus-scala-client_2.11）和2.12版本（pegasus-scala-client_2.12），如果你的项目使用sbt构建，则可配置为：</p>
-<pre><code class="language-sbt">//使用sbt仓库，不需要添加后缀，默认使用当前scala版本号，即使用2.12
+<p>项目默认使用 scala-2.11 进行构建，打包发布时则同时发布 2.11 版本（pegasus-scala-client_2.11）和 2.12 版本（pegasus-scala-client_2.12），如果你的项目使用 sbt 构建，则可配置为：</p>
+<pre><code class="language-sbt">//使用 sbt 仓库，不需要添加后缀，默认使用当前 scala 版本号，即使用 2.12
 scalaVersion := "2.12.8"
 libraryDependencies ++= Seq(
     "com.xiaomi.infra" %% "pegasus-scala-client" % "1.11.4-1-SNAPSHOT"
 )
 </code></pre>
 <p>或者配置为：</p>
-<pre><code class="language-sbt">//使用maven仓库(你可以使用resolvers ++= Seq()添加自定义maven仓库)，需要添加后缀
+<pre><code class="language-sbt">//使用 maven 仓库(你可以使用 resolvers ++= Seq()添加自定义 maven 仓库)，需要添加后缀
 scalaVersion := "2.12.8"
 libraryDependencies ++= Seq(
     "com.xiaomi.infra" % "pegasus-scala-client_2.11" % "1.11.4-1-SNAPSHOT"
 )
 </code></pre>
-<p>如果你的项目通过maven构建，则可通过maven配置在项目中使用，例如：</p>
+<p>如果你的项目通过 maven 构建，则可通过 maven 配置在项目中使用，例如：</p>
 <div class="language-xml highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nt">&lt;dependency&gt;</span>
     <span class="nt">&lt;groupId&gt;</span>com.xiaomi.infra<span class="nt">&lt;/groupId&gt;</span>
     <span class="nt">&lt;artifactId&gt;</span>pegasus-scala-client_2.11<span class="nt">&lt;/artifactId&gt;</span>
@@ -777,14 +777,14 @@ libraryDependencies ++= Seq(
 <h1 id="使用客户端">使用客户端</h1>
 
 <h2 id="获取实例">获取实例</h2>
-<p>通过指定server配置信息获取实例，Scala提供两种获取实例的接口：<br />
-<strong>1、文件路径作为配置参数：</strong>  参见<a href="/zh/clients/java-client#配置文件">Java客户端文件配置</a></p>
+<p>通过指定 server 配置信息获取实例，Scala 提供两种获取实例的接口：<br />
+<strong>1、文件路径作为配置参数：</strong>  参见<a href="/zh/clients/java-client#配置文件"> Java 客户端文件配置</a></p>
 <div class="language-scala highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">def</span> <span class="nf">createClient</span><span class="o">(</span><span class="n">configPath</span><span class="k">:</span> <span class="kt">String</span><span class="o">)</span><span class="k">:</span> <span class="kt">ScalaPegasusClient</span>
 </code></pre></div></div>
 <p>例如:</p>
 <div class="language-scala highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">val</span> <span class="nv">pegasusClient</span> <span class="k">=</span> <span class="nv">ScalaPegasusClientFactory</span><span class="o">.</span><span class="py">createClient</span><span class="o">(</span><span class="s">"resource:///pegasus.properties"</span><span class="o">)</span>
 </code></pre></div></div>
-<p><strong>2、Properties对象作为配置：</strong></p>
+<p><strong>2、Properties 对象作为配置：</strong></p>
 <div class="language-scala highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">def</span> <span class="nf">createClient</span><span class="o">(</span><span class="n">props</span><span class="k">:</span> <span class="kt">Properties</span><span class="o">)</span><span class="k">:</span> <span class="kt">ScalaPegasusClient</span>
 </code></pre></div></div>
 <p>例如：</p>
@@ -794,7 +794,7 @@ libraryDependencies ++= Seq(
 <span class="k">val</span> <span class="nv">pegasusClient</span> <span class="k">=</span> <span class="nv">ScalaPegasusClientFactory</span><span class="o">.</span><span class="py">createClient</span><span class="o">(</span><span class="n">pegasusConfig</span><span class="o">)</span>
 </code></pre></div></div>
 <h2 id="数据操作">数据操作</h2>
-<p>注意：调用函数前请确认导入<code class="language-plaintext highlighter-rouge">Serializers._</code>，详情参阅<a href="#实现原理">实现原理</a></p>
+<p>注意:调用函数前请确认导入 <code class="language-plaintext highlighter-rouge">Serializers._</code>，详情参阅<a href="#实现原理">实现原理</a></p>
 <div class="language-scala highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">val</span> <span class="nv">hashKey</span> <span class="k">=</span> <span class="mi">12345L</span>
 <span class="nv">pegasusClient</span><span class="o">.</span><span class="py">set</span><span class="o">(</span><span class="n">table</span><span class="o">,</span> <span class="n">hashKey</span><span class="o">,</span> <span class="s">"sort_1"</span><span class="o">,</span> <span class="s">"value_1"</span><span class="o">)</span>
 <span class="k">val</span> <span class="nv">value</span> <span class="k">=</span> <span class="nv">pegasusClient</span><span class="o">.</span><span class="py">get</span><span class="o">(</span><span class="n">table</span><span class="o">,</span> <span class="n">hashKey</span><span class="o">,</span> <span class="s">"sort_1"</span><span class="o">).</span><span class="py">as</span><span class="o">[</span><span class="kt">String</span><span class="o">]</span>
@@ -804,7 +804,7 @@ libraryDependencies ++= Seq(
 <span class="nv">pegasusClient</span><span class="o">.</span><span class="py">close</span>
 </code></pre></div></div>
 <h1 id="接口定义">接口定义</h1>
-<p>scala的客户端类地址为：<code class="language-plaintext highlighter-rouge">com.xiaomi.infra.pegasus.scalaclient</code>，主要包括以下四个类：</p>
+<p>scala 的客户端类地址为：<code class="language-plaintext highlighter-rouge">com.xiaomi.infra.pegasus.scalaclient</code>，主要包括以下四个类：</p>
 
 <table>
   <thead>
@@ -816,157 +816,157 @@ libraryDependencies ++= Seq(
   <tbody>
     <tr>
       <td>ScalaPegasusClientFactory</td>
-      <td>Client工厂类，用于创建Client实例</td>
+      <td>Client 工厂类，用于创建 Client 实例</td>
     </tr>
     <tr>
       <td>ScalaPegasusClient</td>
-      <td>Client类，封装了各种<strong>同步API</strong>，也可用于创建Table实例</td>
+      <td>Client 类，封装了各种<strong>同步 API</strong>，也可用于创建 Table 实例</td>
     </tr>
     <tr>
       <td>ScalaPegasusTable</td>
-      <td>Table类，封装了操作单个Table数据的<strong>同步API</strong></td>
+      <td>Table 类，封装了操作单个 Table 数据的<strong>同步 API</strong></td>
     </tr>
     <tr>
       <td>ScalaPegasusAsyncTable</td>
-      <td>Table类，封装了操作单个Table数据的<strong>异步API</strong></td>
+      <td>Table 类，封装了操作单个 Table 数据的<strong>异步 API</strong></td>
     </tr>
   </tbody>
 </table>
 
-<p>用户可以选择使用Client类（ScalaPegasusClient）或者是Table类（ScalaPegasusTable或者ScalaPegasusAsyncTable）存取数据，区别如下：</p>
+<p>用户可以选择使用 Client 类（ScalaPegasusClient）或者是 Table 类（ScalaPegasusTable 或者 ScalaPegasusAsyncTable）存取数据，区别如下：</p>
 <ul>
-  <li>Client类直接在参数中指定表名，省去了打开表的动作，使用更便捷。</li>
-  <li>Table类同时支持<strong>同步和异步API</strong>，而Client类只支持<strong>同步API</strong>。</li>
-  <li>Table类可以为每个操作设置单独的超时，而Client类无法单独指定超时，只能使用配置文件中的默认超时。</li>
-  <li>Table类的超时更准确，而Client类在首次读写请求时可能需要在内部初始化Table对象，所以首次读写的超时可能不太准确。
-    <h2 id="scalapegasusclient接口">ScalaPegasusClient接口</h2>
+  <li>Client 类直接在参数中指定表名，省去了打开表的动作，使用更便捷。</li>
+  <li>Table 类同时支持<strong>同步和异步 API</strong>，而 Client 类只支持<strong>同步 API</strong>。</li>
+  <li>Table 类可以为每个操作设置单独的超时，而 Client 类无法单独指定超时，只能使用配置文件中的默认超时。</li>
+  <li>Table 类的超时更准确，而 Client 类在首次读写请求时可能需要在内部初始化 Table 对象，所以首次读写的超时可能不太准确。
+    <h2 id="scalapegasusclient-接口">ScalaPegasusClient 接口</h2>
     <h3 id="实现原理">实现原理</h3>
-    <p><code class="language-plaintext highlighter-rouge">ScalaPegasusClient</code>接口通过持有<code class="language-plaintext highlighter-rouge">ScalaPegasusTable</code>实现对特定表的访问，而<code class="language-plaintext highlighter-rouge">ScalaPegasusTable</code>实际是封装了Java client的接口<code class="language-plaintext highlighter-rouge">PegasusTableInterface</code>而实现的。函数形式如下所示：</p>
+    <p><code class="language-plaintext highlighter-rouge">ScalaPegasusClient</code> 接口通过持有 <code class="language-plaintext highlighter-rouge">ScalaPegasusTable</code> 实现对特定表的访问，而 <code class="language-plaintext highlighter-rouge">ScalaPegasusTable</code> 实际是封装了 Java client 的接口 <code class="language-plaintext highlighter-rouge">PegasusTableInterface</code> 而实现的。函数形式如下所示：</p>
     <div class="language-scala highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">def</span> <span class="nf">get</span><span class="o">[</span><span class="kt">H</span>, <span class="kt">S</span><span class="o">](</span><span class="n">table</span><span class="k">:</span> <span class="kt">String</span><span class="o">,</span> <span class="n">hashKey</span><span class="k">:</span> <span class="kt">H</span><span class="o">,</span> <span class="n">sortKey</span><span class="k">:</span> <span class="kt">S</span><span class="o">)(</span><span class="k">implicit</span> <span class="n">hSer</span><span class="k">:</span> <span class="kt">SER</span><span class="o">[</span><span class="kt">H</span><span class="o">],</span> <span class="n">sSer</span><span class="k">:</span> <span class="kt">SER</span><span class="o">[</span><span class="kt">S</span><span class="o">])</span> <span class="k">=</span> <span class="o">{</span>
 <span class="nf">getTable</span><span class="o">(</span><span class="n">table</span><span class="o">).</span><span class="py">get</span><span class="o">(</span><span class="n">hashKey</span><span class="o">,</span> <span class="n">sortKey</span><span class="o">)</span>
 <span class="o">}</span>
 </code></pre></div>    </div>
-    <p>每一个数据表的操作函数都被定义为泛型函数，参数列表<code class="language-plaintext highlighter-rouge">(table: String, hashKey: H, sortKey: S)</code>是实际传入的参数，同时使用隐式参数<code class="language-plaintext highlighter-rouge">(implicit hSer: SER[H], sSer: SER[S])</code>完成对参数列表<code class="language-plaintext highlighter-rouge">(table: String, hashKey: H, sortKey: S)</code>泛型的转换。其中SER[H]是类<code class="language-plaintext highlighter-rouge">Serializers</code>的泛型声明，该类包含对不同泛型对象的隐式转换函数（转换成Java client中<code class="language-plaintext highlighter-rouge">PegasusTableInterface</code>的<code class="language-plaintext highlighter-rouge">byte[]参数</code>，在scala中对应为<code class="language-plaintext highlighter-rouge">Array[Byte]</code>，例子展示的是当泛型在使用的时候被定义为<code class="language-plaintext highlighter-rouge">String</code>时的隐式转换函数：</p>
+    <p>每一个数据表的操作函数都被定义为泛型函数，参数列表 <code class="language-plaintext highlighter-rouge">(table: String, hashKey: H, sortKey: S)</code> 是实际传入的参数，同时使用隐式参数 <code class="language-plaintext highlighter-rouge">(implicit hSer: SER[H], sSer: SER[S])</code> 完成对参数列表 <code class="language-plaintext highlighter-rouge">(table: String, hashKey: H, sortKey: S)</code> 泛型的转换。其中 SER[H] 是类 <code class="language-plaintext highlighter-rouge">Serializers</code> 的泛型声明，该类包含对不同泛型对象的隐式转换函数（转换成 Java client 中 <code class="language-plaintext highlighter-rouge">PegasusTableInterface</code> 的 <code class="language-plaintext highlighter-rouge">byte[]参数</code>，在 scala 中对应为 <code class="language-plaintext highlighter-rouge">Array[Byte]</code>，例子展示的是当泛型在使用的时候被定义为 <code class="language-plaintext highlighter-rouge">String</code> 时的隐式转换函数：</p>
     <div class="language-scala highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">implicit</span> <span class="k">object</span> <span class="nc">Utf8String</span> <span class="k">extends</span> <span class="nc">Serializer</span><span class="o">[</span><span class="kt">String</span><span class="o">]</span> <span class="o">{</span>
 <span class="k">override</span> <span class="k">def</span> <span class="nf">serialize</span><span class="o">(</span><span class="n">obj</span><span class="k">:</span> <span class="kt">String</span><span class="o">)</span><span class="k">:</span> <span class="kt">Array</span><span class="o">[</span><span class="kt">Byte</span><span class="o">]</span> <span class="k">=</span> <span class="nf">if</span> <span class="o">(</span><span class="n">obj</span> <span class="o">==</span> <span class="kc">null</span><span class="o">)</span> <span class="kc">null</span> <span class="k">else</span> <span class="nv">obj</span><span class="o">.</span><span class="py">getBytes</span><span class="o">(</span><span class="s">"UTF-8"</span><span class="o">)</span>
 <span class="k">override</span> <span class="k">def</span> <span class="nf">deserialize</span><span class="o">(</span><span class="n">bytes</span><span class="k">:</span> <span class="kt">Array</span><span class="o">[</span><span class="kt">Byte</span><span class="o">])</span><span class="k">:</span> <span class="kt">String</span> <span class="o">=</span> <span class="nf">if</span> <span class="o">(</span><span class="n">bytes</span> <span class="o">==</span> <span class="kc">null</span><span class="o">)</span> <span class="kc">null</span> <span class="k">else</span>  <span class="k">new</span> <span class="nc">String</span><span class="o">(</span><span class="n">bytes</span><span class="o">,</span> <span class="s">"UTF-8"</span><span class="o">)</span>
 <span class="o">}</span>
 </code></pre></div>    </div>
-    <p>客户端在调用<code class="language-plaintext highlighter-rouge">ScalaPegasusClient</code>提供的方法时，当对第一个参数列表的泛型参数传入<code class="language-plaintext highlighter-rouge">String</code>类型变量的时候，将被自动转换为<code class="language-plaintext highlighter-rouge">Array[Byte]</code>类型变量，并传入<code class="language-plaintext highlighter-rouge">PegasusTableInterface</code>的对应方法中。请确保包含<code class="language-plaintext highlighter-rouge">Serializers._</code>，否则无法完成参数的类型转换，你可以使用：</p>
+    <p>客户端在调用 <code class="language-plaintext highlighter-rouge">ScalaPegasusClient</code> 提供的方法时，当对第一个参数列表的泛型参数传入 <code class="language-plaintext highlighter-rouge">String</code> 类型变量的时候，将被自动转换为 <code class="language-plaintext highlighter-rouge">Array[Byte]</code> 类型变量，并传入 <code class="language-plaintext highlighter-rouge">PegasusTableInterface</code> 的对应方法中。请确保包含 <code class="language-plaintext highlighter-rouge">Serializers._</code>，否则无法完成参数的类型转换，你可以使用：</p>
     <div class="language-scala highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">import</span> <span class="nn">com.xiaomi.infra.pegasus.scalaclient.Serializers._</span>
 </code></pre></div>    </div>
-    <p>导入依赖，目前接受的自动类型转换包括<code class="language-plaintext highlighter-rouge">String</code>、<code class="language-plaintext highlighter-rouge">Boolean</code>、<code class="language-plaintext highlighter-rouge">Int</code>、<code class="language-plaintext highlighter-rouge">Long</code>、<code class="language-plaintext highlighter-rouge">Short</code>、<code class="language-plaintext highlighter-rouge">Double</code>，这些类型可自动转换为<code class="language-plaintext highlighter-rouge">Array[Byte]</code>。</p>
-    <h3 id="api功能">API功能</h3>
+    <p>导入依赖，目前接受的自动类型转换包括 <code class="language-plaintext highlighter-rouge">String</code>、<code class="language-plaintext highlighter-rouge">Boolean</code>、<code class="language-plaintext highlighter-rouge">Int</code>、<code class="language-plaintext highlighter-rouge">Long</code>、<code class="language-plaintext highlighter-rouge">Short</code>、<code class="language-plaintext highlighter-rouge">Double</code>，这些类型可自动转换为 <code class="language-plaintext highlighter-rouge">Array[Byte]</code>。</p>
+    <h3 id="api-功能">API 功能</h3>
     <h4 id="exists">exists</h4>
-    <p>判断key是否存在，参见<a href="/zh/clients/java-client#exist">Java客户端文档#exist</a></p>
+    <p>判断 key 是否存在，参见<a href="/zh/clients/java-client#exist"> Java 客户端文档#exist</a></p>
     <div class="language-scala highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">def</span> <span class="nf">exists</span><span class="o">[</span><span class="kt">H</span>, <span class="kt">S</span><span class="o">](</span><span class="n">table</span><span class="k">:</span> <span class="kt">String</span><span class="o">,</span> <span class="n">hashKey</span><span class="k">:</span> <span class="kt">H</span><span class="o">,</span> <span class="n">sortKey</span><span class="k">:</span> <span class="kt">S</span><span class="o">)</span>
 </code></pre></div>    </div>
-    <p>table：表名，通常为<code class="language-plaintext highlighter-rouge">String</code>类型<br />
-hashKey：通常为<code class="language-plaintext highlighter-rouge">String</code>类型<br />
-sortKey：通常为<code class="language-plaintext highlighter-rouge">String</code>类型<br />
-return： 返回是否存在，<code class="language-plaintext highlighter-rouge">boolean</code>类型</p>
+    <p>table: 表名，通常为 <code class="language-plaintext highlighter-rouge">String</code> 类型<br />
+hashKey: 通常为 <code class="language-plaintext highlighter-rouge">String</code> 类型<br />
+sortKey: 通常为 <code class="language-plaintext highlighter-rouge">String</code> 类型<br />
+return: 返回是否存在，<code class="language-plaintext highlighter-rouge">boolean</code> 类型</p>
     <h4 id="sortkeycount">sortKeyCount</h4>
-    <p>获取一个hashkey下的sortkey值，参见<a href="/zh/clients/java-client#sortkeycount">Java客户端文档#sortKeyCount</a></p>
+    <p>获取一个 hashkey 下的 sortkey 值，参见<a href="/zh/clients/java-client#sortkeycount"> Java 客户端文档#sortKeyCount</a></p>
     <div class="language-scala highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">def</span> <span class="nf">sortKeyCount</span><span class="o">[</span><span class="kt">H</span><span class="o">](</span><span class="n">table</span><span class="k">:</span> <span class="kt">String</span><span class="o">,</span> <span class="n">hashKey</span><span class="k">:</span> <span class="kt">H</span><span class="o">)</span>
 </code></pre></div>    </div>
-    <p>table：表名，通常为<code class="language-plaintext highlighter-rouge">String</code>类型<br />
-hashKey：通常为<code class="language-plaintext highlighter-rouge">String</code>类型<br />
-return：返回sortKeys个数，<code class="language-plaintext highlighter-rouge">long</code>类型</p>
+    <p>table: 表名，通常为 <code class="language-plaintext highlighter-rouge">String</code> 类型<br />
+hashKey: 通常为 <code class="language-plaintext highlighter-rouge">String</code> 类型<br />
+return: 返回 sortKeys 个数，<code class="language-plaintext highlighter-rouge">long</code> 类型</p>
     <h4 id="get">get</h4>
-    <p>获取一条数据，参见<a href="/zh/clients/java-client#get">Java客户端文档#get</a></p>
+    <p>获取一条数据，参见<a href="/zh/clients/java-client#get"> Java 客户端文档#get</a></p>
     <div class="language-scala highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">def</span> <span class="nf">get</span><span class="o">[</span><span class="kt">H</span>, <span class="kt">S</span><span class="o">](</span><span class="n">table</span><span class="k">:</span> <span class="kt">String</span><span class="o">,</span> <span class="n">hashKey</span><span class="k">:</span> <span class="kt">H</span><span class="o">,</span> <span class="n">sortKey</span><span class="k">:</span> <span class="kt">S</span><span class="o">)</span>
 </code></pre></div>    </div>
-    <p>table：表名，通常为<code class="language-plaintext highlighter-rouge">String</code>类型<br />
-hashKey：通常为<code class="language-plaintext highlighter-rouge">String</code>类型<br />
-sortKey：通常为<code class="language-plaintext highlighter-rouge">String</code>类型<br />
-return：返回获取值，<code class="language-plaintext highlighter-rouge">Array[Byte]</code>类型，你可以使用<code class="language-plaintext highlighter-rouge">as[String]</code>转换为<code class="language-plaintext highlighter-rouge">String</code>类型</p>
+    <p>table: 表名，通常为 <code class="language-plaintext highlighter-rouge">String</code> 类型<br />
+hashKey: 通常为 <code class="language-plaintext highlighter-rouge">String</code> 类型<br />
+sortKey: 通常为 <code class="language-plaintext highlighter-rouge">String</code> 类型<br />
+return: 返回获取值，<code class="language-plaintext highlighter-rouge">Array[Byte]</code> 类型，你可以使用 <code class="language-plaintext highlighter-rouge">as[String]</code> 转换为 <code class="language-plaintext highlighter-rouge">String</code> 类型</p>
     <h4 id="batchget">batchGet</h4>
-    <p>读取一批数据，对get函数的批量封装。该函数并发地向server发送异步请求，并等待结果。如果有任意一个请求失败，就提前终止并抛出异常。如果抛出了异常，则values中的结果是未定义的，参见<a href="/zh/clients/java-client#batchget">Java客户端文档#batchGet</a></p>
+    <p>读取一批数据，对 get 函数的批量封装。该函数并发地向 server 发送异步请求，并等待结果。如果有任意一个请求失败，就提前终止并抛出异常。如果抛出了异常，则 values 中的结果是未定义的，参见<a href="/zh/clients/java-client#batchget"> Java 客户端文档#batchGet</a></p>
     <div class="language-scala highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">def</span> <span class="nf">batchGet</span><span class="o">[</span><span class="kt">H</span>, <span class="kt">S</span><span class="o">](</span><span class="n">table</span><span class="k">:</span> <span class="kt">String</span><span class="o">,</span> <span class="n">keys</span><span class="k">:</span> <span class="kt">List</span><span class="o">[</span><span class="kt">PegasusKey</span><span class="o">[</span><span class="kt">H</span>, <span class="kt">S</span><span class="o">]])</span>
 </code></pre></div>    </div>
-    <p>table：表名，通常为<code class="language-plaintext highlighter-rouge">String</code>类型<br />
-keys：PegasusKey列表，由hashKey和SortKey组成<br />
-return：返回获取值列表，<code class="language-plaintext highlighter-rouge">PegasusResultList</code>类型</p>
+    <p>table: 表名，通常为 <code class="language-plaintext highlighter-rouge">String</code> 类型<br />
+keys: PegasusKey 列表，由 hashKey 和 SortKey 组成<br />
+return: 返回获取值列表，<code class="language-plaintext highlighter-rouge">PegasusResultList</code> 类型</p>
     <h4 id="batchget2">batchGet2</h4>
-    <p>读取一批数据，对get函数的批量封装。该函数并发地向server发送异步请求，但与上面batchGet不同的是，无论请求成功还是失败，它都会等待所有请求结束，参见<a href="/zh/clients/java-client#batchget">Java客户端文档#batchGet2</a></p>
+    <p>读取一批数据，对 get 函数的批量封装。该函数并发地向 server 发送异步请求，但与上面 batchGet 不同的是，无论请求成功还是失败，它都会等待所有请求结束，参见<a href="/zh/clients/java-client#batchget"> Java 客户端文档#batchGet2</a></p>
     <div class="language-scala highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">def</span> <span class="nf">batchGet2</span><span class="o">[</span><span class="kt">H</span>, <span class="kt">S</span><span class="o">](</span><span class="n">table</span><span class="k">:</span> <span class="kt">String</span><span class="o">,</span> <span class="n">keys</span><span class="k">:</span> <span class="kt">Seq</span><span class="o">[</span><span class="kt">PegasusKey</span><span class="o">[</span><span class="kt">H</span>, <span class="kt">S</span><span class="o">]])</span>
 </code></pre></div>    </div>
-    <p>table：表名，通常为<code class="language-plaintext highlighter-rouge">String</code>类型<br />
-keys：PegasusKey列表，有hashKey和SortKey组成<br />
-return：返回获取值列表，<code class="language-plaintext highlighter-rouge">PegasusResultList</code>类型</p>
+    <p>table: 表名，通常为 <code class="language-plaintext highlighter-rouge">String</code> 类型<br />
+keys: PegasusKey 列表，有 hashKey 和 SortKey 组成<br />
+return: 返回获取值列表，<code class="language-plaintext highlighter-rouge">PegasusResultList</code> 类型</p>
     <h4 id="multiget">multiGet</h4>
-    <p>Java client包含多种multiGet接口，提供读同一HashKey下的多行数据功能，这里封装的是：</p>
+    <p>Java client 包含多种 multiGet 接口，提供读同一 HashKey 下的多行数据功能，这里封装的是：</p>
     <pre><code class="language-Java">public boolean multiGet(String tableName, byte[] hashKey, 
                     List&lt;byte[]&gt; sortKeys, int maxFetchCount, 
                     int maxFetchSize, List&lt;Pair&lt;byte[], byte[]&gt;&gt; values) throws PException;
 </code></pre>
-    <p>支持最大数据量<code class="language-plaintext highlighter-rouge">maxFetchCount</code>和最大数据大小<code class="language-plaintext highlighter-rouge">maxFetchSize</code>的参数设置，参见<a href="/zh/clients/java-client#multiget">Java客户端文档#multiGet</a></p>
+    <p>支持最大数据量 <code class="language-plaintext highlighter-rouge">maxFetchCount</code> 和最大数据大小 <code class="language-plaintext highlighter-rouge">maxFetchSize</code> 的参数设置，参见<a href="/zh/clients/java-client#multiget"> Java 客户端文档#multiGet</a></p>
     <div class="language-scala highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">def</span> <span class="nf">multiGet</span><span class="o">[</span><span class="kt">H</span>, <span class="kt">S</span><span class="o">](</span><span class="n">table</span><span class="k">:</span> <span class="kt">String</span><span class="o">,</span> <span class="n">hashKey</span><span class="k">:</span> <span class="kt">H</span><span class="o">,</span> <span class="n">sortKeys</span><span class="k">:</span> <span class="kt">Seq</span><span class="o">[</span><span class="kt">S</span><span class="o">],</span>
         <span class="n">maxFetchCount</span><span class="k">:</span> <span class="kt">Int</span> <span class="o">=</span> <span class="mi">100</span><span class="o">,</span> <span class="n">maxFetchSize</span><span class="k">:</span> <span class="kt">Int</span> <span class="o">=</span> <span class="mi">1000000</span><span class="o">)</span>
 </code></pre></div>    </div>
-    <p>table：表名，通常为<code class="language-plaintext highlighter-rouge">String</code>类型<br />
-hashKey：通常为<code class="language-plaintext highlighter-rouge">String</code>类型<br />
-sortKeys：sortKey列表<br />
-maxFetchCount：最大获取数据量，这里默认为100<br />
-maxFetchSize：最大获取数据值大小，这里默认为1000000字节<br />
-return：返回获取值列表，<code class="language-plaintext highlighter-rouge">convertMultiGetResult</code>类型</p>
+    <p>table: 表名，通常为 <code class="language-plaintext highlighter-rouge">String</code> 类型<br />
+hashKey: 通常为 <code class="language-plaintext highlighter-rouge">String</code> 类型<br />
+sortKeys: sortKey 列表<br />
+maxFetchCount: 最大获取数据量，这里默认为 100<br />
+maxFetchSize: 最大获取数据值大小，这里默认为 1000000 字节<br />
+return: 返回获取值列表，<code class="language-plaintext highlighter-rouge">convertMultiGetResult</code> 类型</p>
     <h4 id="multigetrange">multiGetRange</h4>
-    <p>Java client包含多种multiGet接口，提供读同一HashKey下的多行数据功能，这里封装的是：</p>
+    <p>Java client 包含多种 multiGet 接口，提供读同一 HashKey 下的多行数据功能，这里封装的是：</p>
     <div class="language-java highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kd">public</span> <span class="kt">boolean</span> <span class="nf">multiGet</span><span class="o">(</span><span class="nc">String</span> <span class="n">tableName</span><span class="o">,</span> <span class="kt">byte</span><span class="o">[]</span> <span class="n">hashKey</span><span class="o">,</span>
                 <span class="kt">byte</span><span class="o">[]</span> <span class="n">startSortKey</span><span class="o">,</span> <span class="kt">byte</span><span class="o">[]</span> <span class="n">stopSortKey</span><span class="o">,</span> <span class="nc">MultiGetOptions</span> <span class="n">options</span><span class="o">,</span>
                 <span class="kt">int</span> <span class="n">maxFetchCount</span><span class="o">,</span> <span class="kt">int</span> <span class="n">maxFetchSize</span><span class="o">,</span>
                 <span class="nc">List</span><span class="o">&lt;</span><span class="nc">Pair</span><span class="o">&lt;</span><span class="kt">byte</span><span class="o">[],</span> <span class="kt">byte</span><span class="o">[]&gt;&gt;</span> <span class="n">values</span><span class="o">)</span> <span class="kd">throws</span> <span class="nc">PException</span><span class="o">;</span>
 </code></pre></div>    </div>
-    <p>可以支持SortKey的范围查询和条件过滤，只读取满足特定条件的数据，参见<a href="/zh/clients/java-client#multiget">Java客户端文档#multiGet</a></p>
+    <p>可以支持 SortKey 的范围查询和条件过滤，只读取满足特定条件的数据，参见<a href="/zh/clients/java-client#multiget"> Java 客户端文档#multiGet</a></p>
     <div class="language-scala highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">def</span> <span class="nf">multiGetRange</span><span class="o">[</span><span class="kt">H</span>, <span class="kt">S</span><span class="o">](</span><span class="n">hashKey</span><span class="k">:</span> <span class="kt">H</span><span class="o">,</span> <span class="n">startSortKey</span><span class="k">:</span> <span class="kt">S</span><span class="o">,</span> <span class="n">stopSortKey</span><span class="k">:</span> <span class="kt">S</span><span class="o">,</span> 
                     <span class="n">options</span><span class="k">:</span> <span class="kt">Options.MultiGet</span><span class="o">,</span>
                     <span class="n">maxFetchCount</span><span class="k">:</span> <span class="kt">Int</span> <span class="o">=</span> <span class="mi">100</span><span class="o">,</span> <span class="n">maxFetchSize</span><span class="k">:</span> <span class="kt">Int</span> <span class="o">=</span> <span class="mi">1000000</span><span class="o">,</span> 
                     <span class="n">timeout</span><span class="k">:</span> <span class="kt">Duration</span> <span class="o">=</span> <span class="mi">0</span> <span class="n">milli</span><span class="o">)</span>
 </code></pre></div>    </div>
-    <p>table：表名，通常为<code class="language-plaintext highlighter-rouge">String</code>类型<br />
-hashKey：hashKey，通常为<code class="language-plaintext highlighter-rouge">String</code>类型<br />
-startSortKey：sortKey范围的起始值<br />
-stopSortKey：sortKey范围的终止值<br />
-options：查询条件<br />
-maxFetchCount：最大数据量，默认为100<br />
-maxFetchSize：最大数据值大小，默认为1000000字节<br />
-timeout：获取数据超时时间，默认为0，表示使用配置文件中的数值<br />
-return：返回获取值列表，<code class="language-plaintext highlighter-rouge">convertMultiGetResult</code>类型</p>
+    <p>table: 表名，通常为 <code class="language-plaintext highlighter-rouge">String</code> 类型<br />
+hashKey: hashKey，通常为 <code class="language-plaintext highlighter-rouge">String</code> 类型<br />
+startSortKey: sortKey 范围的起始值<br />
+stopSortKey: sortKey 范围的终止值<br />
+options: 查询条件<br />
+maxFetchCount: 最大数据量，默认为 100<br />
+maxFetchSize: 最大数据值大小，默认为 1000000 字节<br />
+timeout: 获取数据超时时间，默认为 0，表示使用配置文件中的数值<br />
+return: 返回获取值列表，<code class="language-plaintext highlighter-rouge">convertMultiGetResult</code> 类型</p>
     <h4 id="batchmultiget">batchMultiGet</h4>
-    <p>对multiGet函数的批量封装。该函数并发地向server发送异步请求，并等待结果。如果有任意一个请求失败，就提前终止并抛出异常。如果抛出了异常，则values中的结果是未定义的，参见<a href="/zh/clients/java-client#batchmultiget">Java客户端文档#batchMultiGet</a></p>
+    <p>对 multiGet 函数的批量封装。该函数并发地向 server 发送异步请求，并等待结果。如果有任意一个请求失败，就提前终止并抛出异常。如果抛出了异常，则 values 中的结果是未定义的，参见<a href="/zh/clients/java-client#batchmultiget"> Java 客户端文档#batchMultiGet</a></p>
     <div class="language-scala highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">def</span> <span class="nf">batchMultiGet</span><span class="o">[</span><span class="kt">H</span>, <span class="kt">S</span><span class="o">](</span><span class="n">keys</span><span class="k">:</span> <span class="kt">Seq</span><span class="o">[(</span><span class="kt">H</span>, <span class="kt">Seq</span><span class="o">[</span><span class="kt">S</span><span class="o">])],</span> <span class="n">timeout</span><span class="k">:</span> <span class="kt">Duration</span> <span class="o">=</span> <span class="mi">0</span> <span class="n">milli</span><span class="o">)</span>
 </code></pre></div>    </div>
-    <p>keys：hashKey-sortKeys列表，如：<code class="language-plaintext highlighter-rouge">Seq(("1",Seq("1","2")),("1",Seq("1","2")))</code><br />
-timeout：获取数据超时时间，默认为0，表示使用配置文件中的数值<br />
-return：返回获取值列表，<code class="language-plaintext highlighter-rouge">List</code>类型</p>
+    <p>keys: hashKey-sortKeys 列表，如：<code class="language-plaintext highlighter-rouge">Seq(("1",Seq("1","2")),("1",Seq("1","2")))</code><br />
+timeout: 获取数据超时时间，默认为 0，表示使用配置文件中的数值<br />
+return: 返回获取值列表，<code class="language-plaintext highlighter-rouge">List</code> 类型</p>
     <h4 id="batchmultiget2">batchMultiGet2</h4>
-    <p>对multiGet函数的批量封装。该函数并发地向server发送异步请求，并等待结果。但与上面batchMultiGet不同的是，无论请求成功还是失败，它都会等待所有请求结束，参见<a href="/zh/clients/java-client#batchmultiget2">Java客户端文档#batchMultiGet2</a></p>
+    <p>对 multiGet 函数的批量封装。该函数并发地向 server 发送异步请求，并等待结果。但与上面 batchMultiGet 不同的是，无论请求成功还是失败，它都会等待所有请求结束，参见<a href="/zh/clients/java-client#batchmultiget2"> Java 客户端文档#batchMultiGet2</a></p>
     <div class="language-scala highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">def</span> <span class="nf">batchMultiGet2</span><span class="o">[</span><span class="kt">H</span>, <span class="kt">S</span><span class="o">](</span><span class="n">keys</span><span class="k">:</span> <span class="kt">Seq</span><span class="o">[(</span><span class="kt">H</span>, <span class="kt">Seq</span><span class="o">[</span><span class="kt">S</span><span class="o">])],</span> <span class="n">timeout</span><span class="k">:</span> <span class="kt">Duration</span> <span class="o">=</span> <span class="mi">0</span> <span class="n">milli</span><span class="o">)</span>
 </code></pre></div>    </div>
-    <p>keys：hashKey-sortKeys列表，如：<code class="language-plaintext highlighter-rouge">Seq(("1",Seq("1","2")),("1",Seq("1","2")))</code><br />
-timeout：获取数据超时时间，默认为0，表示使用配置文件中的数值<br />
-return：返回获取值列表，<code class="language-plaintext highlighter-rouge">List</code>类型</p>
+    <p>keys: hashKey-sortKeys 列表，如：<code class="language-plaintext highlighter-rouge">Seq(("1",Seq("1","2")),("1",Seq("1","2")))</code><br />
+timeout: 获取数据超时时间，默认为 0，表示使用配置文件中的数值<br />
+return: 返回获取值列表，<code class="language-plaintext highlighter-rouge">List</code> 类型</p>
     <h4 id="set">set</h4>
     <p>写单行数据</p>
     <div class="language-scala highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">def</span> <span class="nf">set</span><span class="o">[</span><span class="kt">H</span>, <span class="kt">S</span>, <span class="kt">V</span><span class="o">](</span><span class="n">hashKey</span><span class="k">:</span> <span class="kt">H</span><span class="o">,</span> <span class="n">sortKey</span><span class="k">:</span> <span class="kt">S</span><span class="o">,</span> <span class="n">value</span><span class="k">:</span> <span class="kt">V</span><span class="o">,</span> <span class="n">ttl</span><span class="k">:</span> <span class="kt">Duration</span> <span class="o">=</span> <span class="mi">0</span> <span class="n">second</span><span class="o">,</span> <span class="n">timeout</span><span class="k">:</span> <span class="kt">Duration</span> <span class="o">=</span> <span class="mi">0</span> <span class="n">milli</span><span class="o">)</span>
 </code></pre></div>    </div>
-    <p>hashKey：通常为<code class="language-plaintext highlighter-rouge">String</code>类型<br />
-sortKey：通常为<code class="language-plaintext highlighter-rouge">String</code>类型<br />
-value：对应key的写入值，通常为<code class="language-plaintext highlighter-rouge">String</code>类型<br />
-ttl：写入值保留时间，默认为0，表示永久保留<br />
-timeout：获取数据超时时间，默认为0，表示使用配置文件中的数值<br />
-return：无返回值</p>
+    <p>hashKey: 通常为 <code class="language-plaintext highlighter-rouge">String</code> 类型<br />
+sortKey: 通常为 <code class="language-plaintext highlighter-rouge">String</code> 类型<br />
+value: 对应 key 的写入值，通常为 <code class="language-plaintext highlighter-rouge">String</code> 类型<br />
+ttl: 写入值保留时间，默认为 0，表示永久保留<br />
+timeout: 获取数据超时时间，默认为 0，表示使用配置文件中的数值<br />
+return: 无返回值</p>
     <h4 id="batchset">batchSet</h4>
-    <p>写一批数据，对set函数的批量封装。该函数并发地向server发送异步请求，并等待结果。如果有任意一个请求失败，就提前终止并抛出异常，参见<a href="/zh/clients/java-client#batchset">Java客户端文档#batchSet</a></p>
+    <p>写一批数据，对 set 函数的批量封装。该函数并发地向 server 发送异步请求，并等待结果。如果有任意一个请求失败，就提前终止并抛出异常，参见<a href="/zh/clients/java-client#batchset"> Java 客户端文档#batchSet</a></p>
     <div class="language-scala highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">def</span> <span class="nf">batchSet</span><span class="o">[</span><span class="kt">H</span>, <span class="kt">S</span>, <span class="kt">V</span><span class="o">](</span><span class="n">table</span><span class="k">:</span> <span class="kt">String</span><span class="o">,</span> <span class="n">items</span><span class="k">:</span> <span class="kt">Seq</span><span class="o">[</span><span class="kt">SetItem</span><span class="o">[</span><span class="kt">H</span>, <span class="kt">S</span>, <span class="kt">V</span><span class="o">]])</span>
 </code></pre></div>    </div>
-    <p>table：表名，通常为<code class="language-plaintext highlighter-rouge">String</code>类型<br />
-items：写入值列表，由hashKey、sortKey、value组成<br />
-return：请求成功的个数（该方法不是原子的，有可能出现部分成功部分失败的情况，用户可以选择只使用成功的结果）</p>
+    <p>table: 表名，通常为 <code class="language-plaintext highlighter-rouge">String</code> 类型<br />
+items: 写入值列表，由 hashKey、sortKey、value 组成<br />
+return: 请求成功的个数（该方法不是原子的，有可能出现部分成功部分失败的情况，用户可以选择只使用成功的结果）</p>
     <h4 id="batchset2">batchSet2</h4>
-    <p>对set函数的批量封装。该函数并发地向server发送异步请求，并等待结果。但与上面batchSet不同的是，无论请求成功还是失败，它都会等待所有请求结束，参见<a href="/zh/clients/java-client#batchset2">Java客户端文档#batchSet2</a></p>
+    <p>对 set 函数的批量封装。该函数并发地向 server 发送异步请求，并等待结果。但与上面 batchSet 不同的是，无论请求成功还是失败，它都会等待所有请求结束，参见<a href="/zh/clients/java-client#batchset2"> Java 客户端文档#batchSet2</a></p>
     <h4 id="multiset">multiSet</h4>
-    <p>Java client有两种接口，提供写同一HashKey下的多行数据，这里封装的是：</p>
+    <p>Java client 有两种接口，提供写同一 HashKey 下的多行数据，这里封装的是：</p>
     <div class="language-java highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kd">public</span> <span class="kt">void</span> <span class="nf">multiSet</span><span class="o">(</span><span class="nc">String</span> <span class="n">tableName</span><span class="o">,</span> <span class="kt">byte</span><span class="o">[]</span> <span class="n">hashKey</span><span class="o">,</span> 
                 <span class="nc">List</span><span class="o">&lt;</span><span class="nc">Pair</span><span class="o">&lt;</span><span class="kt">byte</span><span class="o">[],</span> <span class="kt">byte</span><span class="o">[]&gt;&gt;</span> <span class="n">values</span><span class="o">,</span> 
                 <span class="kt">int</span> <span class="n">ttl_seconds</span><span class="o">)</span> <span class="kd">throws</span> <span class="nc">PException</span><span class="o">;</span>
@@ -974,90 +974,90 @@ return：请求成功的个数（该方法不是原子的，有可能出现部�
     <p>支持数据过期时间设定</p>
     <div class="language-scala highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">def</span> <span class="nf">multiSet</span><span class="o">[</span><span class="kt">H</span>, <span class="kt">S</span>, <span class="kt">V</span><span class="o">](</span><span class="n">table</span><span class="k">:</span> <span class="kt">String</span><span class="o">,</span> <span class="n">hashKey</span><span class="k">:</span> <span class="kt">H</span><span class="o">,</span> <span class="n">values</span><span class="k">:</span> <span class="kt">Seq</span><span class="o">[(</span><span class="kt">S</span>, <span class="kt">V</span><span class="o">)],</span> <span class="n">ttl</span><span class="k">:</span> <span class="kt">Duration</span> <span class="o">=</span> <span class="mi">0</span> <span class="n">second</span><span class="o">)</span>
 </code></pre></div>    </div>
-    <p>table：表名，通常为<code class="language-plaintext highlighter-rouge">String</code>类型<br />
-hashKey：通常为<code class="language-plaintext highlighter-rouge">String</code>类型<br />
-value：写入值列表，由sortkey、value组成，如<code class="language-plaintext highlighter-rouge">Seq(("hashKey1","sortKey1"),("hashKey2","sortKey2"))</code><br />
-ttl：写入值保留时间，默认为0，表示永久保留<br />
-return：无返回值</p>
+    <p>table: 表名，通常为 <code class="language-plaintext highlighter-rouge">String</code> 类型<br />
+hashKey: 通常为 <code class="language-plaintext highlighter-rouge">String</code> 类型<br />
+value: 写入值列表，由 sortkey、value 组成，如 <code class="language-plaintext highlighter-rouge">Seq(("hashKey1","sortKey1"),("hashKey2","sortKey2"))</code><br />
+ttl: 写入值保留时间，默认为 0，表示永久保留<br />
+return: 无返回值</p>
     <h4 id="batchmultitset">batchMultitSet</h4>
-    <p>对multiSet函数的批量封装。该函数并发地向server发送异步请求，并等待结果。如果有任意一个请求失败，就提前终止并抛出异常，参见<a href="/zh/clients/java-client#batchmultiset">Java客户端文档#batchMultiSet</a></p>
+    <p>对 multiSet 函数的批量封装。该函数并发地向 server 发送异步请求，并等待结果。如果有任意一个请求失败，就提前终止并抛出异常，参见<a href="/zh/clients/java-client#batchmultiset"> Java 客户端文档#batchMultiSet</a></p>
     <div class="language-scala highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">def</span> <span class="nf">batchMultitSet</span><span class="o">[</span><span class="kt">H</span>, <span class="kt">S</span>, <span class="kt">V</span><span class="o">](</span><span class="n">table</span><span class="k">:</span> <span class="kt">String</span><span class="o">,</span> <span class="n">items</span><span class="k">:</span> <span class="kt">Seq</span><span class="o">[</span><span class="kt">HashKeyData</span><span class="o">[</span><span class="kt">H</span>, <span class="kt">S</span>, <span class="kt">V</span><span class="o">]],</span> <span class="n">ttl</span><span class="k">:</span> <span class="kt">Duration</span> <span class="o">=</span> <span class="mi">0</span> <span class="n">second</span><span class="o">)</span>
 </code></pre></div>    </div>
-    <p>table：表名，通常为<code class="language-plaintext highlighter-rouge">String</code>类型<br />
-items：批量写入数据列表<br />
-ttl：写入值保留时间，默认为0，表示永久保留<br />
-return：请求成功的个数（该方法不是原子的，有可能出现部分成功部分失败的情况，用户可以选择只使用成功的结果）</p>
+    <p>table: 表名，通常为<code class="language-plaintext highlighter-rouge">String</code>类型<br />
+items: 批量写入数据列表<br />
+ttl: 写入值保留时间，默认为 0，表示永久保留<br />
+return: 请求成功的个数（该方法不是原子的，有可能出现部分成功部分失败的情况，用户可以选择只使用成功的结果）</p>
     <h4 id="batchmultitset2">batchMultitSet2</h4>
-    <p>对multiSet函数的批量封装。该函数并发地向server发送异步请求，并等待结果。但与上面batchMultiSet不同的是，无论请求成功还是失败，它都会等待所有请求结束，参见<a href="/zh/clients/java-client#batchmultiset2">Java客户端文档#batchMultitSet2</a></p>
+    <p>对 multiSet 函数的批量封装。该函数并发地向 server 发送异步请求，并等待结果。但与上面 batchMultiSet 不同的是，无论请求成功还是失败，它都会等待所有请求结束，参见<a href="/zh/clients/java-client#batchmultiset2"> Java 客户端文档#batchMultitSet2</a></p>
     <div class="language-scala highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">def</span> <span class="nf">batchMultiSet2</span><span class="o">[</span><span class="kt">H</span>, <span class="kt">S</span>, <span class="kt">V</span><span class="o">](</span><span class="n">table</span><span class="k">:</span> <span class="kt">String</span><span class="o">,</span> <span class="n">items</span><span class="k">:</span> <span class="kt">Seq</span><span class="o">[</span><span class="kt">HashKeyData</span><span class="o">[</span><span class="kt">H</span>, <span class="kt">S</span>, <span class="kt">V</span><span class="o">]],</span> <span class="n">ttl</span><span class="k">:</span> <span class="kt">Duration</span> <span class="o">=</span> <span class="mi">0</span> <span class="n">second</span><span class="o">)</span>
 </code></pre></div>    </div>
-    <p>table：表名，通常为<code class="language-plaintext highlighter-rouge">String</code>类型<br />
-items：批量写入数据列表<br />
-ttl：写入值保留时间，默认为0，表示永久保留<br />
-return：请求成功的个数（该方法不是原子的，有可能出现部分成功部分失败的情况，用户可以选择只使用成功的结果）</p>
+    <p>table: 表名，通常为 <code class="language-plaintext highlighter-rouge">String</code> 类型<br />
+items: 批量写入数据列表<br />
+ttl: 写入值保留时间，默认为 0，表示永久保留<br />
+return: 请求成功的个数（该方法不是原子的，有可能出现部分成功部分失败的情况，用户可以选择只使用成功的结果）</p>
     <h4 id="del">del</h4>
-    <p>删除单行数据，参见<a href="/zh/clients/java-client#del">Java客户端文档#del</a></p>
+    <p>删除单行数据，参见<a href="/zh/clients/java-client#del"> Java 客户端文档#del</a></p>
     <div class="language-scala highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">def</span> <span class="nf">del</span><span class="o">[</span><span class="kt">H</span>, <span class="kt">S</span><span class="o">](</span><span class="n">table</span><span class="k">:</span> <span class="kt">String</span><span class="o">,</span> <span class="n">hashKey</span><span class="k">:</span> <span class="kt">H</span><span class="o">,</span> <span class="n">sortKey</span><span class="k">:</span> <span class="kt">S</span><span class="o">)</span>
 </code></pre></div>    </div>
-    <p>table：表名，通常为<code class="language-plaintext highlighter-rouge">String</code>类型<br />
-hashKey：通常为<code class="language-plaintext highlighter-rouge">String</code>类型<br />
-sortkey：通常为<code class="language-plaintext highlighter-rouge">String</code>类型<br />
-return：无返回值</p>
+    <p>table: 表名，通常为 <code class="language-plaintext highlighter-rouge">String</code> 类型<br />
+hashKey: 通常为 <code class="language-plaintext highlighter-rouge">String</code> 类型<br />
+sortkey: 通常为 <code class="language-plaintext highlighter-rouge">String</code> 类型<br />
+return: 无返回值</p>
     <h4 id="batchdel">batchDel</h4>
-    <p>删除一批数据，对del函数的批量封装。该函数并发地向server发送异步请求，并等待结果。如果有任意一个请求失败，就提前终止并抛出异常，参见<a href="/zh/clients/java-client#batchdel">Java客户端文档#batchDel</a></p>
+    <p>删除一批数据，对 del 函数的批量封装。该函数并发地向 server 发送异步请求，并等待结果。如果有任意一个请求失败，就提前终止并抛出异常，参见<a href="/zh/clients/java-client#batchdel"> Java 客户端文档#batchDel</a></p>
     <div class="language-scala highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">batchDel</span><span class="o">[</span><span class="kt">H</span>, <span class="kt">S</span><span class="o">](</span><span class="n">table</span><span class="k">:</span> <span class="kt">String</span><span class="o">,</span> <span class="n">keys</span><span class="k">:</span> <span class="kt">Seq</span><span class="o">[</span><span class="kt">PegasusKey</span><span class="o">[</span><span class="kt">H</span>, <span class="kt">S</span><span class="o">]])</span>
 </code></pre></div>    </div>
-    <p>table：表名，通常为<code class="language-plaintext highlighter-rouge">String</code>类型<br />
-keys：键值列表，由hashKey和sortKey组成<br />
-return：请求成功的个数（该方法不是原子的，有可能出现部分成功部分失败的情况，用户可以选择只使用成功的结果）</p>
+    <p>table: 表名，通常为 <code class="language-plaintext highlighter-rouge">String</code> 类型<br />
+keys: 键值列表，由 hashKey 和 sortKey 组成<br />
+return: 请求成功的个数（该方法不是原子的，有可能出现部分成功部分失败的情况，用户可以选择只使用成功的结果）</p>
     <h4 id="batchdel2">batchDel2</h4>
-    <p>对del函数的批量封装。该函数并发地向server发送异步请求，并等待结果。但与上面batchDel不同的是，无论请求成功还是失败，它都会等待所有请求结束，参见<a href="/zh/clients/java-client#batchdel2">Java客户端文档#batchDel2</a></p>
+    <p>对 del 函数的批量封装。该函数并发地向 server 发送异步请求，并等待结果。但与上面 batchDel 不同的是，无论请求成功还是失败，它都会等待所有请求结束，参见<a href="/zh/clients/java-client#batchdel2"> Java 客户端文档#batchDel2</a></p>
     <div class="language-scala highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">def</span> <span class="nf">batchDel2</span><span class="o">[</span><span class="kt">H</span>, <span class="kt">S</span><span class="o">](</span><span class="n">table</span><span class="k">:</span> <span class="kt">String</span><span class="o">,</span> <span class="n">keys</span><span class="k">:</span> <span class="kt">Seq</span><span class="o">[</span><span class="kt">PegasusKey</span><span class="o">[</span><span class="kt">H</span>, <span class="kt">S</span><span class="o">]])</span>
 </code></pre></div>    </div>
     <h4 id="multidel">multiDel</h4>
-    <p>删同一HashKey下的多行数据，参见<a href="/zh/clients/java-client#multidel">Java客户端文档#multiDel</a></p>
+    <p>删同一 HashKey 下的多行数据，参见<a href="/zh/clients/java-client#multidel"> Java 客户端文档#multiDel</a></p>
     <div class="language-scala highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">def</span> <span class="nf">multiDel</span><span class="o">[</span><span class="kt">H</span>, <span class="kt">S</span><span class="o">](</span><span class="n">table</span><span class="k">:</span> <span class="kt">String</span><span class="o">,</span> <span class="n">hashKey</span><span class="k">:</span> <span class="kt">H</span><span class="o">,</span> <span class="n">sortKeys</span><span class="k">:</span> <span class="kt">Seq</span><span class="o">[</span><span class="kt">S</span><span class="o">])</span>
 </code></pre></div>    </div>
-    <p>table：表名，通常为<code class="language-plaintext highlighter-rouge">String</code>类型<br />
-hashKey：通常为<code class="language-plaintext highlighter-rouge">String</code>类型<br />
-sortKeys：sortKey列表<br />
-return：无返回值</p>
+    <p>table: 表名，通常为 <code class="language-plaintext highlighter-rouge">String</code> 类型<br />
+hashKey: 通常为 <code class="language-plaintext highlighter-rouge">String</code> 类型<br />
+sortKeys: sortKey 列表<br />
+return: 无返回值</p>
     <h4 id="batchmultidel">batchMultiDel</h4>
-    <p>对multiDel函数的批量封装。该函数并发地向server发送异步请求，并等待结果。如果有任意一个请求失败，就提前终止并抛出异常，参见<a href="/zh/clients/java-client#batchmultidel">Java客户端文档#batchMultiDel</a></p>
+    <p>对 multiDel 函数的批量封装。该函数并发地向 server 发送异步请求，并等待结果。如果有任意一个请求失败，就提前终止并抛出异常，参见<a href="/zh/clients/java-client#batchmultidel"> Java 客户端文档#batchMultiDel</a></p>
     <div class="language-scala highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">def</span> <span class="nf">batchMultiDel</span><span class="o">[</span><span class="kt">H</span>, <span class="kt">S</span><span class="o">](</span><span class="n">table</span><span class="k">:</span> <span class="kt">String</span><span class="o">,</span> <span class="n">keys</span><span class="k">:</span> <span class="kt">Seq</span><span class="o">[(</span><span class="kt">H</span>, <span class="kt">Seq</span><span class="o">[</span><span class="kt">S</span><span class="o">])])</span>
 </code></pre></div>    </div>
-    <p>table：表名，通常为<code class="language-plaintext highlighter-rouge">String</code>类型<br />
-keys：键列表，由hashKey、sortKeys组成，如<code class="language-plaintext highlighter-rouge">Seq(("hashKey1",(sortKey1,sortKey2),("hashKey2",(sortKey3,sortKey4))</code><br />
+    <p>table: 表名，通常为 <code class="language-plaintext highlighter-rouge">String</code> 类型<br />
+keys: 键列表，由 hashKey、sortKeys 组成，如 <code class="language-plaintext highlighter-rouge">Seq(("hashKey1",(sortKey1,sortKey2),("hashKey2",(sortKey3,sortKey4))</code><br />
 return：无返回值</p>
     <h4 id="batchmultidel2">batchMultiDel2</h4>
-    <p>对del函数的批量封装。该函数并发地向server发送异步请求，并等待结果。但与上面batchMultiDel不同的是，无论请求成功还是失败，它都会等待所有请求结束，参见<a href="/zh/clients/java-client#batchmultidel2">Java客户端文档#batchMultiDel2</a></p>
+    <p>对 del 函数的批量封装。该函数并发地向 server 发送异步请求，并等待结果。但与上面 batchMultiDel 不同的是，无论请求成功还是失败，它都会等待所有请求结束，参见<a href="/zh/clients/java-client#batchmultidel2"> Java 客户端文档#batchMultiDel2</a></p>
     <div class="language-scala highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">def</span> <span class="nf">batchMultiDel2</span><span class="o">[</span><span class="kt">H</span>, <span class="kt">S</span><span class="o">](</span><span class="n">table</span><span class="k">:</span> <span class="kt">String</span><span class="o">,</span> <span class="n">keys</span><span class="k">:</span> <span class="kt">Seq</span><span class="o">[(</span><span class="kt">H</span>, <span class="kt">Seq</span><span class="o">[</span><span class="kt">S</span><span class="o">])])</span>
 </code></pre></div>    </div>
-    <p>table：表名，通常为<code class="language-plaintext highlighter-rouge">String</code>类型<br />
-keys：键列表，由hashKey、sortKeys组成，如<code class="language-plaintext highlighter-rouge">Seq(("hashKey1",(sortKey1,sortKey2),("hashKey2",(sortKey3,sortKey4))</code><br />
-return：无返回值</p>
+    <p>table: 表名，通常为 <code class="language-plaintext highlighter-rouge">String</code> 类型<br />
+keys: 键列表，由 hashKey、sortKeys 组成，如 <code class="language-plaintext highlighter-rouge">Seq(("hashKey1",(sortKey1,sortKey2),("hashKey2",(sortKey3,sortKey4))</code><br />
+return: 无返回值</p>
     <h4 id="ttl">ttl</h4>
-    <p>获取单行数据的TTL时间。TTL表示Time To Live，表示该数据还能存活多久。如果超过存活时间，数据就读不到了，参见<a href="/zh/clients/java-client#ttl">Java客户端文档#ttl</a></p>
+    <p>获取单行数据的 TTL 时间。TTL 表示 Time To Live，表示该数据还能存活多久。如果超过存活时间，数据就读不到了，参见<a href="/zh/clients/java-client#ttl"> Java 客户端文档#ttl</a></p>
     <div class="language-scala highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">def</span> <span class="nf">ttl</span><span class="o">[</span><span class="kt">H</span>, <span class="kt">S</span><span class="o">](</span><span class="n">table</span><span class="k">:</span> <span class="kt">String</span><span class="o">,</span> <span class="n">hashKey</span><span class="k">:</span> <span class="kt">H</span><span class="o">,</span> <span class="n">sortKey</span><span class="k">:</span> <span class="kt">S</span><span class="o">)</span>
 </code></pre></div>    </div>
-    <p>table：表名，通常为<code class="language-plaintext highlighter-rouge">String</code>类型<br />
-hashKey：通常为<code class="language-plaintext highlighter-rouge">String</code>类型<br />
-sortKeys：通常为<code class="language-plaintext highlighter-rouge">String</code>类型<br />
-return：TTL时间，单位为秒。如果该数据没有设置TTL，返回-1；如果该数据不存在，返回-2</p>
+    <p>table: 表名，通常为<code class="language-plaintext highlighter-rouge">String</code>类型<br />
+hashKey: 通常为<code class="language-plaintext highlighter-rouge">String</code>类型<br />
+sortKeys: 通常为<code class="language-plaintext highlighter-rouge">String</code>类型<br />
+return: TTL 时间，单位为秒。如果该数据没有设置 TTL，返回 -1；如果该数据不存在，返回 -2</p>
     <h4 id="incr">incr</h4>
-    <p>单行原子增(减)操作，详细说明参见<a href="/zh/api/single-atomic">单行原子操作</a>，该操作先将key所指向的value的字节串转换为int64类型（实现上类似于Java的Long.parseLong()函数），然后加上increment，将结果转换为字节串设置为新值。当参数increment为正数时，即原子加；当参数increment为负数时，即原子减，参见<a href="/zh/clients/java-client#incr">Java客户端文档#incr</a>。</p>
+    <p>单行原子增(减)操作，详细说明参见<a href="/zh/api/single-atomic">单行原子操作</a>，该操作先将 key 所指向的 value 的字节串转换为 int64 类型（实现上类似于 Java 的 Long.parseLong() 函数），然后加上 increment，将结果转换为字节串设置为新值。当参数 increment 为正数时，即原子加；当参数 increment 为负数时，即原子减，参见<a href="/zh/clients/java-client#incr"> Java 客户端文档#incr</a>。</p>
     <div class="language-scala highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">def</span> <span class="nf">incr</span><span class="o">[</span><span class="kt">H</span>, <span class="kt">S</span><span class="o">](</span><span class="n">table</span><span class="k">:</span> <span class="kt">String</span><span class="o">,</span> <span class="n">hashKey</span><span class="k">:</span> <span class="kt">H</span><span class="o">,</span> <span class="n">sortKey</span><span class="k">:</span> <span class="kt">S</span><span class="o">,</span> <span class="n">increment</span><span class="k">:</span> <span class="kt">Long</span><span class="o">,</span> <span class="n">ttl</span><span class="k">:</span> <span class="kt">Duration</span> <span class="o">=</span> <span class="mi">0</span> <span class="n">milli</span><span class="o">)</span>
 </code></pre></div>    </div>
-    <p>table：表名，通常为<code class="language-plaintext highlighter-rouge">String</code>类型<br />
-hashKey：通常为<code class="language-plaintext highlighter-rouge">String</code>类型<br />
-sortKey：通常为<code class="language-plaintext highlighter-rouge">String</code>类型<br />
-increment：增加值<br />
-ttl：值保留时间，默认为0，表示永久保留<br />
-return：操作成功后的新值</p>
-    <h2 id="scalapegasustable接口">ScalaPegasusTable接口</h2>
-    <p>ScalaPegasusTable接口提供的方法均为同步API，<code class="language-plaintext highlighter-rouge">ScalaPegasusClient</code>接口即默认封装该接口，详细API信息参见<a href="#scalapegasusclient接口">ScalaPegasusClient接口</a></p>
+    <p>table: 表名，通常为 <code class="language-plaintext highlighter-rouge">String</code> 类型<br />
+hashKey: 通常为 <code class="language-plaintext highlighter-rouge">String</code> 类型<br />
+sortKey: 通常为 <code class="language-plaintext highlighter-rouge">String</code> 类型<br />
+increment: 增加值<br />
+ttl: 值保留时间，默认为 0，表示永久保留<br />
+return: 操作成功后的新值</p>
+    <h2 id="scalapegasustable-接口">ScalaPegasusTable 接口</h2>
+    <p>ScalaPegasusTable 接口提供的方法均为同步 API，<code class="language-plaintext highlighter-rouge">ScalaPegasusClient</code> 接口即默认封装该接口，详细 API 信息参见<a href="#scalapegasusclient接口">ScalaPegasusClient 接口</a></p>
     <h2 id="scalapegasusasynctable">ScalaPegasusAsyncTable</h2>
-    <p>ScalaPegasusAsyncTable接口提供的方法均为异步API，封装了java client的异步接口。对应API功能可参考<a href="#scalapegasusclient接口">ScalaPegasusClient接口</a>和<a href="/zh/clients/java-client#pegasustableinterface接口">Java客户端文档#PegasusTableInterface接口</a>，接口封装形式如：</p>
+    <p>ScalaPegasusAsyncTable 接口提供的方法均为异步 API，封装了 java client 的异步接口。对应 API 功能可参考<a href="#scalapegasusclient接口"> ScalaPegasusClient接口</a>和<a href="/zh/clients/java-client#pegasustableinterface接口"> Java 客户端文档#PegasusTableInterface接口</a>，接口封装形式如：</p>
     <div class="language-scala highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nd">@throws</span><span class="o">[</span><span class="kt">PException</span><span class="o">]</span>
 <span class="k">def</span> <span class="nf">multiGet</span><span class="o">[</span><span class="kt">H</span>, <span class="kt">S</span><span class="o">](</span><span class="n">hashKey</span><span class="k">:</span> <span class="kt">H</span><span class="o">,</span> <span class="n">sortKeys</span><span class="k">:</span> <span class="kt">Seq</span><span class="o">[</span><span class="kt">S</span><span class="o">],</span> <span class="n">maxFetchCount</span><span class="k">:</span> <span class="kt">Int</span> <span class="o">=</span> <span class="mi">100</span><span class="o">,</span> <span class="n">maxFetchSize</span><span class="k">:</span> <span class="kt">Int</span> <span class="o">=</span> <span class="mi">1000000</span><span class="o">,</span> <span class="n">timeout</span><span class="k">:</span> <span class="kt">Duration</span> <span class="o">=</span> <span class="mi">0</span> <span class="n">milli</span><span class="o">)</span>
         <span class="o">(</span><span class="k">implicit</span> <span class="n">hSer</span><span class="k">:</span> <span class="kt">SER</span><span class="o">[</span><span class="kt">H</span><span class="o">],</span> <span class="n">sSer</span><span class="k">:</span> <span class="kt">SER</span><span class="o">[</span><span class="kt">S</span><span class="o">])</span><span class="k">:</span> <span class="kt">Future</span><span class="o">[</span><span class="kt">MultiGetResult</span><span class="o">[</span><span class="kt">S</span>, <span class="kt">Array</span><span class="o">[</span><span class="kt">Byte</span><span class="o">]]]</span> <span class="k">=</span> <span class="o">{</span>
@@ -1065,7 +1065,7 @@ return：操作成功后的新值</p>
     <span class="nf">toScala</span><span class="o">(</span><span class="n">result</span><span class="o">)(</span><span class="n">convertMultiGetResult</span><span class="o">[</span><span class="kt">S</span><span class="o">])</span>
 <span class="o">}</span>
 </code></pre></div>    </div>
-    <p>其中<code class="language-plaintext highlighter-rouge">table.asyncMultiGet(hashKey, sortKeys, maxFetchCount, maxFetchSize, timeout)</code>即Java client接口，参数传递原理参见<a href="#实现原理">实现原理</a>，<code class="language-plaintext highlighter-rouge">toScala(result)(convertMultiGetResult[S])</code>的完整形式如下：</p>
+    <p>其中 <code class="language-plaintext highlighter-rouge">table.asyncMultiGet(hashKey, sortKeys, maxFetchCount, maxFetchSize, timeout)</code>即 Java client 接口，参数传递原理参见<a href="#实现原理">实现原理</a>，<code class="language-plaintext highlighter-rouge">toScala(result)(convertMultiGetResult[S])</code>的完整形式如下：</p>
     <div class="language-scala highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">implicit</span> <span class="k">private</span> <span class="o">[</span><span class="kt">scalaclient</span><span class="o">]</span> <span class="k">def</span> <span class="nf">toScala</span><span class="o">[</span><span class="kt">A</span>, <span class="kt">B</span><span class="o">](</span><span class="n">future</span><span class="k">:</span> <span class="kt">NFuture</span><span class="o">[</span><span class="kt">A</span><span class="o">])(</span><span class="k">implicit</span> <span class="n">f</span><span class="k">:</span> <span class="kt">A</span> <span class="o">=&gt;</span> <span class="n">B</span><span class="o">)</span><span class="k">:</span> <span class="kt">Future</span><span class="o">[</span><span class="kt">B</span><span class="o">]</span> <span class="k">=</span> <span class="o">{</span>
     <span class="k">val</span> <span class="nv">promise</span> <span class="k">=</span> <span class="nc">Promise</span><span class="o">[</span><span class="kt">B</span><span class="o">]()</span>
     <span class="nv">future</span><span class="o">.</span><span class="py">addListener</span><span class="o">(</span><span class="k">new</span> <span class="nc">GenericFutureListener</span><span class="o">[</span><span class="kt">NFuture</span><span class="o">[</span><span class="k">_</span> <span class="k">&gt;:</span> <span class="kt">A</span><span class="o">]]</span> <span class="o">{</span>
@@ -1080,7 +1080,7 @@ return：操作成功后的新值</p>
     <span class="nv">promise</span><span class="o">.</span><span class="py">future</span>
 <span class="o">}</span>
 </code></pre></div>    </div>
-    <p>使用<code class="language-plaintext highlighter-rouge">隐式转换</code>实现Java的异步编程到Scala的异步编程变换，该函数利用<code class="language-plaintext highlighter-rouge">io.netty.util.concurrent.{GenericFutureListener, Future =&gt; NFuture}</code>实现异步编程。</p>
+    <p>使用<code class="language-plaintext highlighter-rouge">隐式转换</code>实现 Java 的异步编程到 Scala 的异步编程变换，该函数利用 <code class="language-plaintext highlighter-rouge">io.netty.util.concurrent.{GenericFutureListener, Future =&gt; NFuture}</code>实现异步编程。</p>
   </li>
 </ul>
 
@@ -1135,10 +1135,10 @@ return：操作成功后的新值</p>
   </li>
   <li><a href="#接口定义">接口定义</a>
     <ul>
-      <li><a href="#scalapegasusclient接口">ScalaPegasusClient接口</a>
+      <li><a href="#scalapegasusclient-接口">ScalaPegasusClient 接口</a>
         <ul>
           <li><a href="#实现原理">实现原理</a></li>
-          <li><a href="#api功能">API功能</a>
+          <li><a href="#api-功能">API 功能</a>
             <ul>
               <li><a href="#exists">exists</a></li>
               <li><a href="#sortkeycount">sortKeyCount</a></li>
@@ -1167,7 +1167,7 @@ return：操作成功后的新值</p>
           </li>
         </ul>
       </li>
-      <li><a href="#scalapegasustable接口">ScalaPegasusTable接口</a></li>
+      <li><a href="#scalapegasustable-接口">ScalaPegasusTable 接口</a></li>
       <li><a href="#scalapegasusasynctable">ScalaPegasusAsyncTable</a></li>
     </ul>
   </li>
